@@ -29,7 +29,7 @@ import { GEMINI_MODELS } from "./src/data/models";
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const PORT = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json());
 
@@ -1384,7 +1384,7 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), "dist/public");
     app.use(express.static(distPath));
-    app.get("*", (_req, res) => {
+    app.use((_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
