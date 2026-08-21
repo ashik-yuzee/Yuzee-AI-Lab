@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
 import {
   Conversation,
   ChatMessage,
@@ -111,6 +111,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const pendingModel = useRef<string>("gemini-3.6-flash");
 
   // Load initial data
   const loadInitialData = useCallback(async () => {
@@ -175,7 +176,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const startNewConversation = async (title?: string): Promise<Conversation> => {
     const newConv = await api.createConversation(
       title || "New Career Exploration",
-      currentConversation?.model || "gemini-3.6-flash",
+      currentConversation?.model || pendingModel.current,
       "ADAPTIVE_HYBRID"
     );
     setConversations((prev) => [newConv, ...prev]);
@@ -218,6 +219,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const updateCurrentConversationSettings = async (updates: Partial<Conversation>) => {
+    if (updates.model) pendingModel.current = updates.model;
     if (!currentConversation) return;
     const updated = { ...currentConversation, ...updates, updatedAt: Date.now() };
     setCurrentConversation(updated);
