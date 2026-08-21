@@ -21,6 +21,7 @@ import * as api from "../services/api";
 interface TokenLabContextType {
   conversations: Conversation[];
   currentConversation: Conversation | null;
+  selectedModel: string;
   capabilities: CapabilitiesResponse | null;
   sessionStats: SessionCumulativeStats | null;
   isLoading: boolean;
@@ -111,6 +112,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.6-flash");
   const pendingModel = useRef<string>("gemini-3.6-flash");
 
   // Load initial data
@@ -164,6 +166,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const found = conversations.find((c) => c.id === id);
     if (found) {
       setCurrentConversation(found);
+      if (found.model) { setSelectedModel(found.model); pendingModel.current = found.model; }
       const lastAssistant = found.messages?.filter((m) => m.role === "assistant").pop();
       if (lastAssistant?.telemetry) {
         setActiveTurnTelemetry(lastAssistant.telemetry);
@@ -219,7 +222,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const updateCurrentConversationSettings = async (updates: Partial<Conversation>) => {
-    if (updates.model) pendingModel.current = updates.model;
+    if (updates.model) { pendingModel.current = updates.model; setSelectedModel(updates.model); }
     if (!currentConversation) return;
     const updated = { ...currentConversation, ...updates, updatedAt: Date.now() };
     setCurrentConversation(updated);
@@ -563,6 +566,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       value={{
         conversations,
         currentConversation,
+        selectedModel,
         capabilities,
         sessionStats,
         isLoading,

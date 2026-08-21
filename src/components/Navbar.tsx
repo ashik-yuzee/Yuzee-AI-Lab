@@ -14,6 +14,7 @@ import { GEMINI_MODELS } from "../data/models";
 export const Navbar: React.FC = () => {
   const {
     currentConversation,
+    selectedModel,
     capabilities,
     updateCurrentConversationSettings,
     applyOptimizationMode,
@@ -127,7 +128,7 @@ export const Navbar: React.FC = () => {
         {/* Apple Model Selector Dropdown */}
         <AppleSelect
           id="select-model"
-          value={currentConversation?.model || "gemini-3.6-flash"}
+          value={currentConversation?.model || selectedModel}
           options={modelOptions}
           onChange={(newModel) => updateCurrentConversationSettings({ model: newModel })}
           leadingIcon={Cpu}
