@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import crypto from "crypto";
-import { createServer as createViteServer } from "vite";
+// vite is only needed for local dev — dynamic import keeps it out of the Vercel bundle
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
 
@@ -1355,15 +1355,16 @@ function generateOfflineProtocolV13(prompt: string, career: Record<string, strin
 // -------------------------------------------------------------
 async function startServer() {
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa",
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist");
+    const distPath = path.join(process.cwd(), "dist/public");
     app.use(express.static(distPath));
-    app.get("*", (req, res) => {
+    app.get("*", (_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
@@ -1373,4 +1374,10 @@ async function startServer() {
   });
 }
 
-startServer();
+// Export app for Vercel serverless function (api/index.ts)
+export { app };
+
+// Only start the HTTP server when running directly (not as a Vercel serverless function)
+if (!process.env.VERCEL) {
+  startServer();
+}
