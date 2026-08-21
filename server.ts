@@ -1382,7 +1382,8 @@ async function startServer() {
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.join(process.cwd(), "dist/public");
+    // __dirname in the compiled dist/server.cjs is the dist/ folder itself
+    const distPath = path.join(__dirname, "public");
     app.use(express.static(distPath));
     app.use((_req, res) => {
       res.sendFile(path.join(distPath, "index.html"));
