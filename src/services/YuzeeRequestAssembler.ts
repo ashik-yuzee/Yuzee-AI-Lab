@@ -204,16 +204,8 @@ export class YuzeeRequestAssembler {
     };
     const numericBudget = numericBudgetMap[appliedLevel];
 
-    if (modelId.startsWith('gemini-2.5')) {
-      return {
-        thinkingConfig: { thinkingBudget: numericBudget },
-        appliedThinkingLevel: appliedLevel,
-        numericBudget,
-      };
-    }
-
     return {
-      thinkingConfig: { thinkingLevel: appliedLevel },
+      thinkingConfig: { thinkingBudget: numericBudget },
       appliedThinkingLevel: appliedLevel,
       numericBudget,
     };
