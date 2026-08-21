@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: yuzee-ai-token-lab
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY:}
+        chat:
+          options:
+            model: gemini-3.6-flash
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+yuzee:
+  token-lab:
+    default-model: gemini-3.6-flash
+    allowed-models:
+      - gemini-3.6-flash
+      - gemini-3.5-flash
+    default-strategy: ADAPTIVE_HYBRID
+    default-context-budget: 2000
+    default-recent-turns: 4
+    enable-deep-diagnostics: true
+    enable-experimental-interactions: false
