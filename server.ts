@@ -1024,18 +1024,9 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       }
       providerEndTime = Date.now();
     } else {
-      // Fallback offline mock mode (Clearly marked as simulated)
-      isMockResponse = true;
-      const guidanceJson = generateOfflineProtocolV13(userMessageContent, conv.careerContext);
-      fullAssistantText = JSON.stringify(guidanceJson, null, 2);
-      await new Promise((r) => setTimeout(r, 250)); // Simulating provider TTFT
-      firstProviderChunkTime = Date.now();
-      sendEvent("status", {
-        state: "generating",
-        ttftMs: firstProviderChunkTime - providerStartTime,
-      });
-      await new Promise((r) => setTimeout(r, 350)); // Simulating generation duration
-      providerEndTime = Date.now();
+      sendEvent("error", { error: "GEMINI_API_KEY is not configured. Add it to your .env file and restart the server.", errorCode: "AUTH_ERROR" });
+      res.end();
+      return;
     }
   } catch (err: any) {
     if (timeoutHandle) clearTimeout(timeoutHandle);

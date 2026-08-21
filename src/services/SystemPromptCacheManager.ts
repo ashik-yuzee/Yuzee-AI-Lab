@@ -27,6 +27,7 @@ export interface CacheStatus {
 export class SystemPromptCacheManager {
   private caches = new Map<string, CacheEntry>();
   private creating = new Set<string>();
+  private failed = new Set<string>(); // models that don't support caching on this tier
 
   /**
    * Returns the cachedContent name when ready, null otherwise.
@@ -59,7 +60,7 @@ export class SystemPromptCacheManager {
       }
     }
 
-    if (!this.creating.has(model)) {
+    if (!this.creating.has(model) && !this.failed.has(model)) {
       this._create(model, ai, systemInstruction, promptHash).catch(() => {});
     }
     return null;
@@ -94,8 +95,7 @@ export class SystemPromptCacheManager {
         console.log(`[CacheManager] Created cache ${cache.name} for ${model}`);
       }
     } catch (err) {
-      // Some models don't support explicit caching — log and continue with systemInstruction
-      console.warn(`[CacheManager] Cache create failed for ${model}: ${(err as Error).message}`);
+      this.failed.add(model); // don't retry — caching not supported on this tier/model
     } finally {
       this.creating.delete(model);
     }

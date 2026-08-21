@@ -205,7 +205,8 @@ export class YuzeeRequestAssembler {
     const numericBudget = numericBudgetMap[appliedLevel];
 
     return {
-      thinkingConfig: { thinkingBudget: numericBudget },
+      // omit thinkingConfig entirely when budget=0; sending {thinkingBudget:0} causes INVALID_ARGUMENT on some models
+      thinkingConfig: numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined,
       appliedThinkingLevel: appliedLevel,
       numericBudget,
     };
@@ -357,7 +358,6 @@ export class YuzeeRequestAssembler {
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
       responseMimeType: 'application/json',
-      responseJsonSchema: this.responseSchemaJson,
       maxOutputTokens,
       ...(thinkingConfig ? { thinkingConfig: thinkingConfig as any } : {}),
     };
