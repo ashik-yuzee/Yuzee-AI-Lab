@@ -95,6 +95,12 @@ export const ChatArea: React.FC = () => {
         detail: "The GEMINI_API_KEY is missing or invalid. Check your .env file and restart the server.",
         color: "bg-red-50 border-red-200 text-red-900",
       },
+      FUNCTION_TIMEOUT: {
+        icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />,
+        title: "Response timed out (free-tier limit)",
+        detail: "The free deployment limit is 10 seconds per request. Switch to Flash Lite for faster responses, or ask a shorter question.",
+        color: "bg-amber-50 border-amber-200 text-amber-900",
+      },
       PROVIDER_ERROR: {
         icon: <Wifi className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />,
         title: "Provider error",

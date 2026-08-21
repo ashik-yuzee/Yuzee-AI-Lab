@@ -972,6 +972,21 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     sendEvent("compaction", mem.compactionMetrics);
   }
 
+  // Vercel Hobby tier kills functions at 10s; fire a clean error event at 8.5s so the
+  // client sees an informative message rather than a silent connection drop.
+  let timeoutFired = false;
+  const VERCEL_SAFE_MS = process.env.VERCEL ? 8500 : 0;
+  const timeoutHandle = VERCEL_SAFE_MS
+    ? setTimeout(() => {
+        timeoutFired = true;
+        sendEvent("error", {
+          error: "Response is taking too long for the free-tier function limit (10 s). Try a shorter question or switch to Flash Lite.",
+          errorCode: "FUNCTION_TIMEOUT",
+        });
+        res.end();
+      }, VERCEL_SAFE_MS - (Date.now() - requestReceivedAt))
+    : null;
+
   const providerStartTime = Date.now();
   let firstProviderChunkTime: number | null = null;
   let providerEndTime: number | null = null;
@@ -989,6 +1004,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       });
 
       for await (const chunk of stream) {
+        if (timeoutFired) break;
         if (!firstProviderChunkTime) {
           firstProviderChunkTime = Date.now();
           // Emit TTFT status without exposing raw unparsed JSON
@@ -1022,6 +1038,8 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       providerEndTime = Date.now();
     }
   } catch (err: any) {
+    if (timeoutHandle) clearTimeout(timeoutHandle);
+    if (timeoutFired) return; // timeout already ended the response
     console.error("Gemini invocation error:", err);
     const msg: string = err?.message || err?.toString() || '';
     let errorCode: string;
@@ -1043,6 +1061,8 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     res.end();
     return;
   }
+  if (timeoutHandle) clearTimeout(timeoutHandle);
+  if (timeoutFired) return; // timeout fired during the stream; response already ended
 
   // 3. SERVER-SIDE 3-LAYER VALIDATION
   const validationStartTime = Date.now();
