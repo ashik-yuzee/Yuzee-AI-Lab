@@ -13,6 +13,7 @@ public class CompactionMetrics {
     private int estimatedNetSavingsPerTurn;
     private double estimatedBreakEvenTurns;
     private long timestamp;
+    private boolean simulated = true; // Lab compactor is always deterministic, never a real LLM call
 
     public CompactionMetrics() {}
 
@@ -51,4 +52,7 @@ public class CompactionMetrics {
 
     public long getTimestamp() { return timestamp; }
     public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
+    public boolean isSimulated() { return simulated; }
+    public void setSimulated(boolean simulated) { this.simulated = simulated; }
 }

@@ -149,7 +149,7 @@ public class GeminiChatService {
         String messageId = UUID.randomUUID().toString();
         long requestStartTime = System.currentTimeMillis();
 
-        int maxOutputTokens = resolveOutputBudget(responseMode);
+        int maxOutputTokens = resolveOutputBudget(responseMode, targetModel);
         int numericThinkingBudget = resolveNumericThinkingBudget(appliedThinking, targetModel);
 
         return Flux.create(sink -> {
@@ -244,15 +244,21 @@ public class GeminiChatService {
         return budget;
     }
 
-    /** Output budget per response mode matching Node implementation. */
-    public int resolveOutputBudget(ResponseMode mode) {
-        if (mode == null) return 2048;
+    /** Output budget per response mode. Flash Lite gets reduced caps to lower latency. */
+    public int resolveOutputBudget(ResponseMode mode, String model) {
+        if (mode == null) mode = ResponseMode.STANDARD;
+        boolean isFlashLite = model != null && model.contains("flash-lite");
         return switch (mode) {
-            case QUICK -> 1024;
-            case STANDARD -> 2048;
-            case EXPLAIN, EXPLORE, DECIDE -> 3072;
-            case DETAIL -> 4096;
+            case QUICK    -> isFlashLite ? 512  : 1024;
+            case STANDARD -> isFlashLite ? 1024 : 2048;
+            case EXPLAIN, EXPLORE, DECIDE -> isFlashLite ? 1536 : 3072;
+            case DETAIL   -> isFlashLite ? 2048 : 4096;
         };
+    }
+
+    /** @deprecated use resolveOutputBudget(mode, model) */
+    public int resolveOutputBudget(ResponseMode mode) {
+        return resolveOutputBudget(mode, null);
     }
 
     private void completeResponse(

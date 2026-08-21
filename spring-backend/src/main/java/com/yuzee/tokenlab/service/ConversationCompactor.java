@@ -2,6 +2,7 @@ package com.yuzee.tokenlab.service;
 
 import com.yuzee.tokenlab.model.CompactionMetrics;
 import com.yuzee.tokenlab.model.Message;
+import com.yuzee.tokenlab.model.MessageRole;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,24 +55,57 @@ public class ConversationCompactor {
         int sourceTokens = tokenCountService.estimateTokens(sourceText);
         metrics.setSourceTokens(sourceTokens);
 
-        // Generate compact structured summary
+        // Build semantic structured summary — extracts career signals from user messages
         StringBuilder newSummary = new StringBuilder();
         if (previousSummary != null && !previousSummary.isBlank()) {
             newSummary.append(previousSummary.trim()).append("\n");
         }
 
-        // Add incremental bullet facts
-        newSummary.append("- Discussed ").append(evictedMessages.size()).append(" turns: ");
-        int count = 0;
+        // Walk user messages and extract career-relevant content
+        String detectedGoal = null;
+        String detectedBackground = null;
+        String detectedDecision = null;
+        int userTurns = 0;
+        int assistantTurns = 0;
+
         for (Message msg : evictedMessages) {
-            String snippet = cleanMessageContent(msg.getContent());
-            if (snippet.length() > 60) snippet = snippet.substring(0, 57) + "...";
-            if (count++ > 0) newSummary.append(" | ");
-            newSummary.append(snippet);
+            String cleaned = cleanMessageContent(msg.getContent());
+            if (cleaned.isBlank()) continue;
+            if (msg.getRole() == MessageRole.USER) {
+                userTurns++;
+                String lower = cleaned.toLowerCase();
+                if (detectedGoal == null && (lower.contains("want to") || lower.contains("goal") || lower.contains("transition") || lower.contains("become") || lower.contains("career into") || lower.contains("break into"))) {
+                    detectedGoal = cleaned.length() > 120 ? cleaned.substring(0, 117) + "..." : cleaned;
+                } else if (detectedBackground == null && (lower.contains("experience") || lower.contains("years") || lower.contains("certified") || lower.contains("background") || lower.contains("degree") || lower.contains("currently"))) {
+                    detectedBackground = cleaned.length() > 120 ? cleaned.substring(0, 117) + "..." : cleaned;
+                } else if (detectedDecision == null && (lower.contains("will ") || lower.contains("decided") || lower.contains("choosing") || lower.contains("going to") || lower.contains("i'll"))) {
+                    detectedDecision = cleaned.length() > 120 ? cleaned.substring(0, 117) + "..." : cleaned;
+                }
+            } else {
+                assistantTurns++;
+                // Extract goal_summary from JSON assistant responses when available
+                if (detectedGoal == null && cleaned.contains("\"goal_summary\"")) {
+                    int start = cleaned.indexOf("\"goal_summary\"") + 16;
+                    if (start < cleaned.length()) {
+                        int end = cleaned.indexOf("\"", start);
+                        if (end > start) {
+                            detectedGoal = cleaned.substring(start, Math.min(end, start + 120));
+                        }
+                    }
+                }
+            }
         }
 
-        String finalSummaryStr = newSummary.toString();
+        if (detectedGoal != null)       newSummary.append("- Goal: ").append(detectedGoal).append("\n");
+        if (detectedBackground != null) newSummary.append("- Background: ").append(detectedBackground).append("\n");
+        if (detectedDecision != null)   newSummary.append("- Decision: ").append(detectedDecision).append("\n");
+        if (detectedGoal == null && detectedBackground == null && detectedDecision == null) {
+            newSummary.append("- Covered ").append(userTurns).append(" user turns / ").append(assistantTurns).append(" assistant turns on career pathway.\n");
+        }
+
+        String finalSummaryStr = newSummary.toString().trim();
         int summaryTokens = tokenCountService.estimateTokens(finalSummaryStr);
+        metrics.setSummaryText(finalSummaryStr);
         metrics.setSummaryTokens(summaryTokens);
 
         int tokensRemoved = Math.max(0, sourceTokens - summaryTokens);

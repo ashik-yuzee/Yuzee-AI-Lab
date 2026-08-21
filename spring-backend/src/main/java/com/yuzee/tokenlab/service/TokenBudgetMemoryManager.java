@@ -204,7 +204,7 @@ public class TokenBudgetMemoryManager {
                         "Adaptive compact of " + evictedMessages.size() + " messages"
                     );
                     result.setCompactionMetrics(compaction);
-                    result.setSummaryText(summary != null && !summary.isBlank() ? summary : "Active Pathway State: Goal and constraints retained.");
+                    result.setSummaryText(summary != null && !summary.isBlank() ? summary : "");
                     result.setRemovedTokens(compaction.getTokensRemoved());
                 } else {
                     result.setSummaryText(summary);

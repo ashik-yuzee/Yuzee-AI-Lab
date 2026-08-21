@@ -9,11 +9,14 @@ import { YuzeeRequestAssembler } from "./src/services/YuzeeRequestAssembler";
 import {
   TokenBudgetMemoryManager,
   estimateTokens,
+  groupIntoTurns,
   getTokenCacheKey,
   getCachedTokenCount,
   setExactCachedTokenCount,
   setEstimatedCachedTokenCount,
+  DialogueTurn,
 } from "./src/services/TokenBudgetMemoryManager";
+import { SystemPromptCacheManager } from "./src/services/SystemPromptCacheManager";
 import {
   validateProtocolV13,
   validateUserEventAgainstActiveInteraction,
@@ -33,6 +36,43 @@ app.use(express.json());
 // Initialize Authoritative Request Assembler & Memory Manager
 const requestAssembler = YuzeeRequestAssembler.getInstance();
 const memoryManager = new TokenBudgetMemoryManager();
+const cacheManager = new SystemPromptCacheManager();
+
+/**
+ * Real LLM summarizer using gemini-3.5-flash-lite.
+ * Runs async post-response — zero latency impact on current turn.
+ * Returns compact structured bullets of the evicted career counseling turns.
+ */
+async function summarizeEvictedTurns(
+  evictedTurns: DialogueTurn[],
+  previousSummary: string,
+  ai: GoogleGenAI
+): Promise<string> {
+  const evictedText = evictedTurns
+    .map(t => `User: ${t.userMessage.content}\nAssistant: ${t.assistantMessage?.content || ''}`)
+    .join('\n---\n');
+
+  const parts: string[] = [];
+  if (previousSummary) parts.push(`Existing summary:\n${previousSummary}\n`);
+  parts.push(`Compress these career counseling turns into structured bullets (max 120 tokens).\nOnly include facts that are explicitly stated:\n\n${evictedText}\n\n- Goal: [career target/role]\n- Background: [experience, certs, skills]\n- Constraints: [budget, time, location]\n- Decisions: [committed choices]\n- Open: [unanswered questions, hesitations]\nOmit any field with no clear evidence. Plain bullets only.`);
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-3.5-flash-lite',
+    contents: parts.join('\n'),
+    config: { maxOutputTokens: 200, thinkingConfig: { thinkingBudget: 0 } },
+  });
+
+  const text = (response.text || '').trim();
+
+  if (response.usageMetadata) {
+    sessionStats.compactionCalls++;
+    sessionStats.compactionInputTokens += response.usageMetadata.promptTokenCount || 0;
+    sessionStats.compactionOutputTokens += response.usageMetadata.candidatesTokenCount || 0;
+    sessionStats.compactionTotalTokens += response.usageMetadata.totalTokenCount || 0;
+  }
+
+  return text;
+}
 
 // Lazy-initialized Gemini client
 let geminiClient: GoogleGenAI | null = null;
@@ -760,13 +800,13 @@ app.post("/api/benchmark", async (req, res) => {
         thinkingTokens: null,
         cachedTokens: null,
         totalTokens: totalInput + estimatedOutput,
-        latencyMs: 700 + Math.round(dynTokens * 0.15),
+        latencyMs: null,
         ttftMs: null,
         generationMs: null,
         compactionCost: mem.compactionMetrics ? mem.compactionMetrics.compactionTotalCost : 0,
         responsePreview: "Modelled structured response adhering to Response Protocol v1.3 envelope.",
         retainedContextTokens: dynTokens,
-        schemaValid: true,
+        schemaValid: null,
         sources: {
           inputTokens: "estimate",
           outputTokens: "estimate",
@@ -866,6 +906,11 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   const mem = memoryManager.assembleMemory(historicalMessages, budget, recentTurns, strategy, conv.summary);
   const memoryAssemblyMs = Date.now() - memoryAssemblyStart;
 
+  // Capture evicted turns now (before pushing current turn) for post-response summarization
+  const allDialogueTurns = groupIntoTurns(historicalMessages);
+  const keptTurnIds = new Set(mem.keptTurns.map(t => t.id));
+  const evictedDialogueTurns = allDialogueTurns.filter(t => !keptTurnIds.has(t.id));
+
   if (mem.compactionMetrics) {
     conv.compactionHistory.push(mem.compactionMetrics);
     if (!mem.compactionMetrics.isSimulated) {
@@ -892,6 +937,16 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     systemPromptMode: req.body.systemPromptMode || conv.systemPromptMode,
   });
   const requestAssemblyMs = Date.now() - requestAssemblyStart;
+
+  // Explicit context cache for system prompt — returns null while cache is being created (first ~1 request per model).
+  // When active: systemInstruction tokens are served from cache at ~75% lower cost.
+  const aiInstance = getGemini();
+  const cacheName = aiInstance
+    ? await cacheManager.getCacheForModel(modelId, aiInstance, assembledReq.systemInstruction, requestAssembler.getPromptHash())
+    : null;
+  const geminiConfig = cacheName
+    ? { ...assembledReq.geminiConfig, systemInstruction: undefined, cachedContent: cacheName }
+    : assembledReq.geminiConfig;
 
   // Setup SSE Headers
   res.setHeader("Content-Type", "text/event-stream");
@@ -925,14 +980,12 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   let isMockResponse = false;
 
   try {
-    const ai = getGemini();
-
-    if (ai) {
-      // Real Gemini API Invocation with Provider-Enforced Response Schema
-      const stream = await ai.models.generateContentStream({
+    if (aiInstance) {
+      // Real Gemini API Invocation — uses explicit cache when available, systemInstruction otherwise
+      const stream = await aiInstance.models.generateContentStream({
         model: assembledReq.model,
         contents: assembledReq.contents,
-        config: assembledReq.geminiConfig,
+        config: geminiConfig,
       });
 
       for await (const chunk of stream) {
@@ -1098,6 +1151,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       appliedThinkingLevel: assembledReq.appliedThinkingLevel,
       numericThinkingBudget: assembledReq.numericThinkingBudget,
       maxOutputTokens: assembledReq.maxOutputTokens,
+      explicitCache: cacheManager.getStatus(modelId),
     },
   };
 
@@ -1171,6 +1225,19 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
 
   sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
   res.end();
+
+  // Async post-response: real LLM summarization of evicted turns (zero latency impact).
+  // Updates conv.summary for the next turn; uses cheapest model.
+  if (aiInstance && !isMockResponse && evictedDialogueTurns.length > 0) {
+    summarizeEvictedTurns(evictedDialogueTurns, conv.summary, aiInstance)
+      .then(s => {
+        if (s) {
+          conv.summary = s;
+          conv.summaryVersion = (conv.summaryVersion || 0) + 1;
+        }
+      })
+      .catch(() => {});
+  }
 });
 
 function generateOfflineProtocolV13(prompt: string, career: Record<string, string | undefined>): YuzeeResponseV13 {

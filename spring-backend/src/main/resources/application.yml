@@ -27,6 +27,8 @@ yuzee:
     allowed-models:
       - gemini-3.6-flash
       - gemini-3.5-flash
+      - gemini-3.5-flash-lite
+      - gemini-3.1-flash-lite
     default-strategy: ADAPTIVE_HYBRID
     default-context-budget: 2000
     default-recent-turns: 4

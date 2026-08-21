@@ -122,24 +122,19 @@ export class YuzeeRequestAssembler {
   }
 
   /**
-   * Deterministic output budgets per response mode
+   * Deterministic output budgets per response mode.
+   * Flash Lite gets reduced caps: smaller model produces shorter responses, lower caps cut latency.
    */
-  public resolveOutputBudget(mode: string = 'standard'): number {
+  public resolveOutputBudget(mode: string = 'standard', model: string = ''): number {
+    const isFlashLite = model.includes('flash-lite');
     switch (mode.toLowerCase()) {
-      case 'quick':
-        return 1024;
-      case 'standard':
-        return 2048;
+      case 'quick':   return isFlashLite ? 512  : 1024;
+      case 'standard': return isFlashLite ? 1024 : 2048;
       case 'explain':
-        return 3072;
       case 'explore':
-        return 3072;
-      case 'decide':
-        return 3072;
-      case 'detail':
-        return 4096;
-      default:
-        return 2048;
+      case 'decide':  return isFlashLite ? 1536 : 3072;
+      case 'detail':  return isFlashLite ? 2048 : 4096;
+      default:        return isFlashLite ? 1024 : 2048;
     }
   }
 
@@ -360,7 +355,7 @@ export class YuzeeRequestAssembler {
     // 5. Config resolution
     const model = params.model || 'gemini-3.6-flash';
     const responseMode = params.responseMode || 'standard';
-    const maxOutputTokens = this.resolveOutputBudget(responseMode);
+    const maxOutputTokens = this.resolveOutputBudget(responseMode, model);
     const { thinkingConfig, appliedThinkingLevel, numericBudget } = this.resolveThinkingConfig(
       model,
       params.thinkingLevel || 'adaptive',
