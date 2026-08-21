@@ -15,6 +15,10 @@ import {
   ArrowRight,
   TrendingDown,
   Info,
+  AlertTriangle,
+  Clock,
+  ShieldAlert,
+  Wifi,
 } from "lucide-react";
 
 export const ChatArea: React.FC = () => {
@@ -70,6 +74,45 @@ export const ChatArea: React.FC = () => {
   };
 
   const messages = currentConversation?.messages || [];
+
+  const errorDisplay = (errorCode?: string, errorMsg?: string) => {
+    const configs: Record<string, { icon: React.ReactNode; title: string; detail: string; color: string }> = {
+      RATE_LIMIT: {
+        icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />,
+        title: "Rate limit reached",
+        detail: "Gemini is receiving too many requests. Wait a few seconds and try again.",
+        color: "bg-amber-50 border-amber-200 text-amber-900",
+      },
+      QUOTA_EXHAUSTED: {
+        icon: <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />,
+        title: "API quota exhausted",
+        detail: "The daily Gemini API quota has been used up. The lab will resume when the quota resets (typically at midnight Pacific time).",
+        color: "bg-red-50 border-red-200 text-red-900",
+      },
+      AUTH_ERROR: {
+        icon: <ShieldAlert className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />,
+        title: "API key error",
+        detail: "The GEMINI_API_KEY is missing or invalid. Check your .env file and restart the server.",
+        color: "bg-red-50 border-red-200 text-red-900",
+      },
+      PROVIDER_ERROR: {
+        icon: <Wifi className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />,
+        title: "Provider error",
+        detail: errorMsg || "Gemini returned an error. Please try again.",
+        color: "bg-slate-50 border-slate-200 text-slate-800",
+      },
+    };
+    const cfg = configs[errorCode || 'PROVIDER_ERROR'] || configs['PROVIDER_ERROR'];
+    return (
+      <div className={`flex items-start gap-2.5 p-3 border rounded-lg text-sm ${cfg.color}`}>
+        {cfg.icon}
+        <div>
+          <p className="font-semibold text-[13px]">{cfg.title}</p>
+          <p className="text-xs mt-0.5 opacity-80">{cfg.detail}</p>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div id="chat-viewport" className="flex-1 flex flex-col h-full bg-slate-50/50 overflow-hidden relative">
@@ -174,10 +217,15 @@ export const ChatArea: React.FC = () => {
                               conversationId={currentConversation?.id}
                             />
                           ) : (
-                            <div className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-headings:text-slate-900 prose-p:text-slate-800 prose-li:text-slate-800">
-                              <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
-                            </div>
+                            !msg.error && (
+                              <div className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-headings:text-slate-900 prose-p:text-slate-800 prose-li:text-slate-800">
+                                <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
+                              </div>
+                            )
                           )}
+
+                          {/* Error Banner */}
+                          {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error)}
 
                           {/* Streaming Indicator */}
                           {msg.isStreaming && (

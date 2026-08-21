@@ -233,6 +233,7 @@ export interface ChatMessage {
   createdAt: number;
   isStreaming?: boolean;
   error?: string;
+  errorCode?: string;
 }
 
 export interface Conversation {

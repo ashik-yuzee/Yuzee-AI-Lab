@@ -1023,7 +1023,23 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     }
   } catch (err: any) {
     console.error("Gemini invocation error:", err);
-    sendEvent("error", { error: err?.message || "Failed to generate AI response" });
+    const msg: string = err?.message || err?.toString() || '';
+    let errorCode: string;
+    let userMsg: string;
+    if (err?.status === 429 || /RESOURCE_EXHAUSTED|rate.limit|too many requests/i.test(msg)) {
+      errorCode = 'RATE_LIMIT';
+      userMsg = 'Gemini rate limit reached. Please wait a moment and try again.';
+    } else if (/quota.*exceed|exceed.*quota|quota.*exhausted|daily.*limit|monthly.*limit/i.test(msg)) {
+      errorCode = 'QUOTA_EXHAUSTED';
+      userMsg = 'Gemini API quota exhausted. The lab will resume when the quota resets (usually next day).';
+    } else if (/API_KEY_INVALID|PERMISSION_DENIED|invalid.api.key|unauthenticated/i.test(msg)) {
+      errorCode = 'AUTH_ERROR';
+      userMsg = 'Gemini API key issue. Check that GEMINI_API_KEY is set and valid.';
+    } else {
+      errorCode = 'PROVIDER_ERROR';
+      userMsg = 'Gemini returned an error. Please try again.';
+    }
+    sendEvent("error", { error: userMsg, errorCode });
     res.end();
     return;
   }

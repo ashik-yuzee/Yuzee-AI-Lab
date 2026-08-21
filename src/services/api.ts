@@ -228,7 +228,11 @@ export function streamChatMessage(
                 else if (currentEvent === "usage" && callbacks.onUsage) callbacks.onUsage(data);
                 else if (currentEvent === "compaction" && callbacks.onCompaction) callbacks.onCompaction(data);
                 else if (currentEvent === "done") triggerDone();
-                else if (currentEvent === "error" && callbacks.onError) callbacks.onError(new Error(data.error || "Streaming error"));
+                else if (currentEvent === "error" && callbacks.onError) {
+                  const e: any = new Error(data.error || "Streaming error");
+                  if (data.errorCode) e.errorCode = data.errorCode;
+                  callbacks.onError(e);
+                }
               } catch (e) {
                 // If text is direct string
                 if (currentEvent === "delta" && callbacks.onDelta) {

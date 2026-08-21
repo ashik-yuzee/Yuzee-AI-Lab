@@ -505,8 +505,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             if (last && last.role === "assistant") {
               msgs[msgs.length - 1] = {
                 ...last,
-                content: accumulatedContent || "Sorry, an error occurred while streaming response.",
+                content: accumulatedContent || "",
                 error: err.message,
+                errorCode: (err as any).errorCode,
                 isStreaming: false,
               };
             }
