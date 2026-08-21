@@ -85,8 +85,8 @@ export const ChatArea: React.FC = () => {
       },
       QUOTA_EXHAUSTED: {
         icon: <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />,
-        title: "API quota exhausted",
-        detail: "The daily Gemini API quota has been used up. The lab will resume when the quota resets (typically at midnight Pacific time).",
+        title: "Daily quota reached",
+        detail: "The free-tier Gemini quota for today has been used up. The lab will automatically resume when the quota resets at midnight Pacific time. No action needed.",
         color: "bg-red-50 border-red-200 text-red-900",
       },
       AUTH_ERROR: {

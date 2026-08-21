@@ -1035,18 +1035,19 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     const msg: string = err?.message || err?.toString() || '';
     let errorCode: string;
     let userMsg: string;
-    if (err?.status === 429 || /RESOURCE_EXHAUSTED|rate.limit|too many requests/i.test(msg)) {
-      errorCode = 'RATE_LIMIT';
-      userMsg = 'Gemini rate limit reached. Please wait a moment and try again.';
-    } else if (/quota.*exceed|exceed.*quota|quota.*exhausted|daily.*limit|monthly.*limit/i.test(msg)) {
-      errorCode = 'QUOTA_EXHAUSTED';
-      userMsg = 'Gemini API quota exhausted. The lab will resume when the quota resets (usually next day).';
-    } else if (/API_KEY_INVALID|PERMISSION_DENIED|invalid.api.key|unauthenticated/i.test(msg)) {
+    if (/API_KEY_INVALID|PERMISSION_DENIED|invalid.api.key|unauthenticated/i.test(msg)) {
       errorCode = 'AUTH_ERROR';
       userMsg = 'Gemini API key issue. Check that GEMINI_API_KEY is set and valid.';
+    } else if (/per.day|daily.*quota|quota.*day|requests_per_day|tokens_per_day|FreeTier.*limit.*exceed|limit.*exceed.*FreeTier/i.test(msg)) {
+      // Daily/monthly quota exhausted — check quota before generic RESOURCE_EXHAUSTED
+      errorCode = 'QUOTA_EXHAUSTED';
+      userMsg = 'Gemini free-tier daily quota has been used up. The lab will resume when the quota resets (midnight Pacific time).';
+    } else if (err?.status === 429 || /RESOURCE_EXHAUSTED|rate.limit|too many requests/i.test(msg)) {
+      errorCode = 'RATE_LIMIT';
+      userMsg = 'Gemini rate limit reached. Wait a few seconds and try again.';
     } else {
       errorCode = 'PROVIDER_ERROR';
-      userMsg = msg ? `Gemini error: ${msg.slice(0, 200)}` : 'Gemini returned an error. Please try again.';
+      userMsg = 'Gemini returned an error. Please try again.';
     }
     sendEvent("error", { error: userMsg, errorCode });
     res.end();
