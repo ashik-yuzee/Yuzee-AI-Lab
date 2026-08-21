@@ -1055,7 +1055,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       userMsg = 'Gemini API key issue. Check that GEMINI_API_KEY is set and valid.';
     } else {
       errorCode = 'PROVIDER_ERROR';
-      userMsg = 'Gemini returned an error. Please try again.';
+      userMsg = msg ? `Gemini error: ${msg.slice(0, 200)}` : 'Gemini returned an error. Please try again.';
     }
     sendEvent("error", { error: userMsg, errorCode });
     res.end();
