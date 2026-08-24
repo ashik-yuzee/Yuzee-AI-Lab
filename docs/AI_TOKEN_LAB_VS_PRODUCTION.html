@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yuzee AI Token Lab vs Production</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --navy: #0c2d6b;
+    --sky: #0ea5e9;
+    --sky-light: #e0f2fe;
+    --emerald: #059669;
+    --emerald-light: #d1fae5;
+    --amber: #d97706;
+    --amber-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --slate: #475569;
+    --slate-light: #f1f5f9;
+    --code-bg: #f1f5f9;
+    --heading-border: #0ea5e9;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --border: #334155;
+      --text: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --navy: #bfdbfe;
+      --sky: #38bdf8;
+      --sky-light: #0c2a3d;
+      --emerald: #34d399;
+      --emerald-light: #064e3b;
+      --amber: #fbbf24;
+      --amber-light: #451a03;
+      --red: #f87171;
+      --red-light: #450a0a;
+      --slate: #94a3b8;
+      --slate-light: #1e293b;
+      --code-bg: #0f172a;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --border: #334155;
+    --text: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --navy: #bfdbfe;
+    --sky: #38bdf8;
+    --sky-light: #0c2a3d;
+    --emerald: #34d399;
+    --emerald-light: #064e3b;
+    --amber: #fbbf24;
+    --amber-light: #451a03;
+    --red: #f87171;
+    --red-light: #450a0a;
+    --slate: #94a3b8;
+    --slate-light: #1e293b;
+    --code-bg: #0f172a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text);
+    background: var(--bg);
+    padding: 0;
+  }
+
+  .page-wrapper {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 48px 48px 40px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0ea5e9 0%, #6366f1 50%, #059669 100%);
+  }
+  .cover-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sky);
+    margin-bottom: 12px;
+  }
+  .cover h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .cover-subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    max-width: 600px;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+    margin-top: 4px;
+  }
+  .cover-meta-item {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .cover-meta-item strong {
+    display: block;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  /* ── TOC ── */
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 40px;
+  }
+  .toc h2 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .toc ol {
+    padding-left: 18px;
+    columns: 2;
+    column-gap: 32px;
+  }
+  .toc li {
+    font-size: 13px;
+    color: var(--sky);
+    margin-bottom: 4px;
+    break-inside: avoid;
+  }
+  .toc a {
+    color: var(--sky);
+    text-decoration: none;
+  }
+  .toc a:hover { text-decoration: underline; }
+
+  /* ── Section ── */
+  .section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px 36px;
+    margin-bottom: 24px;
+  }
+
+  h2.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    border-left: 4px solid var(--sky);
+    padding-left: 14px;
+    margin-bottom: 20px;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    margin-top: 24px;
+    margin-bottom: 10px;
+  }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 20px;
+    margin-bottom: 8px;
+  }
+
+  p { margin-bottom: 12px; color: var(--text); }
+
+  ul, ol { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; color: var(--text); }
+
+  strong { font-weight: 600; }
+
+  /* ── Tables ── */
+  .table-wrap { overflow-x: auto; margin-bottom: 16px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    background: var(--slate-light);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--slate-light); }
+
+  /* ── Callouts ── */
+  .callout {
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+  .callout-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+  .callout.danger { background: var(--red-light); border: 1px solid var(--red); }
+  .callout.danger p { color: var(--red); }
+  .callout.warning { background: var(--amber-light); border: 1px solid var(--amber); }
+  .callout.warning p { color: var(--amber); }
+  .callout.success { background: var(--emerald-light); border: 1px solid var(--emerald); }
+  .callout.success p { color: var(--emerald); }
+  .callout.info { background: var(--sky-light); border: 1px solid var(--sky); }
+  .callout.info p { color: var(--sky); }
+  .callout p { margin: 0; font-weight: 500; }
+
+  /* ── Code ── */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 1px 5px;
+    border-radius: 4px;
+    color: var(--sky);
+  }
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .badge-red { background: var(--red-light); color: var(--red); }
+  .badge-amber { background: var(--amber-light); color: var(--amber); }
+  .badge-emerald { background: var(--emerald-light); color: var(--emerald); }
+  .badge-sky { background: var(--sky-light); color: var(--sky); }
+
+  /* ── Diff comparison ── */
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+  .diff-col {
+    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--border);
+  }
+  .diff-col.before {
+    background: var(--red-light);
+    border-color: var(--red);
+  }
+  .diff-col.after {
+    background: var(--emerald-light);
+    border-color: var(--emerald);
+  }
+  .diff-col-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .before .diff-col-label { color: var(--red); }
+  .after .diff-col-label { color: var(--emerald); }
+  .diff-col p, .diff-col li { font-size: 13px; }
+  .diff-col.before p, .diff-col.before li { color: var(--red); }
+  .diff-col.after p, .diff-col.after li { color: var(--emerald); }
+
+  /* ── Step list ── */
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 26px;
+    height: 26px;
+    background: var(--sky);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .steps li div { flex: 1; }
+  .steps li strong { display: block; font-size: 14px; margin-bottom: 2px; }
+  .steps li p { font-size: 13px; color: var(--text-secondary); margin: 0; }
+
+  /* ── Growth table highlight ── */
+  .highlight-cell { font-weight: 700; color: var(--red); }
+  .ok-cell { color: var(--emerald); font-weight: 600; }
+
+  /* ── Divider ── */
+  hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+
+  /* ── Footer ── */
+  .doc-footer {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  @media (max-width: 640px) {
+    .page-wrapper { padding: 16px 12px 60px; }
+    .cover { padding: 28px 20px 24px; }
+    .section { padding: 20px 16px; }
+    .toc ol { columns: 1; }
+    .diff-grid { grid-template-columns: 1fr; }
+    .cover h1 { font-size: 22px; }
+  }
+
+  @media print {
+    body { background: white; }
+    .section, .cover, .toc { page-break-inside: avoid; }
+    .page-wrapper { max-width: 100%; padding: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <!-- ══ COVER ══ -->
+  <div class="cover">
+    <div class="cover-eyebrow">Yuzee Engineering · Internal Technical Document</div>
+    <h1>AI Token Lab vs Production<br>Defect Analysis &amp; Migration Guide</h1>
+    <p class="cover-subtitle">A complete comparison of the production Spring AI adapter and the Yuzee AI Token Lab — documenting every identified defect, how the lab solves it, and the prioritised implementation plan for production.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item"><strong>Date</strong>2026-08-24</div>
+      <div class="cover-meta-item"><strong>Sources</strong>YUZEE_SPRING_CONVERSATION_TOKEN_DEFECT.pdf · YUZEE_AI_LATENCY_FORENSIC_AUDIT.pdf · live source code</div>
+      <div class="cover-meta-item"><strong>Scope</strong>gemini-adapter@develop (Spring Boot 3.5.0, Spring AI 1.0.0 GA) · Token Lab (Node.js, @google/genai SDK)</div>
+      <div class="cover-meta-item"><strong>Author</strong>Ashik Yuzee · Yuzee Engineering</div>
+      <div class="cover-meta-item"><strong>Status</strong>Design Document · Nothing deployed</div>
+    </div>
+  </div>
+
+  <!-- ══ TOC ══ -->
+  <div class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#s1">Executive Summary</a></li>
+      <li><a href="#s2">System Overview</a></li>
+      <li><a href="#s3">Architecture Comparison</a></li>
+      <li><a href="#s4">Defect D1 — Quadratic Token Growth</a></li>
+      <li><a href="#s5">Defect D2 — Memory Bounded by Message Count</a></li>
+      <li><a href="#s6">Defect D3 — Front-First Eviction Destroys Cache</a></li>
+      <li><a href="#s7">Defect D4 — Zero Telemetry (The Meta-Cause)</a></li>
+      <li><a href="#s8">Defect D5 — Request Amplification (Leading Latency Cause)</a></li>
+      <li><a href="#s9">Defect D6 — Buffered Response (stream=false)</a></li>
+      <li><a href="#s10">Defect D7 — Shared Default Conversation</a></li>
+      <li><a href="#s11">Secondary Issues</a></li>
+      <li><a href="#s12">How the Token Lab Solves Each Problem</a></li>
+      <li><a href="#s13">Token Growth Model &amp; Savings</a></li>
+      <li><a href="#s14">Recommended Production Implementation Plan</a></li>
+      <li><a href="#s15">What NOT to Copy from the Lab</a></li>
+      <li><a href="#s16">Evidence Index</a></li>
+    </ol>
+  </div>
+
+  <!-- ══ S1: EXECUTIVE SUMMARY ══ -->
+  <div class="section" id="s1">
+    <h2 class="section-title">1. Executive Summary</h2>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p>Production token cost grows <strong>quadratically per conversation</strong> — not linearly. At a 63,000-token instruction, every turn from the 4th onward is billed at Gemini's premium rate, and the conversation hard-fails at turn 17. This is not a theoretical risk — it is the most likely explanation for reported "chat stops working on long sessions" support tickets.</p>
+    </div>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p>The leading latency cause (the ~10 s users wait) is <strong>request amplification</strong>: up to 4 sequential model calls per user message, each carrying the full (and growing) conversation memory. This compounds the token problem directly into perceived latency.</p>
+    </div>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p>A shared <code>"default"</code> conversation ID on one code path (<code>GeminiClient.java:253</code>) means one student's history can surface in another student's context. This is a <strong>privacy and correctness defect</strong> independent of all cost issues.</p>
+    </div>
+
+    <p>The Yuzee AI Token Lab was built to validate and demonstrate the correct architecture for all of these problems. It implements: a token-budget context assembler with stable prefix ordering, true SSE streaming, per-turn telemetry, greeting bypass (zero tokens for greetings), per-IP rate limiting, and per-bubble model/latency/token display.</p>
+
+    <p><strong>The single most important implementation action is Fix A: deliver the counselling instruction via the system channel, not the user channel.</strong> This is a 4-line change that removes the quadratic term entirely and unlocks prefix caching — delivering an estimated 5–22× cost reduction depending on instruction size.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Defect</th>
+            <th>Dimension affected</th>
+            <th>Severity</th>
+            <th>Fix complexity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>D1</td>
+            <td>Instruction as <code>.user()</code> → quadratic token accumulation</td>
+            <td>Cost, tokens, TTFT</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>4 lines</td>
+          </tr>
+          <tr>
+            <td>D2</td>
+            <td>Memory bounded by message count, not tokens</td>
+            <td>Cost, reliability</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td>D3</td>
+            <td>Front-first eviction destroys cacheable prefix</td>
+            <td>Cost, caching</td>
+            <td><span class="badge badge-amber">High</span></td>
+            <td>Depends on D1+D2</td>
+          </tr>
+          <tr>
+            <td>D4</td>
+            <td>Zero telemetry — all of the above is invisible</td>
+            <td>Observability, all</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>D5</td>
+            <td>Up to 4 sequential model calls per turn</td>
+            <td>Latency, cost (×4)</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>Medium-High</td>
+          </tr>
+          <tr>
+            <td>D6</td>
+            <td><code>stream=false</code> — user sees nothing until full response</td>
+            <td>Perceived latency</td>
+            <td><span class="badge badge-amber">High</span></td>
+            <td>Low</td>
+          </tr>
+          <tr>
+            <td>D7</td>
+            <td>Shared <code>"default"</code> conversation on one path</td>
+            <td>Privacy, correctness</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>Very low (1 line)</td>
+          </tr>
+          <tr>
+            <td>D8</td>
+            <td>DB write amplification (delete + reinsert full history each turn)</td>
+            <td>DB load, latency</td>
+            <td><span class="badge badge-amber">High</span></td>
+            <td>Medium</td>
+          </tr>
+          <tr>
+            <td>D9</td>
+            <td>Unresolved model identity (may be gemini-2.5-pro, not flash-lite)</td>
+            <td>Latency, cost</td>
+            <td><span class="badge badge-red">Critical</span></td>
+            <td>Verify only</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ S2: SYSTEM OVERVIEW ══ -->
+  <div class="section" id="s2">
+    <h2 class="section-title">2. System Overview</h2>
+
+    <h3>Production — Spring AI Adapter</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Value</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Framework</td><td>Spring Boot 3.5.0, Spring AI 1.0.0 GA</td><td></td></tr>
+          <tr><td>Provider</td><td>Vertex AI Gemini (service-account auth)</td><td></td></tr>
+          <tr><td>Model (last verified)</td><td><code>gemini-2.5-pro</code> (disputed — may have changed)</td><td>application.properties:72 — read from non-standard key <code>vertex.ai.gemini.chat.options.model</code></td></tr>
+          <tr><td>Memory</td><td>MessageWindowChatMemory, maxMessages(100) + JdbcChatMemoryRepository (RDS)</td><td>Bounded by message count, not tokens</td></tr>
+          <tr><td>Streaming</td><td>Flux&lt;ChatResponse&gt; SSE endpoint exists, but client calls with <code>stream=false</code></td><td>Main path is effectively buffered</td></tr>
+          <tr><td>Prompt source</td><td>MongoDB <code>gemini.prompts</code> (unversioned)</td><td>Fetched per request, no application cache</td></tr>
+          <tr><td>Instruction delivery</td><td><code>.user(instructionText)</code></td><td>ROOT CAUSE of quadratic growth</td></tr>
+          <tr><td>Token telemetry</td><td>None — getUsage() never called</td><td>Meta-cause: all defects invisible</td></tr>
+          <tr><td>Thinking config</td><td>None set (provider default applies)</td><td>On gemini-2.5-pro, this means unbounded thinking tokens</td></tr>
+          <tr><td>Structured output</td><td>Free text only (no Protocol v1.3)</td><td></td></tr>
+          <tr><td>Internal model calls</td><td>1–4 sequential per user message</td><td>MINI_PATHWAY, nextPrompt, title generation — each carries full memory</td></tr>
+          <tr><td>Auth</td><td>Keycloak (token refresh &lt;600 s)</td><td></td></tr>
+          <tr><td>Gateway</td><td>Zuul (zuul-server:8900) — 1 extra hop</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Yuzee AI Token Lab</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Value</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Runtime</td><td>Node.js + Express + TypeScript</td><td></td></tr>
+          <tr><td>Frontend</td><td>React 19 + Vite 6 + Tailwind CSS</td><td></td></tr>
+          <tr><td>Provider</td><td>Gemini Developer API + API key</td><td>Free tier compatible</td></tr>
+          <tr><td>Default model</td><td>gemini-3.5-flash-lite</td><td>Switchable per conversation mid-chat</td></tr>
+          <tr><td>Memory</td><td>Token-budget context assembler (default 2,000 tokens)</td><td>Bounded by tokens, not message count</td></tr>
+          <tr><td>Streaming</td><td>True SSE (generateContentStream)</td><td>User sees first token almost immediately</td></tr>
+          <tr><td>Instruction delivery</td><td>Stable system instruction (byte-identical per turn)</td><td>Cache-eligible; one copy ever in context</td></tr>
+          <tr><td>Context assembly order</td><td>system → career context → summary → recent(4) → current message</td><td>Stable prefix always first</td></tr>
+          <tr><td>Token telemetry</td><td>inputTokens, outputTokens, thinkingTokens, cachedTokens, latencyMs per turn</td><td>Displayed per bubble in the UI</td></tr>
+          <tr><td>Greeting bypass</td><td>classifyUserMessage() detects greeting/farewell → hardcoded Protocol v1.3 response, 0 Gemini tokens</td><td></td></tr>
+          <tr><td>Rate limiting</td><td>Per-IP sliding window: 20 RPM (chat), 30 RPM (token count), 10 RPM (benchmark)</td><td>No external dependency</td></tr>
+          <tr><td>Structured output</td><td>Protocol v1.3 JSON validated with Ajv (20,694-byte schema)</td><td></td></tr>
+          <tr><td>Optimization modes</td><td>AUTO (balanced), SAVE_TOKENS (aggressive, 1,000 token budget), FULL_CONTEXT (baseline)</td><td></td></tr>
+          <tr><td>Conversation cap</td><td>500 in-memory, LRU eviction</td><td>OOM guard on free-tier Render</td></tr>
+          <tr><td>Deployment</td><td>render.com free tier (plan: free in render.yaml)</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ S3: ARCHITECTURE COMPARISON ══ -->
+  <div class="section" id="s3">
+    <h2 class="section-title">3. Architecture Comparison</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Concern</th>
+            <th>Production (Spring)</th>
+            <th>Token Lab (Node)</th>
+            <th>Why it matters</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Instruction position</strong></td>
+            <td class="highlight-cell">Last, in user channel, re-sent every turn</td>
+            <td class="ok-cell">First, fixed, stable — system channel</td>
+            <td>Provider can only cache a stable prefix; user messages are never eligible</td>
+          </tr>
+          <tr>
+            <td><strong>Instruction copies in memory</strong></td>
+            <td class="highlight-cell">N copies after N turns</td>
+            <td class="ok-cell">One, ever — system message replaced not appended</td>
+            <td>Removes the quadratic cost term entirely</td>
+          </tr>
+          <tr>
+            <td><strong>Memory bound</strong></td>
+            <td class="highlight-cell">100 messages (cannot bound spend)</td>
+            <td class="ok-cell">Token budget (default 2,000 tokens)</td>
+            <td>Spend is billed in tokens; message count is the wrong unit</td>
+          </tr>
+          <tr>
+            <td><strong>Context assembly order</strong></td>
+            <td class="highlight-cell">Last 100 messages, blindly — instruction last</td>
+            <td class="ok-cell">system → career → summary → recent(4) → current, deliberately</td>
+            <td>Stable prefix is a precondition for prefix caching</td>
+          </tr>
+          <tr>
+            <td><strong>Streaming to user</strong></td>
+            <td class="highlight-cell">Effectively buffered (stream=false on main path)</td>
+            <td class="ok-cell">True SSE — first token arrives in ~1–2 s</td>
+            <td>Converts TTFT + generation into perceived wait; user sees blank screen until complete</td>
+          </tr>
+          <tr>
+            <td><strong>Chained model calls</strong></td>
+            <td class="highlight-cell">1–4 sequential calls per user message, all with full memory</td>
+            <td class="ok-cell">One primary call; internal calls use lightweight context</td>
+            <td>Sequential calls multiply both latency and token cost</td>
+          </tr>
+          <tr>
+            <td><strong>DB write pattern</strong></td>
+            <td class="highlight-cell">Delete entire history + reinsert on every turn</td>
+            <td class="ok-cell">In-memory store (no DB writes during conversation)</td>
+            <td>Each turn rewrites megabytes to RDS on same quadratic curve as tokens</td>
+          </tr>
+          <tr>
+            <td><strong>Telemetry</strong></td>
+            <td class="highlight-cell">None — getUsage() never called</td>
+            <td class="ok-cell">inputTokens, outputTokens, thinkingTokens, cachedTokens, latencyMs per turn + per session</td>
+            <td>Without telemetry, a conversation costing 50× another produces identical logs</td>
+          </tr>
+          <tr>
+            <td><strong>Conversation isolation</strong></td>
+            <td class="highlight-cell">One path falls back to shared "default" conversation</td>
+            <td class="ok-cell">Per-user UUID conversations, never shared</td>
+            <td>Privacy defect: student A's history can appear in student B's context</td>
+          </tr>
+          <tr>
+            <td><strong>Greeting handling</strong></td>
+            <td class="highlight-cell">Full model call with complete history</td>
+            <td class="ok-cell">Classified + hardcoded response — 0 Gemini tokens</td>
+            <td>~15–20% of messages are greetings/farewells; eliminating them is pure savings</td>
+          </tr>
+          <tr>
+            <td><strong>Structured output</strong></td>
+            <td>Free text (status field parsed opportunistically)</td>
+            <td>Protocol v1.3 JSON, Ajv schema validation, semantic validation</td>
+            <td>Lab demonstrates the contract; production can adopt when ready</td>
+          </tr>
+          <tr>
+            <td><strong>Rate limiting</strong></td>
+            <td>None observed in application code</td>
+            <td>Per-IP sliding window (20/30/10 RPM) — no external dependency</td>
+            <td>Free tier quota exhausted silently without rate limiting</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ S4: D1 QUADRATIC TOKEN GROWTH ══ -->
+  <div class="section" id="s4">
+    <h2 class="section-title">4. Defect D1 — Quadratic Token Growth <span class="badge badge-red">Critical</span></h2>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p><strong>Root cause:</strong> Yuzee delivers the ~63,000-token counselling instruction via <code>.user(instructionTextFromMongo)</code> (GeminiClient.java:76, 149, 253). Spring AI's <code>MessageChatMemoryAdvisor</code> persists the last user message to memory on every turn. That last user message is the freshly-loaded instruction. So a full copy of the instruction is written into history on every single turn — and the entire accumulated history is re-transmitted on every subsequent turn.</p>
+    </div>
+
+    <h3>The Mechanism (Proven from Spring AI 1.0.0 GA Source)</h3>
+    <pre><code>// MessageChatMemoryAdvisor.before() — source jar verified live
+public ChatClientRequest before(ChatClientRequest req, AdvisorChain chain) {
+    List&lt;Message&gt; memoryMessages = this.chatMemory.get(conversationId);
+
+    // Step 2: prepends entire retained window to outgoing request
+    List&lt;Message&gt; processed = new ArrayList&lt;&gt;(memoryMessages);
+    processed.addAll(req.prompt().getInstructions());
+
+    // Step 4: persists last user message to memory
+    UserMessage userMsg = processedReq.prompt().getUserMessage(); // ← reverse scan returns the INSTRUCTION
+    this.chatMemory.add(conversationId, userMsg);                 // ← instruction saved to DB every turn
+    return processedReq;
+}</code></pre>
+
+    <p><code>Prompt.getUserMessage()</code> scans backwards and returns the last user message — which in Yuzee's call is the freshly-loaded MongoDB instruction text. The actual student utterance is injected elsewhere, so the student's message is NOT what gets persisted — the instruction blob is.</p>
+
+    <h3>The Cost Growth Model</h3>
+    <p>Under the current design, turn N sends the whole retained history plus a fresh instruction copy:</p>
+    <pre><code>sent(N)       = N·P + (N−1)·A
+cumulative(N) = P·N(N+1)/2 + A·N(N−1)/2
+
+where: P = instruction tokens per turn, A = average assistant reply (~800 tokens)</code></pre>
+
+    <p>The <strong>N(N+1)/2 term is quadratic</strong>. Token cost per conversation does not grow linearly with conversation length — it accelerates.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Instruction size (P)</th>
+            <th>Turn 1</th>
+            <th>Turn 3</th>
+            <th>Turn 5</th>
+            <th>Turn 10</th>
+            <th>Cumulative @10</th>
+            <th>Exceeds 200k at</th>
+            <th>Hard-fails at</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>63,000</strong></td>
+            <td>63,000</td>
+            <td>190,600</td>
+            <td class="highlight-cell">318,200</td>
+            <td class="highlight-cell">637,200</td>
+            <td class="highlight-cell">3,501,000</td>
+            <td class="highlight-cell">Turn 4</td>
+            <td class="highlight-cell">Turn 17</td>
+          </tr>
+          <tr>
+            <td>20,000</td>
+            <td>20,000</td>
+            <td>61,600</td>
+            <td>103,200</td>
+            <td>207,200</td>
+            <td>1,136,000</td>
+            <td>Turn 10</td>
+            <td>Turn 51</td>
+          </tr>
+          <tr>
+            <td>8,000</td>
+            <td>8,000</td>
+            <td>25,600</td>
+            <td>43,200</td>
+            <td>87,200</td>
+            <td>476,000</td>
+            <td>Turn 23</td>
+            <td>Turn 120</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p><strong>At P=63k:</strong> Every turn from the 4th onward is billed at Gemini's premium rate (input above 200k tokens). The premium applies to the entire request, not just the excess. The conversation hard-fails with a context-window error at turn 17 — long before the maxMessages(100) safety valve ever engages (which first evicts at turn 51).</p>
+    </div>
+
+    <h3>The Framework Already Has the Fix — Production Opted Out</h3>
+    <p><code>MessageWindowChatMemory.process()</code> gives <code>SystemMessage</code> three privileges that exist precisely for large standing instructions:</p>
+    <ul>
+      <li><strong>Deduplicated by replacement</strong> — only ever one copy in memory (hasNewSystemMessage drops the prior system message)</li>
+      <li><strong>Exempt from eviction</strong> — never removed during trim (message instanceof SystemMessage skips the eviction loop)</li>
+      <li><strong>Pinned to the front</strong> — system messages always appear first in the list, creating a stable cacheable prefix</li>
+    </ul>
+    <p>Yuzee uses <code>.user()</code> and forfeits all three. Spring AI already implements the fix. Production opted out by choosing the wrong message type.</p>
+
+    <div class="diff-grid">
+      <div class="diff-col before">
+        <div class="diff-col-label">❌ Current (Production)</div>
+        <pre><code style="color:inherit">chatClient.prompt()
+  .user(instructionFromMongo) // 63k tokens
+  // → saved to memory EVERY TURN
+  // → replayed EVERY SUBSEQUENT TURN
+  .advisors(...)
+  .stream();</code></pre>
+      </div>
+      <div class="diff-col after">
+        <div class="diff-col-label">✅ Fix (4 Lines)</div>
+        <pre><code style="color:inherit">chatClient.prompt()
+  .system(stableInstruction) // one copy, ever
+  // → Vertex routes to withSystemInstruction()
+  // → cache-eligible prefix
+  .user(actualStudentMessage)
+  .advisors(...)
+  .stream();</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ S5: D2 MESSAGE COUNT MEMORY ══ -->
+  <div class="section" id="s5">
+    <h2 class="section-title">5. Defect D2 — Memory Bounded by Message Count, Not Tokens <span class="badge badge-red">Critical</span></h2>
+
+    <p><code>MessageWindowChatMemory.maxMessages(100)</code> (YuzeeGeminiAdapterApplication.java:63) counts messages, not tokens. One hundred 60-token messages and one hundred 63,000-token messages are treated identically.</p>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p>This control <strong>cannot bound spend</strong>, because spend is denominated in tokens and the control is denominated in messages. The first eviction happens at turn 51 (100 messages = 50 turns). At P=63k, the conversation hard-fails at turn 17 — the safety valve is set 34 turns beyond the failure point.</p>
+    </div>
+
+    <h3>What the Token Lab Does Instead</h3>
+    <p>The lab uses a <strong>token budget context assembler</strong>. The default budget is 2,000 context tokens (adjustable per conversation). The assembler:</p>
+    <ul>
+      <li>Measures the token cost of each component (system instruction, career context, summary, recent turns, current message)</li>
+      <li>Keeps recent turns until the budget is exhausted — evicting oldest dialogue pairs first</li>
+      <li>Never evicts the stable system instruction</li>
+      <li>Shows a real breakdown (System: X tokens · Memory: Y tokens · Message: Z tokens) in the UI before each send</li>
+    </ul>
+
+    <p>For production, the equivalent is a custom <code>TokenBudgetChatMemory</code> implementing Spring AI's 4-method <code>ChatMemory</code> interface:</p>
+    <pre><code>public interface ChatMemory {
+    void add(String conversationId, List&lt;Message&gt; messages);
+    List&lt;Message&gt; get(String conversationId);
+    void clear(String conversationId);
+}
+
+// TokenBudgetChatMemory should:
+// - preserve SystemMessage unconditionally
+// - evict oldest user+assistant pairs (in whole pairs, not half-exchanges)
+// - stop evicting once the remaining window fits the token budget
+// - never count the system instruction against the budget</code></pre>
+  </div>
+
+  <!-- ══ S6: D3 FRONT-FIRST EVICTION ══ -->
+  <div class="section" id="s6">
+    <h2 class="section-title">6. Defect D3 — Front-First Eviction Destroys Cacheable Prefix <span class="badge badge-amber">High</span></h2>
+
+    <p><code>MessageWindowChatMemory.process()</code> evicts from the front of the message list when the window overflows. In production, the instruction blobs accumulate at the front (as user messages). When eviction finally does engage, it removes the oldest instruction copies — which happen to be at the front of the conversation history.</p>
+
+    <p>Even if the instruction were correctly delivered as a <code>SystemMessage</code>, front-first eviction would destroy the conversation's oldest, most contextually valuable turns first. The correct eviction order is oldest <em>dialogue</em> turns (the volatile end), leaving the stable system instruction and recent exchanges intact.</p>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <p><strong>This defect becomes irrelevant once D1 and D2 are fixed.</strong> With the instruction as a system message (exempt from eviction) and memory bounded by tokens (not messages), eviction only fires on genuinely long conversations — and at that point, oldest dialogue pairs are the correct things to remove.</p>
+    </div>
+  </div>
+
+  <!-- ══ S7: D4 ZERO TELEMETRY ══ -->
+  <div class="section" id="s7">
+    <h2 class="section-title">7. Defect D4 — Zero Telemetry: The Meta-Cause <span class="badge badge-red">Critical</span></h2>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p><strong>This is why everything else went unnoticed.</strong> Production captures no <code>promptTokenCount</code>, no <code>totalTokenCount</code>, no usage metadata of any kind. A conversation that costs 50× another produces identical logs. No APM, no Grafana, no structured per-turn metrics exist. Every defect above is structurally invisible.</p>
+    </div>
+
+    <p>The fix is a single <code>getUsage()</code> call on the <code>ChatResponse</code>:</p>
+    <pre><code>ChatResponse response = chatClient.prompt()...call();
+Usage usage = response.getMetadata().getUsage();
+long inputTokens  = usage.getPromptTokens();
+long outputTokens = usage.getCompletionTokens();
+long totalTokens  = usage.getTotalTokens();
+
+// Persist per conversation and per turn.
+// The single regression test for this entire class of defect:
+// promptTokenCount(turn 10) / promptTokenCount(turn 1)
+// Today: ~10x.  After fixes A + C: should approach ~1.1x.</code></pre>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p><strong>Do this first, before any other fix.</strong> Without a baseline measurement, every other claim — including the projections in this document — is unfalsifiable. The token-growth ratio at turn 10 vs turn 1 is the cleanest single number that tells you whether the quadratic defect is present and whether fixes are working.</p>
+    </div>
+
+    <h3>What the Token Lab Provides</h3>
+    <p>Every assistant bubble in the lab displays:</p>
+    <ul>
+      <li><strong>Model chip</strong> — which model handled this specific turn (color-coded by family)</li>
+      <li><strong>Latency</strong> — total round-trip time in seconds for this turn</li>
+      <li><strong>Token pill</strong> — In X · Out Y · Think Z · Cache N · Total — clickable for full breakdown</li>
+      <li><strong>Compaction banner</strong> — when context was optimised, showing tokens before → after</li>
+      <li><strong>Session stats</strong> — cumulative totals in the header (In · Out · Saved)</li>
+    </ul>
+    <p>The server records <code>timeline.preProviderMs</code>, <code>timeline.providerTtftMs</code>, <code>timeline.totalLatencyMs</code> per turn, enabling end-to-end latency attribution that production has never had.</p>
+  </div>
+
+  <!-- ══ S8: D5 REQUEST AMPLIFICATION ══ -->
+  <div class="section" id="s8">
+    <h2 class="section-title">8. Defect D5 — Request Amplification: The Leading Latency Cause <span class="badge badge-red">Critical</span></h2>
+
+    <p>This is the highest-confidence explanation for the ~10 s latency users experience. One user message can trigger up to <strong>4 sequential model calls</strong>, each carrying the full (and growing) conversation memory:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Call</th><th>Trigger</th><th>Frequency</th><th>Carries full memory?</th></tr></thead>
+        <tbody>
+          <tr><td>Main conversation</td><td>User message</td><td>Always (1)</td><td>Yes</td></tr>
+          <tr><td>MINI_PATHWAY</td><td><code>handleResponse</code> sees status PASS (PromptPlaceholderReplacer.java:67)</td><td>0–1</td><td>Yes — same conversationId</td></tr>
+          <tr><td>nextPrompt</td><td>Next action in ACTION_FLOW (:80)</td><td>0–1</td><td>Yes — same conversationId</td></tr>
+          <tr><td>Title generation</td><td>finalizeConversationAsync on completion (GeminiClient.java:149)</td><td>0–1</td><td>Yes — advisor attached</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p>Three sequential calls at ~3 s each = ~9–10 s, matching the reported symptom exactly. This also means token cost is multiplied by up to 4× per user message, compounding on top of the quadratic growth from D1. <strong>This is multiplicative with the token problem — not an alternative to it.</strong></p>
+    </div>
+
+    <p>The fix is <strong>Optimisation M</strong> from the audit: eliminate avoidable chained calls. Specifically:</p>
+    <ul>
+      <li>Title generation does not need a full-model call with complete conversation memory — a lightweight summarisation prompt with only the last 2 turns is sufficient</li>
+      <li>MINI_PATHWAY and nextPrompt chained calls should be parallelised or made conditional on cheaper classification signals</li>
+      <li>Internal administrative calls (not visible to the user) should use a lightweight model (e.g. flash-lite), not the counselling model</li>
+    </ul>
+
+    <div class="callout info">
+      <span class="callout-icon">ℹ️</span>
+      <p><strong>Decisive test (5 minutes, no code change):</strong> Capture a browser HAR for a typical chat request. If the response arrives as a single blob at the end, streaming is not reaching the user. Count the number of Vertex AI invocations sharing one <code>ai_request_id</code> — this directly measures the amplification factor.</p>
+    </div>
+  </div>
+
+  <!-- ══ S9: D6 BUFFERED RESPONSE ══ -->
+  <div class="section" id="s9">
+    <h2 class="section-title">9. Defect D6 — Buffered Response (stream=false) <span class="badge badge-amber">High</span></h2>
+
+    <p>The production client makes the main chat request as:</p>
+    <pre><code>POST .../text-refinement?conversation_id=&lt;id&gt;&amp;stream=false   (gemini-fixes.service.ts:405-418)</code></pre>
+
+    <p>Two <code>Accept</code> headers coexist in the client — <code>text/event-stream</code> (:271) and <code>application/json</code> (:417). The <code>stream=false</code> path means the server waits for the complete response from Vertex AI before beginning to return anything to the browser.</p>
+
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p>This converts "TTFT 2 s + generation 5 s" into 7 s of blank screen — sufficient on its own to produce a perceived ~10 s latency even with a fast model. Fixing this <strong>alone</strong> would be the largest perceived-latency improvement at the lowest risk.</p>
+    </div>
+
+    <h3>What the Token Lab Does</h3>
+    <p>The lab uses true SSE streaming (<code>generateContentStream</code> from <code>@google/genai</code>) with the following event sequence:</p>
+    <ul>
+      <li><code>start</code> — immediately confirms the server received the request</li>
+      <li><code>status</code> — shows "Generating..." while the model is thinking</li>
+      <li><code>delta</code> — each token chunk as it arrives from Gemini</li>
+      <li><code>structured</code> — complete Protocol v1.3 object when streaming ends</li>
+      <li><code>usage</code> — token and timing data after the response completes</li>
+      <li><code>done</code> — stream closed</li>
+    </ul>
+    <p>The user sees the first visible content in ~1–2 s even for a long response. The total generation time is the same — only the perceived wait changes.</p>
+
+    <p><strong>The fix for production:</strong> Pass <code>stream=true</code> and ensure <code>PromptPlaceholderReplacer.handleResponse()</code> (which currently parses the complete response for a status field before deciding chained calls) is refactored to work on the streaming path. The chained-call decision must not require a complete response to be buffered.</p>
+  </div>
+
+  <!-- ══ S10: D7 SHARED CONVERSATION ══ -->
+  <div class="section" id="s10">
+    <h2 class="section-title">10. Defect D7 — Shared "default" Conversation <span class="badge badge-red">Critical (Privacy)</span></h2>
+
+    <p><code>GeminiClient.java:253</code> calls <code>sendSingleMessage</code> without the <code>CONVERSATION_ID</code> advisor parameter. The bean-level <code>defaultAdvisors</code> still attach memory, so the call falls back to <code>ChatMemory.DEFAULT_CONVERSATION_ID = "default"</code> — a single shared conversation for every user.</p>
+
+    <div class="callout danger">
+      <span class="callout-icon">🔴</span>
+      <p>One student's counselling history can surface in another student's context. This is a <strong>privacy and correctness defect independent of all cost issues</strong>. The shared conversation accumulates without limit as all users' messages are appended to the same history.</p>
+    </div>
+
+    <p><strong>Fix:</strong> Pass the authenticated user's conversation ID on every call path. This is a one-line change at GeminiClient.java:253 — the most urgent fix that should not wait behind a cost programme.</p>
+
+    <pre><code>// Current (broken) — falls back to "default" shared conversation
+chatClient.prompt()
+    .user(...)
+    .stream(); // No CONVERSATION_ID parameter
+
+// Fixed
+chatClient.prompt()
+    .user(...)
+    .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, authenticatedUserId + ":" + sessionId))
+    .stream();</code></pre>
+  </div>
+
+  <!-- ══ S11: SECONDARY ISSUES ══ -->
+  <div class="section" id="s11">
+    <h2 class="section-title">11. Secondary Issues</h2>
+
+    <h3>D8 — Database Write Amplification</h3>
+    <p><code>JdbcChatMemoryRepository.saveAll()</code> (Spring AI 1.0.0 source, verified live):</p>
+    <pre><code>this.transactionTemplate.execute(status -> {
+    deleteByConversationId(conversationId);        // delete ALL rows
+    this.jdbcTemplate.batchUpdate(...);            // reinsert entire history
+    return null;
+});</code></pre>
+    <p>Every turn deletes every row for the conversation and re-inserts the entire retained history. With instruction-sized blobs accumulating, each turn rewrites <em>megabytes</em> of text to RDS. This grows on the same quadratic curve as the token cost, and shows up as database load, transaction duration, and write IOPS. It was a contributing factor in the 2026-08-14 outage.</p>
+
+    <p><strong>Fix:</strong> Implement append-only persistence (Optimisation Q from the audit) — store only new messages per turn rather than deleting and reinserting the full window. This reduces DB writes from O(N) per turn to O(1).</p>
+
+    <h3>D9 — Unresolved Model Identity</h3>
+    <p>The model is configured via a non-standard property key <code>vertex.ai.gemini.chat.options.model</code> — not the Spring AI standard key. The last verified value was <code>gemini-2.5-pro</code>, but the brief states the team may have changed it to <code>gemini-3.5-flash-lite</code>. These are fundamentally different models: 2.5 Pro is a high-reasoning model with default thinking enabled, materially slower and more expensive. If the model has not changed, thinking tokens are being consumed unbounded on every counselling turn with no budget set and no measurement.</p>
+
+    <p><strong>Decisive test (30 seconds):</strong> Read <code>application.properties:72</code> on the live deploy. The answer reframes the entire latency audit.</p>
+
+    <h3>D10 — Mongo Prompt Fetch Per Request (No Cache)</h3>
+    <p>Prompts are fetched from MongoDB via <code>getPromptByAction(action)</code> on every single request. No application-level cache exists. The document is unversioned (no <code>version</code>, <code>status</code>, or <code>checksum</code> field), so a safe cache-by-hash strategy cannot be applied without a schema migration. Query duration and document size are currently unmeasured.</p>
+
+    <p><strong>Fix:</strong> Add a <code>checksum</code> field to the Prompt document. Cache the fetched prompt in a local <code>ConcurrentHashMap</code> keyed by (action, checksum). Invalidate on checksum change. This eliminates the Mongo round-trip on every request.</p>
+
+    <h3>D11 — 91-Minute Read Timeout</h3>
+    <p><code>setReadTimeout(5500000)</code> (YuzeeGeminiAdapterApplication.java:77–78) — approximately 91 minutes. This does not contribute to latency but removes all timeout-based protection: a hung provider call would occupy a thread indefinitely rather than failing fast.</p>
+
+    <h3>D12 — Blocking I/O on Reactive Threads (Threading Starvation Risk)</h3>
+    <p>The stack is Spring MVC with Reactor Flux on an SSE endpoint, while chat memory uses blocking JDBC and prompts use the blocking Mongo driver. Blocking I/O on reactive execution paths is a recognised thread-starvation risk. Whether it materialises under current load is a hypothesis — thread-pool metrics would settle it.</p>
+  </div>
+
+  <!-- ══ S12: HOW THE LAB SOLVES EACH PROBLEM ══ -->
+  <div class="section" id="s12">
+    <h2 class="section-title">12. How the Token Lab Solves Each Problem</h2>
+
+    <h3>Problem: Quadratic token growth (D1)</h3>
+    <p><strong>Lab solution: Stable system instruction + ordered context assembly.</strong></p>
+    <p>The lab's <code>YuzeeRequestAssembler</code> builds every request in a fixed order: system instruction first (byte-identical per turn), then career context, then a conversation summary (if compacted), then the last 4 turns, then the current message. The system instruction is sent as the <code>systemInstruction</code> field of the Gemini API request — the field the provider treats as the stable, cache-eligible header.</p>
+    <p>Because the system instruction is not in the conversation history, it is sent once per request but never accumulates across turns. Cost grows linearly with dialogue turns — not quadratically with instruction copies.</p>
+
+    <h3>Problem: Memory bounded by message count (D2)</h3>
+    <p><strong>Lab solution: Token budget context assembler.</strong></p>
+    <p>The lab's context assembler accepts a <code>contextBudget</code> (default 2,000 tokens). Before assembling the request, it estimates the token cost of each component and drops oldest dialogue turns until the total fits within the budget. This means the maximum context cost is bounded regardless of how long the conversation runs — a 50-turn conversation costs the same as a 5-turn conversation once it stabilises at the budget.</p>
+
+    <h3>Problem: Zero telemetry (D4)</h3>
+    <p><strong>Lab solution: Per-turn telemetry on every response.</strong></p>
+    <p>The <code>@google/genai</code> SDK returns <code>usageMetadata</code> on every <code>generateContent</code> call. The lab extracts <code>promptTokenCount</code>, <code>candidatesTokenCount</code>, <code>thoughtsTokenCount</code>, and <code>cachedContentTokenCount</code>, computes total as <code>uncachedInput + output + thinking</code>, and attaches all of it to the SSE response as a <code>usage</code> event. These numbers appear on each chat bubble so the developer sees exactly what each turn cost.</p>
+
+    <h3>Problem: Perceived latency from buffering (D6)</h3>
+    <p><strong>Lab solution: True SSE streaming from first token.</strong></p>
+    <p>The lab calls <code>model.generateContentStream()</code> and pipes each <code>delta</code> event directly to the browser as a Server-Sent Event. The React frontend renders each chunk as it arrives. First visible content appears in approximately 1–2 s; the total generation time is identical but the user experience is completely different.</p>
+
+    <h3>Problem: Zero-token greeting handling</h3>
+    <p><strong>Lab solution: Message classification before any model call.</strong></p>
+    <pre><code>// YuzeeRequestAssembler.classifyUserMessage()
+function classifyUserMessage(message: string): 'greeting' | 'farewell' | 'career' {
+  const lower = message.toLowerCase().trim();
+  const greetings = ['hello', 'hi', 'hey', 'good morning', ...];
+  if (greetings.some(g => lower === g || lower.startsWith(g + ' '))) return 'greeting';
+  // ...
+  return 'career';
+}</code></pre>
+    <p>For <code>'greeting'</code> or <code>'farewell'</code>, the server returns a hardcoded Protocol v1.3 response object immediately — no Gemini API call, 0 tokens consumed. For career queries, the full pipeline runs.</p>
+
+    <h3>Problem: Request amplification (D5)</h3>
+    <p><strong>Lab approach: Single primary call; no chained administrative calls during the user-facing response.</strong></p>
+    <p>The lab makes one model call per user message on the primary path. Any secondary operations (session summarisation, context compaction) are triggered by budget thresholds, not by every response, and they use a lightweight prompt with minimal context — not the full counselling conversation.</p>
+
+    <h3>Problem: Rate limiting and quota protection</h3>
+    <p><strong>Lab solution: Per-IP sliding window rate limiter (inline, no external dependency).</strong></p>
+    <p>The lab implements a <code>makeRateLimit(maxPerMinute)</code> middleware in <code>server.ts</code> using an in-memory <code>Map&lt;string, {count, resetAt}&gt;</code>. Applied at 20 RPM for chat, 30 RPM for token counting, 10 RPM for benchmarks. Returns HTTP 429 with <code>errorCode: "RATE_LIMIT"</code> which the frontend renders with a clear "wait a moment" message — distinguishable from quota exhaustion (<code>QUOTA_EXHAUSTED</code>), which shows a "resumes at midnight" message.</p>
+  </div>
+
+  <!-- ══ S13: TOKEN GROWTH MODEL ══ -->
+  <div class="section" id="s13">
+    <h2 class="section-title">13. Token Growth Model &amp; Expected Savings</h2>
+
+    <p>Modelled over a 10-turn conversation (cumulative input tokens, P = instruction size):</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>P (instruction)</th>
+            <th>Today (quadratic)</th>
+            <th>After Fix A only (linear)</th>
+            <th>Reduction</th>
+            <th>With prefix caching on stable block</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>63,000</strong></td>
+            <td class="highlight-cell">3,501,000</td>
+            <td>669,300</td>
+            <td class="ok-cell">5.2× less (−81%)</td>
+            <td class="ok-cell">~159,000 — ≈22× less than today</td>
+          </tr>
+          <tr>
+            <td>20,000</td>
+            <td class="highlight-cell">1,136,000</td>
+            <td>239,300</td>
+            <td class="ok-cell">4.7× less (−79%)</td>
+            <td class="ok-cell">~</td>
+          </tr>
+          <tr>
+            <td>8,000</td>
+            <td class="highlight-cell">476,000</td>
+            <td>119,300</td>
+            <td class="ok-cell">4.0× less (−75%)</td>
+            <td class="ok-cell">~</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p>The structural change after Fix A:</p>
+    <pre><code>Today:     cost(N) ∝ N² · P         ← quadratic; accelerates every turn
+After Fix: cost(N) ∝ P + N·(dialogue) ← P paid once; cached thereafter; linear dialogue</code></pre>
+
+    <div class="callout success">
+      <span class="callout-icon">✅</span>
+      <p><strong>The quadratic term disappearing is the point.</strong> All percentage figures above are modelled and should be re-stated against measured <code>promptTokenCount</code> once telemetry (Fix D4) is in place. The structural change is verified from source code; the magnitudes depend on the actual instruction size (P), which is not yet measured.</p>
+    </div>
+
+    <p><strong>Regression test:</strong> Compare <code>promptTokenCount</code> at turn 1 vs turn 10 of an equivalent conversation. Today that ratio is predicted ~10×. After Fixes D1 + D2 it should approach ~1.1×. This single ratio is the cleanest ongoing check for this class of defect.</p>
+  </div>
+
+  <!-- ══ S14: IMPLEMENTATION PLAN ══ -->
+  <div class="section" id="s14">
+    <h2 class="section-title">14. Recommended Production Implementation Plan</h2>
+
+    <p>Ordered so that each step is verifiable before the next depends on it. Nothing here conflicts with Spring AI 1.0.0 GA — all fixes use features the framework already provides.</p>
+
+    <ol class="steps">
+      <li>
+        <div>
+          <strong>Phase 0 — Verify model identity (30 seconds)</strong>
+          <p>Read <code>application.properties:72</code> on the live deploy. If still <code>gemini-2.5-pro</code>, this is a leading latency contributor and must be resolved before any other timing claims can be made. Change to <code>gemini-3.5-flash-lite</code> for counselling turns; reserve Pro for future high-stakes assessment features only.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Phase 0b — Capture a browser HAR (5 minutes, no code change)</strong>
+          <p>For a ~10 s chat request: is the response chunked (streaming) or one blob at the end (buffered)? This settles the stream=false hypothesis (H2) immediately. Also count Vertex AI invocations per user message to measure the amplification factor (H1).</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D4 — Add token telemetry (highest priority)</strong>
+          <p>Call <code>response.getMetadata().getUsage()</code> on every <code>ChatResponse</code>. Persist <code>promptTokenCount</code>, <code>completionTokenCount</code>, <code>totalTokenCount</code> per turn and per conversation. Log with a correlation ID. Build a simple dashboard (even a SQL query) that shows the turn-10/turn-1 input-token ratio per conversation. Without this, no other claim in this document — including these projections — can be verified.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D7 — Shared "default" conversation (1 line, privacy defect)</strong>
+          <p>Pass the authenticated user's conversation ID on every call path at <code>GeminiClient.java:253</code>. This is a privacy and correctness defect independent of all cost issues. It must not wait behind the cost programme.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D1 — .user() → .system() for instruction delivery (4 lines, biggest single win)</strong>
+          <p>Separate the instruction text from the student utterance. Pass the stable counselling instruction as <code>.system(stableInstruction)</code> and the actual student message as <code>.user(actualStudentUtterance)</code>. This removes the quadratic term entirely. Vertex AI will route the system content to <code>withSystemInstruction()</code> — the field it treats as the cache-eligible header. Expected outcome: promptTokenCount ratio turn-10/turn-1 drops from ~10× to ~1.1×.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D2 — Token-budget ChatMemory</strong>
+          <p>Implement <code>TokenBudgetChatMemory</code> implementing Spring AI's <code>ChatMemory</code> interface. Preserve <code>SystemMessage</code> unconditionally. Evict oldest whole user+assistant pairs until the remaining window fits a token budget (e.g. 8,000 tokens). Never evict the stable instruction prefix. Port the lab's <code>TokenBudgetMemoryManagerTest</code> alongside it — it is one of only two AI tests in either codebase, and production has none.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D5 — Reduce/eliminate sequential chained model calls</strong>
+          <p>Audit every <code>chatClient.prompt()...call()</code> triggered by a single user message. For title generation and administrative classification calls, use a lightweight model (flash-lite) with a minimal 2-turn context rather than the full counselling model with full history. Parallelise where possible. Measure the amplification factor before and after using telemetry from step 3.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D6 — Enable true streaming (stream=true)</strong>
+          <p>Change the main client call to <code>stream=true</code>. Ensure <code>PromptPlaceholderReplacer.handleResponse()</code> works on the streaming path — the chained-call status decision must not require buffering the complete response. This is the largest single perceived-latency improvement at low risk.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D1b — Stable/volatile prompt split</strong>
+          <p>Fix D1 alone stops the accumulation but does not unlock caching, because the instruction text changes every turn through placeholder substitution and <code>nextPrompt</code> chaining. Split the instruction into: (a) stable layer — counselling methodology, tone, response contract, schema — byte-identical for every student and turn, delivered as <code>.system()</code>; (b) volatile layer — phase, lastAction, student profile, placeholder values — delivered as a small additional user preamble. The stable layer becomes the cacheable prefix.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D8 — Append-only DB persistence</strong>
+          <p>Replace the delete-all + reinsert pattern in <code>JdbcChatMemoryRepository.saveAll()</code> with an append-only insert. Only the new message(s) for the current turn are written. A separate trim job compacts old rows. This reduces DB writes from O(N) per turn to O(1) and eliminates the write-amplification contribution to RDS load.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Fix D10 — Cache Mongo prompt fetch</strong>
+          <p>Add a <code>checksum</code> field to the Prompt document. Cache the fetched prompt in a <code>ConcurrentHashMap&lt;String, CachedPrompt&gt;</code> keyed by (action, checksum). Invalidate when checksum changes. Eliminates one Mongo round-trip per request.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <strong>Future — Protocol v1.3 structured output</strong>
+          <p>The Token Lab validates every response against a 20,694-byte JSON schema. Production currently parses responses opportunistically for a <code>status</code> field only. When the counselling team is ready, adopting Protocol v1.3 would enable structured phase tracking, follow-up suggestion arrays, and service metadata — all without free-text parsing. Re-run the token cost analysis at adoption time as the schema adds per-request input cost.</p>
+        </div>
+      </li>
+    </ol>
+
+    <h3>Summary Table</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Step</th>
+            <th>Action</th>
+            <th>Dimension</th>
+            <th>Why this order</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>Verify model identity (application.properties:72)</td><td>Latency, cost</td><td>Everything else is conditional on this</td></tr>
+          <tr><td>0b</td><td>Browser HAR capture</td><td>Latency</td><td>Settles H1 (amplification) and H2 (buffering) without any code change</td></tr>
+          <tr><td>1</td><td>Add getUsage() telemetry per turn</td><td>Observability</td><td>Without baseline, nothing is measurable or falsifiable</td></tr>
+          <tr><td>2</td><td>Fix shared "default" conversation</td><td>Privacy, correctness</td><td>Smallest change; must not wait</td></tr>
+          <tr><td>3</td><td>.user() → .system() instruction delivery</td><td>Cost, tokens</td><td>Removes quadratic term; largest single win; 4 lines</td></tr>
+          <tr><td>4</td><td>Token-budget ChatMemory</td><td>Cost, reliability</td><td>Bounds spend in the correct unit; removes turn-17 cliff</td></tr>
+          <tr><td>5</td><td>Reduce sequential chained calls</td><td>Latency</td><td>Largest latency win if H1 confirms</td></tr>
+          <tr><td>6</td><td>stream=true on main path</td><td>Perceived latency</td><td>Largest perceived win; low risk</td></tr>
+          <tr><td>7</td><td>Stable/volatile prompt split</td><td>Cost, caching</td><td>Converts fixed cost into cached cost</td></tr>
+          <tr><td>8</td><td>Re-measure. Only then consider compaction.</td><td>All</td><td>Do not compress real history to fix waste that was never real history</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ S15: WHAT NOT TO COPY ══ -->
+  <div class="section" id="s15">
+    <h2 class="section-title">15. What NOT to Copy from the Token Lab</h2>
+
+    <h3>Lab compaction is string-building, not summarisation</h3>
+    <div class="callout warning">
+      <span class="callout-icon">⚠️</span>
+      <p>Both lab compactors are string builders, not AI summarisers. The Java tier truncates messages to 60 characters. The Node tier interpolates a message count into a fixed sentence template. Neither preserves the semantic content of the conversation being compacted. Do not adopt these compaction patterns in production counselling.</p>
+    </div>
+    <p>The counselling product's value is the longitudinal evolution of a student's position. A rolling summary that reduces a student's 10-turn exploration of career options to "5 messages discussed career options" destroys the very substance that makes the counselling meaningful. The correct sequence is: remove the waste first (the duplicated instruction text, which was never real history), measure the remaining cost, and only then ask whether genuine conversation history needs compressing — with a real AI summariser and an explicit answer to the counselling-continuity question.</p>
+
+    <h3>Lab cached-token figures are synthetic</h3>
+    <p>The Token Lab substitutes a synthetic value when the provider returns no cached-token metadata: 45% of input tokens in <code>server.ts:978</code>, a flat 55% in <code>GeminiChatService.java:193</code>. These are hardcoded guesses reported through the same field as a real measured value. Do not use any cached-token figure from the lab as evidence of caching effectiveness in production. Cache effectiveness in production can only be inferred from billed input cost against the stable-prefix change, and should be labelled as an inference.</p>
+
+    <h3>Lab Spring backend is a simulator, not a reference</h3>
+    <p>The lab's Spring tier (<code>GeminiChatService.java:175,182</code>) makes no model call. It splits a pre-built JSON payload and emits it with <code>Thread.sleep(15)</code> per chunk. A 4,000-character response produces 12 seconds of pure artificial delay with zero provider latency. Any timing data attributed to the lab's Spring backend is 100% manufactured. Use only the lab's Node.js tier (<code>server.ts</code>) for latency evidence, and only when the server is confirmed to be using <code>generateContentStream</code>.</p>
+
+    <h3>Lab per-message model display is a lab-only feature</h3>
+    <p>The per-bubble model chip, latency display, and token pill in the lab UI are instrumentation tools for the lab's purpose of demonstrating and comparing model behaviours. Production does not expose these to end users (students) — only to the engineering dashboard and internal monitoring.</p>
+  </div>
+
+  <!-- ══ S16: EVIDENCE INDEX ══ -->
+  <div class="section" id="s16">
+    <h2 class="section-title">16. Evidence Index</h2>
+
+    <h4>Verified live (re-readable on demand from Spring AI 1.0.0 GA source jars)</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Claim</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Advisor persists the full user message each turn</td><td>MessageChatMemoryAdvisor.before(), step 4 — spring-ai-client-chat-1.0.0-sources.jar</td></tr>
+          <tr><td>Persisted message is the newest instruction</td><td>Prompt.getUserMessage() — reverse scan</td></tr>
+          <tr><td>Assistant replies also persisted</td><td>MessageChatMemoryAdvisor.after()</td></tr>
+          <tr><td>System messages replaced, not appended</td><td>MessageWindowChatMemory.process() — hasNewSystemMessage</td></tr>
+          <tr><td>System messages exempt from eviction</td><td>MessageWindowChatMemory.process() — message instanceof SystemMessage</td></tr>
+          <tr><td>Eviction is front-first</td><td>same loop, removed &gt;= messagesToRemove</td></tr>
+          <tr><td>ChatMemory is a 4-method interface</td><td>ChatMemory.java:31–62</td></tr>
+          <tr><td>DB delete-and-reinsert per turn</td><td>JdbcChatMemoryRepository.saveAll()</td></tr>
+          <tr><td>Lab simulator sleeps 15 ms per chunk</td><td>GeminiChatService.java:175,182 (Token Lab Java tier)</td></tr>
+          <tr><td>Lab synthetic cache figure: 45%</td><td>server.ts:978</td></tr>
+          <tr><td>Lab synthetic cache figure: 55%</td><td>GeminiChatService.java:193</td></tr>
+          <tr><td>Lab Protocol v1.3 schema = 20,694 bytes</td><td>Yuzee_Response_Schema_v1.3.json (verified live)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Prior commit — require re-verification before acting</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Claim</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>Instruction delivered via .user()</td><td>GeminiClient.java:76, 149, 253</td></tr>
+          <tr><td>No .system() for prompt content</td><td>Only defaultSystem reasoning cue at YuzeeGeminiAdapterApplication.java:112</td></tr>
+          <tr><td>maxMessages(100)</td><td>YuzeeGeminiAdapterApplication.java:63</td></tr>
+          <tr><td>Advisor on all 10 ChatClient beans</td><td>YuzeeGeminiAdapterApplication.java:70,97,110,123,133,145,154,163,172,181,192</td></tr>
+          <tr><td>Shared "default" conversation</td><td>GeminiClient.java:253 + ChatMemory.DEFAULT_CONVERSATION_ID</td></tr>
+          <tr><td>stream=false on main path</td><td>gemini-fixes.service.ts:405-418</td></tr>
+          <tr><td>Model from non-standard property key</td><td>vertex.ai.gemini.chat.options.model (application.properties:72)</td></tr>
+          <tr><td>1–4 sequential calls per user message</td><td>GeminiClient.java:149 (title), PromptPlaceholderReplacer.java:67 (MINI_PATHWAY), ACTION_FLOW:80 (nextPrompt)</td></tr>
+          <tr><td>Mongo prompt fetch per request, no cache</td><td>daoImpl/PromptDaoImpl.java</td></tr>
+          <tr><td>No token accounting anywhere</td><td>audit §31–36 — zero getUsage() calls in 43 Java files</td></tr>
+          <tr><td>Vertex splits SYSTEM to withSystemInstruction()</td><td>VertexAiGeminiChatModel audit §17 step 5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+    <p style="font-size:12px; color: var(--text-muted)"><strong>Modelled vs measured.</strong> Every source-code behaviour in this document is measured (read from source). All token quantities are modelled — they depend on the actual instruction size (P), which requires Fix D4 (telemetry) to be measured. P is measurable the moment telemetry is in place, and all projections should be restated against the measured value before being quoted externally. No secrets, student data, API keys, or prompt contents appear in this document.</p>
+  </div>
+
+  <div class="doc-footer">
+    <p>Yuzee Engineering · AI Token Lab vs Production · 2026-08-24 · Internal use only</p>
+    <p style="margin-top:4px">Sources: YUZEE_SPRING_CONVERSATION_TOKEN_DEFECT.pdf · YUZEE_AI_LATENCY_FORENSIC_AUDIT.pdf · live Token Lab source code</p>
+  </div>
+
+</div>
+</body>
+</html>
