@@ -9,8 +9,6 @@ import { GEMINI_MODELS } from "../data/models";
 import {
   Sparkles,
   Activity,
-  ThumbsUp,
-  ThumbsDown,
   Copy,
   Check,
   ArrowRight,
@@ -40,7 +38,6 @@ export const ChatArea: React.FC = () => {
     sendMessage,
     isStreaming,
     inspectTurnTelemetry,
-    submitFeedback,
     capabilities,
   } = useTokenLab();
 
@@ -302,41 +299,15 @@ export const ChatArea: React.FC = () => {
                                 </button>
                               </div>
 
-                              {/* Actions & Feedback */}
-                              <div className="flex items-center gap-1">
-                                <button
-                                  onClick={() => copyMessage(msg.id, msg.content)}
-                                  className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
-                                  title="Copy Response"
-                                  aria-label="Copy Response"
-                                >
-                                  {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                                </button>
-
-                                {/* Quality Feedback Widget */}
-                                <div className="flex items-center gap-0.5 ml-1 border-l border-slate-200 pl-1.5">
-                                  <button
-                                    onClick={() => submitFeedback(msg.id, "good")}
-                                    className={`p-1 rounded ${
-                                      msg.feedback?.type === "good" ? "text-emerald-600 bg-emerald-50" : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-                                    }`}
-                                    title="Good response quality"
-                                    aria-label="Good response"
-                                  >
-                                    <ThumbsUp className="w-3.5 h-3.5" />
-                                  </button>
-                                  <button
-                                    onClick={() => submitFeedback(msg.id, "context_missing")}
-                                    className={`p-1 rounded ${
-                                      msg.feedback?.type === "context_missing" ? "text-rose-600 bg-rose-50" : "text-slate-400 hover:text-slate-700 hover:bg-slate-100"
-                                    }`}
-                                    title="Context missing due to compaction"
-                                    aria-label="Context missing"
-                                  >
-                                    <ThumbsDown className="w-3.5 h-3.5" />
-                                  </button>
-                                </div>
-                              </div>
+                              {/* Actions */}
+                              <button
+                                onClick={() => copyMessage(msg.id, msg.content)}
+                                className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
+                                title="Copy Response"
+                                aria-label="Copy Response"
+                              >
+                                {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                              </button>
                             </div>
                           )}
                         </div>
