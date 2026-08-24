@@ -112,8 +112,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.6-flash");
-  const pendingModel = useRef<string>("gemini-3.6-flash");
+  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.5-flash-lite");
+  const pendingModel = useRef<string>("gemini-3.5-flash-lite");
 
   // Load initial data
   const loadInitialData = useCallback(async () => {
@@ -450,7 +450,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             contextMetrics: usagePayload.contextMetrics,
             compactionMetrics: usagePayload.compactionMetrics,
             timeline: usagePayload.timeline,
-            model: currentConversation?.model || "gemini-3.6-flash",
+            model: currentConversation?.model || "gemini-3.5-flash-lite",
             thinkingLevel: currentConversation?.thinkingLevel || "adaptive",
             optimizationMode: currentConversation?.mode || "AUTO",
             optimizationStrategy: currentConversation?.strategy || "ADAPTIVE_HYBRID",

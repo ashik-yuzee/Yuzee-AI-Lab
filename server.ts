@@ -164,7 +164,7 @@ const sessionStats = {
 
 async function countExactTokens(
   text: string,
-  model: string = "gemini-3.6-flash"
+  model: string = "gemini-3.5-flash-lite"
 ): Promise<{ count: number; source: "provider" | "estimate" | "countTokens" }> {
   if (!text || text.trim().length === 0) return { count: 0, source: "estimate" };
   
@@ -212,7 +212,7 @@ app.get("/api/config/capabilities", (req, res) => {
     configured: hasKey,
     availableModels: GEMINI_MODELS.filter((m) => m.selectable).map((m) => m.id),
     modelsList: GEMINI_MODELS,
-    defaultModel: "gemini-3.6-flash",
+    defaultModel: "gemini-3.5-flash-lite",
     supportsThinking: true,
     supportsCachedTokens: true,
     supportsInteractionsApi: true,
@@ -232,7 +232,7 @@ app.get("/api/conversations", (req, res) => {
 app.post("/api/conversations", (req, res) => {
   const id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const title = req.body?.title || "New Career Exploration";
-  const model = req.body?.model || "gemini-3.6-flash";
+  const model = req.body?.model || "gemini-3.5-flash-lite";
   const mode = req.body?.mode || "AUTO";
   const strategy = req.body?.strategy || "ADAPTIVE_HYBRID";
   const preset = req.body?.preset || "BALANCED";
@@ -284,7 +284,7 @@ app.post("/api/conversations/load-demo", (req, res) => {
     title: "Cybersecurity Analyst Pathway (Demo)",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    model: "gemini-3.6-flash",
+    model: "gemini-3.5-flash-lite",
     mode: "AUTO",
     strategy: "ADAPTIVE_HYBRID",
     preset: "BALANCED",
@@ -536,7 +536,7 @@ app.post("/api/conversations/:id/actions/:actionId/execute", (req, res) => {
 
 // Pre-flight Token Count Endpoint
 app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
-  const { message = "", conversationId, model = "gemini-3.6-flash", fastEstimate = false } = req.body;
+  const { message = "", conversationId, model = "gemini-3.5-flash-lite", fastEstimate = false } = req.body;
   const trimmed = message.trim();
 
   if (!trimmed) {
@@ -706,7 +706,7 @@ app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
   const {
     conversationId,
     prompt = "Help me transition into cybersecurity and build a 6-month study roadmap.",
-    model = "gemini-3.6-flash",
+    model = "gemini-3.5-flash-lite",
     strategies,
     isLive = false, // When true, executes real Gemini provider benchmark
   } = req.body;
@@ -858,7 +858,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       title: "Career Exploration",
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      model: req.body.model || "gemini-3.6-flash",
+      model: req.body.model || "gemini-3.5-flash-lite",
       mode: req.body.mode || "AUTO",
       strategy: req.body.strategy || "ADAPTIVE_HYBRID",
       preset: req.body.preset || "BALANCED",
@@ -943,7 +943,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   // 2. ASSEMBLE GEMINI REQUEST (IMMUTABLE PROMPT IN SYSTEM INSTRUCTION ONLY)
   const requestAssemblyStart = Date.now();
-  const modelId = req.body.model || conv.model || "gemini-3.6-flash";
+  const modelId = req.body.model || conv.model || "gemini-3.5-flash-lite";
   const allowedModels = GEMINI_MODELS.filter(m => m.selectable).map(m => m.id);
   if (!allowedModels.includes(modelId)) {
     return res.status(400).json({ error: `Unknown model: ${modelId}` });

@@ -64,7 +64,6 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsCaching: true,
     supportsInteractionsApi: true,
     isRecommended: true,
-    isDefault: true,
     badge: 'Recommended',
   },
   {
@@ -102,7 +101,8 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     defaultThinkingLevel: 'minimal',
     supportsCaching: true,
     supportsInteractionsApi: true,
-    badge: 'Efficiency',
+    isDefault: true,
+    badge: 'Default',
   },
   {
     id: 'gemini-3.1-flash-lite',

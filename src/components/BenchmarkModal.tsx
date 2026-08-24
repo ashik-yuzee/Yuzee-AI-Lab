@@ -34,7 +34,7 @@ export const BenchmarkModal: React.FC = () => {
       const res = await api.runBenchmark({
         conversationId: currentConversation?.id,
         prompt,
-        model: currentConversation?.model || "gemini-3.6-flash",
+        model: currentConversation?.model || "gemini-3.5-flash-lite",
         strategies: ["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"],
         isLive,
       });

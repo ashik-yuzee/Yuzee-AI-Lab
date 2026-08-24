@@ -5,6 +5,7 @@ import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { GEMINI_MODELS } from "../data/models";
 import {
   Sparkles,
   Activity,
@@ -19,7 +20,19 @@ import {
   Clock,
   ShieldAlert,
   Wifi,
+  Cpu,
 } from "lucide-react";
+
+function modelShortName(modelId: string): string {
+  const found = GEMINI_MODELS.find(m => m.id === modelId);
+  return found ? found.name.replace('Gemini ', '') : modelId;
+}
+
+function modelChipStyle(modelId: string): string {
+  if (modelId.includes('lite')) return 'bg-amber-50 border-amber-200 text-amber-800';
+  if (modelId.includes('2.5') || modelId.includes('2.0')) return 'bg-slate-100 border-slate-200 text-slate-600';
+  return 'bg-sky-50 border-sky-200 text-sky-800';
+}
 
 export const ChatArea: React.FC = () => {
   const {
@@ -252,25 +265,42 @@ export const ChatArea: React.FC = () => {
                           {/* Unobtrusive Turn Token Indicator */}
                           {msg.telemetry && !msg.isStreaming && (
                             <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
-                              {/* Token Indicator Pill */}
-                              <button
-                                onClick={() => inspectTurnTelemetry(msg.telemetry)}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-200 hover:border-sky-300 rounded-md font-mono text-[11px] transition-colors cursor-pointer"
-                                title="Click for full breakdown: User vs Input, Thinking, Cached, and Compaction"
-                              >
-                                <Activity className="w-3 h-3 text-sky-600" />
-                                <span>
-                                  Input <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong> · Output{" "}
-                                  <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
-                                  {msg.telemetry.usage.thinkingTokens !== null && (
-                                    <> · Thinking <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
-                                  )}
-                                  {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 && (
-                                    <> · Cached <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong></>
-                                  )}
-                                  {" "}· Consumed <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
-                                </span>
-                              </button>
+                              {/* Left: model chip + latency + token pill */}
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                {/* Model chip */}
+                                {msg.telemetry.model && (
+                                  <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold border ${modelChipStyle(msg.telemetry.model)}`}>
+                                    <Cpu className="w-2.5 h-2.5" />
+                                    {modelShortName(msg.telemetry.model)}
+                                  </span>
+                                )}
+                                {/* Latency */}
+                                {(() => {
+                                  const ms = msg.telemetry.timeline?.totalLatencyMs ?? msg.telemetry.usage.latencyMs;
+                                  return ms ? (
+                                    <span className="text-[10px] text-slate-400 font-mono">{(ms / 1000).toFixed(1)}s</span>
+                                  ) : null;
+                                })()}
+                                {/* Token Indicator Pill */}
+                                <button
+                                  onClick={() => inspectTurnTelemetry(msg.telemetry)}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-200 hover:border-sky-300 rounded-md font-mono text-[11px] transition-colors cursor-pointer"
+                                  title="Click for full breakdown: User vs Input, Thinking, Cached, and Compaction"
+                                >
+                                  <Activity className="w-3 h-3 text-sky-600" />
+                                  <span>
+                                    In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong> · Out{" "}
+                                    <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
+                                    {msg.telemetry.usage.thinkingTokens !== null && (
+                                      <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
+                                    )}
+                                    {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 && (
+                                      <> · Cache <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong></>
+                                    )}
+                                    {" "}· <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
+                                  </span>
+                                </button>
+                              </div>
 
                               {/* Actions & Feedback */}
                               <div className="flex items-center gap-1">

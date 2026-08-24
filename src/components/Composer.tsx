@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Zap, ArrowUp, Square, Info, X } from "lucide-react";
+import { Zap, ArrowUp, Square, Info, X, Cpu } from "lucide-react";
+import { GEMINI_MODELS } from "../data/models";
+
+function modelShortName(modelId: string): string {
+  const found = GEMINI_MODELS.find(m => m.id === modelId);
+  return found ? found.name.replace('Gemini ', '') : modelId;
+}
 
 export const Composer: React.FC = () => {
-  const { sendMessage, isStreaming, stopStreaming } = useTokenLab();
+  const { sendMessage, isStreaming, stopStreaming, currentConversation } = useTokenLab();
   const [text, setText] = useState("");
   const [tokenForecast, setTokenForecast] = useState<{
     userTokens: number;
@@ -154,8 +160,20 @@ export const Composer: React.FC = () => {
             )}
           </div>
 
-          <div className="text-[11px] text-slate-400 hidden sm:block">
-            {text.length > 0 ? `${text.length} chars` : "Shift + Enter for new line"}
+          <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-400">
+            {currentConversation?.model && (
+              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border ${
+                currentConversation.model.includes('lite')
+                  ? 'bg-amber-50 border-amber-200 text-amber-700'
+                  : currentConversation.model.includes('2.5') || currentConversation.model.includes('2.0')
+                  ? 'bg-slate-100 border-slate-200 text-slate-600'
+                  : 'bg-sky-50 border-sky-200 text-sky-700'
+              }`}>
+                <Cpu className="w-2.5 h-2.5" />
+                {modelShortName(currentConversation.model)}
+              </span>
+            )}
+            <span>{text.length > 0 ? `${text.length} chars` : "Shift+Enter for new line"}</span>
           </div>
         </div>
 

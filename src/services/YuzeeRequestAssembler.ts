@@ -142,7 +142,7 @@ export class YuzeeRequestAssembler {
    * Deterministic thinking level resolution
    */
   public resolveThinkingConfig(
-    modelId: string = 'gemini-3.6-flash',
+    modelId: string = 'gemini-3.5-flash-lite',
     thinkingLevel: string = 'adaptive',
     userPrompt: string = ''
   ): {
@@ -376,7 +376,7 @@ export class YuzeeRequestAssembler {
       : `CURRENT_USER_INPUT:\n${currentUserStr}`;
 
     // 5. Config resolution
-    const model = params.model || 'gemini-3.6-flash';
+    const model = params.model || 'gemini-3.5-flash-lite';
     const responseMode = params.responseMode || 'standard';
     const maxOutputTokens = this.resolveOutputBudget(responseMode, model);
     const { thinkingConfig, appliedThinkingLevel, numericBudget } = this.resolveThinkingConfig(

@@ -43,11 +43,14 @@ export const Navbar: React.FC = () => {
       if (m.id === "gemini-3.7-flash") {
         badge = "Latest";
         badgeColor = "purple";
+      } else if (m.id === "gemini-3.5-flash-lite") {
+        badge = "Default";
+        badgeColor = "emerald";
       } else if (m.id === "gemini-3.6-flash") {
         badge = "Recommended";
-        badgeColor = "emerald";
+        badgeColor = "blue";
       } else if (m.family === "flash-lite") {
-        badge = badge || "Fast & Cheap";
+        badge = badge || "Fast";
         badgeColor = "amber";
       } else if (m.family === "legacy") {
         badge = badge || "Legacy";

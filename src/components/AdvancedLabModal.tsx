@@ -73,7 +73,7 @@ export const AdvancedLabModal: React.FC = () => {
   const conv = currentConversation || {
     id: "default",
     title: "Career Exploration",
-    model: "gemini-3.6-flash",
+    model: "gemini-3.5-flash-lite",
     strategy: "ADAPTIVE_HYBRID" as OptimizationStrategy,
     contextBudget: 2000,
     recentTurnsToKeep: 4,
