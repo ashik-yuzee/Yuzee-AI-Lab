@@ -80,13 +80,13 @@ export const ChatArea: React.FC = () => {
       RATE_LIMIT: {
         icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />,
         title: "Rate limit reached",
-        detail: "Gemini is receiving too many requests. Wait a few seconds and try again.",
+        detail: errorMsg || "Gemini rate limit reached. Wait a moment and try again.",
         color: "bg-amber-50 border-amber-200 text-amber-900",
       },
       QUOTA_EXHAUSTED: {
         icon: <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />,
         title: "Daily quota reached",
-        detail: "The free-tier Gemini quota for today has been used up. The lab will automatically resume when the quota resets at midnight Pacific time. No action needed.",
+        detail: errorMsg || "The free-tier Gemini quota for today has been used up. The lab will resume when the quota resets at midnight Pacific time.",
         color: "bg-red-50 border-red-200 text-red-900",
       },
       AUTH_ERROR: {
@@ -265,10 +265,10 @@ export const ChatArea: React.FC = () => {
                                   {msg.telemetry.usage.thinkingTokens !== null && (
                                     <> · Thinking <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
                                   )}
-                                  {msg.telemetry.usage.cachedTokens !== null && (
+                                  {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 && (
                                     <> · Cached <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong></>
                                   )}
-                                  {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
+                                  {" "}· Consumed <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
                                 </span>
                               </button>
 

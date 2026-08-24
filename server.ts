@@ -1074,7 +1074,10 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       userMsg = 'Gemini free-tier daily quota has been used up. The lab will resume when the quota resets (midnight Pacific time).';
     } else if (err?.status === 429 || /RESOURCE_EXHAUSTED|rate.limit|too many requests/i.test(msg)) {
       errorCode = 'RATE_LIMIT';
-      userMsg = 'Gemini rate limit reached. Wait a few seconds and try again.';
+      // Distinguish per-minute (RPM) from other rate limits
+      userMsg = /per.minute|per_minute|requests.*minute|minute.*request/i.test(msg)
+        ? 'Per-minute request limit reached (free tier: 10–30 RPM). Wait 60 seconds and try again. Flash Lite has the highest free-tier limit.'
+        : 'Gemini rate limit reached. Wait a moment and try again.';
     } else {
       errorCode = 'PROVIDER_ERROR';
       userMsg = 'Gemini returned an error. Please try again.';
@@ -1181,8 +1184,13 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   const inputTokens = realUsageMetadata?.promptTokenCount ?? (estimateTokens(assembledReq.systemInstruction) + estimateTokens(assembledReq.contents));
   const outputTokens = realUsageMetadata?.candidatesTokenCount ?? estimateTokens(fullAssistantText);
   const thinkingTokens = realUsageMetadata?.thinkingTokenCount ?? (realUsageMetadata?.thoughtsTokenCount ?? null);
-  const cachedTokens = realUsageMetadata?.cachedContentTokenCount ?? null;
-  const totalTokens = realUsageMetadata?.totalTokenCount ?? (inputTokens + outputTokens + (thinkingTokens || 0));
+  // Only report cached tokens when provider confirms a real cache hit (non-null, non-zero)
+  const cachedTokensRaw = realUsageMetadata?.cachedContentTokenCount ?? null;
+  const cachedTokens = (cachedTokensRaw !== null && cachedTokensRaw > 0) ? cachedTokensRaw : null;
+  // Total = tokens actually consumed from quota: uncached input + output + thinking
+  // (Do NOT use totalTokenCount from the API — it includes cached tokens in the input sum)
+  const uncachedInputTokens = cachedTokens !== null ? Math.max(0, inputTokens - cachedTokens) : inputTokens;
+  const totalTokens = uncachedInputTokens + outputTokens + (thinkingTokens || 0);
 
   const usageMetrics = {
     currentUserTokens: userPromptTokens,
@@ -1193,7 +1201,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     toolTokens: null,
     totalTokens,
     finishReason,
-    uncachedInputTokens: cachedTokens !== null ? Math.max(0, inputTokens - cachedTokens) : inputTokens,
+    uncachedInputTokens,
     cacheHitPercentage: cachedTokens !== null && inputTokens > 0 ? Math.round((cachedTokens / inputTokens) * 1000) / 10 : null,
     latencyMs: totalLatencyMs,
     isMock: isMockResponse,

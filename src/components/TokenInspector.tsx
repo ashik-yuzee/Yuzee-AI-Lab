@@ -113,23 +113,25 @@ export const TokenInspector: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Cached Tokens (Rule #8, #19) */}
-                <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 col-span-2 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-emerald-700 font-medium block">Implicit Cache Read</span>
-                    <span className="text-sm font-bold text-emerald-900">
-                      {usage.cachedTokens !== null ? `${usage.cachedTokens.toLocaleString()} tokens` : "0 tokens"}
-                    </span>
-                  </div>
-                  {usage.cacheHitPercentage !== null && (
-                    <div className="text-right">
-                      <span className="text-[10px] text-emerald-700 block">Hit Rate</span>
-                      <span className="text-xs font-bold text-emerald-800">
-                        {usage.cacheHitPercentage}%
+                {/* Cached Tokens — only shown on a real cache hit */}
+                {usage.cachedTokens !== null && usage.cachedTokens > 0 && (
+                  <div className="p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 col-span-2 flex items-center justify-between">
+                    <div>
+                      <span className="text-[10px] text-emerald-700 font-medium block">Served from Cache</span>
+                      <span className="text-sm font-bold text-emerald-900">
+                        {usage.cachedTokens.toLocaleString()} tokens
                       </span>
                     </div>
-                  )}
-                </div>
+                    {usage.cacheHitPercentage !== null && usage.cacheHitPercentage > 0 && (
+                      <div className="text-right">
+                        <span className="text-[10px] text-emerald-700 block">of Input</span>
+                        <span className="text-xs font-bold text-emerald-800">
+                          {usage.cacheHitPercentage}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
