@@ -1073,7 +1073,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
         const text = chunk.text;
         if (text) {
           fullAssistantText += text;
-          // IMPORTANT: DO NOT emit raw JSON fragments over the delta channel for protocol mode
+          sendEvent("delta", text);
         }
         if (chunk.usageMetadata) {
           realUsageMetadata = chunk.usageMetadata;

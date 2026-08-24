@@ -471,7 +471,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               msgs[msgs.length - 1] = {
                 ...last,
                 telemetry,
-                isStreaming: false,
+                // isStreaming stays true — onDone clears it so chip only shows when content is ready
               };
             }
             return { ...prev, messages: msgs };
@@ -501,6 +501,23 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             const last = msgs[msgs.length - 1];
             if (last && last.role === "assistant") {
               msgs[msgs.length - 1] = { ...last, isStreaming: false };
+            }
+            return { ...prev, messages: msgs };
+          });
+        },
+        onProtocolValidationError: (data) => {
+          setCurrentConversation((prev) => {
+            if (!prev) return prev;
+            const msgs = [...prev.messages];
+            const last = msgs[msgs.length - 1];
+            if (last && last.role === "assistant") {
+              msgs[msgs.length - 1] = {
+                ...last,
+                content: accumulatedContent || last.content,
+                schemaValid: false,
+                semanticValid: false,
+                validationErrors: data.errors || [],
+              };
             }
             return { ...prev, messages: msgs };
           });

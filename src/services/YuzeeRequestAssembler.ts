@@ -125,16 +125,16 @@ export class YuzeeRequestAssembler {
    * Deterministic output budgets per response mode.
    * Flash Lite gets reduced caps: smaller model produces shorter responses, lower caps cut latency.
    */
-  public resolveOutputBudget(mode: string = 'standard', model: string = ''): number {
-    const isFlashLite = model.includes('flash-lite');
+  public resolveOutputBudget(mode: string = 'standard', _model: string = ''): number {
+    // Protocol v1.3 JSON has a fixed minimum schema size regardless of model — no flash-lite discount
     switch (mode.toLowerCase()) {
-      case 'quick':   return isFlashLite ? 512  : 1024;
-      case 'standard': return isFlashLite ? 1024 : 2048;
+      case 'quick':   return 1024;
+      case 'standard': return 2048;
       case 'explain':
       case 'explore':
-      case 'decide':  return isFlashLite ? 1536 : 3072;
-      case 'detail':  return isFlashLite ? 2048 : 4096;
-      default:        return isFlashLite ? 1024 : 2048;
+      case 'decide':  return 3072;
+      case 'detail':  return 4096;
+      default:        return 2048;
     }
   }
 

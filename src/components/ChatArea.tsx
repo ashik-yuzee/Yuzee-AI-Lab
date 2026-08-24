@@ -260,7 +260,7 @@ export const ChatArea: React.FC = () => {
                           )}
 
                           {/* Unobtrusive Turn Token Indicator */}
-                          {msg.telemetry && !msg.isStreaming && (
+                          {msg.telemetry && !msg.isStreaming && (msg.structuredResponse || msg.content) && !msg.telemetry?.usage?.isMock && (
                             <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-500">
                               {/* Left: model chip + latency + token pill */}
                               <div className="flex flex-wrap items-center gap-1.5">

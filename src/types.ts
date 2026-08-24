@@ -100,6 +100,7 @@ export interface TokenUsageMetrics {
   latencyMs?: number;
   timeToFirstTokenMs?: number | null;
   finishReason?: string | null;
+  isMock?: boolean;
 }
 
 export interface ContextSectionDetail {
