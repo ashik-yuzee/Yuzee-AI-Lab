@@ -205,7 +205,7 @@ export const ChatArea: React.FC = () => {
                                 </span>
                               </div>
                               <span className="text-[10px] text-emerald-800 font-semibold underline">
-                                Saved {msg.telemetry.compactionMetrics.tokensRemoved} tokens
+                                ~{msg.telemetry.compactionMetrics.tokensRemoved} tokens saved (estimated)
                               </span>
                             </div>
                           )}
@@ -238,6 +238,14 @@ export const ChatArea: React.FC = () => {
                             <div className="flex items-center gap-2 text-xs text-sky-600 font-medium pt-1">
                               <span className="w-2 h-2 rounded-full bg-sky-600 animate-pulse" />
                               <span>Generating & validating Protocol v1.3 response...</span>
+                            </div>
+                          )}
+
+                          {/* MAX_TOKENS truncation warning */}
+                          {msg.telemetry?.usage?.finishReason === 'MAX_TOKENS' && !msg.isStreaming && (
+                            <div className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
+                              <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
+                              <span>Response was truncated at the output token limit. The protocol response may be invalid. Try a shorter question or switch to Quick/Standard mode.</span>
                             </div>
                           )}
 

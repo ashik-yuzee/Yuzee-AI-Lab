@@ -99,6 +99,7 @@ export interface TokenUsageMetrics {
   cacheHitPercentage?: number | null;
   latencyMs?: number;
   timeToFirstTokenMs?: number | null;
+  finishReason?: string | null;
 }
 
 export interface ContextSectionDetail {

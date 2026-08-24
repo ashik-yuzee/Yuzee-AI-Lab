@@ -376,6 +376,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setConversations((prev) => prev.map((c) => (c.id === updatedConv.id ? updatedConv : c)));
 
     setIsStreaming(true);
+    performance.mark('yuzee_send_clicked');
     const controller = new AbortController();
     setAbortController(controller);
 
@@ -411,6 +412,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           });
         },
         onStructured: (structData) => {
+          performance.mark('yuzee_first_structured');
           setCurrentConversation((prev) => {
             if (!prev) return prev;
             const msgs = [...prev.messages];
@@ -487,6 +489,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           });
         },
         onDone: () => {
+          performance.mark('yuzee_response_complete');
+          try {
+            performance.measure('yuzee_e2e_latency', 'yuzee_send_clicked', 'yuzee_response_complete');
+          } catch { /* marks may be cleared between calls */ }
           setIsStreaming(false);
           setAbortController(null);
           setCurrentConversation((prev) => {

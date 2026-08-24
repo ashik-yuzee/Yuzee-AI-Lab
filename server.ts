@@ -992,6 +992,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   let providerEndTime: number | null = null;
   let fullAssistantText = "";
   let realUsageMetadata: any = null;
+  let finishReason: string | null = null;
   let isMockResponse = false;
 
   try {
@@ -1021,6 +1022,8 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
         if (chunk.usageMetadata) {
           realUsageMetadata = chunk.usageMetadata;
         }
+        const chunkFinish = chunk.candidates?.[0]?.finishReason;
+        if (chunkFinish) finishReason = chunkFinish;
       }
       providerEndTime = Date.now();
     } else {
@@ -1083,11 +1086,13 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
 
   const validationEndTime = Date.now();
   const validationDurationMs = validationEndTime - validationStartTime;
+  const wasTruncated = finishReason === 'MAX_TOKENS';
 
   // STRICT PROTOCOL ACCEPTANCE BOUNDARY:
   // Only if protocolAccepted === true may the server update activeInteraction and emit protocol_response
   // ponytail: mock responses bypass validation — they're our own hardcoded data
-  if (isMockResponse || validationResult.protocolAccepted) {
+  // MAX_TOKENS truncation: JSON is incomplete, always reject regardless of partial parse
+  if (!wasTruncated && (isMockResponse || validationResult.protocolAccepted)) {
     if (parsedResponse?.interaction && parsedResponse.interaction.kind !== "none") {
       conv.activeInteraction = parsedResponse.interaction;
     } else if (parsedResponse?.interaction && parsedResponse.interaction.kind === "none") {
@@ -1108,13 +1113,17 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     sendEvent("structured", parsedResponse);
   } else {
     // DO NOT update active interaction or trusted state on invalid output
+    const truncationErrors = wasTruncated
+      ? [`Response truncated (MAX_TOKENS): output hit the ${assembledReq.maxOutputTokens}-token limit mid-JSON. Try a shorter question or use Quick/Standard mode.`]
+      : [];
     sendEvent("protocol_validation_error", {
       schemaValid: validationResult.schemaValid,
       semanticValid: validationResult.semanticValid,
       protocolAccepted: false,
-      errors: validationResult.errors,
+      errors: [...truncationErrors, ...validationResult.errors],
       warnings: validationResult.warnings,
       aiRequestId: assembledReq.aiRequestId,
+      finishReason,
     });
   }
 
@@ -1156,6 +1165,7 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
     cachedTokens,
     toolTokens: null,
     totalTokens,
+    finishReason,
     uncachedInputTokens: cachedTokens !== null ? Math.max(0, inputTokens - cachedTokens) : inputTokens,
     cacheHitPercentage: cachedTokens !== null && inputTokens > 0 ? Math.round((cachedTokens / inputTokens) * 1000) / 10 : null,
     latencyMs: totalLatencyMs,
