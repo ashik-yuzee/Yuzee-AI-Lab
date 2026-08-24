@@ -31,7 +31,22 @@ dotenv.config();
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
-app.use(express.json());
+app.use(express.json({ limit: '50kb' }));
+
+// Simple in-memory per-IP rate limiter (no extra dependency needed for this scale)
+const _rlWindows = new Map<string, { count: number; resetAt: number }>();
+function makeRateLimit(maxPerMinute: number) {
+  return (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    const ip = (req.ip ?? req.socket.remoteAddress ?? 'anon') + ':' + maxPerMinute;
+    const now = Date.now();
+    let w = _rlWindows.get(ip);
+    if (!w || w.resetAt < now) _rlWindows.set(ip, (w = { count: 0, resetAt: now + 60_000 }));
+    if (++w.count > maxPerMinute) {
+      return res.status(429).json({ error: 'Rate limit: too many requests. Wait a minute and try again.', errorCode: 'RATE_LIMIT' });
+    }
+    next();
+  };
+}
 
 // Initialize Authoritative Request Assembler & Memory Manager
 const requestAssembler = YuzeeRequestAssembler.getInstance();
@@ -59,7 +74,7 @@ async function summarizeEvictedTurns(
   const response = await ai.models.generateContent({
     model: 'gemini-3.5-flash-lite',
     contents: parts.join('\n'),
-    config: { maxOutputTokens: 200, thinkingConfig: { thinkingBudget: 0 } },
+    config: { maxOutputTokens: 200 },
   });
 
   const text = (response.text || '').trim();
@@ -252,6 +267,11 @@ app.post("/api/conversations", (req, res) => {
     compactionHistory: [],
   };
 
+  // Cap in-memory store to prevent unbounded growth on the free Render instance
+  if (conversations.size >= 500) {
+    const oldest = Array.from(conversations.values()).sort((a, b) => a.updatedAt - b.updatedAt)[0];
+    if (oldest) conversations.delete(oldest.id);
+  }
   conversations.set(id, conv);
   res.json(conv);
 });
@@ -515,7 +535,7 @@ app.post("/api/conversations/:id/actions/:actionId/execute", (req, res) => {
 });
 
 // Pre-flight Token Count Endpoint
-app.post("/api/tokens/count", async (req, res) => {
+app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
   const { message = "", conversationId, model = "gemini-3.6-flash", fastEstimate = false } = req.body;
   const trimmed = message.trim();
 
@@ -682,7 +702,7 @@ app.post("/api/tokens/session-reset", (req, res) => {
 });
 
 // Benchmark Mode Endpoint (Modelled Estimate vs Live Gemini Benchmark)
-app.post("/api/benchmark", async (req, res) => {
+app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
   const {
     conversationId,
     prompt = "Help me transition into cybersecurity and build a 6-month study roadmap.",
@@ -824,7 +844,7 @@ app.post("/api/benchmark", async (req, res) => {
 // -------------------------------------------------------------
 // Streaming Chat API (SSE) with Real Schema Enforcement & Validation
 // -------------------------------------------------------------
-app.post("/api/conversations/:id/messages", async (req, res) => {
+app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) => {
   // START REQUEST LATENCY CLOCK AT LINE 1 (covers conversation lookup, validation, memory assembly)
   const requestReceivedAt = Date.now();
   const id = req.params.id;
@@ -924,6 +944,10 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   // 2. ASSEMBLE GEMINI REQUEST (IMMUTABLE PROMPT IN SYSTEM INSTRUCTION ONLY)
   const requestAssemblyStart = Date.now();
   const modelId = req.body.model || conv.model || "gemini-3.6-flash";
+  const allowedModels = GEMINI_MODELS.filter(m => m.selectable).map(m => m.id);
+  if (!allowedModels.includes(modelId)) {
+    return res.status(400).json({ error: `Unknown model: ${modelId}` });
+  }
   const assembledReq = requestAssembler.assembleRequest({
     model: modelId,
     messageText: userMessageContent,
@@ -941,9 +965,14 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
   // Explicit context cache for system prompt — returns null while cache is being created (first ~1 request per model).
   // When active: systemInstruction tokens are served from cache at ~75% lower cost.
   const aiInstance = getGemini();
-  const cacheName = aiInstance
-    ? await cacheManager.getCacheForModel(modelId, aiInstance, assembledReq.systemInstruction, requestAssembler.getPromptHash())
-    : null;
+  let cacheName: string | null = null;
+  try {
+    cacheName = aiInstance
+      ? await cacheManager.getCacheForModel(modelId, aiInstance, assembledReq.systemInstruction, requestAssembler.getPromptHash())
+      : null;
+  } catch {
+    // Cache lookup failure is non-fatal; proceed without cache
+  }
   const geminiConfig = cacheName
     ? { ...assembledReq.geminiConfig, systemInstruction: undefined, cachedContent: cacheName }
     : assembledReq.geminiConfig;
@@ -1327,100 +1356,6 @@ function makeBypassResponse(kind: 'greeting' | 'farewell'): YuzeeResponseV13 {
     service: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },
     state: { active_response_mode: "standard", effective_response_mode: "standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: [], failed_attempts: 0, loop_count_same_issue: 0 } },
     followups: { enabled: false, cancel_on_user_message: true, topic_lock: false, topic_key: "", triggers: [] },
-  };
-}
-
-function generateOfflineProtocolV13(prompt: string, career: Record<string, string | undefined>): YuzeeResponseV13 {
-  const role = career?.["Target Role"] || career?.["goals"] || "Cybersecurity Analyst";
-  return {
-    schema_version: "1.3",
-    current_mode: "A_CONVERSATION",
-    response_intent: "ACTION_PLAN",
-    content_blocks: [
-      {
-        id: "b1",
-        type: "text",
-        level: "none",
-        variant: "default",
-        title: "",
-        text: `Here is a structured, actionable pathway plan for your transition towards **${role}**.`,
-        items: [],
-        columns: [],
-        rows: [],
-      },
-      {
-        id: "b2",
-        type: "steps",
-        level: "h2",
-        variant: "info",
-        title: "Recommended Milestones",
-        text: "Core progression steps designed to build demonstrable competence:",
-        items: [
-          { id: "s1", title: "Foundational Networking & Systems Core", text: "Master TCP/IP subnetting, Linux command-line diagnostics, and Wireshark packet capture.", value: "Phase 1", status: "next" },
-          { id: "s2", title: "Defensive Operations & SIEM Telemetry", text: "Setup a virtual home lab with Splunk or Elastic Security and analyze attack alerts.", value: "Phase 2", status: "" },
-          { id: "s3", title: "Industry Certification & GitHub Portfolio", text: "Complete Security+ certification and document 2 end-to-end incident walkthroughs.", value: "Phase 3", status: "" },
-        ],
-        columns: [],
-        rows: [],
-      },
-    ],
-    interaction: {
-      kind: "question",
-      input_type: "single_select",
-      question_id: "q_next_step",
-      question: "Which milestone would you like to explore first?",
-      options: [
-        { id: "opt_networking", label: "Networking & Linux Foundations", description: "Free labs and command cheat-sheets", value: "networking" },
-        { id: "opt_siem", label: "SIEM & Practical Detection", description: "Configuring Splunk Free & alert analysis", value: "siem" },
-        { id: "opt_portfolio", label: "Incident Walkthrough Portfolio", description: "Structuring verifiable GitHub case studies", value: "portfolio" },
-      ],
-      allow_other_input: false,
-      other_input_label: "",
-      fields: [],
-      recommended_actions: [],
-    },
-    service: {
-      flow: "NONE",
-      intent_detected: false,
-      goal_summary: `Career pathway towards ${role}`,
-      trigger: "",
-      confidence: "",
-      selected_rmo: "",
-      offer_target: "",
-      missing_inputs: [],
-      actions: [],
-    },
-    state: {
-      active_response_mode: "standard",
-      effective_response_mode: "standard",
-      mode_source: "default",
-      safety_override_applied: false,
-      user_confidence: {
-        score: -1,
-        band: "unknown",
-        evidence_strength: "none",
-        trend: "unknown",
-        reason_codes: ["NEW_TOPIC_RESET"],
-      },
-      progress: {
-        explained: ["pathway_overview"],
-        failed_attempts: 0,
-        loop_count_same_issue: 0,
-      },
-    },
-    followups: {
-      enabled: true,
-      cancel_on_user_message: true,
-      topic_lock: true,
-      topic_key: "offline_pathway",
-      triggers: [
-        {
-          after_seconds: 10,
-          message: "Would you like me to tailor this timeline based on your current weekly study hours?",
-          suggested_replies: ["Tailor for 10 hrs/week", "Tailor for 20 hrs/week", "Show cert resources"],
-        },
-      ],
-    },
   };
 }
 
