@@ -987,13 +987,40 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       }, VERCEL_SAFE_MS - (Date.now() - requestReceivedAt))
     : null;
 
+  let fullAssistantText = "";
+  let isMockResponse = false;
+
+  // Greeting/farewell bypass — skip Gemini entirely, costs 0 tokens
+  const messageClass = requestAssembler.classifyUserMessage(userMessageContent);
+  if (messageClass !== 'career') {
+    fullAssistantText = JSON.stringify(makeBypassResponse(messageClass));
+    isMockResponse = true;
+    // Fast-path: emit all required SSE events and return
+    sendEvent("validation", { schemaValid: true, semanticValid: true, protocolAccepted: true, errors: [], warnings: [], promptHash: requestAssembler.getPromptHash(), schemaHash: requestAssembler.getSchemaHash() });
+    const bypassParsed = JSON.parse(fullAssistantText);
+    sendEvent("protocol_response", bypassParsed);
+    sendEvent("structured", bypassParsed);
+    const bypassTokens = estimateTokens(fullAssistantText);
+    sendEvent("usage", {
+      usage: { currentUserTokens: estimateTokens(userMessageContent), inputTokens: 0, outputTokens: bypassTokens, thinkingTokens: null, cachedTokens: null, toolTokens: null, totalTokens: bypassTokens, finishReason: 'STOP', isMock: true, sources: { inputTokens: "bypass", outputTokens: "bypass", thinkingTokens: "unavailable", cachedTokens: "unavailable", currentUserTokens: "estimate" }, timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt } },
+      contextMetrics: null,
+      compactionMetrics: null,
+      timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt },
+    });
+    const bypassMsg: MessageItem = { id: messageId, role: "assistant", content: fullAssistantText, structuredResponse: bypassParsed, createdAt: Date.now() };
+    conv.messages.push({ id: `user-${Date.now()}`, role: "user", content: userMessageContent, userEvent, createdAt: requestReceivedAt });
+    conv.messages.push(bypassMsg);
+    conv.updatedAt = Date.now();
+    sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
+    res.end();
+    return;
+  }
+
   const providerStartTime = Date.now();
   let firstProviderChunkTime: number | null = null;
   let providerEndTime: number | null = null;
-  let fullAssistantText = "";
   let realUsageMetadata: any = null;
   let finishReason: string | null = null;
-  let isMockResponse = false;
 
   try {
     if (aiInstance) {
@@ -1278,6 +1305,22 @@ app.post("/api/conversations/:id/messages", async (req, res) => {
       .catch(() => {});
   }
 });
+
+function makeBypassResponse(kind: 'greeting' | 'farewell'): YuzeeResponseV13 {
+  const text = kind === 'greeting'
+    ? "Hi! I'm Oala, your Yuzee career counsellor. What career challenge can I help you with today? I can help with pathway planning, skill gap analysis, course options, job readiness, and more."
+    : "You're welcome — happy to help anytime. Come back whenever you need career guidance!";
+  return {
+    schema_version: "1.3",
+    current_mode: "A_CONVERSATION",
+    response_intent: kind === 'greeting' ? "SOCRATIC_DIRECTION" : "PAUSE_CLOSURE",
+    content_blocks: [{ id: "b1", type: "text", level: "none", variant: "default", title: "", text, items: [], columns: [], rows: [] }],
+    interaction: { kind: "none", input_type: "none", question_id: "", question: "", options: [], allow_other_input: false, other_input_label: "", fields: [], recommended_actions: [] },
+    service: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },
+    state: { active_response_mode: "standard", effective_response_mode: "standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: [], failed_attempts: 0, loop_count_same_issue: 0 } },
+    followups: { enabled: false, cancel_on_user_message: true, topic_lock: false, topic_key: "", triggers: [] },
+  };
+}
 
 function generateOfflineProtocolV13(prompt: string, career: Record<string, string | undefined>): YuzeeResponseV13 {
   const role = career?.["Target Role"] || career?.["goals"] || "Cybersecurity Analyst";

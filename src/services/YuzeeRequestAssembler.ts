@@ -213,6 +213,36 @@ export class YuzeeRequestAssembler {
   }
 
   /**
+   * Classifies a user message into a bypass category or 'career' for normal routing.
+   * Only matches with high confidence — any ambiguity falls through to 'career'.
+   * Returns:
+   *   'greeting'  — pure social opener, no career content
+   *   'farewell'  — closing/thanks, no career content
+   *   'career'    — send to Gemini
+   */
+  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'career' {
+    const t = text.trim().toLowerCase().replace(/[!?.,']+$/, '').trim();
+
+    const greetingPatterns = [
+      /^(hi|hey|hello|howdy|hiya|sup|yo)(\s+(there|oala|yuzee|bot|ai|friend))?$/,
+      /^good\s+(morning|afternoon|evening|day)(\s+(oala|yuzee))?$/,
+      /^how are you(\s+(doing|going|today))?$/,
+      /^(are you there|you there|you working|is this working|test|testing|hello\?)$/,
+      /^what('s| is) up(\s+with you)?$/,
+    ];
+
+    const farewellPatterns = [
+      /^(bye|goodbye|see you|see ya|cya|ttyl|later|take care)(\s+(later|soon|then|now))?$/,
+      /^(thanks|thank you|thx|ty|cheers|great|awesome|perfect|got it|ok|okay|cool|nice|sounds good)(\s+(for (that|everything|your help|the help)))?$/,
+      /^(that('s| is) (great|helpful|perfect|all|enough)|no (more )?questions?|i('m| am) (done|good|all set|all good))$/,
+    ];
+
+    if (greetingPatterns.some(p => p.test(t))) return 'greeting';
+    if (farewellPatterns.some(p => p.test(t))) return 'farewell';
+    return 'career';
+  }
+
+  /**
    * Normalizes response mode capitalization to exact Prompt v0.12 spec
    */
   public normalizeModeCapitalization(mode: string = 'Standard'): string {
