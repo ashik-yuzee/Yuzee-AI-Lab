@@ -1,51 +1,40 @@
 import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { OptimizationStrategy, ThinkingLevel, ResponseMode } from "../types";
-import { Settings, X, Save, Sparkles, Cpu, Layers, Sliders, Info, ShieldCheck, Check, Database, Trash2 } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi } from "lucide-react";
 
 export const SettingsModal: React.FC = () => {
   const {
     isSettingsOpen,
     setSettingsOpen,
-    currentConversation,
-    updateCurrentConversationSettings,
+    setAdvancedLabOpen,
+    setActiveLabTab,
     capabilities,
     localStorageStats,
     clearLocalData,
   } = useTokenLab();
   const [clearConfirm, setClearConfirm] = useState(false);
-
-  const [systemMode, setSystemMode] = useState(currentConversation?.systemPromptMode || "default");
-  const [customSys, setCustomSys] = useState(currentConversation?.customSystemPrompt || "");
-  const [strategy, setStrategy] = useState<OptimizationStrategy>(currentConversation?.strategy || "ADAPTIVE_HYBRID");
-  const [thinking, setThinking] = useState<ThinkingLevel>(currentConversation?.thinkingLevel || "adaptive");
-  const [budget, setBudget] = useState(currentConversation?.contextBudget || 270000);
-  const [recentTurns, setRecentTurns] = useState(currentConversation?.recentTurnsToKeep || 100);
-  const [savedNotice, setSavedNotice] = useState(false);
+  const [cleared, setCleared] = useState(false);
 
   if (!isSettingsOpen) return null;
 
-  const handleSave = () => {
-    updateCurrentConversationSettings({
-      systemPromptMode: systemMode as any,
-      customSystemPrompt: customSys,
-      strategy,
-      thinkingLevel: thinking,
-      contextBudget: budget,
-      recentTurnsToKeep: recentTurns,
-    });
-    setSavedNotice(true);
-    setTimeout(() => {
-      setSavedNotice(false);
-      setSettingsOpen(false);
-    }, 600);
+  const handleClear = () => {
+    clearLocalData();
+    setClearConfirm(false);
+    setCleared(true);
+    setTimeout(() => setCleared(false), 2000);
+  };
+
+  const openLab = (tab: string) => {
+    setSettingsOpen(false);
+    setActiveLabTab(tab);
+    setAdvancedLabOpen(true);
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div
         id="settings-developer-modal"
-        className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150"
       >
         {/* Header */}
         <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
@@ -54,223 +43,147 @@ export const SettingsModal: React.FC = () => {
               <Settings className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-slate-900">Optimization & Developer Settings</h2>
-              <p className="text-xs text-slate-500">Fine-tune memory strategies, thinking levels, and context budgets</p>
+              <h2 className="text-sm font-bold text-slate-900">App Settings</h2>
+              <p className="text-xs text-slate-500">Storage, API status, and lab shortcuts</p>
             </div>
           </div>
-
           <button
             onClick={() => setSettingsOpen(false)}
             className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-200/60"
-            title="Close"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Content Body */}
+        {/* Body */}
         <div className="flex-1 overflow-y-auto p-5 space-y-5 text-xs">
-          {/* 1. Context Strategy Selection */}
+
+          {/* API & Runtime Status */}
           <div className="space-y-2">
-            <label className="font-semibold text-slate-800 block text-xs uppercase tracking-wider">
-              Context Memory Strategy (Rule #12)
-            </label>
-            <div className="grid sm:grid-cols-2 gap-2">
-              {[
-                { id: "ADAPTIVE_HYBRID", label: "Adaptive Hybrid (Default)", desc: "Token-budget prioritised dynamic context allocation" },
-                { id: "SEMANTIC_EVIDENCE", label: "Semantic Evidence (Experimental)", desc: "Episodic memory with typed temporal records and evidence retrieval" },
-                { id: "SUMMARY_RECENT", label: "Summary + Recent Turns", desc: "Incremental compaction of evicted turns into summary" },
-                { id: "SLIDING_WINDOW", label: "Sliding Window", desc: "Turn-safe window keeping last N complete turns" },
-                { id: "BASELINE", label: "Baseline (Full History)", desc: "Sends entire uncompressed transcript (High token cost)" },
-              ].map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => setStrategy(s.id as OptimizationStrategy)}
-                  className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
-                    strategy === s.id
-                      ? "bg-sky-50 border-sky-300 ring-2 ring-sky-100 font-medium"
-                      : "bg-white border-slate-200 hover:bg-slate-50"
-                  }`}
-                >
-                  <span className="font-bold text-slate-900 block mb-0.5">{s.label}</span>
-                  <span className="text-[11px] text-slate-500">{s.desc}</span>
-                </button>
-              ))}
+            <div className="flex items-center gap-2">
+              <Wifi className="w-3.5 h-3.5 text-slate-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Connection & Runtime</span>
             </div>
-          </div>
-
-          {/* 2. Thinking Level (Gemini 3) (Rule #5) */}
-          <div className="space-y-2 pt-2 border-t border-slate-200">
-            <div className="flex items-center justify-between">
-              <label className="font-semibold text-slate-800 block text-xs uppercase tracking-wider">
-                Thinking / Reasoning Level
-              </label>
-              <span className="text-[10px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
-                Gemini 3.6 Thinking
-              </span>
-            </div>
-
-            <div className="grid grid-cols-3 sm:grid-cols-5 gap-1.5 text-center">
-              {(["adaptive", "minimal", "low", "medium", "high"] as ThinkingLevel[]).map((lvl) => (
-                <button
-                  key={lvl}
-                  onClick={() => setThinking(lvl)}
-                  className={`py-2 px-1 rounded-lg border text-xs font-semibold capitalize cursor-pointer transition-all ${
-                    thinking === lvl
-                      ? "bg-amber-100 border-amber-300 text-amber-900 shadow-2xs"
-                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                  }`}
-                >
-                  {lvl}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* 3. Budget & Sliding Window Sliders */}
-          <div className="grid sm:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
-            <div>
-              <div className="flex justify-between font-semibold text-slate-800 mb-1">
-                <span>Context Target Budget</span>
-                <span className="text-sky-700">{budget.toLocaleString()} tokens</span>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2 text-xs text-slate-700">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">Gemini API Key</span>
+                {capabilities?.geminiApiKeyPresent ? (
+                  <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+                    <ShieldCheck className="w-3.5 h-3.5" /> Connected
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-1 text-amber-700 font-semibold">
+                    <Info className="w-3.5 h-3.5" /> Not configured
+                  </span>
+                )}
               </div>
-              <input
-                type="range"
-                min={1000}
-                max={270000}
-                step={1000}
-                value={budget}
-                onChange={(e) => setBudget(Number(e.target.value))}
-                className="w-full cursor-pointer accent-sky-600"
-              />
-              <span className="text-[10px] text-slate-500 block mt-1">
-                Optimization budget ceiling for memory manager
-              </span>
-            </div>
-
-            <div>
-              <div className="flex justify-between font-semibold text-slate-800 mb-1">
-                <span>Recent Turns Retained</span>
-                <span className="text-sky-700">{recentTurns} complete turns</span>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">Runtime</span>
+                <span className="font-mono font-medium">{capabilities?.runtime || "preview-adapter"}</span>
               </div>
-              <input
-                type="range"
-                min={2}
-                max={100}
-                step={2}
-                value={recentTurns}
-                onChange={(e) => setRecentTurns(Number(e.target.value))}
-                className="w-full cursor-pointer accent-sky-600"
-              />
-              <span className="text-[10px] text-slate-500 block mt-1">
-                Verbatim dialogue turns preserved before compaction
-              </span>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500">Context Caching</span>
+                <span className={`font-semibold ${capabilities?.supportsExplicitCache ? "text-emerald-700" : "text-slate-500"}`}>
+                  {capabilities?.supportsExplicitCache ? "Enabled" : "Disabled"}
+                </span>
+              </div>
+              {!capabilities?.geminiApiKeyPresent && (
+                <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-1">
+                  Set <code className="font-mono">GEMINI_API_KEY</code> in your <code>.env</code> file and restart the server to enable live Gemini calls.
+                </p>
+              )}
             </div>
           </div>
 
-          {/* 4. System Instruction Configuration (Rule #18) */}
-          <div className="space-y-2 pt-2 border-t border-slate-200">
-            <label className="font-semibold text-slate-800 block text-xs uppercase tracking-wider">
-              System Instruction Optimization
-            </label>
-
-            <div className="flex gap-2">
-              {(["default", "compact", "custom"] as const).map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => setSystemMode(mode)}
-                  className={`px-3 py-1.5 rounded-lg border text-xs font-semibold capitalize cursor-pointer transition-all ${
-                    systemMode === mode
-                      ? "bg-slate-900 text-white border-slate-900"
-                      : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-                  }`}
-                >
-                  {mode === "default" ? "Standard (~55t)" : mode === "compact" ? "Compact (~22t)" : "Custom"}
-                </button>
-              ))}
-            </div>
-
-            {systemMode === "custom" && (
-              <textarea
-                rows={3}
-                value={customSys}
-                onChange={(e) => setCustomSys(e.target.value)}
-                placeholder="Enter custom prompt guidance..."
-                className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs font-mono resize-none focus:ring-2 focus:ring-sky-100"
-              />
-            )}
-          </div>
-
-          {/* 5. Local Data Storage */}
-          <div className="space-y-2 pt-2 border-t border-slate-200">
+          {/* Local Data Storage */}
+          <div className="space-y-2">
             <div className="flex items-center gap-2">
               <Database className="w-3.5 h-3.5 text-slate-500" />
-              <label className="font-semibold text-slate-800 text-xs uppercase tracking-wider">
-                Local Data Storage
-              </label>
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Local Data Storage</span>
             </div>
             <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between">
               <div className="text-xs text-slate-600 space-y-0.5">
                 <div>
-                  <span className="font-semibold text-slate-800">{localStorageStats.conversationCount}</span> conversation{localStorageStats.conversationCount !== 1 ? "s" : ""} stored locally
+                  <span className="font-semibold text-slate-800">{localStorageStats.conversationCount}</span>{" "}
+                  conversation{localStorageStats.conversationCount !== 1 ? "s" : ""} stored locally
                 </div>
                 <div className="text-slate-400">
                   {localStorageStats.bytes < 1024
                     ? `${localStorageStats.bytes} B`
-                    : localStorageStats.bytes < 1024 * 1024
+                    : localStorageStats.bytes < 1048576
                     ? `${(localStorageStats.bytes / 1024).toFixed(1)} KB`
-                    : `${(localStorageStats.bytes / (1024 * 1024)).toFixed(2)} MB`}
-                  {" "}used · survives page refresh &amp; server restarts
+                    : `${(localStorageStats.bytes / 1048576).toFixed(2)} MB`}
+                  {" "}· survives page refresh &amp; server restarts
                 </div>
               </div>
-              {clearConfirm ? (
+              {cleared ? (
+                <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-semibold">
+                  <Check className="w-3.5 h-3.5" /> Cleared
+                </span>
+              ) : clearConfirm ? (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[11px] text-red-600 font-medium">Delete all local data?</span>
-                  <button
-                    onClick={() => { clearLocalData(); setClearConfirm(false); }}
-                    className="px-2 py-1 bg-red-600 text-white text-[11px] font-semibold rounded-lg cursor-pointer hover:bg-red-700"
-                  >Yes, delete</button>
-                  <button
-                    onClick={() => setClearConfirm(false)}
-                    className="px-2 py-1 border border-slate-300 text-slate-600 text-[11px] rounded-lg cursor-pointer hover:bg-slate-100"
-                  >Cancel</button>
+                  <span className="text-[11px] text-red-600 font-medium">Delete all?</span>
+                  <button onClick={handleClear} className="px-2 py-1 bg-red-600 text-white text-[11px] font-semibold rounded-lg cursor-pointer hover:bg-red-700">
+                    Yes
+                  </button>
+                  <button onClick={() => setClearConfirm(false)} className="px-2 py-1 border border-slate-300 text-slate-600 text-[11px] rounded-lg cursor-pointer hover:bg-slate-100">
+                    No
+                  </button>
                 </div>
               ) : (
                 <button
                   onClick={() => setClearConfirm(true)}
                   className="flex items-center gap-1 px-2.5 py-1.5 border border-red-200 text-red-600 text-[11px] font-semibold rounded-lg cursor-pointer hover:bg-red-50"
                 >
-                  <Trash2 className="w-3 h-3" />
-                  Clear
+                  <Trash2 className="w-3 h-3" /> Clear
                 </button>
               )}
+            </div>
+          </div>
+
+          {/* Lab Shortcuts */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <FlaskConical className="w-3.5 h-3.5 text-indigo-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Advanced Lab Shortcuts</span>
+            </div>
+            <p className="text-[11px] text-slate-500">
+              AI model configuration (strategy, thinking, budget, prompts) lives in the Lab to keep it all in one place.
+            </p>
+            <div className="grid grid-cols-2 gap-2">
+              {[
+                { tab: "context", label: "Memory Strategy", desc: "Context budget & memory" },
+                { tab: "reasoning", label: "Thinking Level", desc: "Reasoning depth control" },
+                { tab: "prompt", label: "System Prompt", desc: "Instruction mode & API" },
+                { tab: "optimization", label: "Optimization", desc: "Token economics" },
+                { tab: "benchmark", label: "Benchmark", desc: "Strategy comparison" },
+                { tab: "analytics", label: "Analytics", desc: "Session usage charts" },
+              ].map((s) => (
+                <button
+                  key={s.tab}
+                  onClick={() => openLab(s.tab)}
+                  className="p-2.5 bg-white border border-slate-200 hover:border-indigo-300 hover:bg-indigo-50/40 rounded-xl text-left transition-all cursor-pointer group"
+                >
+                  <div className="font-semibold text-[11px] text-slate-900 group-hover:text-indigo-800">{s.label}</div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">{s.desc}</div>
+                </button>
+              ))}
             </div>
           </div>
         </div>
 
         {/* Footer */}
         <div className="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
-          <div className="text-[11px] text-slate-500">
-            Runtime: <strong>{capabilities?.runtime || "preview-adapter"}</strong>
+          <div className="text-[11px] text-slate-400">
+            AI config lives in <span className="font-semibold text-indigo-600">Lab →</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSettingsOpen(false)}
-              className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-100 cursor-pointer"
-            >
-              Cancel
-            </button>
-            <button
-              id="btn-save-settings"
-              onClick={handleSave}
-              className="flex items-center gap-1.5 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer"
-            >
-              {savedNotice ? <Check className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              <span>{savedNotice ? "Saved!" : "Apply Changes"}</span>
-            </button>
-          </div>
+          <button
+            onClick={() => setSettingsOpen(false)}
+            className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg text-xs font-medium hover:bg-slate-100 cursor-pointer"
+          >
+            Close
+          </button>
         </div>
       </div>
     </div>

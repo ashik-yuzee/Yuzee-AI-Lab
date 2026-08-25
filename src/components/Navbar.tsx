@@ -10,7 +10,7 @@ import {
   Settings,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
-import { GEMINI_MODELS } from "../data/models";
+import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
 
 export const Navbar: React.FC = () => {
   const {
@@ -100,6 +100,12 @@ export const Navbar: React.FC = () => {
   const inputTokens = cachedTokens > 0 ? uncachedInput : rawInput;
   const outputTokens = activeTurnTelemetry?.usage?.outputTokens || 0;
 
+  // Conversation total cost — sum across all assistant messages
+  const convTotalCost = (currentConversation?.messages || []).reduce((sum, m) => {
+    if (m.role !== "assistant" || !m.telemetry?.usage || !m.telemetry?.model) return sum;
+    return sum + (calcTurnCost(m.telemetry.model, m.telemetry.usage) ?? 0);
+  }, 0);
+
   return (
     <header id="main-header" className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
       {/* Left: Brand & Mobile Sidebar Toggle */}
@@ -173,17 +179,27 @@ export const Navbar: React.FC = () => {
         </button>
       </div>
 
-      {/* Right: Settings + Telemetry Pill */}
+      {/* Right: Settings + Conv Cost + Telemetry Pill */}
       <div className="flex items-center gap-2">
         <button
           id="btn-open-settings"
           onClick={() => setSettingsOpen(true)}
           className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
-          title="Optimization & Developer Settings"
+          title="App Settings (storage, API status)"
           aria-label="Settings"
         >
           <Settings className="w-4 h-4" />
         </button>
+
+        {convTotalCost > 0 && (
+          <span
+            className="hidden sm:flex items-center px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold"
+            title="Estimated cost for this conversation (based on approximate Gemini pricing)"
+          >
+            {formatCost(convTotalCost)}
+          </span>
+        )}
+
         <button
           id="btn-header-telemetry-pill"
           onClick={() => setTokenInspectorOpen(!isTokenInspectorOpen)}
