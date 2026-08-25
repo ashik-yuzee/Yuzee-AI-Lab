@@ -41,7 +41,9 @@ export const Sidebar: React.FC = () => {
   };
 
   const savedTokens = sessionStats?.tokensSaved || 0;
-  const inputTokens = sessionStats?.totalModelInputTokens || 0;
+  // Show uncached (new) input only — cached tokens cost a separate lower rate
+  const inputTokens = sessionStats?.totalUncachedInputTokens ?? sessionStats?.totalModelInputTokens ?? 0;
+  const cachedTokens = sessionStats?.totalCachedTokens || 0;
   const outputTokens = sessionStats?.totalModelOutputTokens || 0;
 
   // Session total cost from all assistant messages across all conversations
@@ -236,9 +238,12 @@ export const Sidebar: React.FC = () => {
           </div>
 
           <div className="text-[11px] font-mono text-slate-700 flex items-center justify-between">
-            <span>In <strong>{inputTokens > 1000 ? `${(inputTokens/1000).toFixed(1)}k` : inputTokens}</strong></span>
+            <span title="New uncached tokens — billed at full input rate">In <strong>{inputTokens > 1000 ? `${(inputTokens/1000).toFixed(1)}k` : inputTokens}</strong></span>
+            {cachedTokens > 0 && (
+              <span className="text-emerald-700" title="Served from cache — billed at ~4× lower cached-read rate">⚡ <strong>{cachedTokens > 1000 ? `${(cachedTokens/1000).toFixed(1)}k` : cachedTokens}</strong></span>
+            )}
             <span>Out <strong>{outputTokens > 1000 ? `${(outputTokens/1000).toFixed(1)}k` : outputTokens}</strong></span>
-            <span className="text-emerald-700">Saved <strong>{savedTokens > 1000 ? `${(savedTokens/1000).toFixed(1)}k` : savedTokens}</strong></span>
+            {!cachedTokens && <span className="text-emerald-700">Saved <strong>{savedTokens > 1000 ? `${(savedTokens/1000).toFixed(1)}k` : savedTokens}</strong></span>}
           </div>
           {sessionTotalCost > 0 && (
             <div className="text-[11px] font-mono text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200 mt-1">

@@ -272,15 +272,25 @@ export const TokenInspector: React.FC = () => {
 
                 <div className="space-y-1 text-[11px] text-slate-300 font-mono pt-2 border-t border-slate-800">
                   <div className="flex justify-between">
-                    <span className="text-slate-400">User Chat Tokens:</span>
-                    <span>{(sessionStats?.totalUserFacingTokens || 0).toLocaleString()}</span>
+                    <span className="text-slate-400">New Input (full rate):</span>
+                    <span>{(sessionStats?.totalUncachedInputTokens ?? sessionStats?.totalModelInputTokens ?? 0).toLocaleString()}</span>
+                  </div>
+                  {(sessionStats?.totalCachedTokens || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-emerald-400">⚡ Cache Reads (~4× cheaper):</span>
+                      <span className="text-emerald-400">{(sessionStats?.totalCachedTokens || 0).toLocaleString()}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between">
+                    <span className="text-slate-400">Output + Thinking:</span>
+                    <span>{((sessionStats?.totalModelOutputTokens || 0) + (sessionStats?.totalThinkingTokens || 0)).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Compaction Calls Cost:</span>
+                    <span className="text-slate-400">Compaction Overhead:</span>
                     <span>{(sessionStats?.compactionTotalTokens || 0).toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-400">Baseline Estimate:</span>
+                    <span className="text-slate-400">Baseline (no caching):</span>
                     <span>{(sessionStats?.baselineEstimatedTokens || 0).toLocaleString()}</span>
                   </div>
                 </div>

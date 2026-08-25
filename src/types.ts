@@ -267,7 +267,8 @@ export interface Conversation {
 export interface SessionCumulativeStats {
   userFacingChatCalls: number;
   totalUserInputTokens: number;
-  totalModelInputTokens: number;
+  totalModelInputTokens: number;    // gross input (uncached + cached)
+  totalUncachedInputTokens: number; // new tokens billed at full input rate
   totalModelOutputTokens: number;
   totalThinkingTokens: number;
   totalCachedTokens: number;

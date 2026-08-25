@@ -148,7 +148,8 @@ const conversations: Map<string, ConversationItem> = new Map();
 const sessionStats = {
   userFacingChatCalls: 0,
   totalUserInputTokens: 0,
-  totalModelInputTokens: 0,
+  totalModelInputTokens: 0,   // gross (uncached + cached); used for cache-hit ratio
+  totalUncachedInputTokens: 0, // only new tokens billed at full input rate
   totalModelOutputTokens: 0,
   totalThinkingTokens: 0,
   totalCachedTokens: 0,
@@ -1368,6 +1369,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     sessionStats.userFacingChatCalls++;
     sessionStats.totalUserInputTokens += userPromptTokens;
     sessionStats.totalModelInputTokens += inputTokens;
+    sessionStats.totalUncachedInputTokens += uncachedInputTokens;
     sessionStats.totalModelOutputTokens += outputTokens;
     if (thinkingTokens) sessionStats.totalThinkingTokens += thinkingTokens;
     if (cachedTokens) sessionStats.totalCachedTokens += cachedTokens;
