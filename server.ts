@@ -517,6 +517,40 @@ app.post("/api/conversations/restore", (req, res) => {
   res.json(restored);
 });
 
+// Generate Conversation Title from first exchange
+app.post("/api/conversations/:id/generate-title", makeRateLimit(10), async (req, res) => {
+  const conv = conversations.get(req.params.id);
+  if (!conv) return res.status(404).json({ error: "Conversation not found" });
+
+  const ai = getGemini();
+  if (!ai) return res.status(503).json({ error: "AI not configured" });
+
+  const userMsg = conv.messages.find((m) => m.role === "user");
+  const assistantMsg = conv.messages.find((m) => m.role === "assistant");
+  if (!userMsg) return res.status(400).json({ error: "No messages to title" });
+
+  const excerpt = [
+    `User: ${userMsg.content.slice(0, 400)}`,
+    assistantMsg ? `Assistant: ${(assistantMsg.content || "").slice(0, 300)}` : "",
+  ].filter(Boolean).join("\n");
+
+  try {
+    const response = await ai.models.generateContent({
+      model: "gemini-3.5-flash-lite",
+      contents: `Write a short title (4-6 words, no quotes, no punctuation at end) summarising this conversation:\n\n${excerpt}`,
+      config: { maxOutputTokens: 20 },
+    });
+    const title = (response.text || "").trim().replace(/^["'`]|["'`]$/g, "").replace(/[.!?]$/, "").slice(0, 60);
+    if (!title) return res.status(500).json({ error: "Empty title generated" });
+    conv.title = title;
+    conv.updatedAt = Date.now();
+    conversations.set(conv.id, conv);
+    res.json({ title });
+  } catch (e: any) {
+    res.status(500).json({ error: e.message || "Title generation failed" });
+  }
+});
+
 // Feedback Endpoint
 app.post("/api/conversations/:id/feedback", (req, res) => {
   const conv = conversations.get(req.params.id);

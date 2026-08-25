@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
+import * as api from "../services/api";
+import { calcTurnCost, formatCost } from "../data/models";
 import {
   Plus,
   MessageSquare,
   Trash2,
+  Pencil,
   RotateCcw,
   X,
   PlayCircle,
@@ -18,6 +21,7 @@ export const Sidebar: React.FC = () => {
     startNewConversation,
     loadDemoConversation,
     removeConversation,
+    updateCurrentConversationSettings,
     sessionStats,
     resetSessionStats,
     isSidebarOpen,
@@ -27,6 +31,8 @@ export const Sidebar: React.FC = () => {
   } = useTokenLab();
 
   const [conversationToDelete, setConversationToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editingTitle, setEditingTitle] = useState("");
 
   const handleOpenLab = (tab = "context") => {
     setActiveLabTab(tab);
@@ -37,6 +43,15 @@ export const Sidebar: React.FC = () => {
   const savedTokens = sessionStats?.tokensSaved || 0;
   const inputTokens = sessionStats?.totalModelInputTokens || 0;
   const outputTokens = sessionStats?.totalModelOutputTokens || 0;
+
+  // Session total cost from all assistant messages across all conversations
+  const sessionTotalCost = conversations.reduce((sum, conv) => {
+    return sum + (conv.messages || []).reduce((s, m) => {
+      if (m.role !== "assistant" || !m.telemetry?.usage || !m.telemetry?.model) return s;
+      const c = calcTurnCost(m.telemetry.model, m.telemetry.usage);
+      return s + (c ?? 0);
+    }, 0);
+  }, 0);
 
   return (
     <>
@@ -125,28 +140,74 @@ export const Sidebar: React.FC = () => {
                       : "text-slate-700 hover:bg-slate-200/50"
                   }`}
                 >
-                  <div className="flex items-center gap-2 min-w-0 pr-6">
+                  <div className="flex items-center gap-2 min-w-0 pr-14">
                     <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-sky-600" : "text-slate-400"}`} />
-                    <div className="truncate">
-                      <span className="truncate block font-medium">{conv.title || "Career Exploration"}</span>
-                      <span className="text-[10px] text-slate-500 block">
-                        {conv.model?.replace("gemini-", "") || "3.6-flash"} · {msgCount} turns
-                      </span>
+                    <div className="truncate min-w-0 flex-1">
+                      {editingId === conv.id ? (
+                        <input
+                          className="w-full text-xs font-medium bg-white border border-sky-400 rounded px-1 py-0.5 outline-none"
+                          value={editingTitle}
+                          autoFocus
+                          onClick={(e) => e.stopPropagation()}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          onBlur={() => {
+                            const trimmed = editingTitle.trim();
+                            if (trimmed) {
+                              if (isSelected) updateCurrentConversationSettings({ title: trimmed });
+                              else api.updateConversation(conv.id, { title: trimmed });
+                            }
+                            setEditingId(null);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              const trimmed = editingTitle.trim();
+                              if (trimmed) {
+                                if (isSelected) updateCurrentConversationSettings({ title: trimmed });
+                                else api.updateConversation(conv.id, { title: trimmed });
+                              }
+                              setEditingId(null);
+                            } else if (e.key === "Escape") {
+                              setEditingId(null);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <span className="truncate block font-medium">{conv.title || "Career Exploration"}</span>
+                          <span className="text-[10px] text-slate-500 block">
+                            {conv.model?.replace("gemini-", "") || "3.6-flash"} · {msgCount} turns
+                          </span>
+                        </>
+                      )}
                     </div>
                   </div>
 
-                  <button
-                    id={`btn-delete-conv-${conv.id}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setConversationToDelete({ id: conv.id, title: conv.title || "Career Exploration" });
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors opacity-70 group-hover:opacity-100 cursor-pointer"
-                    title="Delete Conversation"
-                    aria-label="Delete Conversation"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-0.5">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingId(conv.id);
+                        setEditingTitle(conv.title || "Career Exploration");
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-md transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                      title="Rename Conversation"
+                      aria-label="Rename Conversation"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      id={`btn-delete-conv-${conv.id}`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setConversationToDelete({ id: conv.id, title: conv.title || "Career Exploration" });
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors opacity-70 group-hover:opacity-100 cursor-pointer"
+                      title="Delete Conversation"
+                      aria-label="Delete Conversation"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               );
             })
@@ -179,6 +240,12 @@ export const Sidebar: React.FC = () => {
             <span>Out <strong>{outputTokens > 1000 ? `${(outputTokens/1000).toFixed(1)}k` : outputTokens}</strong></span>
             <span className="text-emerald-700">Saved <strong>{savedTokens > 1000 ? `${(savedTokens/1000).toFixed(1)}k` : savedTokens}</strong></span>
           </div>
+          {sessionTotalCost > 0 && (
+            <div className="text-[11px] font-mono text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200 mt-1">
+              <span>Est. cost</span>
+              <span className="text-emerald-700 font-semibold">{formatCost(sessionTotalCost)}</span>
+            </div>
+          )}
         </div>
       </aside>
 

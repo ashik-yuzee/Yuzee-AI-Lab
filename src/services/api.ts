@@ -138,6 +138,15 @@ export async function resetSessionStats(): Promise<void> {
   });
 }
 
+export async function generateConversationTitle(id: string): Promise<string> {
+  const res = await fetch(`${API_BASE}/api/conversations/${id}/generate-title`, {
+    method: "POST",
+  });
+  if (!res.ok) throw new Error("Failed to generate title");
+  const data = await res.json();
+  return data.title as string;
+}
+
 export async function runBenchmark(payload: {
   conversationId?: string;
   prompt: string;

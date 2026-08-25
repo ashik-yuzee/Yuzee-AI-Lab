@@ -566,6 +566,14 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             }
             return { ...prev, messages: msgs };
           });
+          // Auto-rename after first response if title is still generic
+          const isFirstTurn = (activeConv.messages || []).filter((m: any) => m.role === "assistant").length === 0;
+          if (isFirstTurn) {
+            api.generateConversationTitle(activeConv.id).then((title) => {
+              setCurrentConversation((prev) => prev ? { ...prev, title } : prev);
+              setConversations((prev) => prev.map((c) => (c.id === activeConv.id ? { ...c, title } : c)));
+            }).catch(() => {});
+          }
         },
         onProtocolValidationError: (data) => {
           setCurrentConversation((prev) => {

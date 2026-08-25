@@ -5,7 +5,7 @@ import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { GEMINI_MODELS } from "../data/models";
+import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
 import {
   Sparkles,
   Activity,
@@ -292,6 +292,10 @@ export const ChatArea: React.FC = () => {
                                       <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
                                     )}
                                     {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
+                                    {(() => {
+                                      const cost = calcTurnCost(msg.telemetry.model || "", msg.telemetry.usage);
+                                      return cost !== null ? <> · <span className="text-emerald-700">{formatCost(cost)}</span></> : null;
+                                    })()}
                                   </span>
                                 </button>
                               </div>

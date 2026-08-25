@@ -24,6 +24,10 @@ export interface ModelCapabilityInfo {
   isDefault?: boolean;
   replacementModel?: string;
   badge?: string;
+  // Approximate USD per million tokens (based on Gemini Flash tier pricing patterns)
+  inputPricePerMToken?: number;
+  outputPricePerMToken?: number;
+  cachedReadPricePerMToken?: number;
 }
 
 export const GEMINI_MODELS: ModelCapabilityInfo[] = [
@@ -45,6 +49,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsCaching: true,
     supportsInteractionsApi: true,
     badge: 'Latest',
+    inputPricePerMToken: 0.10,
+    outputPricePerMToken: 0.40,
+    cachedReadPricePerMToken: 0.025,
   },
   {
     id: 'gemini-3.6-flash',
@@ -65,6 +72,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsInteractionsApi: true,
     isRecommended: true,
     badge: 'Recommended',
+    inputPricePerMToken: 0.10,
+    outputPricePerMToken: 0.40,
+    cachedReadPricePerMToken: 0.025,
   },
   {
     id: 'gemini-3.5-flash',
@@ -83,6 +93,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     defaultThinkingLevel: 'medium',
     supportsCaching: true,
     supportsInteractionsApi: true,
+    inputPricePerMToken: 0.10,
+    outputPricePerMToken: 0.40,
+    cachedReadPricePerMToken: 0.025,
   },
   {
     id: 'gemini-3.5-flash-lite',
@@ -103,6 +116,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsInteractionsApi: true,
     isDefault: true,
     badge: 'Default',
+    inputPricePerMToken: 0.075,
+    outputPricePerMToken: 0.30,
+    cachedReadPricePerMToken: 0.019,
   },
   {
     id: 'gemini-3.1-flash-lite',
@@ -121,6 +137,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     defaultThinkingLevel: 'low',
     supportsCaching: true,
     supportsInteractionsApi: true,
+    inputPricePerMToken: 0.075,
+    outputPricePerMToken: 0.30,
+    cachedReadPricePerMToken: 0.019,
   },
   {
     id: 'gemini-2.5-flash',
@@ -140,6 +159,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsCaching: true,
     supportsInteractionsApi: false,
     badge: 'Legacy',
+    inputPricePerMToken: 0.075,
+    outputPricePerMToken: 0.30,
+    cachedReadPricePerMToken: 0.019,
   },
   {
     id: 'gemini-2.5-flash-lite',
@@ -159,6 +181,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsCaching: true,
     supportsInteractionsApi: false,
     badge: 'Legacy',
+    inputPricePerMToken: 0.038,
+    outputPricePerMToken: 0.15,
+    cachedReadPricePerMToken: 0.010,
   },
   {
     id: 'gemini-2.0-flash',
@@ -204,6 +229,34 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
 
 export function getModelInfo(modelId: string): ModelCapabilityInfo | undefined {
   return GEMINI_MODELS.find((m) => m.id === modelId);
+}
+
+export function calcTurnCost(
+  modelId: string,
+  usage: {
+    uncachedInputTokens?: number | null;
+    inputTokens: number;
+    outputTokens: number;
+    thinkingTokens?: number | null;
+    cachedTokens?: number | null;
+  }
+): number | null {
+  const model = getModelInfo(modelId);
+  if (!model?.inputPricePerMToken) return null;
+  const uncachedInput = usage.uncachedInputTokens ?? (usage.inputTokens - (usage.cachedTokens ?? 0));
+  const outputTotal = usage.outputTokens + (usage.thinkingTokens ?? 0);
+  const cached = usage.cachedTokens ?? 0;
+  return (
+    (Math.max(0, uncachedInput) / 1_000_000) * model.inputPricePerMToken +
+    (outputTotal / 1_000_000) * model.outputPricePerMToken! +
+    (cached / 1_000_000) * (model.cachedReadPricePerMToken ?? 0)
+  );
+}
+
+export function formatCost(usd: number): string {
+  if (usd < 0.00001) return '<$0.00001';
+  if (usd < 0.01) return `$${usd.toFixed(5)}`;
+  return `$${usd.toFixed(4)}`;
 }
 
 export function getValidThinkingLevel(modelId: string, currentLevel: string): 'minimal' | 'low' | 'medium' | 'high' {
