@@ -83,10 +83,17 @@ export const TokenInspector: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-2">
                 <div className="p-2.5 rounded-lg bg-sky-50 border border-sky-200">
-                  <span className="text-[10px] text-sky-700 font-medium block">Total Model Input</span>
+                  <span className="text-[10px] text-sky-700 font-medium block">
+                    {usage.cachedTokens && usage.cachedTokens > 0 ? "Gross Input (incl. cache)" : "Total Input"}
+                  </span>
                   <span className="text-sm font-bold text-sky-900">
                     {usage.inputTokens.toLocaleString()} tokens
                   </span>
+                  {usage.cachedTokens && usage.cachedTokens > 0 && (
+                    <span className="text-[10px] text-sky-600 block mt-0.5">
+                      {(usage.uncachedInputTokens ?? usage.inputTokens - usage.cachedTokens).toLocaleString()} actually consumed
+                    </span>
+                  )}
                 </div>
 
                 {/* Output Tokens */}

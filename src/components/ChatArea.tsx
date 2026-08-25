@@ -279,13 +279,17 @@ export const ChatArea: React.FC = () => {
                                 >
                                   <Activity className="w-3 h-3 text-sky-600" />
                                   <span>
-                                    In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong> · Out{" "}
-                                    <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
+                                    {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 ? (
+                                      <>
+                                        ⚡ <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong> cached
+                                        {" "}· In <strong>{(msg.telemetry.usage.uncachedInputTokens ?? msg.telemetry.usage.inputTokens - msg.telemetry.usage.cachedTokens).toLocaleString()}</strong> new
+                                      </>
+                                    ) : (
+                                      <>In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong></>
+                                    )}
+                                    {" "}· Out <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
                                     {msg.telemetry.usage.thinkingTokens !== null && (
                                       <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
-                                    )}
-                                    {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 && (
-                                      <> · Cache <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong></>
                                     )}
                                     {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
                                   </span>

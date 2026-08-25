@@ -93,8 +93,11 @@ export const Navbar: React.FC = () => {
     },
   ];
 
-  // Latest turn telemetry stats for collapsed header pill
-  const inputTokens = activeTurnTelemetry?.usage?.inputTokens || 0;
+  // Latest turn telemetry — show uncached input when cache is active
+  const rawInput = activeTurnTelemetry?.usage?.inputTokens || 0;
+  const cachedTokens = activeTurnTelemetry?.usage?.cachedTokens || 0;
+  const uncachedInput = activeTurnTelemetry?.usage?.uncachedInputTokens ?? (rawInput - cachedTokens);
+  const inputTokens = cachedTokens > 0 ? uncachedInput : rawInput;
   const outputTokens = activeTurnTelemetry?.usage?.outputTokens || 0;
 
   return (
@@ -193,7 +196,8 @@ export const Navbar: React.FC = () => {
         >
           <Activity className="w-3.5 h-3.5 text-sky-600" />
           <span className="text-[11px]">
-            In <strong>{inputTokens}</strong> · Out <strong>{outputTokens}</strong>
+            {cachedTokens > 0 ? <>⚡ <strong>{inputTokens}</strong> new</> : <>In <strong>{inputTokens}</strong></>}
+            {" "}· Out <strong>{outputTokens}</strong>
           </span>
         </button>
       </div>
