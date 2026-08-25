@@ -1113,9 +1113,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     const bypassParsed = JSON.parse(fullAssistantText);
     sendEvent("protocol_response", bypassParsed);
     sendEvent("structured", bypassParsed);
-    const bypassTokens = estimateTokens(fullAssistantText);
     sendEvent("usage", {
-      usage: { currentUserTokens: estimateTokens(userMessageContent), inputTokens: 0, outputTokens: bypassTokens, thinkingTokens: null, cachedTokens: null, toolTokens: null, totalTokens: bypassTokens, finishReason: 'STOP', isMock: true, sources: { inputTokens: "bypass", outputTokens: "bypass", thinkingTokens: "unavailable", cachedTokens: "unavailable", currentUserTokens: "estimate" }, timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt } },
+      usage: { currentUserTokens: estimateTokens(userMessageContent), inputTokens: 0, outputTokens: 0, thinkingTokens: null, cachedTokens: null, toolTokens: null, totalTokens: 0, finishReason: 'STOP', isMock: true, sources: { inputTokens: "bypass", outputTokens: "bypass", thinkingTokens: "unavailable", cachedTokens: "unavailable", currentUserTokens: "estimate" }, timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt } },
       contextMetrics: null,
       compactionMetrics: null,
       timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt },
