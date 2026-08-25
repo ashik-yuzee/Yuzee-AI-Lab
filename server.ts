@@ -69,12 +69,12 @@ async function summarizeEvictedTurns(
 
   const parts: string[] = [];
   if (previousSummary) parts.push(`Existing summary:\n${previousSummary}\n`);
-  parts.push(`Compress these career counseling turns into structured bullets (max 120 tokens).\nOnly include facts that are explicitly stated:\n\n${evictedText}\n\n- Goal: [career target/role]\n- Background: [experience, certs, skills]\n- Constraints: [budget, time, location]\n- Decisions: [committed choices]\n- Open: [unanswered questions, hesitations]\nOmit any field with no clear evidence. Plain bullets only.`);
+  parts.push(`Compress these career counseling turns into structured bullets (max 500 tokens).\nOnly include facts that are explicitly stated:\n\n${evictedText}\n\n- Goal: [career target/role]\n- Background: [experience, certs, skills]\n- Constraints: [budget, time, location]\n- Decisions: [committed choices, chosen courses/certs]\n- Progress: [completed steps, feedback given]\n- Open: [unanswered questions, hesitations]\nOmit any field with no clear evidence. Plain bullets only.`);
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.5-flash-lite',
     contents: parts.join('\n'),
-    config: { maxOutputTokens: 200 },
+    config: { maxOutputTokens: 500 },
   });
 
   const text = (response.text || '').trim();
@@ -248,8 +248,8 @@ app.post("/api/conversations", (req, res) => {
     preset,
     responseMode: req.body?.responseMode || "standard",
     thinkingLevel: req.body?.thinkingLevel || "adaptive",
-    contextBudget: req.body?.contextBudget || 2000,
-    recentTurnsToKeep: req.body?.recentTurnsToKeep || 4,
+    contextBudget: req.body?.contextBudget || 8000,
+    recentTurnsToKeep: req.body?.recentTurnsToKeep || 10,
     careerContext: req.body?.careerContext || {
       facts: "",
       goals: "",
@@ -290,8 +290,8 @@ app.post("/api/conversations/load-demo", (req, res) => {
     preset: "BALANCED",
     responseMode: "standard",
     thinkingLevel: "adaptive",
-    contextBudget: 2000,
-    recentTurnsToKeep: 4,
+    contextBudget: 8000,
+    recentTurnsToKeep: 10,
     careerContext: {
       facts: "2 years IT Support, CompTIA Network+ certified, hands-on Linux experience",
       goals: "Transition into Junior SOC Analyst / Tier 1 Security Analyst within 6-9 months",
@@ -574,8 +574,8 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
   const historicalMessages = conv ? conv.messages : [];
   const mem = memoryManager.assembleMemory(
     historicalMessages,
-    conv?.contextBudget || 2000,
-    conv?.recentTurnsToKeep || 4,
+    conv?.contextBudget || 8000,
+    conv?.recentTurnsToKeep || 10,
     conv?.strategy || "ADAPTIVE_HYBRID",
     conv?.summary || ""
   );
@@ -864,8 +864,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       preset: req.body.preset || "BALANCED",
       responseMode: req.body.responseMode || "standard",
       thinkingLevel: req.body.thinkingLevel || "adaptive",
-      contextBudget: req.body.contextBudget || 2000,
-      recentTurnsToKeep: req.body.recentTurnsToKeep || 4,
+      contextBudget: req.body.contextBudget || 8000,
+      recentTurnsToKeep: req.body.recentTurnsToKeep || 10,
       careerContext: req.body.careerContext || {
         facts: "",
         goals: "",
@@ -1127,7 +1127,16 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     parsedResponse = JSON.parse(fullAssistantText);
     isJsonValid = true;
   } catch {
-    isJsonValid = false;
+    // Flash-Lite sometimes wraps JSON in markdown fences (```json...```). Strip them and retry.
+    const fenceMatch = fullAssistantText.match(/```(?:json)?\s*([\s\S]*?)```/);
+    const extracted = fenceMatch ? fenceMatch[1].trim() : fullAssistantText.trim().replace(/^```json?\s*/, '').replace(/```\s*$/, '');
+    try {
+      parsedResponse = JSON.parse(extracted);
+      isJsonValid = true;
+      fullAssistantText = extracted; // normalise so delta content matches
+    } catch {
+      isJsonValid = false;
+    }
   }
 
   const validationResult = isJsonValid
@@ -1147,40 +1156,42 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   const validationDurationMs = validationEndTime - validationStartTime;
   const wasTruncated = finishReason === 'MAX_TOKENS';
 
-  // STRICT PROTOCOL ACCEPTANCE BOUNDARY:
-  // Only if protocolAccepted === true may the server update activeInteraction and emit protocol_response
-  // ponytail: mock responses bypass validation — they're our own hardcoded data
-  // MAX_TOKENS truncation: JSON is incomplete, always reject regardless of partial parse
-  if (!wasTruncated && (isMockResponse || validationResult.protocolAccepted)) {
+  // Security gate: only trust interaction choices when protocol is fully accepted.
+  // MAX_TOKENS truncation: JSON is incomplete, never trust it.
+  const trustInteraction = !wasTruncated && (isMockResponse || validationResult.protocolAccepted);
+  if (trustInteraction) {
     if (parsedResponse?.interaction && parsedResponse.interaction.kind !== "none") {
       conv.activeInteraction = parsedResponse.interaction;
     } else if (parsedResponse?.interaction && parsedResponse.interaction.kind === "none") {
       conv.activeInteraction = null;
     }
+  }
 
+  // Render gate: send structured event whenever JSON parsed OK (not truncated).
+  // AJV noise / semantic warnings must NOT suppress rendering — the UI shows notices instead.
+  const canRender = !wasTruncated && isJsonValid && parsedResponse !== null;
+  if (canRender) {
     sendEvent("validation", {
       schemaValid: isMockResponse ? true : validationResult.schemaValid,
       semanticValid: isMockResponse ? true : validationResult.semanticValid,
-      protocolAccepted: true,
-      errors: [],
+      protocolAccepted: isMockResponse ? true : validationResult.protocolAccepted,
+      errors: isMockResponse ? [] : validationResult.errors,
       warnings: isMockResponse ? [] : validationResult.warnings,
       promptHash: requestAssembler.getPromptHash(),
       schemaHash: requestAssembler.getSchemaHash(),
     });
-
     sendEvent("protocol_response", parsedResponse);
     sendEvent("structured", parsedResponse);
   } else {
-    // DO NOT update active interaction or trusted state on invalid output
     const truncationErrors = wasTruncated
-      ? [`Response truncated (MAX_TOKENS): output hit the ${assembledReq.maxOutputTokens}-token limit mid-JSON. Try a shorter question or use Quick/Standard mode.`]
+      ? [`Response truncated (MAX_TOKENS): output hit the ${assembledReq.maxOutputTokens}-token limit mid-JSON. Try switching to Detail mode or ask a more focused question.`]
       : [];
     sendEvent("protocol_validation_error", {
-      schemaValid: validationResult.schemaValid,
-      semanticValid: validationResult.semanticValid,
+      schemaValid: isJsonValid ? validationResult.schemaValid : false,
+      semanticValid: isJsonValid ? validationResult.semanticValid : false,
       protocolAccepted: false,
-      errors: [...truncationErrors, ...validationResult.errors],
-      warnings: validationResult.warnings,
+      errors: [...truncationErrors, ...(isJsonValid ? validationResult.errors : ["Failed to parse model output as JSON"])],
+      warnings: isJsonValid ? validationResult.warnings : [],
       aiRequestId: assembledReq.aiRequestId,
       finishReason,
     });
@@ -1303,7 +1314,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     id: messageId,
     role: "assistant",
     content: fullAssistantText,
-    structuredResponse: validationResult.protocolAccepted ? parsedResponse : undefined,
+    structuredResponse: (isJsonValid && parsedResponse !== null && !wasTruncated) ? parsedResponse : undefined,
     telemetry: {
       usage: usageMetrics,
       contextMetrics: contextBreakdown,

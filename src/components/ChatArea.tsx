@@ -205,18 +205,11 @@ export const ChatArea: React.FC = () => {
                           {msg.telemetry?.compactionMetrics && (
                             <div
                               onClick={() => inspectTurnTelemetry(msg.telemetry)}
-                              className="flex items-center justify-between p-2 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg text-xs font-medium cursor-pointer hover:bg-emerald-100/70 transition-colors"
-                              title="Click to inspect compaction break-even telemetry"
+                              className="flex items-center gap-1.5 p-2 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg text-xs font-medium cursor-pointer hover:bg-emerald-100/70 transition-colors"
+                              title="Click to view memory timeline"
                             >
-                              <div className="flex items-center gap-1.5">
-                                <TrendingDown className="w-3.5 h-3.5 text-emerald-600" />
-                                <span>
-                                  Context optimised: {msg.telemetry.compactionMetrics.sourceTokens} → {msg.telemetry.compactionMetrics.summaryTokens} tokens
-                                </span>
-                              </div>
-                              <span className="text-[10px] text-emerald-800 font-semibold underline">
-                                ~{msg.telemetry.compactionMetrics.tokensRemoved} tokens saved (estimated)
-                              </span>
+                              <TrendingDown className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>Context compacted — older turns archived to preserve memory</span>
                             </div>
                           )}
 
@@ -233,7 +226,7 @@ export const ChatArea: React.FC = () => {
                               conversationId={currentConversation?.id}
                             />
                           ) : (
-                            !msg.error && (
+                            !msg.error && !msg.isStreaming && (
                               <div className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-headings:text-slate-900 prose-p:text-slate-800 prose-li:text-slate-800">
                                 <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
                               </div>
@@ -255,7 +248,7 @@ export const ChatArea: React.FC = () => {
                           {msg.telemetry?.usage?.finishReason === 'MAX_TOKENS' && !msg.isStreaming && (
                             <div className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
                               <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                              <span>Response was truncated at the output token limit. The protocol response may be invalid. Try a shorter question or switch to Quick/Standard mode.</span>
+                              <span>Response was truncated at the output token limit. Try switching to Detail mode for longer responses.</span>
                             </div>
                           )}
 
@@ -294,7 +287,7 @@ export const ChatArea: React.FC = () => {
                                     {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 && (
                                       <> · Cache <strong>{msg.telemetry.usage.cachedTokens.toLocaleString()}</strong></>
                                     )}
-                                    {" "}· <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
+                                    {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
                                   </span>
                                 </button>
                               </div>

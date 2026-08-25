@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   CheckCircle2,
   AlertCircle,
@@ -72,6 +74,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
   if (!data) return null;
 
+  // Model may omit id or leave it empty — fall back to value so it matches the server's trusted list
+  const optId = (opt: YuzeeOption): string => opt.id || opt.value;
+
   const interaction = data.interaction;
   const blocks = data.content_blocks || (data as any).blocks || [];
   const service = data.service;
@@ -80,18 +85,18 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   // Single Select
   const handleOptionSelect = (option: YuzeeOption) => {
     if (readOnly || submitted) return;
-    setSelectedOption(option.id);
+    setSelectedOption(optId(option));
     setIsOtherSelected(false);
     if (onInteract) {
       onInteract({
         type: "option_selected",
         interaction_id: interaction?.question_id || "question",
-        option_id: option.id,
+        option_id: optId(option),
         value: option.value || option.label,
         userEvent: {
           interaction: {
             question_id: interaction?.question_id || "question",
-            selected_option_ids: [option.id],
+            selected_option_ids: [optId(option)],
           },
         },
         timestamp: Date.now(),
@@ -145,12 +150,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
     onInteract({
       type: "ranked_submission",
       interaction_id: interaction?.question_id || "question",
-      ranked_ids: rankedItems.map((i) => i.id),
+      ranked_ids: rankedItems.map((i) => optId(i)),
       value: rankedItems.map((i) => i.label).join(" > "),
       userEvent: {
         interaction: {
           question_id: interaction?.question_id || "question",
-          ranked_option_ids: rankedItems.map((i) => i.id),
+          ranked_option_ids: rankedItems.map((i) => optId(i)),
         },
       },
       timestamp: Date.now(),
@@ -279,7 +284,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="text-sm leading-relaxed text-slate-800 space-y-1">
             {block.title && <h4 className="font-semibold text-slate-900 mb-1">{block.title}</h4>}
-            <p className="whitespace-pre-wrap">{block.text || (block as any).body}</p>
+            <div className="prose prose-slate prose-sm max-w-none prose-p:my-0.5 prose-li:my-0 prose-headings:text-slate-900">
+              <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).body || ""}</Markdown>
+            </div>
           </div>
         );
 
@@ -494,7 +501,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   return (
     <div className="space-y-4">
       {/* Schema / Semantic Validation Warning if any */}
-      {!schemaValid && (
+      {!schemaValid && !semanticValid && (
         <div className="p-2.5 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-900 flex items-start gap-2">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <div>
@@ -532,10 +539,10 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             <div className="space-y-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {interaction.options.map((opt) => {
-                  const isSelected = selectedOption === opt.id;
+                  const isSelected = selectedOption === optId(opt);
                   return (
                     <button
-                      key={opt.id}
+                      key={optId(opt)}
                       disabled={submitted || readOnly}
                       onClick={() => handleOptionSelect(opt)}
                       className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
@@ -601,11 +608,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             <div className="space-y-2">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {interaction.options.map((opt) => {
-                  const isChecked = selectedMultiOptions.includes(opt.id);
+                  const isChecked = selectedMultiOptions.includes(optId(opt));
                   return (
                     <div
-                      key={opt.id}
-                      onClick={() => toggleMultiOption(opt.id)}
+                      key={optId(opt)}
+                      onClick={() => toggleMultiOption(optId(opt))}
                       className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                         isChecked
                           ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"

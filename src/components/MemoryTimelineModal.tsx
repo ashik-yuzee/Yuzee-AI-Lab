@@ -88,27 +88,9 @@ export const MemoryTimelineModal: React.FC = () => {
                         </span>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 text-center text-[11px] pt-1">
-                        <div className="bg-slate-50 p-1.5 rounded border border-slate-200">
-                          <span className="text-[10px] text-slate-500 block">Source Input</span>
-                          <span className="font-bold text-slate-800">{evt.sourceTokens} tokens</span>
-                        </div>
-
-                        <div className="bg-slate-50 p-1.5 rounded border border-slate-200">
-                          <span className="text-[10px] text-slate-500 block">Summary Output</span>
-                          <span className="font-bold text-indigo-700">{evt.summaryTokens} tokens</span>
-                        </div>
-
-                        <div className="bg-emerald-50 p-1.5 rounded border border-emerald-200">
-                          <span className="text-[10px] text-emerald-700 block">Removed</span>
-                          <span className="font-bold text-emerald-800">-{evt.tokensRemoved} tokens</span>
-                        </div>
-                      </div>
-
-                      <div className="p-2 bg-amber-50/70 border border-amber-200 rounded-lg flex items-center justify-between text-[11px] text-amber-900">
-                        <span>Compaction invocation cost: <strong>{evt.compactionTotalCost} tokens</strong></span>
-                        <span>Break-even: <strong>~{evt.estimatedBreakEvenTurns} turns</strong></span>
-                      </div>
+                      <p className="text-[11px] text-slate-500 pt-1">
+                        Older turns were removed from context and compressed into memory bullets by a background summarisation call. Token counts for this operation are not available synchronously.
+                      </p>
                     </div>
                   </div>
                 ))}

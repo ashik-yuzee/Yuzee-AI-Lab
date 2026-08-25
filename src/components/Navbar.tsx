@@ -94,8 +94,6 @@ export const Navbar: React.FC = () => {
   // Latest turn telemetry stats for collapsed header pill
   const inputTokens = activeTurnTelemetry?.usage?.inputTokens || 0;
   const outputTokens = activeTurnTelemetry?.usage?.outputTokens || 0;
-  const tokensSaved = activeTurnTelemetry?.compactionMetrics?.tokensRemoved || 
-    (sessionStats?.tokensSaved ? Math.min(sessionStats.tokensSaved, 99999) : 0);
 
   return (
     <header id="main-header" className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -185,9 +183,6 @@ export const Navbar: React.FC = () => {
           <Activity className="w-3.5 h-3.5 text-sky-600" />
           <span className="text-[11px]">
             In <strong>{inputTokens}</strong> · Out <strong>{outputTokens}</strong>
-            {tokensSaved > 0 && (
-              <> · <span className="text-emerald-700">Saved <strong>{tokensSaved}</strong></span></>
-            )}
           </span>
         </button>
       </div>

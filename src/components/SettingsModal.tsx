@@ -16,8 +16,8 @@ export const SettingsModal: React.FC = () => {
   const [customSys, setCustomSys] = useState(currentConversation?.customSystemPrompt || "");
   const [strategy, setStrategy] = useState<OptimizationStrategy>(currentConversation?.strategy || "ADAPTIVE_HYBRID");
   const [thinking, setThinking] = useState<ThinkingLevel>(currentConversation?.thinkingLevel || "adaptive");
-  const [budget, setBudget] = useState(currentConversation?.contextBudget || 2000);
-  const [recentTurns, setRecentTurns] = useState(currentConversation?.recentTurnsToKeep || 4);
+  const [budget, setBudget] = useState(currentConversation?.contextBudget || 8000);
+  const [recentTurns, setRecentTurns] = useState(currentConversation?.recentTurnsToKeep || 10);
   const [savedNotice, setSavedNotice] = useState(false);
 
   if (!isSettingsOpen) return null;

@@ -82,14 +82,6 @@ export const TokenInspector: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                {/* User Typed vs Actual Input (Rule #8) */}
-                <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-200">
-                  <span className="text-[10px] text-slate-500 block">User Message Typed</span>
-                  <span className="text-sm font-bold text-slate-900">
-                    {usage.currentUserTokens !== null ? `${usage.currentUserTokens} tokens` : "N/A"}
-                  </span>
-                </div>
-
                 <div className="p-2.5 rounded-lg bg-sky-50 border border-sky-200">
                   <span className="text-[10px] text-sky-700 font-medium block">Total Model Input</span>
                   <span className="text-sm font-bold text-sky-900">
@@ -191,7 +183,7 @@ export const TokenInspector: React.FC = () => {
               <div className="space-y-2 pt-2 border-t border-slate-200">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-slate-800 uppercase text-[11px] tracking-wider">
-                    Context Breakdown
+                    Context Composition
                   </span>
                   <button
                     onClick={() => setContextInspectorOpen(true)}
@@ -201,50 +193,47 @@ export const TokenInspector: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="space-y-1.5 bg-slate-50 p-2.5 rounded-lg border border-slate-200 font-mono text-[11px]">
-                  <div className="flex justify-between text-slate-600">
-                    <span>System Prompt:</span>
-                    <span className="font-medium text-slate-900">{context.systemInstructionTokens} tokens</span>
+                <div className="space-y-1 bg-slate-50 p-2.5 rounded-lg border border-slate-200 text-[11px]">
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0"></span>
+                    System prompt
                   </div>
                   {context.careerContextTokens > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>Career Capsule:</span>
-                      <span className="font-medium text-sky-700">{context.careerContextTokens} tokens</span>
+                    <div className="flex items-center gap-1.5 text-sky-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-sky-400 flex-shrink-0"></span>
+                      Career context capsule
                     </div>
                   )}
                   {context.summaryTokens > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>Conversation Summary:</span>
-                      <span className="font-medium text-indigo-700">{context.summaryTokens} tokens</span>
+                    <div className="flex items-center gap-1.5 text-indigo-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 flex-shrink-0"></span>
+                      Conversation summary
                     </div>
                   )}
                   {context.recentTurnsTokens > 0 && (
-                    <div className="flex justify-between text-slate-600">
-                      <span>Recent Turns:</span>
-                      <span className="font-medium text-slate-900">{context.recentTurnsTokens} tokens</span>
+                    <div className="flex items-center gap-1.5 text-slate-600">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0"></span>
+                      Recent dialogue turns
                     </div>
                   )}
-                  <div className="flex justify-between text-slate-600">
-                    <span>Current Message:</span>
-                    <span className="font-medium text-slate-900">{context.currentMessageTokens} tokens</span>
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-400 flex-shrink-0"></span>
+                    Current message
                   </div>
-                  {context.removedTokens > 0 && (
-                    <div className="flex justify-between text-emerald-700 pt-1 border-t border-slate-200 font-sans">
-                      <span>Removed by Optimisation:</span>
-                      <span className="font-bold text-emerald-800">-{context.removedTokens} tokens</span>
-                    </div>
-                  )}
+                  <p className="text-[10px] text-slate-400 pt-1 border-t border-slate-200">
+                    Per-section token counts are not available from the Gemini API — only the total above is exact.
+                  </p>
                 </div>
               </div>
             )}
 
-            {/* 3. COMPACTION BREAK-EVEN ANALYSIS (Rule #15) */}
+            {/* 3. COMPACTION EVENT */}
             {compaction && (
               <div className="space-y-2 pt-2 border-t border-slate-200">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-slate-800 uppercase text-[11px] tracking-wider flex items-center gap-1">
                     <TrendingDown className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Compaction Break-Even</span>
+                    <span>Context Compaction</span>
                   </span>
                   <button
                     onClick={() => setMemoryTimelineOpen(true)}
@@ -254,20 +243,8 @@ export const TokenInspector: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-lg space-y-2">
-                  <div className="grid grid-cols-2 gap-2 text-center">
-                    <div className="bg-white p-2 rounded border border-amber-200 shadow-2xs">
-                      <span className="text-[10px] text-slate-500 block">Compaction Cost</span>
-                      <span className="font-bold text-amber-800">{compaction.compactionTotalCost} tokens</span>
-                    </div>
-                    <div className="bg-white p-2 rounded border border-amber-200 shadow-2xs">
-                      <span className="text-[10px] text-slate-500 block">Break-Even Point</span>
-                      <span className="font-bold text-slate-900">~{compaction.estimatedBreakEvenTurns} turns</span>
-                    </div>
-                  </div>
-                  <p className="text-[10px] text-slate-600 leading-normal">
-                    Compaction consumed {compaction.compactionTotalCost} tokens to compress historical dialogue from {compaction.sourceTokens} tokens to {compaction.summaryTokens} tokens.
-                  </p>
+                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-[11px] text-emerald-900">
+                  Older turns were archived this turn. A background summarisation job compressed the evicted dialogue into structured memory bullets. Token counts for this operation are not available synchronously.
                 </div>
               </div>
             )}

@@ -240,8 +240,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           mode: "AUTO",
           strategy: "ADAPTIVE_HYBRID",
           thinkingLevel: "adaptive",
-          recentTurnsToKeep: 4,
-          contextBudget: 2000,
+          recentTurnsToKeep: 10,
+          contextBudget: 8000,
           responseMode: "standard",
         };
         break;
@@ -283,8 +283,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           preset,
           strategy: "SLIDING_WINDOW",
           thinkingLevel: "medium",
-          recentTurnsToKeep: 6,
-          contextBudget: 4000,
+          recentTurnsToKeep: 10,
+          contextBudget: 8000,
           responseMode: "standard",
         };
         break;
@@ -293,8 +293,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           preset,
           strategy: "ADAPTIVE_HYBRID",
           thinkingLevel: "adaptive",
-          recentTurnsToKeep: 4,
-          contextBudget: 2000,
+          recentTurnsToKeep: 10,
+          contextBudget: 8000,
           responseMode: "standard",
         };
         break;
@@ -456,7 +456,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             optimizationStrategy: currentConversation?.strategy || "ADAPTIVE_HYBRID",
             preset: currentConversation?.preset || "BALANCED",
             responseMode: currentConversation?.responseMode || "standard",
-            recentTurnsCount: currentConversation?.recentTurnsToKeep || 4,
+            recentTurnsCount: currentConversation?.recentTurnsToKeep || 10,
             hasSummary: !!usagePayload.contextMetrics?.summaryTokens,
             timestamp: Date.now(),
           };

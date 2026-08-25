@@ -128,13 +128,13 @@ export class YuzeeRequestAssembler {
   public resolveOutputBudget(mode: string = 'standard', _model: string = ''): number {
     // Protocol v1.3 JSON has a fixed minimum schema size regardless of model — no flash-lite discount
     switch (mode.toLowerCase()) {
-      case 'quick':   return 1024;
-      case 'standard': return 2048;
+      case 'quick':   return 2048;
+      case 'standard': return 6144;
       case 'explain':
       case 'explore':
-      case 'decide':  return 3072;
-      case 'detail':  return 4096;
-      default:        return 2048;
+      case 'decide':  return 8192;
+      case 'detail':  return 8192;
+      default:        return 6144;
     }
   }
 
