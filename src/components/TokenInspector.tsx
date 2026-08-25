@@ -277,8 +277,14 @@ export const TokenInspector: React.FC = () => {
                   </div>
                   {(sessionStats?.totalCachedTokens || 0) > 0 && (
                     <div className="flex justify-between">
-                      <span className="text-emerald-400">⚡ Cache Reads (~4× cheaper):</span>
+                      <span className="text-emerald-400">⚡ Cache reads (cumulative):</span>
                       <span className="text-emerald-400">{(sessionStats?.totalCachedTokens || 0).toLocaleString()}</span>
+                    </div>
+                  )}
+                  {(sessionStats?.totalCachedTokens || 0) > 0 && (sessionStats?.userFacingChatCalls || 0) > 0 && (
+                    <div className="flex justify-between">
+                      <span className="text-slate-500 pl-2">↳ per turn (system prompt):</span>
+                      <span className="text-slate-500">{Math.round((sessionStats?.totalCachedTokens || 0) / (sessionStats?.userFacingChatCalls || 1)).toLocaleString()}</span>
                     </div>
                   )}
                   <div className="flex justify-between">

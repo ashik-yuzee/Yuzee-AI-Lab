@@ -242,7 +242,7 @@ export const Sidebar: React.FC = () => {
           <div className="text-[11px] font-mono text-slate-700 flex items-center justify-between">
             <span title="New uncached tokens — billed at full input rate">In <strong>{inputTokens > 1000 ? `${(inputTokens/1000).toFixed(1)}k` : inputTokens}</strong></span>
             {cachedTokens > 0 && (
-              <span className="text-emerald-700" title="Served from cache — billed at ~4× lower cached-read rate">⚡ <strong>{cachedTokens > 1000 ? `${(cachedTokens/1000).toFixed(1)}k` : cachedTokens}</strong></span>
+              <span className="text-emerald-700" title={`Cumulative cache reads across all turns this session (≈${Math.round(cachedTokens / Math.max(1, sessionStats?.userFacingChatCalls ?? 1)).toLocaleString()} tokens/turn from cached system prompt) — billed at ~4× lower rate`}>⚡ <strong>{cachedTokens > 1000 ? `${(cachedTokens/1000).toFixed(1)}k` : cachedTokens}</strong> reads</span>
             )}
             <span>Out <strong>{outputTokens > 1000 ? `${(outputTokens/1000).toFixed(1)}k` : outputTokens}</strong></span>
             {!cachedTokens && <span className="text-emerald-700">Saved <strong>{savedTokens > 1000 ? `${(savedTokens/1000).toFixed(1)}k` : savedTokens}</strong></span>}
