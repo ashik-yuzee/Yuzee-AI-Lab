@@ -762,8 +762,14 @@ app.get("/api/tokens/session-stats", (req, res) => {
     : 0;
   const calls = sessionStats.userFacingChatCalls;
 
+  // Derive uncached input in case old accumulated stats pre-date the new field
+  const totalUncachedInputTokens = sessionStats.totalUncachedInputTokens > 0
+    ? sessionStats.totalUncachedInputTokens
+    : Math.max(0, sessionStats.totalModelInputTokens - sessionStats.totalCachedTokens);
+
   res.json({
     ...sessionStats,
+    totalUncachedInputTokens,
     trueTotalConsumption: trueTotal,
     tokensSaved: saved,
     netSavingsPercentage: netSavingsPercent,

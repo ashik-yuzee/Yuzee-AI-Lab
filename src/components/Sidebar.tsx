@@ -41,10 +41,12 @@ export const Sidebar: React.FC = () => {
   };
 
   const savedTokens = sessionStats?.tokensSaved || 0;
-  // Show uncached (new) input only — cached tokens cost a separate lower rate
-  const inputTokens = sessionStats?.totalUncachedInputTokens ?? sessionStats?.totalModelInputTokens ?? 0;
-  const cachedTokens = sessionStats?.totalCachedTokens || 0;
+  const grossInputTokens = sessionStats?.totalModelInputTokens ?? 0;
+  const cachedTokens = sessionStats?.totalCachedTokens ?? 0;
   const outputTokens = sessionStats?.totalModelOutputTokens || 0;
+  // Show only new uncached tokens — cached reads are a separate (cheaper) cost
+  const inputTokens = sessionStats?.totalUncachedInputTokens
+    ?? Math.max(0, grossInputTokens - cachedTokens);
 
   // Session total cost from all assistant messages across all conversations
   const sessionTotalCost = conversations.reduce((sum, conv) => {

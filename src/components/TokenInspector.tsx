@@ -273,7 +273,7 @@ export const TokenInspector: React.FC = () => {
                 <div className="space-y-1 text-[11px] text-slate-300 font-mono pt-2 border-t border-slate-800">
                   <div className="flex justify-between">
                     <span className="text-slate-400">New Input (full rate):</span>
-                    <span>{(sessionStats?.totalUncachedInputTokens ?? sessionStats?.totalModelInputTokens ?? 0).toLocaleString()}</span>
+                    <span>{(sessionStats?.totalUncachedInputTokens ?? Math.max(0, (sessionStats?.totalModelInputTokens ?? 0) - (sessionStats?.totalCachedTokens ?? 0))).toLocaleString()}</span>
                   </div>
                   {(sessionStats?.totalCachedTokens || 0) > 0 && (
                     <div className="flex justify-between">
