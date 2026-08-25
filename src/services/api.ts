@@ -60,6 +60,16 @@ export async function deleteConversation(id: string): Promise<void> {
   if (!res.ok) throw new Error("Failed to delete conversation");
 }
 
+export async function restoreConversation(conv: Conversation): Promise<Conversation> {
+  const res = await fetch(`${API_BASE}/api/conversations/restore`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(conv),
+  });
+  if (!res.ok) throw new Error("Failed to restore conversation");
+  return res.json();
+}
+
 export async function resetConversationMemory(id: string): Promise<Conversation> {
   const res = await fetch(`${API_BASE}/api/conversations/${id}/reset-memory`, {
     method: "POST",

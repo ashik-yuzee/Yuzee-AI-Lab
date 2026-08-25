@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback, useRef } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import {
   Conversation,
   ChatMessage,
@@ -85,9 +85,40 @@ interface TokenLabContextType {
   refreshStats: () => Promise<void>;
   resetSessionStats: () => Promise<void>;
   inspectTurnTelemetry: (telemetry: any) => void;
+  localStorageStats: { bytes: number; conversationCount: number; storageAvailable: boolean };
+  clearLocalData: () => void;
 }
 
 const TokenLabContext = createContext<TokenLabContextType | null>(null);
+
+const LS_KEY = "yuzee-token-lab-v1";
+
+function lsLoad(): Conversation[] {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as Conversation[];
+  } catch { return []; }
+}
+
+function lsSave(convs: Conversation[]): void {
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(convs));
+  } catch (e: any) {
+    if (e?.name === "QuotaExceededError") {
+      // Drop oldest conversation and retry once
+      const trimmed = convs.slice(0, Math.max(1, convs.length - 1));
+      try { localStorage.setItem(LS_KEY, JSON.stringify(trimmed)); } catch { /* ignore */ }
+    }
+  }
+}
+
+function lsBytes(): number {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    return raw ? new Blob([raw]).size : 0;
+  } catch { return 0; }
+}
 
 export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -115,7 +146,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [selectedModel, setSelectedModel] = useState<string>("gemini-3.5-flash-lite");
   const pendingModel = useRef<string>("gemini-3.5-flash-lite");
 
-  // Load initial data
+  // Load initial data — falls back to localStorage when server has no conversations (e.g. restart)
   const loadInitialData = useCallback(async () => {
     try {
       setIsLoading(true);
@@ -130,17 +161,26 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
       if (convs && convs.length > 0) {
         setConversations(convs);
+        // Sync latest versions to localStorage
+        lsSave(convs);
         setCurrentConversation(convs[0]);
-        // Set latest telemetry if exists
         const lastAssistant = convs[0].messages?.filter((m) => m.role === "assistant").pop();
-        if (lastAssistant?.telemetry) {
-          setActiveTurnTelemetry(lastAssistant.telemetry);
-        }
+        if (lastAssistant?.telemetry) setActiveTurnTelemetry(lastAssistant.telemetry);
       } else {
-        // Zero conversations is a valid initial state (Section 79)
-        setConversations([]);
-        setCurrentConversation(null);
-        setActiveTurnTelemetry(null);
+        // Server is empty — restore from localStorage (covers server restarts)
+        const saved = lsLoad();
+        if (saved.length > 0) {
+          // Restore all conversations to server in parallel (non-blocking on failure)
+          await Promise.allSettled(saved.map((c) => api.restoreConversation(c).catch(() => {})));
+          setConversations(saved);
+          setCurrentConversation(saved[0]);
+          const lastAssistant = saved[0].messages?.filter((m) => m.role === "assistant").pop();
+          if (lastAssistant?.telemetry) setActiveTurnTelemetry(lastAssistant.telemetry);
+        } else {
+          setConversations([]);
+          setCurrentConversation(null);
+          setActiveTurnTelemetry(null);
+        }
       }
     } catch (e) {
       console.error("Initialization error:", e);
@@ -152,6 +192,28 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     loadInitialData();
   }, [loadInitialData]);
+
+  // Persist to localStorage on every conversation change (but not during initial load)
+  const isFirstLoad = useRef(true);
+  useEffect(() => {
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+      return;
+    }
+    if (conversations.length > 0) {
+      lsSave(conversations);
+    }
+  }, [conversations]);
+
+  const localStorageStats = useMemo(() => {
+    const bytes = lsBytes();
+    const saved = lsLoad();
+    return { bytes, conversationCount: saved.length, storageAvailable: typeof localStorage !== "undefined" };
+  }, [conversations]); // recompute when conversations change
+
+  const clearLocalData = useCallback(() => {
+    try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+  }, []);
 
   const refreshStats = useCallback(async () => {
     try {
@@ -631,6 +693,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         refreshStats,
         resetSessionStats: resetSessionStatsAction,
         inspectTurnTelemetry,
+        localStorageStats,
+        clearLocalData,
       }}
     >
       {children}

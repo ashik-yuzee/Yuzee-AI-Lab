@@ -7,6 +7,7 @@ import {
   FlaskConical,
   Menu,
   Activity,
+  Settings,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS } from "../data/models";
@@ -24,6 +25,7 @@ export const Navbar: React.FC = () => {
     setSidebarOpen,
     isTokenInspectorOpen,
     setTokenInspectorOpen,
+    setSettingsOpen,
     activeTurnTelemetry,
     sessionStats,
   } = useTokenLab();
@@ -168,8 +170,17 @@ export const Navbar: React.FC = () => {
         </button>
       </div>
 
-      {/* Right: Collapsed Telemetry Pill (In X · Out Y · Saved Z) */}
+      {/* Right: Settings + Telemetry Pill */}
       <div className="flex items-center gap-2">
+        <button
+          id="btn-open-settings"
+          onClick={() => setSettingsOpen(true)}
+          className="p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+          title="Optimization & Developer Settings"
+          aria-label="Settings"
+        >
+          <Settings className="w-4 h-4" />
+        </button>
         <button
           id="btn-header-telemetry-pill"
           onClick={() => setTokenInspectorOpen(!isTokenInspectorOpen)}

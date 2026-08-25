@@ -216,7 +216,7 @@ app.get("/api/config/capabilities", (req, res) => {
     supportsThinking: true,
     supportsCachedTokens: true,
     supportsInteractionsApi: true,
-    supportsExplicitCache: false,
+    supportsExplicitCache: true,
     geminiApiKeyPresent: hasKey,
     runtime: "preview-adapter",
   });
@@ -472,6 +472,49 @@ app.delete("/api/conversations/:id", (req, res) => {
     return res.status(404).json({ error: "Conversation not found" });
   }
   res.status(204).send();
+});
+
+// Restore Conversation (from localStorage backup after server restart)
+app.post("/api/conversations/restore", (req, res) => {
+  const data = req.body;
+  if (!data || !data.id) return res.status(400).json({ error: "Missing conversation id" });
+
+  // Skip if already in memory (server hasn't restarted)
+  if (conversations.has(data.id)) {
+    return res.json(conversations.get(data.id));
+  }
+
+  const restored: ConversationItem = {
+    id: data.id,
+    title: data.title || "Restored Conversation",
+    createdAt: data.createdAt || Date.now(),
+    updatedAt: data.updatedAt || Date.now(),
+    model: data.model || "gemini-3.5-flash-lite",
+    mode: data.mode || "AUTO",
+    strategy: data.strategy || "ADAPTIVE_HYBRID",
+    preset: data.preset || "BALANCED",
+    responseMode: data.responseMode || "standard",
+    thinkingLevel: data.thinkingLevel || "adaptive",
+    contextBudget: data.contextBudget || 270000,
+    recentTurnsToKeep: data.recentTurnsToKeep || 100,
+    careerContext: data.careerContext || {},
+    summary: data.summary || "",
+    summaryVersion: data.summaryVersion || 0,
+    systemPromptMode: data.systemPromptMode || "default",
+    customSystemPrompt: data.customSystemPrompt || "",
+    useInteractionsApi: data.useInteractionsApi || false,
+    useFlashLiteUtility: data.useFlashLiteUtility ?? true,
+    activeInteraction: data.activeInteraction || null,
+    messages: Array.isArray(data.messages) ? data.messages : [],
+    compactionHistory: Array.isArray(data.compactionHistory) ? data.compactionHistory : [],
+  };
+
+  if (conversations.size >= 500) {
+    const oldest = Array.from(conversations.values()).sort((a, b) => a.updatedAt - b.updatedAt)[0];
+    if (oldest) conversations.delete(oldest.id);
+  }
+  conversations.set(restored.id, restored);
+  res.json(restored);
 });
 
 // Feedback Endpoint
