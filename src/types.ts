@@ -67,11 +67,12 @@ export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high' | 'adaptive';
 
 export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED';
 
-export type OptimizationStrategy = 
-  | 'BASELINE'         // Baseline / Full History (High token usage)
-  | 'SLIDING_WINDOW'   // Turn-safe Sliding Window
-  | 'SUMMARY_RECENT'   // Incremental Summary + Recent Turns
-  | 'ADAPTIVE_HYBRID'; // Token-budget Prioritized Adaptive Hybrid (Default)
+export type OptimizationStrategy =
+  | 'BASELINE'          // Baseline / Full History (High token usage)
+  | 'SLIDING_WINDOW'    // Turn-safe Sliding Window
+  | 'SUMMARY_RECENT'    // Incremental Summary + Recent Turns
+  | 'ADAPTIVE_HYBRID'   // Token-budget Prioritized Adaptive Hybrid (Default)
+  | 'SEMANTIC_EVIDENCE'; // Episodic memory with typed temporal long-term records
 
 export type PresetMode = 'MAX_QUALITY' | 'BALANCED' | 'MAX_SAVINGS' | 'ADVANCED';
 

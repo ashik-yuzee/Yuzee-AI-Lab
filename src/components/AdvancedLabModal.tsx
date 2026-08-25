@@ -209,6 +209,7 @@ export const AdvancedLabModal: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {[
                       { id: "ADAPTIVE_HYBRID", title: "Adaptive Hybrid (Recommended)", desc: "Prioritized budget + stable prefix caching + incremental compaction." },
+                      { id: "SEMANTIC_EVIDENCE", title: "Semantic Evidence (Experimental)", desc: "Episodic memory with typed temporal records. Retrieves relevant evidence from past episodes instead of compacting." },
                       { id: "SUMMARY_RECENT", title: "Summary + Recent Turns", desc: "Compacts older turns into a semantic summary while retaining last N turns." },
                       { id: "SLIDING_WINDOW", title: "Turn-safe Sliding Window", desc: "Strictly evicts turns exceeding window limit without background summary." },
                       { id: "BASELINE", title: "Baseline (Full History)", desc: "Sends full historical transcript without compaction (unbounded token growth)." },

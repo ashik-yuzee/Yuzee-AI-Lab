@@ -22,6 +22,7 @@ public class Conversation {
     private String customSystemPrompt = "";
     private boolean useInteractionsApi = false;
     private boolean useExplicitCache = false;
+    private boolean useFlashLiteUtility = false;
     private List<Message> messages = new ArrayList<>();
     private List<CompactionMetrics> compactionHistory = new ArrayList<>();
 
@@ -90,6 +91,9 @@ public class Conversation {
 
     public boolean isUseExplicitCache() { return useExplicitCache; }
     public void setUseExplicitCache(boolean useExplicitCache) { this.useExplicitCache = useExplicitCache; }
+
+    public boolean isUseFlashLiteUtility() { return useFlashLiteUtility; }
+    public void setUseFlashLiteUtility(boolean useFlashLiteUtility) { this.useFlashLiteUtility = useFlashLiteUtility; }
 
     public List<Message> getMessages() { return messages; }
     public void setMessages(List<Message> messages) { this.messages = messages; }

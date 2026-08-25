@@ -101,6 +101,10 @@ public class BenchmarkService {
                     item.setLabel("Adaptive Hybrid (Budget Prioritized)");
                     item.setNotes("Optimal token efficiency; budget-aware prioritization + stable prefix for implicit caching.");
                 }
+                case SEMANTIC_EVIDENCE -> {
+                    item.setLabel("Semantic Evidence Memory");
+                    item.setNotes("Semantic Evidence Memory — episodic retrieval with typed temporal memory.");
+                }
             }
 
             response.getResults().add(item);

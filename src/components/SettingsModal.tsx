@@ -76,6 +76,7 @@ export const SettingsModal: React.FC = () => {
             <div className="grid sm:grid-cols-2 gap-2">
               {[
                 { id: "ADAPTIVE_HYBRID", label: "Adaptive Hybrid (Default)", desc: "Token-budget prioritised dynamic context allocation" },
+                { id: "SEMANTIC_EVIDENCE", label: "Semantic Evidence (Experimental)", desc: "Episodic memory with typed temporal records and evidence retrieval" },
                 { id: "SUMMARY_RECENT", label: "Summary + Recent Turns", desc: "Incremental compaction of evicted turns into summary" },
                 { id: "SLIDING_WINDOW", label: "Sliding Window", desc: "Turn-safe window keeping last N complete turns" },
                 { id: "BASELINE", label: "Baseline (Full History)", desc: "Sends entire uncompressed transcript (High token cost)" },

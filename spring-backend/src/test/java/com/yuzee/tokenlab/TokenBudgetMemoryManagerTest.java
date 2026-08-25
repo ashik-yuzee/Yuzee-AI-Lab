@@ -44,6 +44,38 @@ public class TokenBudgetMemoryManagerTest {
     }
 
     @Test
+    void testSummaryRecentPersistsSummaryToConversation() {
+        Conversation conv = new Conversation("test-sr", "Summary Persistence Test");
+        for (int i = 1; i <= 6; i++) {
+            conv.getMessages().add(new Message("u" + i, MessageRole.USER, "I want to become a software engineer turn " + i));
+            conv.getMessages().add(new Message("a" + i, MessageRole.ASSISTANT, "Here are steps for turn " + i));
+        }
+        assertEquals("", conv.getSummary());
+        assertEquals(0, conv.getSummaryVersion());
+
+        memoryManager.assembleMemory(conv, "Next question", OptimizationStrategy.SUMMARY_RECENT, 2000, 2);
+
+        assertNotNull(conv.getSummary(), "Summary must be persisted back to conversation");
+        // With 6 turns and keeping 2, 4 are evicted — compactor produces non-empty summary
+        assertTrue(conv.getSummaryVersion() >= 1, "SummaryVersion must increment after compaction");
+    }
+
+    @Test
+    void testAdaptiveHybridPersistsSummaryToConversation() {
+        Conversation conv = new Conversation("test-ah-persist", "Adaptive Hybrid Persistence Test");
+        for (int i = 1; i <= 6; i++) {
+            conv.getMessages().add(new Message("u" + i, MessageRole.USER, "Career question turn " + i));
+            conv.getMessages().add(new Message("a" + i, MessageRole.ASSISTANT, "Career answer turn " + i));
+        }
+        assertEquals("", conv.getSummary());
+
+        memoryManager.assembleMemory(conv, "Current question", OptimizationStrategy.ADAPTIVE_HYBRID, 500, 2);
+
+        assertNotNull(conv.getSummary(), "ADAPTIVE_HYBRID must persist summary to conversation");
+        assertTrue(conv.getSummaryVersion() >= 1, "SummaryVersion must increment after compaction");
+    }
+
+    @Test
     void testAdaptiveHybridBudgetEnforcement() {
         Conversation conv = new Conversation("test-2", "Adaptive Test");
         for (int i = 1; i <= 6; i++) {

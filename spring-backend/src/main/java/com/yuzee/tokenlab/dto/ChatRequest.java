@@ -17,6 +17,7 @@ public class ChatRequest {
     private String customSystemPrompt;
     private Boolean useInteractionsApi;
     private Boolean useExplicitCache;
+    private Boolean useFlashLiteUtility;
     private String protocolVersion;
     private UserEvent userEvent;
 
@@ -60,6 +61,9 @@ public class ChatRequest {
 
     public Boolean getUseExplicitCache() { return useExplicitCache; }
     public void setUseExplicitCache(Boolean useExplicitCache) { this.useExplicitCache = useExplicitCache; }
+
+    public Boolean getUseFlashLiteUtility() { return useFlashLiteUtility; }
+    public void setUseFlashLiteUtility(Boolean useFlashLiteUtility) { this.useFlashLiteUtility = useFlashLiteUtility; }
 
     public String getProtocolVersion() { return protocolVersion; }
     public void setProtocolVersion(String protocolVersion) { this.protocolVersion = protocolVersion; }

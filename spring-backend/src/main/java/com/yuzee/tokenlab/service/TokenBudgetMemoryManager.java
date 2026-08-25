@@ -132,14 +132,19 @@ public class TokenBudgetMemoryManager {
                 String currentSummary = conversation.getSummary();
                 if (!evictedMessages.isEmpty()) {
                     CompactionMetrics compaction = compactor.compactTurns(
-                        currentSummary, 
-                        evictedMessages, 
+                        currentSummary,
+                        evictedMessages,
                         "Turns 1 to " + (startIndex / 2)
                     );
                     result.setCompactionMetrics(compaction);
-                    // Use the actual summary text from compaction, not a fabricated placeholder
                     String actualSummary = compaction.getSummaryText() != null ? compaction.getSummaryText() : conversation.getSummary();
-                    result.setSummaryText(actualSummary != null ? actualSummary : "");
+                    actualSummary = actualSummary != null ? actualSummary : "";
+                    result.setSummaryText(actualSummary);
+                    conversation.setSummary(actualSummary);
+                    conversation.setSummaryVersion(conversation.getSummaryVersion() + 1);
+                    if (!conversation.getCompactionHistory().contains(compaction)) {
+                        conversation.getCompactionHistory().add(compaction);
+                    }
                     result.setRemovedTokens(compaction.getTokensRemoved());
                 } else {
                     result.setSummaryText(currentSummary);
@@ -199,12 +204,19 @@ public class TokenBudgetMemoryManager {
                 String summary = conversation.getSummary();
                 if (!evictedMessages.isEmpty()) {
                     CompactionMetrics compaction = compactor.compactTurns(
-                        summary, 
-                        evictedMessages, 
+                        summary,
+                        evictedMessages,
                         "Adaptive compact of " + evictedMessages.size() + " messages"
                     );
                     result.setCompactionMetrics(compaction);
-                    result.setSummaryText(summary != null && !summary.isBlank() ? summary : "");
+                    String actualSummary = compaction.getSummaryText() != null ? compaction.getSummaryText() : summary;
+                    actualSummary = actualSummary != null ? actualSummary : "";
+                    result.setSummaryText(actualSummary);
+                    conversation.setSummary(actualSummary);
+                    conversation.setSummaryVersion(conversation.getSummaryVersion() + 1);
+                    if (!conversation.getCompactionHistory().contains(compaction)) {
+                        conversation.getCompactionHistory().add(compaction);
+                    }
                     result.setRemovedTokens(compaction.getTokensRemoved());
                 } else {
                     result.setSummaryText(summary);
@@ -214,6 +226,16 @@ public class TokenBudgetMemoryManager {
                 result.setRecentHistoryText(recentHistory.toString().trim());
                 result.setRecentTurnsCount(keptMessages.size() / 2);
             }
+
+            case SEMANTIC_EVIDENCE -> {
+                // Delegated to SemanticEvidenceAssembler — return empty result as placeholder
+                result.setSummaryText("");
+                result.setRecentHistoryText("");
+                result.setRecentTurnsCount(0);
+                result.setRemovedTokens(0);
+            }
+
+            default -> throw new IllegalArgumentException("Unknown optimization strategy: " + strategy);
         }
 
         return result;

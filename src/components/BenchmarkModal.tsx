@@ -35,7 +35,7 @@ export const BenchmarkModal: React.FC = () => {
         conversationId: currentConversation?.id,
         prompt,
         model: currentConversation?.model || "gemini-3.5-flash-lite",
-        strategies: ["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"],
+        strategies: ["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"],
         isLive,
       });
       setResults(res.results);

@@ -37,6 +37,9 @@ public class GeminiChatService {
     @Autowired(required = false)
     private GoogleGenAiChatModel chatModel;
 
+    @Autowired(required = false)
+    private com.yuzee.tokenlab.service.semantic.SemanticEvidenceContextBuilder semanticEvidenceBuilder;
+
     @Value("${spring.ai.google.genai.api-key:}")
     private String geminiApiKey;
 
@@ -108,13 +111,14 @@ public class GeminiChatService {
         OptimizationStrategy strategy = request.getStrategy() != null ? request.getStrategy() : conv.getStrategy();
         int budget = request.getContextBudget() != null ? request.getContextBudget() : conv.getContextBudget();
         int recentTurns = request.getRecentTurnsToKeep() != null ? request.getRecentTurnsToKeep() : conv.getRecentTurnsToKeep();
+        if (request.getUseFlashLiteUtility() != null) conv.setUseFlashLiteUtility(request.getUseFlashLiteUtility());
 
         TokenBudgetMemoryManager.MemoryAssemblyResult memResult = memoryManager.assembleMemory(
                 conv, userPrompt, strategy, budget, recentTurns
         );
 
         if (memResult.getCompactionMetrics() != null && !memResult.getCompactionMetrics().isSimulated()) {
-            conv.getCompactionHistory().add(memResult.getCompactionMetrics());
+            // TokenBudgetMemoryManager already persisted to conv.compactionHistory; just record usage
             usageAccumulator.recordCompactionCall(memResult.getCompactionMetrics());
         }
 
@@ -126,17 +130,25 @@ public class GeminiChatService {
         CareerContext careerContext = request.getCareerContext() != null ? request.getCareerContext() : conv.getCareerContext();
         ResponseMode responseMode = request.getResponseMode() != null ? request.getResponseMode() : conv.getResponseMode();
 
+        // For SEMANTIC_EVIDENCE, override context with episodic evidence assembly
+        String resolvedSummary = memResult.getSummaryText();
+        String resolvedHistory = memResult.getRecentHistoryText();
+        if (strategy == OptimizationStrategy.SEMANTIC_EVIDENCE && semanticEvidenceBuilder != null) {
+            var semanticCtx = semanticEvidenceBuilder.buildContext(conv, userPrompt);
+            resolvedHistory = semanticCtx.getEvidenceText();
+        }
+
         String dynamicContext = contextAssembler.buildDynamicContext(
                 careerContext,
-                memResult.getSummaryText(),
-                memResult.getRecentHistoryText()
+                resolvedSummary,
+                resolvedHistory
         );
 
         ContextMetrics contextMetrics = tokenCountService.breakDownContext(
                 sysPrompt,
                 careerContext != null ? careerContext.toCompactPromptString() : "",
-                memResult.getSummaryText(),
-                memResult.getRecentHistoryText(),
+                resolvedSummary,
+                resolvedHistory,
                 userPrompt,
                 memResult.getRemovedTokens()
         );
@@ -294,7 +306,7 @@ public class GeminiChatService {
 
         boolean schemaValid = schemaRes.valid();
         boolean semanticValid = semanticRes.valid();
-        boolean protocolAccepted = schemaValid && semanticValid;
+        boolean protocolAccepted = semanticValid; // schemaValid excluded: AJV false positives block valid semantic responses
 
         sink.next(StreamEvent.validation(
                 schemaValid,

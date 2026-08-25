@@ -34,3 +34,11 @@ yuzee:
     default-recent-turns: 4
     enable-deep-diagnostics: true
     enable-experimental-interactions: false
+    semantic-memory:
+      soft-max-tokens-per-episode: 800
+      soft-max-turns-per-episode: 6
+      boundary-threshold: 0.55
+      max-evidence-tokens: 600
+      max-structured-memories: 8
+      max-historical-episodes: 3
+      enable-extraction: false
