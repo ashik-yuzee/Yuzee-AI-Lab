@@ -13,8 +13,8 @@ public class Conversation {
     private PresetMode preset = PresetMode.BALANCED;
     private ResponseMode responseMode = ResponseMode.STANDARD;
     private ThinkingLevel thinkingLevel = ThinkingLevel.ADAPTIVE;
-    private int contextBudget = 2000;
-    private int recentTurnsToKeep = 4;
+    private int contextBudget = 270000;
+    private int recentTurnsToKeep = 100;
     private CareerContext careerContext = new CareerContext();
     private String summary = "";
     private int summaryVersion = 0;

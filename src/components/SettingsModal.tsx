@@ -16,8 +16,8 @@ export const SettingsModal: React.FC = () => {
   const [customSys, setCustomSys] = useState(currentConversation?.customSystemPrompt || "");
   const [strategy, setStrategy] = useState<OptimizationStrategy>(currentConversation?.strategy || "ADAPTIVE_HYBRID");
   const [thinking, setThinking] = useState<ThinkingLevel>(currentConversation?.thinkingLevel || "adaptive");
-  const [budget, setBudget] = useState(currentConversation?.contextBudget || 8000);
-  const [recentTurns, setRecentTurns] = useState(currentConversation?.recentTurnsToKeep || 10);
+  const [budget, setBudget] = useState(currentConversation?.contextBudget || 270000);
+  const [recentTurns, setRecentTurns] = useState(currentConversation?.recentTurnsToKeep || 100);
   const [savedNotice, setSavedNotice] = useState(false);
 
   if (!isSettingsOpen) return null;
@@ -134,9 +134,9 @@ export const SettingsModal: React.FC = () => {
               </div>
               <input
                 type="range"
-                min={500}
-                max={8000}
-                step={500}
+                min={1000}
+                max={270000}
+                step={1000}
                 value={budget}
                 onChange={(e) => setBudget(Number(e.target.value))}
                 className="w-full cursor-pointer accent-sky-600"
@@ -154,7 +154,7 @@ export const SettingsModal: React.FC = () => {
               <input
                 type="range"
                 min={2}
-                max={10}
+                max={100}
                 step={2}
                 value={recentTurns}
                 onChange={(e) => setRecentTurns(Number(e.target.value))}

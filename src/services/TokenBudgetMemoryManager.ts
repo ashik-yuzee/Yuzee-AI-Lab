@@ -247,7 +247,7 @@ export class TokenBudgetMemoryManager {
   public assembleMemory(
     historicalMessages: Array<{ id: string; role: string; content: string; createdAt?: number }>,
     dynamicBudgetTokens: number = 2000,
-    recentTurnsToKeep: number = 4,
+    recentTurnsToKeep: number = 100,
     strategy: string = 'ADAPTIVE_HYBRID',
     existingSummary: string = ''
   ): MemoryAssemblyResult {

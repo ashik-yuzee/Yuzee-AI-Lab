@@ -190,7 +190,6 @@ public class GeminiChatService {
                     GoogleGenAiChatOptions options = GoogleGenAiChatOptions.builder()
                             .model(targetModel)
                             .responseMimeType("application/json")
-                            .responseSchema(protocolRegistry.getResponseSchemaJson())
                             .maxOutputTokens(maxOutputTokens)
                             .thinkingBudget(numericThinkingBudget)
                             .build();
@@ -332,7 +331,7 @@ public class GeminiChatService {
                     && finalChatResponse.getMetadata().getUsage() != null) {
                 var provUsage = finalChatResponse.getMetadata().getUsage();
                 if (provUsage.getPromptTokens() != null) providerInput = provUsage.getPromptTokens().intValue();
-                if (provUsage.getGenerationTokens() != null) providerOutput = provUsage.getGenerationTokens().intValue();
+                if (provUsage.getCompletionTokens() != null) providerOutput = provUsage.getCompletionTokens().intValue();
             }
         } catch (Exception ignored) {}
 

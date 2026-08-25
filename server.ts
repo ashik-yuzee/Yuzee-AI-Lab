@@ -248,8 +248,8 @@ app.post("/api/conversations", (req, res) => {
     preset,
     responseMode: req.body?.responseMode || "standard",
     thinkingLevel: req.body?.thinkingLevel || "adaptive",
-    contextBudget: req.body?.contextBudget || 8000,
-    recentTurnsToKeep: req.body?.recentTurnsToKeep || 10,
+    contextBudget: req.body?.contextBudget || 270000,
+    recentTurnsToKeep: req.body?.recentTurnsToKeep || 100,
     careerContext: req.body?.careerContext || {
       facts: "",
       goals: "",
@@ -290,8 +290,8 @@ app.post("/api/conversations/load-demo", (req, res) => {
     preset: "BALANCED",
     responseMode: "standard",
     thinkingLevel: "adaptive",
-    contextBudget: 8000,
-    recentTurnsToKeep: 10,
+    contextBudget: 270000,
+    recentTurnsToKeep: 100,
     careerContext: {
       facts: "2 years IT Support, CompTIA Network+ certified, hands-on Linux experience",
       goals: "Transition into Junior SOC Analyst / Tier 1 Security Analyst within 6-9 months",
@@ -574,8 +574,8 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
   const historicalMessages = conv ? conv.messages : [];
   const mem = memoryManager.assembleMemory(
     historicalMessages,
-    conv?.contextBudget || 8000,
-    conv?.recentTurnsToKeep || 10,
+    conv?.contextBudget || 270000,
+    conv?.recentTurnsToKeep || 100,
     conv?.strategy || "ADAPTIVE_HYBRID",
     conv?.summary || ""
   );
@@ -864,8 +864,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       preset: req.body.preset || "BALANCED",
       responseMode: req.body.responseMode || "standard",
       thinkingLevel: req.body.thinkingLevel || "adaptive",
-      contextBudget: req.body.contextBudget || 8000,
-      recentTurnsToKeep: req.body.recentTurnsToKeep || 10,
+      contextBudget: req.body.contextBudget || 270000,
+      recentTurnsToKeep: req.body.recentTurnsToKeep || 100,
       careerContext: req.body.careerContext || {
         facts: "",
         goals: "",

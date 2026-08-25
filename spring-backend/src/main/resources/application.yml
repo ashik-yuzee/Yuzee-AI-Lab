@@ -30,8 +30,8 @@ yuzee:
       - gemini-3.5-flash-lite
       - gemini-3.1-flash-lite
     default-strategy: ADAPTIVE_HYBRID
-    default-context-budget: 2000
-    default-recent-turns: 4
+    default-context-budget: 270000
+    default-recent-turns: 100
     enable-deep-diagnostics: true
     enable-experimental-interactions: false
     semantic-memory:

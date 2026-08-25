@@ -240,8 +240,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           mode: "AUTO",
           strategy: "ADAPTIVE_HYBRID",
           thinkingLevel: "adaptive",
-          recentTurnsToKeep: 10,
-          contextBudget: 8000,
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
           responseMode: "standard",
         };
         break;
@@ -260,8 +260,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           mode: "FULL_CONTEXT",
           strategy: "BASELINE",
           thinkingLevel: "medium",
-          recentTurnsToKeep: 8,
-          contextBudget: 6000,
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
           responseMode: "standard",
         };
         break;
@@ -283,8 +283,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           preset,
           strategy: "SLIDING_WINDOW",
           thinkingLevel: "medium",
-          recentTurnsToKeep: 10,
-          contextBudget: 8000,
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
           responseMode: "standard",
         };
         break;
@@ -293,8 +293,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           preset,
           strategy: "ADAPTIVE_HYBRID",
           thinkingLevel: "adaptive",
-          recentTurnsToKeep: 10,
-          contextBudget: 8000,
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
           responseMode: "standard",
         };
         break;
@@ -456,7 +456,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             optimizationStrategy: currentConversation?.strategy || "ADAPTIVE_HYBRID",
             preset: currentConversation?.preset || "BALANCED",
             responseMode: currentConversation?.responseMode || "standard",
-            recentTurnsCount: currentConversation?.recentTurnsToKeep || 10,
+            recentTurnsCount: currentConversation?.recentTurnsToKeep || 100,
             hasSummary: !!usagePayload.contextMetrics?.summaryTokens,
             timestamp: Date.now(),
           };
