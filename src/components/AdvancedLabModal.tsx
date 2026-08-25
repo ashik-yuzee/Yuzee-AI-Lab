@@ -234,26 +234,26 @@ export const AdvancedLabModal: React.FC = () => {
                       label="Context Token Budget"
                       value={conv.contextBudget}
                       onChange={(val) => updateCurrentConversationSettings({ contextBudget: val })}
-                      min={500}
-                      max={8000}
-                      step={250}
+                      min={1000}
+                      max={270000}
+                      step={1000}
                       unit="tokens"
-                      minLabel="500 (Aggressive)"
-                      helperText="2,000 (Balanced)"
-                      maxLabel="8,000 (Deep)"
+                      minLabel="1k (Aggressive)"
+                      helperText="270k (Default)"
+                      maxLabel="270k (Max)"
                     />
 
                     <AppleSlider
                       label="Recent Turns to Retain"
                       value={conv.recentTurnsToKeep}
                       onChange={(val) => updateCurrentConversationSettings({ recentTurnsToKeep: val })}
-                      min={1}
-                      max={10}
-                      step={1}
+                      min={2}
+                      max={100}
+                      step={2}
                       unit="turns"
-                      minLabel="1 turn"
-                      helperText="4 turns (Default)"
-                      maxLabel="10 turns"
+                      minLabel="2 turns"
+                      helperText="100 turns (Default)"
+                      maxLabel="100 turns"
                     />
                   </div>
                 </div>

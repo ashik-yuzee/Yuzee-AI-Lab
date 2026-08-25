@@ -254,9 +254,9 @@ export function calcTurnCost(
 }
 
 export function formatCost(usd: number): string {
-  if (usd < 0.00001) return '<$0.00001';
-  if (usd < 0.01) return `$${usd.toFixed(5)}`;
-  return `$${usd.toFixed(4)}`;
+  if (usd < 0.00001) return '~<$0.00001';
+  if (usd < 0.01) return `~$${usd.toFixed(5)}`;
+  return `~$${usd.toFixed(4)}`;
 }
 
 export function getValidThinkingLevel(modelId: string, currentLevel: string): 'minimal' | 'low' | 'medium' | 'high' {
