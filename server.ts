@@ -25,7 +25,7 @@ import {
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
-import { initDb, logTurn, pruneExpired, isDbEnabled } from "./src/services/db";
+import { initDb, logTurn, pruneExpired, isDbEnabled, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 
 dotenv.config();
 
@@ -278,6 +278,7 @@ app.post("/api/conversations", (req, res) => {
     if (oldest) conversations.delete(oldest.id);
   }
   conversations.set(id, conv);
+  saveConversation(conv).catch(() => {});
   res.json(conv);
 });
 
@@ -432,6 +433,8 @@ app.post("/api/conversations/load-demo", (req, res) => {
   };
 
   conversations.set(demoId, demoConv);
+  saveConversation(demoConv).catch(() => {});
+  for (const m of demoConv.messages) saveMessage(m, demoId).catch(() => {});
   res.json(demoConv);
 });
 
@@ -468,6 +471,7 @@ app.put("/api/conversations/:id", (req, res) => {
   const allowedUpdates = Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== undefined));
   Object.assign(conv, allowedUpdates, { updatedAt: Date.now() });
   conversations.set(conv.id, conv);
+  saveConversation(conv).catch(() => {});
   res.json(conv);
 });
 
@@ -477,6 +481,7 @@ app.delete("/api/conversations/:id", (req, res) => {
   if (!deleted) {
     return res.status(404).json({ error: "Conversation not found" });
   }
+  deleteConversation(req.params.id).catch(() => {});
   res.status(204).send();
 });
 
@@ -520,6 +525,8 @@ app.post("/api/conversations/restore", (req, res) => {
     if (oldest) conversations.delete(oldest.id);
   }
   conversations.set(restored.id, restored);
+  saveConversation(restored).catch(() => {});
+  for (const m of restored.messages) saveMessage(m, restored.id).catch(() => {});
   res.json(restored);
 });
 
@@ -551,6 +558,7 @@ app.post("/api/conversations/:id/generate-title", makeRateLimit(10), async (req,
     conv.title = title;
     conv.updatedAt = Date.now();
     conversations.set(conv.id, conv);
+    saveConversation(conv).catch(() => {});
     res.json({ title });
   } catch (e: any) {
     res.status(500).json({ error: e.message || "Title generation failed" });
@@ -577,6 +585,7 @@ app.post("/api/conversations/:id/reset-memory", (req, res) => {
   conv.summaryVersion = 0;
   conv.compactionHistory = [];
   conv.updatedAt = Date.now();
+  saveConversation(conv).catch(() => {});
   res.json(conv);
 });
 
@@ -975,6 +984,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       compactionHistory: [],
     };
     conversations.set(id, newConv);
+    saveConversation(newConv).catch(() => {});
     conv = newConv;
   }
   const conversationLoadMs = Date.now() - conversationLoadStart;
@@ -1128,10 +1138,14 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       compactionMetrics: null,
       timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt },
     });
+    const bypassUserMsg: MessageItem = { id: `user-${Date.now()}`, role: "user", content: userMessageContent, userEvent, createdAt: requestReceivedAt };
     const bypassMsg: MessageItem = { id: messageId, role: "assistant", content: fullAssistantText, structuredResponse: bypassParsed, createdAt: Date.now() };
-    conv.messages.push({ id: `user-${Date.now()}`, role: "user", content: userMessageContent, userEvent, createdAt: requestReceivedAt });
+    conv.messages.push(bypassUserMsg);
     conv.messages.push(bypassMsg);
     conv.updatedAt = Date.now();
+    saveConversation(conv).catch(() => {});
+    saveMessage(bypassUserMsg, conv.id).catch(() => {});
+    saveMessage(bypassMsg, conv.id).catch(() => {});
     sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
     res.end();
     return;
@@ -1434,6 +1448,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   };
   conv.messages.push(assistantMsg);
   conv.updatedAt = Date.now();
+  saveConversation(conv).catch(() => {});
+  saveMessage(userMsg, conv.id).catch(() => {});
+  saveMessage(assistantMsg, conv.id).catch(() => {});
 
   sendEvent("usage", {
     usage: usageMetrics,
@@ -1480,6 +1497,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
         if (s && live) {
           live.summary = s;
           live.summaryVersion = (live.summaryVersion || 0) + 1;
+          saveConversation(live).catch(() => {});
         }
       })
       .catch(() => {});
@@ -1525,6 +1543,11 @@ async function startServer() {
   // Init DB before opening the port so the schema exists for the first request
   await initDb();
   if (isDbEnabled()) {
+    const loaded = await loadConversations();
+    for (const conv of loaded) {
+      if (!conversations.has(conv.id)) conversations.set(conv.id, conv);
+    }
+    if (loaded.length) console.log(`[db] Loaded ${loaded.length} conversations from DB`);
     const iv = setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
     iv.unref(); // don't prevent clean process exit
   }

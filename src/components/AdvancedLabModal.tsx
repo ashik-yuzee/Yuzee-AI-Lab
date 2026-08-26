@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import {
   OptimizationStrategy,
@@ -16,14 +16,9 @@ import {
   BarChart3,
   RotateCcw,
   Sparkles,
-  Activity,
   Download,
   Info,
   CheckCircle2,
-  Code2,
-  ShieldCheck,
-  Check,
-  ExternalLink,
 } from "lucide-react";
 import * as api from "../services/api";
 import { AppleSlider } from "./ui/AppleSlider";
@@ -41,7 +36,6 @@ export const AdvancedLabModal: React.FC = () => {
     resetMemory,
     sessionStats,
     resetSessionStats,
-    activeTurnTelemetry,
   } = useTokenLab();
 
   // Local state for benchmark
@@ -52,22 +46,6 @@ export const AdvancedLabModal: React.FC = () => {
   const [isBenchmarking, setIsBenchmarking] = useState(false);
   const [isResetMemoryConfirmOpen, setIsResetMemoryConfirmOpen] = useState(false);
   const [isResetStatsConfirmOpen, setIsResetStatsConfirmOpen] = useState(false);
-
-  // Protocol tab state
-  const [protocolMeta, setProtocolMeta] = useState<any>(null);
-  const [loadingProtocol, setLoadingProtocol] = useState(false);
-
-  useEffect(() => {
-    if (activeLabTab !== "protocol" || protocolMeta) return;
-    const controller = new AbortController();
-    setLoadingProtocol(true);
-    fetch("/api/protocol/info", { signal: controller.signal })
-      .then((res) => res.json())
-      .then((data) => setProtocolMeta(data))
-      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to load protocol info", err); })
-      .finally(() => setLoadingProtocol(false));
-    return () => controller.abort();
-  }, [activeLabTab, protocolMeta]);
 
   if (!isAdvancedLabOpen) return null;
 
@@ -129,10 +107,8 @@ export const AdvancedLabModal: React.FC = () => {
   const navTabs = [
     { id: "context", label: "Context & Memory", icon: Layers },
     { id: "reasoning", label: "Thinking & Reasoning", icon: Brain },
-    { id: "protocol", label: "Protocol v1.3 (JSON)", icon: ShieldCheck },
     { id: "prompt", label: "Prompt & Response", icon: FileText },
     { id: "optimization", label: "Optimization & Economics", icon: Sliders },
-    { id: "trace", label: "Lifecycle Trace", icon: Activity },
     { id: "benchmark", label: "Benchmark Matrix", icon: Play },
     { id: "analytics", label: "Session Analytics", icon: BarChart3 },
   ];
@@ -359,89 +335,6 @@ export const AdvancedLabModal: React.FC = () => {
               </div>
             )}
 
-            {/* TAB: PROTOCOL V1.3 */}
-            {effectiveTab === "protocol" && (
-              <div className="space-y-6 max-w-4xl">
-                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                        <span>Yuzee Response Protocol v1.3 Specification</span>
-                      </h3>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Guarantees JSON-only streaming, strict schema conformance, semantic validation, and interactive UI blocks.
-                      </p>
-                    </div>
-                    <span className="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-200 rounded-md text-xs font-semibold">
-                      Protocol v1.3 Active
-                    </span>
-                  </div>
-
-                  {/* Protocol Core Directives */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                      <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Strict JSON Envelope</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 leading-normal">
-                        No Markdown headers, HTML, or preamble outside the root JSON object. Enforces pure structured data.
-                      </p>
-                    </div>
-
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                      <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Content Block Hierarchy</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 leading-normal">
-                        First block is plain text (level="none", title=""). Subsequent blocks support nested lists, tables, and sections.
-                      </p>
-                    </div>
-
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
-                      <div className="text-xs font-bold text-slate-900 flex items-center gap-1">
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Interactive UI Elements</span>
-                      </div>
-                      <p className="text-[11px] text-slate-600 leading-normal">
-                        Single select, ranked priorities, text intake fields, and service hand-off cards.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Hashes & Version Verification */}
-                  {protocolMeta && (
-                    <div className="p-3 bg-sky-50/50 border border-sky-200 rounded-lg space-y-2 text-xs">
-                      <div className="font-semibold text-sky-950 flex items-center gap-1.5">
-                        <Code2 className="w-3.5 h-3.5 text-sky-600" />
-                        <span>Verified Hash Signatures</span>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
-                        <div className="bg-white p-2 rounded border border-sky-100">
-                          <span className="text-slate-500 block text-[10px]">SYSTEM PROMPT HASH (v0.12)</span>
-                          <span className="text-sky-900 font-bold break-all">{protocolMeta.promptHash}</span>
-                        </div>
-                        <div className="bg-white p-2 rounded border border-sky-100">
-                          <span className="text-slate-500 block text-[10px]">JSON SCHEMA HASH (v1.3)</span>
-                          <span className="text-emerald-900 font-bold break-all">{protocolMeta.schemaHash}</span>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Active JSON Schema Preview */}
-                  <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-slate-800">Protocol v1.3 JSON Schema Definition:</label>
-                    <pre className="p-3 bg-slate-900 text-slate-100 rounded-lg text-[11px] font-mono max-h-56 overflow-y-auto leading-relaxed">
-                      {protocolMeta ? JSON.stringify(protocolMeta.schema, null, 2) : "Loading protocol schema..."}
-                    </pre>
-                  </div>
-                </div>
-              </div>
-            )}
-
             {/* TAB: PROMPT & RESPONSE */}
             {effectiveTab === "prompt" && (
               <div className="space-y-6 max-w-4xl">
@@ -554,58 +447,6 @@ export const AdvancedLabModal: React.FC = () => {
                       Break-Even Turns = Compaction Token Cost / Net Saved Tokens Per Turn (~1.8 turns)
                     </div>
                   </div>
-                </div>
-              </div>
-            )}
-
-            {/* TAB: LIFECYCLE TRACE */}
-            {effectiveTab === "trace" && (
-              <div className="space-y-4 max-w-4xl">
-                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-3">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                    <Activity className="w-4 h-4 text-sky-600" />
-                    <span>Request Lifecycle Debug Trace</span>
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    Step-by-step pipeline waterfall executing token budgeting, prefix caching assembly, and execution telemetry.
-                  </p>
-
-                  {activeTurnTelemetry?.lifecycleTrace ? (
-                    <div className="space-y-2 pt-2">
-                      {activeTurnTelemetry.lifecycleTrace.steps.map((step: any) => (
-                        <div
-                          key={step.step}
-                          className="flex items-start justify-between p-2.5 rounded-lg border border-slate-200 bg-slate-50 font-mono text-xs"
-                        >
-                          <div className="flex items-start gap-2.5">
-                            <span className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center text-[10px] font-bold shrink-0">
-                              {step.step}
-                            </span>
-                            <div>
-                              <div className="font-bold text-slate-900 font-sans text-xs">{step.name}</div>
-                              <div className="text-[11px] text-slate-600 font-sans mt-0.5">{step.details}</div>
-                            </div>
-                          </div>
-
-                          <span
-                            className={`px-2 py-0.5 text-[10px] uppercase font-bold rounded ${
-                              step.status === "completed"
-                                ? "bg-emerald-100 text-emerald-800"
-                                : step.status === "optimized"
-                                ? "bg-sky-100 text-sky-800"
-                                : "bg-slate-200 text-slate-600"
-                            }`}
-                          >
-                            {step.status}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-xs text-slate-500 text-center py-8">
-                      Send a message to generate a detailed lifecycle debug trace.
-                    </div>
-                  )}
                 </div>
               </div>
             )}

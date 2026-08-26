@@ -13,7 +13,49 @@ const pool = process.env.DATABASE_URL
     })
   : null;
 
-const TABLE_SQL = `
+// ---- Schema ----
+
+const TABLE_CONVERSATIONS = `
+CREATE TABLE IF NOT EXISTS conversations (
+  id                    TEXT PRIMARY KEY,
+  title                 TEXT NOT NULL DEFAULT '',
+  created_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at            TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  expires_at            TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '30 days'),
+  model                 TEXT NOT NULL DEFAULT 'gemini-3.5-flash',
+  mode                  TEXT DEFAULT 'AUTO',
+  strategy              TEXT DEFAULT 'ADAPTIVE_HYBRID',
+  preset                TEXT DEFAULT 'BALANCED',
+  response_mode         TEXT DEFAULT 'standard',
+  thinking_level        TEXT DEFAULT 'adaptive',
+  context_budget        INT DEFAULT 270000,
+  recent_turns_to_keep  INT DEFAULT 100,
+  summary               TEXT DEFAULT '',
+  summary_version       INT DEFAULT 0,
+  system_prompt_mode    TEXT DEFAULT 'default',
+  custom_system_prompt  TEXT DEFAULT '',
+  use_interactions_api  BOOLEAN DEFAULT FALSE,
+  use_flash_lite_utility BOOLEAN DEFAULT TRUE,
+  career_context        JSONB DEFAULT '{}',
+  compaction_history    JSONB DEFAULT '[]',
+  active_interaction    JSONB
+)`;
+
+const TABLE_MESSAGES = `
+CREATE TABLE IF NOT EXISTS messages (
+  id                  TEXT PRIMARY KEY,
+  conversation_id     TEXT NOT NULL,
+  role                TEXT NOT NULL,
+  content             TEXT NOT NULL,
+  structured_response JSONB,
+  user_event          JSONB,
+  telemetry           JSONB,
+  feedback            JSONB,
+  created_at          TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
+)`;
+
+const TABLE_TURN_LOGS = `
 CREATE TABLE IF NOT EXISTS conversation_logs (
   id            BIGSERIAL PRIMARY KEY,
   logged_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -40,33 +82,42 @@ const INDEX_SQLS = [
   `CREATE INDEX IF NOT EXISTS idx_convlog_expires ON conversation_logs (expires_at)`,
   `CREATE INDEX IF NOT EXISTS idx_convlog_ip      ON conversation_logs (ip, logged_at DESC)`,
   `CREATE INDEX IF NOT EXISTS idx_convlog_conv    ON conversation_logs (conversation_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_conv_updated    ON conversations (updated_at DESC)`,
+  `CREATE INDEX IF NOT EXISTS idx_conv_expires    ON conversations (expires_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_msg_conv        ON messages (conversation_id, created_at ASC)`,
 ];
 
 export async function initDb(): Promise<void> {
   if (!pool) return;
   try {
-    await pool.query(TABLE_SQL);
+    await pool.query(TABLE_TURN_LOGS);
+    await pool.query(TABLE_CONVERSATIONS);
+    await pool.query(TABLE_MESSAGES);
     for (const sql of INDEX_SQLS) {
       try { await pool.query(sql); } catch (e) { console.warn("[db] Index warning:", e); }
     }
     console.log("[db] Schema ready");
     const { rowCount } = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
-    if (rowCount) console.log(`[db] Pruned ${rowCount} expired rows on startup`);
+    if (rowCount) console.log(`[db] Pruned ${rowCount} expired turn log rows on startup`);
   } catch (err) {
     console.error("[db] Init failed:", err);
   }
 }
 
-// Run every 6 hours to keep the table lean
+// Run every 6 hours to keep the tables lean
 export async function pruneExpired(): Promise<void> {
   if (!pool) return;
   try {
-    const { rowCount } = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
-    if (rowCount) console.log(`[db] Pruned ${rowCount} expired rows`);
+    const r1 = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
+    const r2 = await pool.query("DELETE FROM conversations WHERE expires_at < NOW()");
+    const pruned = (r1.rowCount ?? 0) + (r2.rowCount ?? 0);
+    if (pruned) console.log(`[db] Pruned ${pruned} expired rows`);
   } catch (err) {
     console.error("[db] Prune failed:", err);
   }
 }
+
+// ---- Turn logging (stats row per API call) ----
 
 export interface TurnLog {
   ip: string;
@@ -121,6 +172,168 @@ export async function logTurn(turn: TurnLog): Promise<void> {
     );
   } catch (err) {
     console.error("[db] logTurn failed:", err);
+  }
+}
+
+// ---- Conversation persistence ----
+
+export async function saveConversation(conv: any): Promise<void> {
+  if (!pool) return;
+  try {
+    await pool.query(
+      `INSERT INTO conversations (
+        id, title, created_at, updated_at, expires_at,
+        model, mode, strategy, preset, response_mode, thinking_level,
+        context_budget, recent_turns_to_keep,
+        summary, summary_version,
+        system_prompt_mode, custom_system_prompt,
+        use_interactions_api, use_flash_lite_utility,
+        career_context, compaction_history, active_interaction
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+      ON CONFLICT (id) DO UPDATE SET
+        title                 = EXCLUDED.title,
+        updated_at            = EXCLUDED.updated_at,
+        expires_at            = NOW() + INTERVAL '30 days',
+        model                 = EXCLUDED.model,
+        mode                  = EXCLUDED.mode,
+        strategy              = EXCLUDED.strategy,
+        preset                = EXCLUDED.preset,
+        response_mode         = EXCLUDED.response_mode,
+        thinking_level        = EXCLUDED.thinking_level,
+        context_budget        = EXCLUDED.context_budget,
+        recent_turns_to_keep  = EXCLUDED.recent_turns_to_keep,
+        summary               = EXCLUDED.summary,
+        summary_version       = EXCLUDED.summary_version,
+        system_prompt_mode    = EXCLUDED.system_prompt_mode,
+        custom_system_prompt  = EXCLUDED.custom_system_prompt,
+        use_interactions_api  = EXCLUDED.use_interactions_api,
+        use_flash_lite_utility = EXCLUDED.use_flash_lite_utility,
+        career_context        = EXCLUDED.career_context,
+        compaction_history    = EXCLUDED.compaction_history,
+        active_interaction    = EXCLUDED.active_interaction`,
+      [
+        conv.id,
+        conv.title ?? '',
+        new Date(conv.createdAt || Date.now()),
+        new Date(conv.updatedAt || Date.now()),
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        conv.model ?? 'gemini-3.5-flash',
+        conv.mode ?? 'AUTO',
+        conv.strategy ?? 'ADAPTIVE_HYBRID',
+        conv.preset ?? 'BALANCED',
+        conv.responseMode ?? 'standard',
+        conv.thinkingLevel ?? 'adaptive',
+        conv.contextBudget ?? 270000,
+        conv.recentTurnsToKeep ?? 100,
+        conv.summary ?? '',
+        conv.summaryVersion ?? 0,
+        conv.systemPromptMode ?? 'default',
+        conv.customSystemPrompt ?? '',
+        conv.useInteractionsApi ?? false,
+        conv.useFlashLiteUtility ?? true,
+        JSON.stringify(conv.careerContext || {}),
+        JSON.stringify(conv.compactionHistory || []),
+        conv.activeInteraction ? JSON.stringify(conv.activeInteraction) : null,
+      ]
+    );
+  } catch (err) {
+    console.error("[db] saveConversation failed:", err);
+  }
+}
+
+export async function saveMessage(msg: any, conversationId: string): Promise<void> {
+  if (!pool) return;
+  try {
+    await pool.query(
+      `INSERT INTO messages (id, conversation_id, role, content, structured_response, user_event, telemetry, feedback, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+       ON CONFLICT (id) DO UPDATE SET
+         content             = EXCLUDED.content,
+         structured_response = EXCLUDED.structured_response,
+         telemetry           = EXCLUDED.telemetry,
+         feedback            = EXCLUDED.feedback`,
+      [
+        msg.id,
+        conversationId,
+        msg.role,
+        msg.content,
+        msg.structuredResponse != null ? JSON.stringify(msg.structuredResponse) : null,
+        msg.userEvent != null ? JSON.stringify(msg.userEvent) : null,
+        msg.telemetry != null ? JSON.stringify(msg.telemetry) : null,
+        msg.feedback != null ? JSON.stringify(msg.feedback) : null,
+        new Date(msg.createdAt || Date.now()),
+      ]
+    );
+  } catch (err) {
+    console.error("[db] saveMessage failed:", err);
+  }
+}
+
+export async function deleteConversation(id: string): Promise<void> {
+  if (!pool) return;
+  try {
+    await pool.query("DELETE FROM conversations WHERE id = $1", [id]);
+  } catch (err) {
+    console.error("[db] deleteConversation failed:", err);
+  }
+}
+
+export async function loadConversations(): Promise<any[]> {
+  if (!pool) return [];
+  try {
+    const convResult = await pool.query(
+      `SELECT * FROM conversations WHERE expires_at > NOW() ORDER BY updated_at DESC LIMIT 500`
+    );
+    if (convResult.rows.length === 0) return [];
+
+    const ids = convResult.rows.map((r: any) => r.id);
+    const msgResult = await pool.query(
+      `SELECT * FROM messages WHERE conversation_id = ANY($1) ORDER BY created_at ASC`,
+      [ids]
+    );
+
+    const msgsByConv = new Map<string, any[]>();
+    for (const m of msgResult.rows) {
+      if (!msgsByConv.has(m.conversation_id)) msgsByConv.set(m.conversation_id, []);
+      msgsByConv.get(m.conversation_id)!.push(m);
+    }
+
+    return convResult.rows.map((r: any) => ({
+      id: r.id,
+      title: r.title,
+      createdAt: new Date(r.created_at).getTime(),
+      updatedAt: new Date(r.updated_at).getTime(),
+      model: r.model,
+      mode: r.mode,
+      strategy: r.strategy,
+      preset: r.preset,
+      responseMode: r.response_mode,
+      thinkingLevel: r.thinking_level,
+      contextBudget: r.context_budget,
+      recentTurnsToKeep: r.recent_turns_to_keep,
+      summary: r.summary || '',
+      summaryVersion: r.summary_version || 0,
+      systemPromptMode: r.system_prompt_mode,
+      customSystemPrompt: r.custom_system_prompt || '',
+      useInteractionsApi: r.use_interactions_api || false,
+      useFlashLiteUtility: r.use_flash_lite_utility ?? true,
+      careerContext: r.career_context || {},
+      compactionHistory: r.compaction_history || [],
+      activeInteraction: r.active_interaction || null,
+      messages: (msgsByConv.get(r.id) || []).map((m: any) => ({
+        id: m.id,
+        role: m.role,
+        content: m.content,
+        structuredResponse: m.structured_response ?? undefined,
+        userEvent: m.user_event ?? undefined,
+        telemetry: m.telemetry ?? undefined,
+        feedback: m.feedback ?? undefined,
+        createdAt: new Date(m.created_at).getTime(),
+      })),
+    }));
+  } catch (err) {
+    console.error("[db] loadConversations failed:", err);
+    return [];
   }
 }
 

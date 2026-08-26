@@ -179,7 +179,7 @@ export const Sidebar: React.FC = () => {
                         <>
                           <span className="truncate block font-medium">{conv.title || "Career Exploration"}</span>
                           <span className="text-[10px] text-slate-500 block">
-                            {conv.model?.replace("gemini-", "") || "3.6-flash"} · {Math.floor(msgCount / 2)} exchanges
+                            {conv.model?.replace("gemini-", "") || "3.6-flash"} · {conv.thinkingLevel || "adaptive"} · {Math.floor(msgCount / 2)} exchanges
                           </span>
                         </>
                       )}
