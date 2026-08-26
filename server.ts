@@ -213,7 +213,7 @@ app.get("/api/config/capabilities", (req, res) => {
     configured: hasKey,
     availableModels: GEMINI_MODELS.filter((m) => m.selectable).map((m) => m.id),
     modelsList: GEMINI_MODELS,
-    defaultModel: "gemini-3.5-flash-lite",
+    defaultModel: "gemini-3.5-flash",
     supportsThinking: true,
     supportsCachedTokens: true,
     supportsInteractionsApi: true,
@@ -233,7 +233,7 @@ app.get("/api/conversations", (req, res) => {
 app.post("/api/conversations", (req, res) => {
   const id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const title = req.body?.title || "New Career Exploration";
-  const model = req.body?.model || "gemini-3.5-flash-lite";
+  const model = req.body?.model || "gemini-3.5-flash";
   const mode = req.body?.mode || "AUTO";
   const strategy = req.body?.strategy || "ADAPTIVE_HYBRID";
   const preset = req.body?.preset || "BALANCED";
@@ -285,7 +285,7 @@ app.post("/api/conversations/load-demo", (req, res) => {
     title: "Cybersecurity Analyst Pathway (Demo)",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    model: "gemini-3.5-flash-lite",
+    model: "gemini-3.5-flash",
     mode: "AUTO",
     strategy: "ADAPTIVE_HYBRID",
     preset: "BALANCED",

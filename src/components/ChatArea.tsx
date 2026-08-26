@@ -19,6 +19,7 @@ import {
   ShieldAlert,
   Wifi,
   Cpu,
+  Code2,
 } from "lucide-react";
 
 function modelShortName(modelId: string): string {
@@ -43,6 +44,7 @@ export const ChatArea: React.FC = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
+  const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
 
   const starterPrompts = [
     { title: "Cybersecurity Pathway", prompt: "Build a realistic pathway from IT support into a junior cybersecurity analyst." },
@@ -214,7 +216,11 @@ export const ChatArea: React.FC = () => {
                           )}
 
                           {/* Protocol v1.3 Structured Renderer or Markdown Fallback */}
-                          {structured ? (
+                          {structured && rawJsonIds.has(msg.id) ? (
+                            <pre className="text-[11px] leading-relaxed font-mono bg-slate-900 text-emerald-300 p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all">
+                              {msg.content}
+                            </pre>
+                          ) : structured ? (
                             <ProtocolV13Renderer
                               data={structured}
                               rawJson={msg.content}
@@ -301,14 +307,30 @@ export const ChatArea: React.FC = () => {
                               </div>
 
                               {/* Actions */}
-                              <button
-                                onClick={() => copyMessage(msg.id, msg.content)}
-                                className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
-                                title="Copy Response"
-                                aria-label="Copy Response"
-                              >
-                                {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                              </button>
+                              <div className="flex items-center gap-1">
+                                {msg.structuredResponse && (
+                                  <button
+                                    onClick={() => setRawJsonIds(prev => {
+                                      const next = new Set(prev);
+                                      next.has(msg.id) ? next.delete(msg.id) : next.add(msg.id);
+                                      return next;
+                                    })}
+                                    className={`p-1 rounded hover:bg-slate-100 ${rawJsonIds.has(msg.id) ? 'text-sky-600' : 'text-slate-400 hover:text-slate-700'}`}
+                                    title={rawJsonIds.has(msg.id) ? "Show rendered output" : "Show raw JSON"}
+                                    aria-label="Toggle raw JSON"
+                                  >
+                                    <Code2 className="w-3.5 h-3.5" />
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => copyMessage(msg.id, msg.content)}
+                                  className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
+                                  title="Copy Response"
+                                  aria-label="Copy Response"
+                                >
+                                  {copiedId === msg.id ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                                </button>
+                              </div>
                             </div>
                           )}
                         </div>
