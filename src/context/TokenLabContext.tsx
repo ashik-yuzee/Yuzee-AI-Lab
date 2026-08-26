@@ -584,7 +584,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           const isFirstTurn = (activeConv.messages || []).filter((m: any) => m.role === "assistant").length === 0;
           if (isFirstTurn) {
             api.generateConversationTitle(activeConv.id).then((title) => {
-              setCurrentConversation((prev) => prev ? { ...prev, title } : prev);
+              setCurrentConversation((prev) => prev && prev.id === activeConv.id ? { ...prev, title } : prev);
               setConversations((prev) => prev.map((c) => (c.id === activeConv.id ? { ...c, title } : c)));
             }).catch(() => {});
           }
@@ -636,6 +636,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
       setIsStreaming(false);
+      // Clear the per-message streaming flag so the spinner doesn't stay stuck
+      setCurrentConversation((prev) => {
+        if (!prev) return prev;
+        const msgs = [...prev.messages];
+        const last = msgs[msgs.length - 1];
+        if (last?.role === "assistant" && last.isStreaming) {
+          msgs[msgs.length - 1] = { ...last, isStreaming: false };
+          return { ...prev, messages: msgs };
+        }
+        return prev;
+      });
     }
   };
 

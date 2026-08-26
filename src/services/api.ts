@@ -195,7 +195,9 @@ export function streamChatMessage(
   signal?: AbortSignal
 ): () => void {
   const controller = new AbortController();
-  const activeSignal = signal || controller.signal;
+  // Always use controller.signal for fetch so the returned cancel fn works.
+  // When caller passes their own signal, forward its abort into our controller.
+  if (signal) signal.addEventListener("abort", () => controller.abort(), { once: true });
 
   (async () => {
     let doneCalled = false;
@@ -211,7 +213,7 @@ export function streamChatMessage(
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
-        signal: activeSignal,
+        signal: controller.signal,
       });
 
       if (!response.ok || !response.body) {
@@ -221,6 +223,7 @@ export function streamChatMessage(
       const reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let buffer = "";
+      let currentEvent = ""; // must persist across chunk boundaries
 
       while (true) {
         const { value, done } = await reader.read();
@@ -230,7 +233,6 @@ export function streamChatMessage(
         const lines = buffer.split("\n");
         buffer = lines.pop() || "";
 
-        let currentEvent = "";
         for (const line of lines) {
           if (line.startsWith("event: ")) {
             currentEvent = line.substring(7).trim();

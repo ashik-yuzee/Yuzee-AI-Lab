@@ -236,7 +236,7 @@ export const ChatArea: React.FC = () => {
                               conversationId={currentConversation?.id}
                             />
                           ) : (
-                            !msg.error && !msg.isStreaming && (
+                            !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
                               <div className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-headings:text-slate-900 prose-p:text-slate-800 prose-li:text-slate-800">
                                 <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
                               </div>
