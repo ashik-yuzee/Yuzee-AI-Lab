@@ -42,15 +42,15 @@ export const Navbar: React.FC = () => {
       let badge = m.badge;
       let badgeColor: "emerald" | "blue" | "amber" | "purple" | "slate" = "blue";
 
-      if (m.id === "gemini-3.7-flash") {
-        badge = "Latest";
-        badgeColor = "purple";
-      } else if (m.id === "gemini-3.5-flash-lite") {
+      if (m.isDefault) {
         badge = "Default";
         badgeColor = "emerald";
-      } else if (m.id === "gemini-3.6-flash") {
+      } else if (m.isRecommended) {
         badge = "Recommended";
         badgeColor = "blue";
+      } else if (m.id === "gemini-3.7-flash") {
+        badge = "Latest";
+        badgeColor = "purple";
       } else if (m.family === "flash-lite") {
         badge = badge || "Fast";
         badgeColor = "amber";
@@ -193,9 +193,10 @@ export const Navbar: React.FC = () => {
 
         {convTotalCost > 0 && (
           <span
-            className="hidden sm:flex items-center px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold"
-            title="Estimated cost for this conversation (based on approximate Gemini pricing)"
+            className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold"
+            title="Estimated cost for this conversation only (not the full session). Session totals are in the sidebar."
           >
+            <span className="font-normal text-emerald-600 text-[10px]">Chat</span>
             {formatCost(convTotalCost)}
           </span>
         )}

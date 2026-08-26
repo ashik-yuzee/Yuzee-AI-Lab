@@ -225,7 +225,7 @@ export const Sidebar: React.FC = () => {
           title="Click to view detailed session analytics and token attribution charts"
         >
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[11px] font-semibold uppercase text-slate-600">Session Telemetry</span>
+            <span className="text-[11px] font-semibold uppercase text-slate-600" title="Token counts reset when you click Reset. Cost covers all conversations in this browser session.">Session Telemetry</span>
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -249,7 +249,7 @@ export const Sidebar: React.FC = () => {
           </div>
           {sessionTotalCost > 0 && (
             <div className="text-[11px] font-mono text-slate-500 flex items-center justify-between pt-1 border-t border-slate-200 mt-1">
-              <span>Est. cost</span>
+              <span title="Sum of all conversations in this browser session. Unlike token counts above, this does not reset with the Reset button.">All chats cost</span>
               <span className="text-emerald-700 font-semibold">{formatCost(sessionTotalCost)}</span>
             </div>
           )}

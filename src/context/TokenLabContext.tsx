@@ -17,6 +17,9 @@ import {
   UserEvent,
 } from "../types";
 import * as api from "../services/api";
+import { GEMINI_MODELS } from "../data/models";
+
+const DEFAULT_MODEL_ID = GEMINI_MODELS.find(m => m.isDefault)?.id ?? "gemini-3.5-flash";
 
 interface TokenLabContextType {
   conversations: Conversation[];
@@ -143,8 +146,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
   const [abortController, setAbortController] = useState<AbortController | null>(null);
-  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.5-flash-lite");
-  const pendingModel = useRef<string>("gemini-3.5-flash-lite");
+  const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
+  const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
 
   // Load initial data — falls back to localStorage when server has no conversations (e.g. restart)
   const loadInitialData = useCallback(async () => {
@@ -512,7 +515,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             contextMetrics: usagePayload.contextMetrics,
             compactionMetrics: usagePayload.compactionMetrics,
             timeline: usagePayload.timeline,
-            model: currentConversation?.model || "gemini-3.5-flash-lite",
+            model: currentConversation?.model || DEFAULT_MODEL_ID,
             thinkingLevel: currentConversation?.thinkingLevel || "adaptive",
             optimizationMode: currentConversation?.mode || "AUTO",
             optimizationStrategy: currentConversation?.strategy || "ADAPTIVE_HYBRID",

@@ -258,8 +258,8 @@ export const TokenInspector: React.FC = () => {
 
             {/* 4. SESSION CUMULATIVE STATS (Rule #10) */}
             <div className="space-y-2 pt-2 border-t border-slate-200">
-              <span className="font-semibold text-slate-800 uppercase text-[11px] tracking-wider block">
-                Session True AI Totals
+              <span className="font-semibold text-slate-800 uppercase text-[11px] tracking-wider block" title="Cumulative totals since last Reset (sidebar). Resets automatically on server restart.">
+                Session Totals (since last Reset)
               </span>
 
               <div className="bg-slate-900 text-white p-3.5 rounded-xl space-y-2.5 shadow-sm">
