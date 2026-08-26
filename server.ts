@@ -24,7 +24,8 @@ import {
 } from "./src/protocol/validator";
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
-import { GEMINI_MODELS } from "./src/data/models";
+import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
+import { initDb, logTurn, pruneExpired, isDbEnabled } from "./src/services/db";
 
 dotenv.config();
 
@@ -1204,6 +1205,16 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     }
     sendEvent("error", { error: userMsg, errorCode });
     res.end();
+    const clientIpErr = ((req.ip ?? req.socket?.remoteAddress ?? 'unknown') as string).replace(/^::ffff:/, '');
+    logTurn({
+      ip: clientIpErr,
+      conversationId: conv.id,
+      messageId,
+      model: modelId,
+      isMock: false,
+      userInput: userMessageContent,
+      errorCode,
+    }).catch(() => {});
     return;
   }
   if (timeoutHandle) clearTimeout(timeoutHandle);
@@ -1430,6 +1441,26 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     timeline,
   });
 
+  // Fire-and-forget DB logging (non-blocking, optional)
+  const clientIp = ((req.ip ?? req.socket?.remoteAddress ?? 'unknown') as string).replace(/^::ffff:/, '');
+  logTurn({
+    ip: clientIp,
+    conversationId: conv.id,
+    messageId,
+    model: modelId,
+    inputTokens: usageMetrics.inputTokens,
+    uncachedInputTokens: usageMetrics.uncachedInputTokens,
+    cachedTokens: usageMetrics.cachedTokens,
+    outputTokens: usageMetrics.outputTokens,
+    thinkingTokens: usageMetrics.thinkingTokens,
+    estimatedCostUsd: calcTurnCost(modelId, usageMetrics),
+    latencyMs: usageMetrics.latencyMs,
+    finishReason: finishReason || null,
+    isMock: isMockResponse,
+    userInput: userMessageContent,
+    assistantOutput: fullAssistantText,
+  }).catch(() => {});
+
   sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
   } catch (e: any) {
     console.error("Post-stream processing error:", e);
@@ -1490,8 +1521,10 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  app.listen(PORT, "0.0.0.0", async () => {
     console.log(`Yuzee AI Token Lab running on port ${PORT}`);
+    await initDb();
+    if (isDbEnabled()) setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
   });
 }
 
