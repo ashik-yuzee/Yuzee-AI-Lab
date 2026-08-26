@@ -1114,6 +1114,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   // Greeting/farewell bypass — skip Gemini entirely, costs 0 tokens
   const messageClass = requestAssembler.classifyUserMessage(userMessageContent);
   if (messageClass !== 'career') {
+    if (timeoutHandle) clearTimeout(timeoutHandle); // prevent timer firing after res.end()
     fullAssistantText = JSON.stringify(makeBypassResponse(messageClass));
     isMockResponse = true;
     // Fast-path: emit all required SSE events and return
@@ -1521,10 +1522,15 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", async () => {
+  // Init DB before opening the port so the schema exists for the first request
+  await initDb();
+  if (isDbEnabled()) {
+    const iv = setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
+    iv.unref(); // don't prevent clean process exit
+  }
+
+  app.listen(PORT, "0.0.0.0", () => {
     console.log(`Yuzee AI Token Lab running on port ${PORT}`);
-    await initDb();
-    if (isDbEnabled()) setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
   });
 }
 

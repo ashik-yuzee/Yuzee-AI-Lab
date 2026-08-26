@@ -13,7 +13,7 @@ const pool = process.env.DATABASE_URL
     })
   : null;
 
-const SCHEMA_SQL = `
+const TABLE_SQL = `
 CREATE TABLE IF NOT EXISTS conversation_logs (
   id            BIGSERIAL PRIMARY KEY,
   logged_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -34,16 +34,21 @@ CREATE TABLE IF NOT EXISTS conversation_logs (
   user_input    TEXT,
   assistant_output TEXT,
   error_code    TEXT
-);
-CREATE INDEX IF NOT EXISTS idx_convlog_expires  ON conversation_logs (expires_at);
-CREATE INDEX IF NOT EXISTS idx_convlog_ip       ON conversation_logs (ip, logged_at DESC);
-CREATE INDEX IF NOT EXISTS idx_convlog_conv     ON conversation_logs (conversation_id);
-`;
+)`;
+
+const INDEX_SQLS = [
+  `CREATE INDEX IF NOT EXISTS idx_convlog_expires ON conversation_logs (expires_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_convlog_ip      ON conversation_logs (ip, logged_at DESC)`,
+  `CREATE INDEX IF NOT EXISTS idx_convlog_conv    ON conversation_logs (conversation_id)`,
+];
 
 export async function initDb(): Promise<void> {
   if (!pool) return;
   try {
-    await pool.query(SCHEMA_SQL);
+    await pool.query(TABLE_SQL);
+    for (const sql of INDEX_SQLS) {
+      try { await pool.query(sql); } catch (e) { console.warn("[db] Index warning:", e); }
+    }
     console.log("[db] Schema ready");
     const { rowCount } = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
     if (rowCount) console.log(`[db] Pruned ${rowCount} expired rows on startup`);
