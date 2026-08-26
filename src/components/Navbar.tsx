@@ -8,6 +8,7 @@ import {
   Menu,
   Activity,
   Settings,
+  User,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -26,6 +27,8 @@ export const Navbar: React.FC = () => {
     isTokenInspectorOpen,
     setTokenInspectorOpen,
     setSettingsOpen,
+    setProfileOpen,
+    userProfile,
     activeTurnTelemetry,
     sessionStats,
   } = useTokenLab();
@@ -182,6 +185,21 @@ export const Navbar: React.FC = () => {
 
       {/* Right: Settings + Conv Cost + Telemetry Pill */}
       <div className="flex items-center gap-2">
+        <button
+          id="btn-open-profile"
+          onClick={() => setProfileOpen(true)}
+          className="relative p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-transparent hover:border-slate-200 transition-colors cursor-pointer"
+          title="User Profile — facts Oala learns about you"
+          aria-label="User Profile"
+        >
+          <User className="w-4 h-4" />
+          {userProfile.length > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center leading-none">
+              {userProfile.length > 9 ? "9+" : userProfile.length}
+            </span>
+          )}
+        </button>
+
         <button
           id="btn-open-settings"
           onClick={() => setSettingsOpen(true)}

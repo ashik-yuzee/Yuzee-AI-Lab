@@ -72,6 +72,12 @@ interface TokenLabContextType {
   setExportOpen: (open: boolean) => void;
   isSidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+  isProfileOpen: boolean;
+  setProfileOpen: (open: boolean) => void;
+  userProfile: { id: string; text: string; addedAt: number }[];
+  setUserProfile: (facts: { id: string; text: string; addedAt: number }[]) => void;
+  userLocation: string;
+  setUserLocation: (loc: string) => void;
 
   // Actions
   selectConversation: (id: string) => Promise<void>;
@@ -144,6 +150,13 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
+  const [userProfile, setUserProfile] = useState<{ id: string; text: string; addedAt: number }[]>(() => {
+    try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }
+  });
+  const [userLocation, setUserLocation] = useState<string>(() =>
+    localStorage.getItem("yuzee_user_location") || ""
+  );
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
@@ -458,6 +471,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     let accumulatedContent = "";
 
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const todayStr = new Date().toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+
     api.streamChatMessage(
       activeConv.id,
       {
@@ -473,6 +489,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         careerContext: activeConv.careerContext,
         systemPromptMode: activeConv.systemPromptMode,
         customSystemPrompt: activeConv.customSystemPrompt,
+        userContext: { date: todayStr, timezone: tz, location: userLocation || undefined },
+        userProfileFacts: userProfile.map(f => f.text),
       },
       {
         onDelta: (chunk) => {
@@ -587,6 +605,25 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               setCurrentConversation((prev) => prev && prev.id === activeConv.id ? { ...prev, title } : prev);
               setConversations((prev) => prev.map((c) => (c.id === activeConv.id ? { ...c, title } : c)));
             }).catch(() => {});
+          }
+          // Extract new user profile facts from this turn (fire-and-forget)
+          if (textMessage && accumulatedContent) {
+            api.extractProfileFacts(textMessage, accumulatedContent, userProfile.map(f => f.text))
+              .then(({ facts }) => {
+                if (facts.length > 0) {
+                  setUserProfile(prev => {
+                    const newFacts = facts.map((text: string, i: number) => ({
+                      id: `fact-${Date.now()}-${i}`,
+                      text,
+                      addedAt: Date.now(),
+                    }));
+                    const updated = [...prev, ...newFacts];
+                    try { localStorage.setItem("yuzee_user_profile", JSON.stringify(updated)); } catch {}
+                    return updated;
+                  });
+                }
+              })
+              .catch(() => {});
           }
         },
         onProtocolValidationError: (data) => {
@@ -716,6 +753,12 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setExportOpen,
         isSidebarOpen,
         setSidebarOpen,
+        isProfileOpen,
+        setProfileOpen,
+        userProfile,
+        setUserProfile,
+        userLocation,
+        setUserLocation,
         selectConversation,
         startNewConversation,
         loadDemoConversation,

@@ -227,6 +227,27 @@ app.get("/api/config/capabilities", (req, res) => {
   });
 });
 
+// Extract user profile facts from a conversation turn (fire-and-forget from client)
+app.post("/api/extract-profile-facts", makeRateLimit(30), async (req, res) => {
+  const { userMessage = "", assistantMessage = "", existingFacts = [] } = req.body;
+  const ai = getGemini();
+  if (!ai || !userMessage) return res.json({ facts: [] });
+  const prompt = `Extract 0-3 SHORT factual statements about the user from this conversation turn. Focus on: name, location, job/role, years of experience, certifications held, career goals, budget constraints, time availability, learning preferences.
+
+User message: "${String(userMessage).slice(0, 300)}"
+Already known facts: ${JSON.stringify((existingFacts as string[]).slice(0, 10))}
+
+Return ONLY a JSON array of new facts not already known. If none, return [].
+Example output: ["Works as IT support", "Targeting Junior SOC Analyst role", "Has CompTIA Network+"]`;
+  try {
+    const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    const text = (resp.text || "[]").trim();
+    const match = text.match(/\[[\s\S]*\]/);
+    const facts = match ? JSON.parse(match[0]) : [];
+    res.json({ facts: Array.isArray(facts) ? facts.slice(0, 3) : [] });
+  } catch { res.json({ facts: [] }); }
+});
+
 // Default system prompt content (so client can display/diff)
 app.get("/api/system-prompt", (req, res) => {
   res.json({
@@ -1000,6 +1021,18 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   const userMessageContent = req.body.message || "";
   const userEvent: UserEvent | undefined = req.body.userEvent;
+
+  // Build lightweight context prefix (date, location, user profile) — injected into each turn
+  const uc = req.body.userContext as { date?: string; timezone?: string; location?: string } | undefined;
+  const upFacts: string[] = req.body.userProfileFacts || [];
+  const ctxParts: string[] = [];
+  if (uc?.date) ctxParts.push(`Date: ${uc.date}`);
+  if (uc?.location) ctxParts.push(`Location: ${uc.location}`);
+  else if (uc?.timezone) ctxParts.push(`Timezone: ${uc.timezone}`);
+  if (upFacts.length > 0) ctxParts.push(`User facts: ${upFacts.slice(0, 8).join("; ")}`);
+  const enrichedMessage = ctxParts.length > 0
+    ? `[${ctxParts.join(" · ")}]\n${userMessageContent}`
+    : userMessageContent;
   const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const userPromptTokens = estimateTokens(userMessageContent);
 
@@ -1061,7 +1094,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
   const assembledReq = requestAssembler.assembleRequest({
     model: modelId,
-    messageText: userMessageContent,
+    messageText: enrichedMessage,
     userEvent,
     careerContext: req.body.careerContext || conv.careerContext,
     summaryText: mem.summaryText,

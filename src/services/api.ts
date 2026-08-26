@@ -152,6 +152,21 @@ export async function fetchSystemPrompt(): Promise<{ content: string; hash: stri
   return res.json();
 }
 
+export async function extractProfileFacts(
+  userMessage: string,
+  assistantMessage: string,
+  existingFacts: string[]
+): Promise<{ facts: string[] }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/extract-profile-facts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userMessage: userMessage.slice(0, 400), assistantMessage: assistantMessage.slice(0, 400), existingFacts }),
+    });
+    return res.ok ? res.json() : { facts: [] };
+  } catch { return { facts: [] }; }
+}
+
 export async function runBenchmark(payload: {
   conversationId?: string;
   prompt: string;
@@ -195,6 +210,8 @@ export function streamChatMessage(
     careerContext?: any;
     systemPromptMode?: string;
     customSystemPrompt?: string;
+    userContext?: { date?: string; timezone?: string; location?: string };
+    userProfileFacts?: string[];
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal

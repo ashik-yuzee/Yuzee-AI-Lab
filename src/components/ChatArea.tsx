@@ -20,6 +20,7 @@ import {
   Wifi,
   Cpu,
   Code2,
+  Brain,
 } from "lucide-react";
 
 function modelShortName(modelId: string): string {
@@ -274,6 +275,13 @@ export const ChatArea: React.FC = () => {
                                     {modelShortName(msg.telemetry.model)}
                                   </span>
                                 )}
+                                {/* Thinking level chip */}
+                                {msg.telemetry.appliedThinkingLevel && (
+                                  <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold border bg-purple-50 text-purple-700 border-purple-200">
+                                    <Brain className="w-2.5 h-2.5" />
+                                    {msg.telemetry.appliedThinkingLevel}
+                                  </span>
+                                )}
                                 {/* Latency */}
                                 {(() => {
                                   const ms = msg.telemetry.timeline?.totalLatencyMs ?? msg.telemetry.usage.latencyMs;
@@ -298,11 +306,8 @@ export const ChatArea: React.FC = () => {
                                       <>In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong></>
                                     )}
                                     {" "}· Out <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
-                                    {msg.telemetry.appliedThinkingLevel && (
-                                      <> · <span className="text-purple-600 font-semibold">{msg.telemetry.appliedThinkingLevel}</span></>
-                                    )}
                                     {msg.telemetry.usage.thinkingTokens !== null && (
-                                      <> think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
+                                      <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
                                     )}
                                     {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
                                     {(() => {

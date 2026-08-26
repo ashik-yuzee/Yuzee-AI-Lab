@@ -12,6 +12,7 @@ import { AnalyticsDashboardModal } from "./components/AnalyticsDashboardModal";
 import { ExportModal } from "./components/ExportModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { AdvancedLabModal } from "./components/AdvancedLabModal";
+import { UserProfileModal } from "./components/UserProfileModal";
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
 
         {/* Global Modals & Dialogs */}
         <AdvancedLabModal />
+        <UserProfileModal />
         <ContextInspectorModal />
         <CareerContextModal />
         <MemoryTimelineModal />
