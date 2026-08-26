@@ -145,7 +145,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
-  const [abortController, setAbortController] = useState<AbortController | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
   const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
 
@@ -454,7 +454,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setIsStreaming(true);
     performance.mark('yuzee_send_clicked');
     const controller = new AbortController();
-    setAbortController(controller);
+    abortControllerRef.current = controller;
 
     let accumulatedContent = "";
 
@@ -526,13 +526,13 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             contextMetrics: usagePayload.contextMetrics,
             compactionMetrics: usagePayload.compactionMetrics,
             timeline: usagePayload.timeline,
-            model: currentConversation?.model || DEFAULT_MODEL_ID,
-            thinkingLevel: currentConversation?.thinkingLevel || "adaptive",
-            optimizationMode: currentConversation?.mode || "AUTO",
-            optimizationStrategy: currentConversation?.strategy || "ADAPTIVE_HYBRID",
-            preset: currentConversation?.preset || "BALANCED",
-            responseMode: currentConversation?.responseMode || "standard",
-            recentTurnsCount: currentConversation?.recentTurnsToKeep || 100,
+            model: activeConv.model || DEFAULT_MODEL_ID,
+            thinkingLevel: activeConv.thinkingLevel || "adaptive",
+            optimizationMode: activeConv.mode || "AUTO",
+            optimizationStrategy: activeConv.strategy || "ADAPTIVE_HYBRID",
+            preset: activeConv.preset || "BALANCED",
+            responseMode: activeConv.responseMode || "standard",
+            recentTurnsCount: activeConv.recentTurnsToKeep || 100,
             hasSummary: !!usagePayload.contextMetrics?.summaryTokens,
             timestamp: Date.now(),
           };
@@ -570,7 +570,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             performance.measure('yuzee_e2e_latency', 'yuzee_send_clicked', 'yuzee_response_complete');
           } catch { /* marks may be cleared between calls */ }
           setIsStreaming(false);
-          setAbortController(null);
+          abortControllerRef.current = null;
           setCurrentConversation((prev) => {
             if (!prev) return prev;
             const msgs = [...prev.messages];
@@ -609,7 +609,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         onError: (err) => {
           console.error("Stream failed:", err);
           setIsStreaming(false);
-          setAbortController(null);
+          abortControllerRef.current = null;
           setCurrentConversation((prev) => {
             if (!prev) return prev;
             const msgs = [...prev.messages];
@@ -632,12 +632,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const stopStreaming = () => {
-    if (abortController) {
-      abortController.abort();
-      setAbortController(null);
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
       setIsStreaming(false);
     }
   };
+
+  useEffect(() => {
+    return () => { abortControllerRef.current?.abort(); };
+  }, []);
 
   const submitFeedback = async (messageId: string, type: QualityFeedbackType, comment?: string) => {
     if (!currentConversation) return;

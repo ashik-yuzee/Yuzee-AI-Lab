@@ -160,9 +160,9 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     supportsCaching: true,
     supportsInteractionsApi: false,
     badge: 'Legacy',
-    inputPricePerMToken: 0.075,
-    outputPricePerMToken: 0.30,
-    cachedReadPricePerMToken: 0.019,
+    inputPricePerMToken: 0.10,
+    outputPricePerMToken: 0.40,
+    cachedReadPricePerMToken: 0.025,
   },
   {
     id: 'gemini-2.5-flash-lite',
@@ -243,13 +243,13 @@ export function calcTurnCost(
   }
 ): number | null {
   const model = getModelInfo(modelId);
-  if (!model?.inputPricePerMToken) return null;
+  if (!model?.inputPricePerMToken || !model?.outputPricePerMToken) return null;
   const uncachedInput = usage.uncachedInputTokens ?? (usage.inputTokens - (usage.cachedTokens ?? 0));
   const outputTotal = usage.outputTokens + (usage.thinkingTokens ?? 0);
   const cached = usage.cachedTokens ?? 0;
   return (
     (Math.max(0, uncachedInput) / 1_000_000) * model.inputPricePerMToken +
-    (outputTotal / 1_000_000) * model.outputPricePerMToken! +
+    (outputTotal / 1_000_000) * model.outputPricePerMToken +
     (cached / 1_000_000) * (model.cachedReadPricePerMToken ?? 0)
   );
 }

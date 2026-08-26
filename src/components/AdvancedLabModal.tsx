@@ -58,14 +58,15 @@ export const AdvancedLabModal: React.FC = () => {
   const [loadingProtocol, setLoadingProtocol] = useState(false);
 
   useEffect(() => {
-    if (activeLabTab === "protocol" && !protocolMeta) {
-      setLoadingProtocol(true);
-      fetch("/api/protocol/info")
-        .then((res) => res.json())
-        .then((data) => setProtocolMeta(data))
-        .catch((err) => console.error("Failed to load protocol info", err))
-        .finally(() => setLoadingProtocol(false));
-    }
+    if (activeLabTab !== "protocol" || protocolMeta) return;
+    const controller = new AbortController();
+    setLoadingProtocol(true);
+    fetch("/api/protocol/info", { signal: controller.signal })
+      .then((res) => res.json())
+      .then((data) => setProtocolMeta(data))
+      .catch((err) => { if (err.name !== "AbortError") console.error("Failed to load protocol info", err); })
+      .finally(() => setLoadingProtocol(false));
+    return () => controller.abort();
   }, [activeLabTab, protocolMeta]);
 
   if (!isAdvancedLabOpen) return null;

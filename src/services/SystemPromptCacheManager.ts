@@ -54,8 +54,8 @@ export class SystemPromptCacheManager {
       }
       // Expired or stale prompt — remove and rebuild
       this.caches.delete(model);
-      if (!isStale) {
-        // Stale = prompt changed: delete old cache to avoid paying storage
+      if (isStale) {
+        // Prompt changed: delete old remote cache to avoid paying storage for unused content
         ai.caches.delete({ name: entry.name }).catch(() => {});
       }
     }

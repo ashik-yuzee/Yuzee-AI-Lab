@@ -40,7 +40,10 @@ function makeRateLimit(maxPerMinute: number) {
     const ip = (req.ip ?? req.socket.remoteAddress ?? 'anon') + ':' + maxPerMinute;
     const now = Date.now();
     let w = _rlWindows.get(ip);
-    if (!w || w.resetAt < now) _rlWindows.set(ip, (w = { count: 0, resetAt: now + 60_000 }));
+    if (!w || w.resetAt < now) {
+      if (_rlWindows.size > 500) for (const [k, v] of _rlWindows) if (v.resetAt < now) _rlWindows.delete(k);
+      _rlWindows.set(ip, (w = { count: 0, resetAt: now + 60_000 }));
+    }
     if (++w.count > maxPerMinute) {
       return res.status(429).json({ error: 'Rate limit: too many requests. Wait a minute and try again.', errorCode: 'RATE_LIMIT' });
     }
@@ -447,7 +450,7 @@ app.put("/api/conversations/:id", (req, res) => {
     return res.status(404).json({ error: "Conversation not found" });
   }
   // Filter out any unauthorized browser-submitted server state
-  const allowedUpdates = {
+  const raw = {
     title: req.body.title,
     model: req.body.model,
     mode: req.body.mode,
@@ -461,6 +464,7 @@ app.put("/api/conversations/:id", (req, res) => {
     systemPromptMode: req.body.systemPromptMode,
     customSystemPrompt: req.body.customSystemPrompt,
   };
+  const allowedUpdates = Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== undefined));
   Object.assign(conv, allowedUpdates, { updatedAt: Date.now() });
   conversations.set(conv.id, conv);
   res.json(conv);
@@ -846,7 +850,10 @@ app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
           if (chunk.usageMetadata) usageMeta = chunk.usageMetadata;
         }
 
-        const validation = validateProtocolV13(JSON.parse(fullText));
+        let textToParse = fullText;
+        const fenceMatch = fullText.match(/```(?:json)?\s*([\s\S]*?)```/);
+        if (fenceMatch) textToParse = fenceMatch[1].trim();
+        const validation = validateProtocolV13(JSON.parse(textToParse));
         isValid = validation.protocolAccepted;
       } catch {
         isValid = false;
@@ -1166,6 +1173,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       }
       providerEndTime = Date.now();
     } else {
+      if (timeoutHandle) clearTimeout(timeoutHandle);
       sendEvent("error", { error: "GEMINI_API_KEY is not configured. Add it to your .env file and restart the server.", errorCode: "AUTH_ERROR" });
       res.end();
       return;
@@ -1201,6 +1209,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   if (timeoutHandle) clearTimeout(timeoutHandle);
   if (timeoutFired) return; // timeout fired during the stream; response already ended
 
+  try {
   // 3. SERVER-SIDE 3-LAYER VALIDATION
   const validationStartTime = Date.now();
   let parsedResponse: any = null;
@@ -1422,16 +1431,23 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   });
 
   sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
-  res.end();
+  } catch (e: any) {
+    console.error("Post-stream processing error:", e);
+    try { sendEvent("error", { error: "Internal error processing response", errorCode: "INTERNAL_ERROR" }); } catch {}
+  } finally {
+    res.end();
+  }
 
   // Async post-response: real LLM summarization of evicted turns (zero latency impact).
   // Updates conv.summary for the next turn; uses cheapest model.
   if (aiInstance && !isMockResponse && evictedDialogueTurns.length > 0) {
+    const convId = conv.id;
     summarizeEvictedTurns(evictedDialogueTurns, conv.summary, aiInstance)
       .then(s => {
-        if (s) {
-          conv.summary = s;
-          conv.summaryVersion = (conv.summaryVersion || 0) + 1;
+        const live = conversations.get(convId);
+        if (s && live) {
+          live.summary = s;
+          live.summaryVersion = (live.summaryVersion || 0) + 1;
         }
       })
       .catch(() => {});

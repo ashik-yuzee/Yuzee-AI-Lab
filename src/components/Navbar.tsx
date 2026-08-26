@@ -173,6 +173,7 @@ export const Navbar: React.FC = () => {
               : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
           }`}
           title="Open Lab (Context, Thinking, Memory Capsule, Benchmark, Traces)"
+          aria-label="Open Lab"
         >
           <FlaskConical className="w-3.5 h-3.5 text-indigo-600" />
           <span>Lab</span>
@@ -210,6 +211,7 @@ export const Navbar: React.FC = () => {
               : "bg-slate-50 hover:bg-white border-slate-200 text-slate-700 hover:border-sky-300"
           }`}
           title="Click to view full turn & session telemetry diagnostics"
+          aria-label="Token Telemetry"
         >
           <Activity className="w-3.5 h-3.5 text-sky-600" />
           <span className="text-[11px]">

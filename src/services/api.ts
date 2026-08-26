@@ -83,11 +83,12 @@ export async function sendFeedback(
   messageId: string,
   feedback: { type: QualityFeedbackType; comment?: string }
 ): Promise<void> {
-  await fetch(`${API_BASE}/api/conversations/${convId}/feedback?messageId=${encodeURIComponent(messageId)}`, {
+  const res = await fetch(`${API_BASE}/api/conversations/${convId}/feedback?messageId=${encodeURIComponent(messageId)}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ ...feedback, timestamp: Date.now() }),
   });
+  if (!res.ok) throw new Error("Failed to send feedback");
 }
 
 export async function countTokens(
@@ -133,9 +134,8 @@ export async function fetchSessionStats(): Promise<SessionCumulativeStats> {
 }
 
 export async function resetSessionStats(): Promise<void> {
-  await fetch(`${API_BASE}/api/tokens/session-reset`, {
-    method: "POST",
-  });
+  const res = await fetch(`${API_BASE}/api/tokens/session-reset`, { method: "POST" });
+  if (!res.ok) throw new Error("Failed to reset session stats");
 }
 
 export async function generateConversationTitle(id: string): Promise<string> {

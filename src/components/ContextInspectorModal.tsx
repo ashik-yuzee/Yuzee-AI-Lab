@@ -75,8 +75,8 @@ export const ContextInspectorModal: React.FC = () => {
                 No active prompt payload to inspect. Send a turn first.
               </div>
             ) : (
-              included.map((sec, idx) => (
-                <div key={idx} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
+              included.map((sec) => (
+                <div key={sec.name} className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-2">
                   <div className="flex items-center justify-between">
                     <div>
                       <span className="font-semibold text-xs text-slate-900">{sec.name}</span>
@@ -97,8 +97,8 @@ export const ContextInspectorModal: React.FC = () => {
               No items were excluded in the latest request. (All context fits within budget).
             </div>
           ) : (
-            excluded.map((sec, idx) => (
-              <div key={idx} className="p-3.5 bg-amber-50/40 border border-amber-200 rounded-xl space-y-2">
+            excluded.map((sec) => (
+              <div key={sec.name} className="p-3.5 bg-amber-50/40 border border-amber-200 rounded-xl space-y-2">
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="font-semibold text-xs text-slate-900">{sec.name}</span>

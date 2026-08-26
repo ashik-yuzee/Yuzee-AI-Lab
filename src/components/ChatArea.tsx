@@ -43,8 +43,11 @@ export const ChatArea: React.FC = () => {
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
+
+  useEffect(() => { return () => { if (copyTimerRef.current) clearTimeout(copyTimerRef.current); }; }, []);
 
   const starterPrompts = [
     { title: "Cybersecurity Pathway", prompt: "Build a realistic pathway from IT support into a junior cybersecurity analyst." },
@@ -61,7 +64,8 @@ export const ChatArea: React.FC = () => {
   const copyMessage = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
+    if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    copyTimerRef.current = setTimeout(() => setCopiedId(null), 2000);
   };
 
   const handleInteractionEvent = (event: UserEvent) => {
