@@ -203,10 +203,21 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       isFirstLoad.current = false;
       return;
     }
-    if (conversations.length > 0) {
-      lsSave(conversations);
-    }
+    lsSave(conversations); // save even empty array so deleted conversations don't resurrect on refresh
   }, [conversations]);
+
+  // Sync currentConversation (which has live telemetry) back to conversations when streaming ends.
+  // Without this, the most-recent turn's telemetry never reaches localStorage/export/navigation.
+  useEffect(() => {
+    if (isStreaming || !currentConversation) return;
+    setConversations(prev => {
+      const idx = prev.findIndex(c => c.id === currentConversation.id);
+      if (idx === -1 || prev[idx] === currentConversation) return prev;
+      const next = [...prev];
+      next[idx] = currentConversation;
+      return next;
+    });
+  }, [isStreaming, currentConversation]);
 
   const localStorageStats = useMemo(() => {
     const bytes = lsBytes();

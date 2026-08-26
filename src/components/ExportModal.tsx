@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { Download, X, FileJson, FileSpreadsheet, ShieldCheck, Check } from "lucide-react";
+import { calcTurnCost, formatCost } from "../data/models";
 
 export const ExportModal: React.FC = () => {
   const { isExportOpen, setExportOpen, currentConversation, conversations, sessionStats } = useTokenLab();
@@ -9,7 +10,12 @@ export const ExportModal: React.FC = () => {
 
   if (!isExportOpen) return null;
 
-  const exportData = conversations.map((conv) => ({
+  // Merge currentConversation (has live telemetry) over conversations list
+  const mergedConversations = conversations.map(c =>
+    currentConversation && c.id === currentConversation.id ? currentConversation : c
+  );
+
+  const exportData = mergedConversations.map((conv) => ({
     conversationId: conv.id,
     title: conv.title,
     model: conv.model,
@@ -47,38 +53,47 @@ export const ExportModal: React.FC = () => {
     const rows: string[] = [
       [
         "ConversationId",
+        "ConversationTitle",
         "TurnId",
         "Role",
         "Model",
         "Strategy",
         "ThinkingLevel",
-        "InputTokens",
+        "GrossInputTokens",
+        "UncachedInputTokens",
+        "CachedReadTokens",
         "OutputTokens",
         "ThinkingTokens",
-        "CachedTokens",
-        "TotalTokens",
+        "TotalBilledTokens",
+        "EstimatedCostUSD",
         "LatencyMs",
         "Feedback",
         "Timestamp",
       ].join(","),
     ];
 
-    conversations.forEach((conv) => {
+    mergedConversations.forEach((conv) => {
       conv.messages?.forEach((msg) => {
         const u = msg.telemetry?.usage;
+        const model = msg.telemetry?.model || conv.model || "";
+        const cost = u && model ? calcTurnCost(model, u) : null;
+        const uncached = u ? (u.uncachedInputTokens ?? (u.inputTokens - (u.cachedTokens ?? 0))) : "";
         rows.push(
           [
             conv.id,
+            `"${(conv.title || "").replace(/"/g, '""')}"`,
             msg.id,
             msg.role,
-            conv.model,
+            model,
             conv.strategy,
             conv.thinkingLevel,
             u?.inputTokens ?? "",
+            uncached,
+            u?.cachedTokens ?? "",
             u?.outputTokens ?? "",
             u?.thinkingTokens ?? "",
-            u?.cachedTokens ?? "",
             u?.totalTokens ?? "",
+            cost !== null ? cost.toFixed(8) : "",
             u?.latencyMs ?? "",
             msg.feedback?.type ?? "",
             msg.createdAt,
