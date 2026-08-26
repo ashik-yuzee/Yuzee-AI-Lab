@@ -227,6 +227,15 @@ app.get("/api/config/capabilities", (req, res) => {
   });
 });
 
+// Default system prompt content (so client can display/diff)
+app.get("/api/system-prompt", (req, res) => {
+  res.json({
+    content: requestAssembler.getPromptContent(),
+    hash: requestAssembler.getPromptHash(),
+    bytes: requestAssembler.getPromptBytes(),
+  });
+});
+
 // List Conversations
 app.get("/api/conversations", (req, res) => {
   const list = Array.from(conversations.values()).sort((a, b) => b.updatedAt - a.updatedAt);

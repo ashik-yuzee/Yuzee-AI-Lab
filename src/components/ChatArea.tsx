@@ -298,8 +298,11 @@ export const ChatArea: React.FC = () => {
                                       <>In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong></>
                                     )}
                                     {" "}· Out <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
+                                    {msg.telemetry.appliedThinkingLevel && (
+                                      <> · <span className="text-purple-600 font-semibold">{msg.telemetry.appliedThinkingLevel}</span></>
+                                    )}
                                     {msg.telemetry.usage.thinkingTokens !== null && (
-                                      <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
+                                      <> think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
                                     )}
                                     {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
                                     {(() => {

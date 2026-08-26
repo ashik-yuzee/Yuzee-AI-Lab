@@ -147,6 +147,11 @@ export async function generateConversationTitle(id: string): Promise<string> {
   return data.title as string;
 }
 
+export async function fetchSystemPrompt(): Promise<{ content: string; hash: string; bytes: number }> {
+  const res = await fetch(`${API_BASE}/api/system-prompt`);
+  return res.json();
+}
+
 export async function runBenchmark(payload: {
   conversationId?: string;
   prompt: string;

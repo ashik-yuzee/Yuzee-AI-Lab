@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import {
   OptimizationStrategy,
@@ -19,7 +19,11 @@ import {
   Download,
   Info,
   CheckCircle2,
+  Upload,
+  Eye,
+  EyeOff,
 } from "lucide-react";
+import { GEMINI_MODELS } from "../data/models";
 import * as api from "../services/api";
 import { AppleSlider } from "./ui/AppleSlider";
 import { AppleToggle } from "./ui/AppleToggle";
@@ -46,6 +50,17 @@ export const AdvancedLabModal: React.FC = () => {
   const [isBenchmarking, setIsBenchmarking] = useState(false);
   const [isResetMemoryConfirmOpen, setIsResetMemoryConfirmOpen] = useState(false);
   const [isResetStatsConfirmOpen, setIsResetStatsConfirmOpen] = useState(false);
+  const [benchmarkModel, setBenchmarkModel] = useState("");
+  const [benchmarkStrategies, setBenchmarkStrategies] = useState<string[]>(["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"]);
+  const [benchmarkIsLive, setBenchmarkIsLive] = useState(false);
+  const [defaultPromptContent, setDefaultPromptContent] = useState("");
+  const [showPromptContent, setShowPromptContent] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!isAdvancedLabOpen || defaultPromptContent) return;
+    api.fetchSystemPrompt().then(r => setDefaultPromptContent(r.content)).catch(() => {});
+  }, [isAdvancedLabOpen, defaultPromptContent]);
 
   if (!isAdvancedLabOpen) return null;
 
@@ -84,7 +99,9 @@ export const AdvancedLabModal: React.FC = () => {
       const res = await api.runBenchmark({
         conversationId: conv.id,
         prompt: benchmarkPrompt,
-        model: conv.model,
+        model: benchmarkModel || conv.model,
+        strategies: benchmarkStrategies as OptimizationStrategy[],
+        isLive: benchmarkIsLive,
       });
       setBenchmarkResults(res.results);
     } catch (e) {
@@ -369,11 +386,76 @@ export const AdvancedLabModal: React.FC = () => {
                     <div className="space-y-1.5">
                       <label className="text-xs font-semibold text-slate-800">Custom System Instruction:</label>
                       <textarea
-                        rows={3}
+                        rows={4}
                         value={conv.customSystemPrompt || ""}
                         onChange={(e) => updateCurrentConversationSettings({ customSystemPrompt: e.target.value })}
                         placeholder="Define specific instructions, response styles, or tone rules..."
-                        className="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200"
+                        className="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 font-mono"
+                      />
+                    </div>
+                  )}
+
+                  {/* Upload / View / Revert controls */}
+                  <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept=".md,.txt"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        const reader = new FileReader();
+                        reader.onload = (ev) => {
+                          const content = (ev.target?.result as string) || "";
+                          updateCurrentConversationSettings({ systemPromptMode: "custom", customSystemPrompt: content });
+                          try { localStorage.setItem("yuzee_custom_system_prompt", content); } catch {}
+                        };
+                        reader.readAsText(file);
+                        e.target.value = "";
+                      }}
+                    />
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5" />
+                      <span>Upload .md File</span>
+                    </button>
+
+                    <button
+                      onClick={() => setShowPromptContent(v => !v)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
+                    >
+                      {showPromptContent ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      <span>{showPromptContent ? "Hide" : "View"} Current Prompt</span>
+                    </button>
+
+                    {conv.systemPromptMode !== "default" && (
+                      <button
+                        onClick={() => updateCurrentConversationSettings({ systemPromptMode: "default", customSystemPrompt: "" })}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-xs font-semibold cursor-pointer"
+                      >
+                        <RotateCcw className="w-3.5 h-3.5" />
+                        <span>Revert to Default</span>
+                      </button>
+                    )}
+                  </div>
+
+                  {showPromptContent && (
+                    <div className="space-y-1.5 pt-1">
+                      <div className="text-[11px] text-slate-500 flex items-center gap-1">
+                        <span className="font-semibold text-slate-700">Active prompt</span>
+                        {conv.systemPromptMode === "custom" ? " (custom)" : " (default — read-only)"}
+                        {defaultPromptContent && conv.systemPromptMode !== "custom" && (
+                          <span className="ml-auto text-[10px] text-slate-400">{defaultPromptContent.length} chars</span>
+                        )}
+                      </div>
+                      <textarea
+                        readOnly
+                        rows={8}
+                        value={conv.systemPromptMode === "custom" ? (conv.customSystemPrompt || "") : defaultPromptContent}
+                        className="w-full text-[11px] font-mono p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 resize-y"
                       />
                     </div>
                   )}
@@ -476,14 +558,74 @@ export const AdvancedLabModal: React.FC = () => {
                     </button>
                   </div>
 
-                  <div>
-                    <label className="text-[11px] font-semibold text-slate-700 block mb-1">Test Prompt:</label>
-                    <input
-                      type="text"
-                      value={benchmarkPrompt}
-                      onChange={(e) => setBenchmarkPrompt(e.target.value)}
-                      className="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-300"
-                    />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-700 block mb-1">Test Prompt:</label>
+                      <input
+                        type="text"
+                        value={benchmarkPrompt}
+                        onChange={(e) => setBenchmarkPrompt(e.target.value)}
+                        className="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-300"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-700 block mb-1">Model Override:</label>
+                      <select
+                        value={benchmarkModel || conv.model}
+                        onChange={(e) => setBenchmarkModel(e.target.value)}
+                        className="w-full text-xs px-3 py-1.5 rounded-lg border border-slate-300 bg-white"
+                      >
+                        {GEMINI_MODELS.filter(m => m.selectable).map(m => (
+                          <option key={m.id} value={m.id}>{m.id}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-700 block mb-1.5">Strategies to Include:</label>
+                      <div className="space-y-1">
+                        {(["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"] as const).map(s => (
+                          <label key={s} className="flex items-center gap-2 text-[11px] text-slate-700 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={benchmarkStrategies.includes(s)}
+                              onChange={(e) => setBenchmarkStrategies(prev =>
+                                e.target.checked ? [...prev, s] : prev.filter(x => x !== s)
+                              )}
+                              className="rounded border-slate-300"
+                            />
+                            {s.replace(/_/g, " ")}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="text-[11px] font-semibold text-slate-700 block mb-1.5">Mode:</label>
+                      <div className="space-y-2">
+                        <label className="flex items-center gap-2 text-[11px] text-slate-700 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="benchmarkMode"
+                            checked={!benchmarkIsLive}
+                            onChange={() => setBenchmarkIsLive(false)}
+                          />
+                          <span><strong>Modelled Estimate</strong> — zero API calls, instant</span>
+                        </label>
+                        <label className="flex items-center gap-2 text-[11px] text-slate-700 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="benchmarkMode"
+                            checked={benchmarkIsLive}
+                            onChange={() => setBenchmarkIsLive(true)}
+                          />
+                          <span><strong>Live Gemini</strong> — real provider calls, uses API quota</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
 
                   {benchmarkResults && (
@@ -492,22 +634,28 @@ export const AdvancedLabModal: React.FC = () => {
                         <thead>
                           <tr className="border-b border-slate-200 bg-slate-50 text-slate-600 text-[11px]">
                             <th className="p-2">Strategy</th>
+                            <th className="p-2">Mode</th>
                             <th className="p-2">Input</th>
                             <th className="p-2">Output</th>
                             <th className="p-2">Cached</th>
-                            <th className="p-2 font-bold text-slate-900">Total Tokens</th>
+                            <th className="p-2 font-bold text-slate-900">Total</th>
                             <th className="p-2">Latency</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
                           {benchmarkResults.map((r, i) => (
                             <tr key={i} className="hover:bg-slate-50">
-                              <td className="p-2 font-sans font-medium text-slate-900">{r.label}</td>
-                              <td className="p-2 text-slate-600">{r.inputTokens}</td>
-                              <td className="p-2 text-slate-600">{r.outputTokens}</td>
-                              <td className="p-2 text-emerald-600">{r.cachedTokens}</td>
-                              <td className="p-2 font-bold text-sky-800">{r.totalTokens}</td>
-                              <td className="p-2 text-slate-500">{r.latencyMs}ms</td>
+                              <td className="p-2 font-sans font-medium text-slate-900 text-[11px]">{r.strategy}</td>
+                              <td className="p-2">
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] font-semibold ${r.mode === 'live' ? 'bg-emerald-100 text-emerald-800' : 'bg-slate-100 text-slate-600'}`}>
+                                  {r.mode}
+                                </span>
+                              </td>
+                              <td className="p-2 text-slate-600">{r.inputTokens?.toLocaleString() ?? "—"}</td>
+                              <td className="p-2 text-slate-600">{r.outputTokens?.toLocaleString() ?? "—"}</td>
+                              <td className="p-2 text-emerald-600">{r.cachedTokens != null ? r.cachedTokens.toLocaleString() : "—"}</td>
+                              <td className="p-2 font-bold text-sky-800">{r.totalTokens?.toLocaleString() ?? "—"}</td>
+                              <td className="p-2 text-slate-500">{r.latencyMs != null ? `${r.latencyMs}ms` : "—"}</td>
                             </tr>
                           ))}
                         </tbody>

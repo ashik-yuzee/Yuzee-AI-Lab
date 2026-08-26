@@ -163,6 +163,7 @@ export class YuzeeRequestAssembler {
     } else {
       // Adaptive deterministic local classifier (zero latency, no extra provider request)
       const lower = (userPrompt || '').toLowerCase();
+      const isFlashLite = modelId.includes('flash-lite');
       if (
         lower.includes('compare') ||
         lower.includes('pathway') ||
@@ -172,20 +173,57 @@ export class YuzeeRequestAssembler {
         lower.includes('vs') ||
         lower.includes('architect') ||
         lower.includes('recommend') ||
-        lower.includes('matrix')
+        lower.includes('matrix') ||
+        lower.includes('trade off') ||
+        lower.includes('pros and cons') ||
+        lower.includes('which is better') ||
+        lower.includes('difference between')
       ) {
-        appliedLevel = modelId.includes('flash-lite') ? 'low' : 'medium';
+        appliedLevel = isFlashLite ? 'low' : 'medium';
       } else if (
         lower.length < 35 ||
-        lower.startsWith('what is') ||
-        lower.startsWith('hi') ||
+        lower.startsWith('what is ') ||
+        lower.startsWith('hi ') ||
+        lower === 'hi' ||
         lower.startsWith('hello') ||
         lower.startsWith('format') ||
-        lower.startsWith('thank')
+        lower.startsWith('thank') ||
+        lower.startsWith('ok') ||
+        lower.startsWith('great') ||
+        lower.startsWith('got it')
       ) {
         appliedLevel = 'minimal';
+      } else if (
+        lower.includes('how to') ||
+        lower.includes('how do') ||
+        lower.includes('how can') ||
+        lower.includes('help me') ||
+        lower.includes('guide me') ||
+        lower.includes('explain') ||
+        lower.includes('should i') ||
+        lower.includes('career') ||
+        lower.includes('certif') ||
+        lower.includes('skill') ||
+        lower.includes('course') ||
+        lower.includes('study') ||
+        lower.includes('learn') ||
+        lower.includes('job') ||
+        lower.includes('role') ||
+        lower.includes('salary') ||
+        lower.includes('interview') ||
+        lower.includes('prepare') ||
+        lower.includes('resume') ||
+        lower.includes('portfolio') ||
+        lower.includes('next step') ||
+        lower.includes('start') ||
+        lower.includes('begin') ||
+        lower.includes('advice') ||
+        lower.includes('suggest')
+      ) {
+        // General guidance/career prompts — upgrade to low for flash-lite instead of minimal
+        appliedLevel = 'low';
       } else {
-        appliedLevel = modelId.includes('flash-lite') ? 'minimal' : 'low';
+        appliedLevel = isFlashLite ? 'minimal' : 'low';
       }
     }
 
