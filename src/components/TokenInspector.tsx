@@ -264,7 +264,7 @@ export const TokenInspector: React.FC = () => {
 
               <div className="bg-slate-900 text-white p-3.5 rounded-xl space-y-2.5 shadow-sm">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-slate-400 text-xs">True AI Consumption</span>
+                  <span className="text-slate-400 text-xs" title="New uncached input + output + thinking + compaction overhead. Cache reads are listed separately below and are NOT included here. Resets when you click Reset in the sidebar.">Session Total (excl. cache reads)</span>
                   <span className="text-base font-bold text-white font-mono">
                     {(sessionStats?.trueTotalConsumption || 0).toLocaleString()}
                   </span>
