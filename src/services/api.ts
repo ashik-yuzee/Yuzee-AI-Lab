@@ -156,7 +156,7 @@ export async function extractProfileFacts(
   userMessage: string,
   assistantMessage: string,
   existingFacts: string[]
-): Promise<{ facts: string[] }> {
+): Promise<{ facts: Array<{ text: string; category: string } | string> }> {
   try {
     const res = await fetch(`${API_BASE}/api/extract-profile-facts`, {
       method: "POST",
@@ -165,6 +165,20 @@ export async function extractProfileFacts(
     });
     return res.ok ? res.json() : { facts: [] };
   } catch { return { facts: [] }; }
+}
+
+export async function detectContradictions(
+  userMessage: string,
+  profileFacts: string[]
+): Promise<{ contradictions: Array<{ fact: string; contradiction: string }> }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/detect-contradictions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userMessage: userMessage.slice(0, 400), profileFacts: profileFacts.slice(0, 15) }),
+    });
+    return res.ok ? res.json() : { contradictions: [] };
+  } catch { return { contradictions: [] }; }
 }
 
 export async function runBenchmark(payload: {

@@ -232,20 +232,48 @@ app.post("/api/extract-profile-facts", makeRateLimit(30), async (req, res) => {
   const { userMessage = "", assistantMessage = "", existingFacts = [] } = req.body;
   const ai = getGemini();
   if (!ai || !userMessage) return res.json({ facts: [] });
-  const prompt = `Extract 0-3 SHORT factual statements about the user from this conversation turn. Focus on: name, location, job/role, years of experience, certifications held, career goals, budget constraints, time availability, learning preferences.
+  const prompt = `Extract 0-4 SHORT factual statements about the user from this conversation turn.
+Focus on: name, location, job/role, years of experience, certifications held, career goals, budget constraints, time availability, learning preferences, explicit likes ("I love", "I prefer", "I enjoy"), explicit dislikes ("I hate", "I don't like", "I avoid").
 
-User message: "${String(userMessage).slice(0, 300)}"
+For each fact, output an object with "text" (the fact) and "category" (one of: "general", "like", "dislike").
+
+User message: "${String(userMessage).slice(0, 400)}"
 Already known facts: ${JSON.stringify((existingFacts as string[]).slice(0, 10))}
 
-Return ONLY a JSON array of new facts not already known. If none, return [].
-Example output: ["Works as IT support", "Targeting Junior SOC Analyst role", "Has CompTIA Network+"]`;
+Return ONLY a JSON array of NEW fact objects not already known. If none, return [].
+Example: [{"text":"Works as IT support","category":"general"},{"text":"Likes hands-on learning","category":"like"},{"text":"Dislikes online-only courses","category":"dislike"}]`;
   try {
     const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
     const text = (resp.text || "[]").trim();
     const match = text.match(/\[[\s\S]*\]/);
-    const facts = match ? JSON.parse(match[0]) : [];
-    res.json({ facts: Array.isArray(facts) ? facts.slice(0, 3) : [] });
+    const raw = match ? JSON.parse(match[0]) : [];
+    // Support both old string format and new object format
+    const facts = Array.isArray(raw) ? raw.slice(0, 4).map((f: any) =>
+      typeof f === "string" ? { text: f, category: "general" } : f
+    ) : [];
+    res.json({ facts });
   } catch { res.json({ facts: [] }); }
+});
+
+// Detect contradictions between user message and stored profile facts
+app.post("/api/detect-contradictions", makeRateLimit(20), async (req, res) => {
+  const { userMessage = "", profileFacts = [] } = req.body;
+  const ai = getGemini();
+  if (!ai || !userMessage || !profileFacts.length) return res.json({ contradictions: [] });
+  const prompt = `Check if the user's message contradicts any of their stored profile facts.
+
+User message: "${String(userMessage).slice(0, 400)}"
+Profile facts: ${JSON.stringify((profileFacts as string[]).slice(0, 15))}
+
+Return ONLY a JSON array of contradiction objects. Each object: {"fact": "the stored fact", "contradiction": "what the user said that conflicts"}.
+If no contradictions, return []. Keep it short — only clear factual conflicts, not vague differences.`;
+  try {
+    const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    const text = (resp.text || "[]").trim();
+    const match = text.match(/\[[\s\S]*\]/);
+    const contradictions = match ? JSON.parse(match[0]) : [];
+    res.json({ contradictions: Array.isArray(contradictions) ? contradictions.slice(0, 3) : [] });
+  } catch { res.json({ contradictions: [] }); }
 });
 
 // Default system prompt content (so client can display/diff)
@@ -1025,11 +1053,13 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   // Build lightweight context prefix (date, location, user profile) — injected into each turn
   const uc = req.body.userContext as { date?: string; timezone?: string; location?: string } | undefined;
   const upFacts: string[] = req.body.userProfileFacts || [];
+  const userQuestionAnswers: any[] = req.body.userQuestionAnswers || [];
   const ctxParts: string[] = [];
   if (uc?.date) ctxParts.push(`Date: ${uc.date}`);
   if (uc?.location) ctxParts.push(`Location: ${uc.location}`);
   else if (uc?.timezone) ctxParts.push(`Timezone: ${uc.timezone}`);
   if (upFacts.length > 0) ctxParts.push(`User facts: ${upFacts.slice(0, 8).join("; ")}`);
+  if (userQuestionAnswers.length > 0) ctxParts.push(`USER_QUESTION_ANSWERS: ${JSON.stringify(userQuestionAnswers)}`);
   const enrichedMessage = ctxParts.length > 0
     ? `[${ctxParts.join(" · ")}]\n${userMessageContent}`
     : userMessageContent;

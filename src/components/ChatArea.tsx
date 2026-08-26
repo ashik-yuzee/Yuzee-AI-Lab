@@ -3,6 +3,7 @@ import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
 import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
+import { ClarificationQuestionsCard, ClarificationAnswer } from "./ClarificationQuestionsCard";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -88,6 +89,31 @@ export const ChatArea: React.FC = () => {
       }
     }
     return null;
+  };
+
+  // Parse counsellor gate JSON (question_controller format)
+  const parseCounsellorGate = (msg: ChatMessage): any | null => {
+    if (!msg.content || msg.isStreaming) return null;
+    const trimmed = msg.content.trim();
+    if (!trimmed.startsWith("{")) return null;
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (parsed.question_controller && parsed.question_controller.ask_questions === true && Array.isArray(parsed.clarification_questions) && parsed.clarification_questions.length > 0) {
+        return parsed;
+      }
+    } catch { /* not valid JSON or not counsellor gate format */ }
+    return null;
+  };
+
+  const handleClarificationSubmit = (answers: ClarificationAnswer[]) => {
+    // Format answers as a human-readable + structured message
+    const lines = answers.map(a => {
+      const display = a.self_input || a.selected_values.join(", ");
+      return `• ${a.dimension}: ${display}`;
+    });
+    const jsonBlock = JSON.stringify({ user_question_answers: answers.map((a, i) => ({ ...a, answered_at_turn: i + 1 })) });
+    const message = `[QUESTION_ANSWERS: ${jsonBlock}]\n${lines.join("\n")}`;
+    sendMessage(message);
   };
 
   const messages = currentConversation?.messages || [];
@@ -192,6 +218,14 @@ export const ChatArea: React.FC = () => {
             /* Active Message List */
             messages.map((msg, index) => {
               const structured = msg.role === "assistant" ? parseStructuredResponse(msg) : null;
+              const counsellorGate = msg.role === "assistant" && !structured ? parseCounsellorGate(msg) : null;
+              // Only the last assistant message with questions is interactive
+              const isLastMsg = index === messages.length - 1 || messages.slice(index + 1).every(m => m.role === "user");
+
+              // User message: hide the structured question answers prefix from display
+              const userDisplayContent = msg.role === "user" && msg.content?.startsWith("[QUESTION_ANSWERS:")
+                ? msg.content.replace(/^\[QUESTION_ANSWERS:.*?\]\n/, "")
+                : msg.content;
 
               return (
                 <div key={msg.id || index} id={`message-${msg.id || index}`} className="space-y-2">
@@ -205,7 +239,7 @@ export const ChatArea: React.FC = () => {
                       }`}
                     >
                       {msg.role === "user" ? (
-                        <div className="whitespace-pre-wrap">{msg.content}</div>
+                        <div className="whitespace-pre-wrap">{userDisplayContent}</div>
                       ) : (
                         <div className="space-y-3">
                           {/* Compaction Event Banner if triggered before this turn */}
@@ -220,8 +254,15 @@ export const ChatArea: React.FC = () => {
                             </div>
                           )}
 
-                          {/* Protocol v1.3 Structured Renderer or Markdown Fallback */}
-                          {structured && rawJsonIds.has(msg.id) ? (
+                          {/* Counsellor Gate: Clarification Questions */}
+                          {counsellorGate ? (
+                            <ClarificationQuestionsCard
+                              questions={counsellorGate.clarification_questions}
+                              bridgeMessage={counsellorGate.frontend?.bridge_message}
+                              onSubmit={handleClarificationSubmit}
+                              disabled={!isLastMsg || isStreaming}
+                            />
+                          ) : structured && rawJsonIds.has(msg.id) ? (
                             <pre className="text-[11px] leading-relaxed font-mono bg-slate-900 text-emerald-300 p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all">
                               {msg.content}
                             </pre>

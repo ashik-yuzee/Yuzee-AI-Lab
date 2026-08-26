@@ -29,6 +29,7 @@ export const Navbar: React.FC = () => {
     setSettingsOpen,
     setProfileOpen,
     userProfile,
+    userContradictions,
     activeTurnTelemetry,
     sessionStats,
   } = useTokenLab();
@@ -193,9 +194,9 @@ export const Navbar: React.FC = () => {
           aria-label="User Profile"
         >
           <User className="w-4 h-4" />
-          {userProfile.length > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center leading-none">
-              {userProfile.length > 9 ? "9+" : userProfile.length}
+          {(userProfile.length > 0 || (userContradictions || []).some((c: any) => !c.resolved)) && (
+            <span className={`absolute -top-0.5 -right-0.5 w-3.5 h-3.5 text-white text-[8px] font-bold rounded-full flex items-center justify-center leading-none ${(userContradictions || []).some((c: any) => !c.resolved) ? "bg-amber-500" : "bg-emerald-500"}`}>
+              {(userContradictions || []).some((c: any) => !c.resolved) ? "!" : userProfile.length > 9 ? "9+" : userProfile.length}
             </span>
           )}
         </button>

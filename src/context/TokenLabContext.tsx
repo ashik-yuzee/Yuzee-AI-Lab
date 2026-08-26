@@ -74,10 +74,12 @@ interface TokenLabContextType {
   setSidebarOpen: (open: boolean) => void;
   isProfileOpen: boolean;
   setProfileOpen: (open: boolean) => void;
-  userProfile: { id: string; text: string; addedAt: number }[];
-  setUserProfile: (facts: { id: string; text: string; addedAt: number }[]) => void;
+  userProfile: { id: string; text: string; category?: string; addedAt: number }[];
+  setUserProfile: (facts: { id: string; text: string; category?: string; addedAt: number }[]) => void;
   userLocation: string;
   setUserLocation: (loc: string) => void;
+  userContradictions: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[];
+  setUserContradictions: (c: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]) => void;
 
   // Actions
   selectConversation: (id: string) => Promise<void>;
@@ -151,12 +153,15 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
-  const [userProfile, setUserProfile] = useState<{ id: string; text: string; addedAt: number }[]>(() => {
+  const [userProfile, setUserProfile] = useState<{ id: string; text: string; category?: string; addedAt: number }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }
   });
   const [userLocation, setUserLocation] = useState<string>(() =>
     localStorage.getItem("yuzee_user_location") || ""
   );
+  const [userContradictions, setUserContradictions] = useState<{ id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]>(() => {
+    try { return JSON.parse(localStorage.getItem("yuzee_contradictions") || "[]"); } catch { return []; }
+  });
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
@@ -612,9 +617,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               .then(({ facts }) => {
                 if (facts.length > 0) {
                   setUserProfile(prev => {
-                    const newFacts = facts.map((text: string, i: number) => ({
+                    const newFacts = (facts as Array<{ text: string; category?: string } | string>).map((f, i) => ({
                       id: `fact-${Date.now()}-${i}`,
-                      text,
+                      text: typeof f === "string" ? f : f.text,
+                      category: typeof f === "string" ? "general" : (f.category || "general"),
                       addedAt: Date.now(),
                     }));
                     const updated = [...prev, ...newFacts];
@@ -624,6 +630,26 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 }
               })
               .catch(() => {});
+            // Detect contradictions (fire-and-forget, only if we have profile facts)
+            if (userProfile.length > 0) {
+              api.detectContradictions(textMessage, userProfile.map(f => f.text))
+                .then(({ contradictions }) => {
+                  if (contradictions.length > 0) {
+                    setUserContradictions(prev => {
+                      const newC = contradictions.map((c, i) => ({
+                        id: `c-${Date.now()}-${i}`,
+                        fact: c.fact,
+                        contradiction: c.contradiction,
+                        detectedAt: Date.now(),
+                        resolved: false,
+                      }));
+                      const updated = [...prev, ...newC];
+                      try { localStorage.setItem("yuzee_contradictions", JSON.stringify(updated)); } catch {}
+                      return updated;
+                    });
+                  }
+                }).catch(() => {});
+            }
           }
         },
         onProtocolValidationError: (data) => {
@@ -759,6 +785,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setUserProfile,
         userLocation,
         setUserLocation,
+        userContradictions,
+        setUserContradictions,
         selectConversation,
         startNewConversation,
         loadDemoConversation,
