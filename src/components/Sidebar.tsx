@@ -179,7 +179,7 @@ export const Sidebar: React.FC = () => {
                         <>
                           <span className="truncate block font-medium">{conv.title || "Career Exploration"}</span>
                           <span className="text-[10px] text-slate-500 block">
-                            {conv.model?.replace("gemini-", "") || "3.6-flash"} · {msgCount} turns
+                            {conv.model?.replace("gemini-", "") || "3.6-flash"} · {Math.floor(msgCount / 2)} exchanges
                           </span>
                         </>
                       )}
@@ -244,7 +244,7 @@ export const Sidebar: React.FC = () => {
             {cachedTokens > 0 && (
               <span className="text-emerald-700" title={`Cumulative cache reads across all turns this session (≈${Math.round(cachedTokens / Math.max(1, sessionStats?.userFacingChatCalls ?? 1)).toLocaleString()} tokens/turn from cached system prompt) — billed at ~4× lower rate`}>⚡ <strong>{cachedTokens > 1000 ? `${(cachedTokens/1000).toFixed(1)}k` : cachedTokens}</strong> reads</span>
             )}
-            <span>Out <strong>{outputTokens > 1000 ? `${(outputTokens/1000).toFixed(1)}k` : outputTokens}</strong></span>
+            <span title="Text output tokens — excludes thinking tokens (counted separately in Session Total)">Out <strong>{outputTokens > 1000 ? `${(outputTokens/1000).toFixed(1)}k` : outputTokens}</strong></span>
             {!cachedTokens && <span className="text-emerald-700">Saved <strong>{savedTokens > 1000 ? `${(savedTokens/1000).toFixed(1)}k` : savedTokens}</strong></span>}
           </div>
           {sessionTotalCost > 0 && (
