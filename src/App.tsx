@@ -13,6 +13,7 @@ import { ExportModal } from "./components/ExportModal";
 import { SettingsModal } from "./components/SettingsModal";
 import { AdvancedLabModal } from "./components/AdvancedLabModal";
 import { UserProfileModal } from "./components/UserProfileModal";
+import { ClarificationQuestionsModal } from "./components/ClarificationQuestionsModal";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ export default function App() {
         <AnalyticsDashboardModal />
         <ExportModal />
         <SettingsModal />
+        <ClarificationQuestionsModal />
       </div>
     </TokenLabProvider>
   );

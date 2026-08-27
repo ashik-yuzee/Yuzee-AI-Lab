@@ -3,7 +3,6 @@ import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
 import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
-import { ClarificationQuestionsCard, ClarificationAnswer } from "./ClarificationQuestionsCard";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -42,6 +41,7 @@ export const ChatArea: React.FC = () => {
     isStreaming,
     inspectTurnTelemetry,
     capabilities,
+    setPendingClarificationQuestions,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -62,6 +62,26 @@ export const ChatArea: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentConversation?.messages, isStreaming]);
+
+  // Trigger clarification modal when last non-streaming assistant message is a counsellor gate.
+  // Track the last processed message ID so switching conversations doesn't re-trigger old gates.
+  const lastCounsellorGateIdRef = React.useRef<string | null>(null);
+  useEffect(() => {
+    const msgs = currentConversation?.messages || [];
+    if (msgs.length === 0 || isStreaming) return;
+    const last = msgs[msgs.length - 1];
+    if (last.role !== "assistant" || last.isStreaming || !last.content) return;
+    if (last.id === lastCounsellorGateIdRef.current) return;
+    const trimmed = last.content.trim();
+    if (!trimmed.startsWith("{")) return;
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (parsed.question_controller?.ask_questions === true && Array.isArray(parsed.clarification_questions) && parsed.clarification_questions.length > 0) {
+        lastCounsellorGateIdRef.current = last.id;
+        setPendingClarificationQuestions({ questions: parsed.clarification_questions, bridgeMessage: parsed.frontend?.bridge_message });
+      }
+    } catch { /* not counsellor gate */ }
+  }, [currentConversation?.messages, isStreaming, setPendingClarificationQuestions]);
 
   const copyMessage = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -91,30 +111,6 @@ export const ChatArea: React.FC = () => {
     return null;
   };
 
-  // Parse counsellor gate JSON (question_controller format)
-  const parseCounsellorGate = (msg: ChatMessage): any | null => {
-    if (!msg.content || msg.isStreaming) return null;
-    const trimmed = msg.content.trim();
-    if (!trimmed.startsWith("{")) return null;
-    try {
-      const parsed = JSON.parse(trimmed);
-      if (parsed.question_controller && parsed.question_controller.ask_questions === true && Array.isArray(parsed.clarification_questions) && parsed.clarification_questions.length > 0) {
-        return parsed;
-      }
-    } catch { /* not valid JSON or not counsellor gate format */ }
-    return null;
-  };
-
-  const handleClarificationSubmit = (answers: ClarificationAnswer[]) => {
-    // Format answers as a human-readable + structured message
-    const lines = answers.map(a => {
-      const display = a.self_input || a.selected_values.join(", ");
-      return `• ${a.dimension}: ${display}`;
-    });
-    const jsonBlock = JSON.stringify({ user_question_answers: answers.map((a, i) => ({ ...a, answered_at_turn: i + 1 })) });
-    const message = `[QUESTION_ANSWERS: ${jsonBlock}]\n${lines.join("\n")}`;
-    sendMessage(message);
-  };
 
   const messages = currentConversation?.messages || [];
 
@@ -218,9 +214,8 @@ export const ChatArea: React.FC = () => {
             /* Active Message List */
             messages.map((msg, index) => {
               const structured = msg.role === "assistant" ? parseStructuredResponse(msg) : null;
-              const counsellorGate = msg.role === "assistant" && !structured ? parseCounsellorGate(msg) : null;
-              // Only the last assistant message with questions is interactive
-              const isLastMsg = index === messages.length - 1 || messages.slice(index + 1).every(m => m.role === "user");
+              // Counsellor gate messages are handled by ClarificationQuestionsModal — skip inline rendering
+              const isCounsellorGate = msg.role === "assistant" && !structured && !msg.isStreaming && msg.content?.trim().startsWith("{") && (() => { try { const p = JSON.parse(msg.content!.trim()); return p.question_controller?.ask_questions === true; } catch { return false; } })();
 
               // User message: hide the structured question answers prefix from display
               const userDisplayContent = msg.role === "user" && msg.content?.startsWith("[QUESTION_ANSWERS:")
@@ -254,14 +249,12 @@ export const ChatArea: React.FC = () => {
                             </div>
                           )}
 
-                          {/* Counsellor Gate: Clarification Questions */}
-                          {counsellorGate ? (
-                            <ClarificationQuestionsCard
-                              questions={counsellorGate.clarification_questions}
-                              bridgeMessage={counsellorGate.frontend?.bridge_message}
-                              onSubmit={handleClarificationSubmit}
-                              disabled={!isLastMsg || isStreaming}
-                            />
+                          {/* Counsellor gate JSON: shown as a subtle pending indicator; modal handles interaction */}
+                          {isCounsellorGate ? (
+                            <div className="flex items-center gap-2 p-3 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-700">
+                              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                              <span>Questions ready — see the popup above to answer them.</span>
+                            </div>
                           ) : structured && rawJsonIds.has(msg.id) ? (
                             <pre className="text-[11px] leading-relaxed font-mono bg-slate-900 text-emerald-300 p-3 rounded-lg overflow-x-auto whitespace-pre-wrap break-all">
                               {msg.content}
@@ -347,7 +340,7 @@ export const ChatArea: React.FC = () => {
                                       <>In <strong>{msg.telemetry.usage.inputTokens.toLocaleString()}</strong></>
                                     )}
                                     {" "}· Out <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
-                                    {msg.telemetry.usage.thinkingTokens !== null && (
+                                    {msg.telemetry.usage.thinkingTokens != null && msg.telemetry.usage.thinkingTokens > 0 && (
                                       <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>
                                     )}
                                     {" "}· Total <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
@@ -376,7 +369,7 @@ export const ChatArea: React.FC = () => {
                                   </button>
                                 )}
                                 <button
-                                  onClick={() => copyMessage(msg.id, msg.content)}
+                                  onClick={() => copyMessage(msg.id, msg.content ?? "")}
                                   className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"
                                   title="Copy Response"
                                   aria-label="Copy Response"

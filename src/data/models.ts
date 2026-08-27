@@ -30,6 +30,8 @@ export interface ModelCapabilityInfo {
   cachedReadPricePerMToken?: number;
 }
 
+export const DEFAULT_MODEL_ID = 'gemini-3.7-flash';
+
 export const GEMINI_MODELS: ModelCapabilityInfo[] = [
   {
     id: 'gemini-3.7-flash',
@@ -48,7 +50,8 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     defaultThinkingLevel: 'medium',
     supportsCaching: true,
     supportsInteractionsApi: true,
-    badge: 'Latest',
+    isDefault: true,
+    badge: 'Default',
     inputPricePerMToken: 0.10,
     outputPricePerMToken: 0.40,
     cachedReadPricePerMToken: 0.025,
@@ -79,8 +82,8 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
   {
     id: 'gemini-3.5-flash',
     name: 'Gemini 3.5 Flash',
-    shortDescription: 'Balanced Flash model — strong quality with full thinking support. Default.',
-    longDescription: 'High-capability Flash model with a strong balance between quality and cost. Default model for new conversations.',
+    shortDescription: 'Balanced Flash model — strong quality with full thinking support.',
+    longDescription: 'High-capability Flash model with a strong balance between quality and cost.',
     family: 'flash',
     categoryGroup: 'Current',
     status: 'stable',
@@ -93,8 +96,7 @@ export const GEMINI_MODELS: ModelCapabilityInfo[] = [
     defaultThinkingLevel: 'medium',
     supportsCaching: true,
     supportsInteractionsApi: true,
-    isDefault: true,
-    badge: 'Default',
+    badge: 'Stable',
     inputPricePerMToken: 0.10,
     outputPricePerMToken: 0.40,
     cachedReadPricePerMToken: 0.025,

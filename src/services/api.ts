@@ -149,6 +149,40 @@ export async function generateConversationTitle(id: string): Promise<string> {
 
 export async function fetchSystemPrompt(): Promise<{ content: string; hash: string; bytes: number }> {
   const res = await fetch(`${API_BASE}/api/system-prompt`);
+  if (!res.ok) throw new Error(`Failed to fetch system prompt: ${res.status}`);
+  return res.json();
+}
+
+export interface SharedSettings {
+  systemPromptMode: 'default' | 'custom';
+  customSystemPrompt: string;
+  contextBudget: number;
+  recentTurnsToKeep: number;
+  strategy: string;
+  updatedAt: number;
+  defaultPromptHash?: string;
+  defaultPromptBytes?: number;
+}
+
+export async function fetchSharedSettings(): Promise<SharedSettings> {
+  const res = await fetch(`${API_BASE}/api/shared-settings`);
+  if (!res.ok) throw new Error('Failed to fetch shared settings');
+  return res.json();
+}
+
+export async function updateSharedSettings(patch: Partial<Omit<SharedSettings, 'updatedAt' | 'defaultPromptHash' | 'defaultPromptBytes'>>): Promise<SharedSettings> {
+  const res = await fetch(`${API_BASE}/api/shared-settings`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patch),
+  });
+  if (!res.ok) throw new Error('Failed to update shared settings');
+  return res.json();
+}
+
+export async function resetSharedPrompt(): Promise<SharedSettings> {
+  const res = await fetch(`${API_BASE}/api/shared-settings/reset-prompt`, { method: 'POST' });
+  if (!res.ok) throw new Error('Failed to reset shared prompt');
   return res.json();
 }
 
@@ -165,6 +199,20 @@ export async function extractProfileFacts(
     });
     return res.ok ? res.json() : { facts: [] };
   } catch { return { facts: [] }; }
+}
+
+export async function preCheckMessage(payload: {
+  userMessage: string;
+  unresolvedContradictions: { fact: string; contradiction: string }[];
+}): Promise<{ needsClarification: boolean; questions?: any[]; bridgeMessage?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/pre-check`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return res.ok ? res.json() : { needsClarification: false };
+  } catch { return { needsClarification: false }; }
 }
 
 export async function detectContradictions(
@@ -226,6 +274,7 @@ export function streamChatMessage(
     customSystemPrompt?: string;
     userContext?: { date?: string; timezone?: string; location?: string };
     userProfileFacts?: string[];
+    userQuestionAnswers?: any[];
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal
@@ -270,7 +319,10 @@ export function streamChatMessage(
         buffer = lines.pop() || "";
 
         for (const line of lines) {
-          if (line.startsWith("event: ")) {
+          if (line === "") {
+            // SSE spec: empty line dispatches the event and resets the type
+            currentEvent = "";
+          } else if (line.startsWith("event: ")) {
             currentEvent = line.substring(7).trim();
           } else if (line.startsWith("data: ")) {
             const dataStr = line.substring(6).trim();

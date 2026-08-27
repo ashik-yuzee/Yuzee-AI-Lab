@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
@@ -71,6 +71,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   // Service Action Confirmation
   const [pendingAction, setPendingAction] = useState<ServiceAction | null>(null);
   const [executedActions, setExecutedActions] = useState<Record<string, boolean>>({});
+
+  // Must be declared before any early return to satisfy Rules of Hooks
+  const [actionStatus, setActionStatus] = useState<Record<string, { executed: boolean; message: string }>>({});
+
+  // Reset ranked items when the response data changes (new message from AI)
+  useEffect(() => {
+    setRankedItems(data?.interaction?.options || []);
+  }, [data?.interaction?.options]);
 
   if (!data) return null;
 
@@ -221,8 +229,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   };
 
   // Service Action Execution
-  const [actionStatus, setActionStatus] = useState<Record<string, { executed: boolean; message: string }>>({});
-
   const triggerServiceAction = (act: ServiceAction) => {
     if (act.requires_confirmation) {
       setPendingAction(act);
@@ -501,7 +507,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   return (
     <div className="space-y-4">
       {/* Schema / Semantic Validation Warning if any */}
-      {!schemaValid && !semanticValid && (
+      {(!schemaValid || !semanticValid) && (
         <div className="p-2.5 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-900 flex items-start gap-2">
           <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
           <div>
@@ -520,7 +526,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         {blocks.map((block, idx) => renderBlock(block, idx))}
       </div>
 
-      {/* Structured Interaction Section */}
+      {/* Structured Interaction Section — only when there's an actual input type */}
       {interaction && interaction.kind !== "none" && interaction.input_type !== "none" && (
         <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-3">
           {/* Interaction Header */}
@@ -785,21 +791,22 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             </form>
           )}
 
-          {/* Recommended Actions */}
-          {interaction.recommended_actions && interaction.recommended_actions.length > 0 && !submitted && (
-            <div className="pt-1 flex flex-wrap gap-1.5">
-              {interaction.recommended_actions.map((act) => (
-                <button
-                  key={act.id}
-                  type="button"
-                  onClick={() => handleActionClick(act.id, act.label)}
-                  className="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-slate-700 rounded-lg text-xs transition-colors cursor-pointer"
-                >
-                  {act.label}
-                </button>
-              ))}
-            </div>
-          )}
+        </div>
+      )}
+
+      {/* Recommended Actions — shown regardless of interaction kind/input_type */}
+      {interaction && interaction.recommended_actions && interaction.recommended_actions.length > 0 && !submitted && (
+        <div className="pt-1 flex flex-wrap gap-1.5">
+          {interaction.recommended_actions.map((act) => (
+            <button
+              key={act.id}
+              type="button"
+              onClick={() => handleActionClick(act.id, act.label)}
+              className="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-slate-700 rounded-lg text-xs transition-colors cursor-pointer"
+            >
+              {act.label}
+            </button>
+          ))}
         </div>
       )}
 
@@ -818,11 +825,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {service.actions.map((act: ServiceAction) => {
-              const actId = act.id || act.action_id || "";
+              const actId = act.action_id || act.id || "";
               const currentStatus = actionStatus[actId];
               const isExecuted = currentStatus?.executed;
               const hasAttempted = !!currentStatus;
-              const trusted = TRUSTED_SERVICE_ACTIONS[act.action_id || act.id];
+              const trusted = TRUSTED_SERVICE_ACTIONS[actId];
 
               return (
                 <div

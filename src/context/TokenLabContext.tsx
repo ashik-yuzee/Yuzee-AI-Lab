@@ -80,6 +80,14 @@ interface TokenLabContextType {
   setUserLocation: (loc: string) => void;
   userContradictions: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[];
   setUserContradictions: (c: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]) => void;
+  pendingClarificationQuestions: { questions: any[]; bridgeMessage?: string } | null;
+  setPendingClarificationQuestions: (q: { questions: any[]; bridgeMessage?: string } | null) => void;
+  hasDeferredMessage: boolean;
+  proceedWithDeferredMessage: () => void;
+  clearDeferredMessage: () => void;
+  sharedSettings: import('../services/api').SharedSettings | null;
+  updateSharedSettings: (patch: Parameters<typeof import('../services/api').updateSharedSettings>[0]) => Promise<void>;
+  resetSharedPrompt: () => Promise<void>;
 
   // Actions
   selectConversation: (id: string) => Promise<void>;
@@ -89,7 +97,7 @@ interface TokenLabContextType {
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
-  sendMessage: (input: string | UserEvent) => Promise<void>;
+  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }) => Promise<void>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
   resetMemory: () => Promise<void>;
@@ -162,6 +170,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [userContradictions, setUserContradictions] = useState<{ id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_contradictions") || "[]"); } catch { return []; }
   });
+  const [pendingClarificationQuestions, setPendingClarificationQuestions] = useState<{ questions: any[]; bridgeMessage?: string } | null>(null);
+  const [hasDeferredMessage, setHasDeferredMessage] = useState(false);
+  const pendingOriginalMessageRef = useRef<string | null>(null);
+  const [sharedSettings, setSharedSettings] = useState<import('../services/api').SharedSettings | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
@@ -171,14 +183,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const loadInitialData = useCallback(async () => {
     try {
       setIsLoading(true);
-      const [caps, convs, stats] = await Promise.all([
+      const [caps, convs, stats, ss] = await Promise.all([
         api.fetchCapabilities().catch(() => null),
         api.fetchConversations().catch(() => []),
         api.fetchSessionStats().catch(() => null),
+        api.fetchSharedSettings().catch(() => null),
       ]);
 
       if (caps) setCapabilities(caps);
       if (stats) setSessionStats(stats);
+      if (ss) setSharedSettings(ss);
 
       if (convs && convs.length > 0) {
         setConversations(convs);
@@ -375,7 +389,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       case "MAX_QUALITY":
         updates = {
           preset,
-          strategy: "SLIDING_WINDOW",
+          strategy: "ADAPTIVE_HYBRID",
           thinkingLevel: "medium",
           recentTurnsToKeep: 100,
           contextBudget: 270000,
@@ -415,38 +429,65 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     let textMessage = "";
     let userEventPayload: any = null;
+    let userQuestionAnswers: any[] | undefined;
 
     if (typeof input === "string") {
       textMessage = input.trim();
       if (!textMessage) return;
     } else if (input && typeof input === "object") {
-      userEventPayload = input;
-      // Synthesize a human readable chat bubble label from the interaction
-      if (input.userEvent?.interaction) {
-        const inter = input.userEvent.interaction;
-        if (inter.self_input) {
-          textMessage = inter.self_input;
-        } else if (inter.selected_option_ids?.length) {
-          textMessage = input.value || `Selected option: ${inter.selected_option_ids.join(", ")}`;
-        } else if (inter.ranked_option_ids?.length) {
-          textMessage = `Prioritized options: ${inter.ranked_option_ids.join(" > ")}`;
-        } else if (inter.fields) {
-          textMessage = `Submitted details: ${Object.entries(inter.fields).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
-        } else {
-          textMessage = "Submitted response";
-        }
-      } else if (input.value) {
-        textMessage = input.value;
-      } else if (input.message) {
+      // Clarification answers payload: { message, userQuestionAnswers }
+      if (input.message !== undefined && input.userQuestionAnswers !== undefined) {
         textMessage = input.message;
+        userQuestionAnswers = input.userQuestionAnswers;
       } else {
-        textMessage = "Submitted interaction";
+        userEventPayload = input;
+        // Synthesize a human readable chat bubble label from the interaction
+        if (input.userEvent?.interaction) {
+          const inter = input.userEvent.interaction;
+          if (inter.self_input) {
+            textMessage = inter.self_input;
+          } else if (inter.selected_option_ids?.length) {
+            textMessage = input.value || `Selected option: ${inter.selected_option_ids.join(", ")}`;
+          } else if (inter.ranked_option_ids?.length) {
+            textMessage = `Prioritized options: ${inter.ranked_option_ids.join(" > ")}`;
+          } else if (inter.fields) {
+            textMessage = `Submitted details: ${Object.entries(inter.fields).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
+          } else {
+            textMessage = "Submitted response";
+          }
+        } else if (input.value) {
+          textMessage = input.value;
+        } else if (input.message) {
+          textMessage = input.message;
+        } else {
+          textMessage = "Submitted interaction";
+        }
       }
     }
 
     let activeConv = currentConversation;
     if (!activeConv) {
       activeConv = await startNewConversation(textMessage ? textMessage.substring(0, 30) : "Career Exploration");
+    }
+
+    // PRE-FLIGHT: check for contradictions BEFORE touching conversation state.
+    // Only runs for fresh messages (userQuestionAnswers === undefined).
+    // By checking first we avoid ever adding an orphaned user bubble to the chat.
+    if (userQuestionAnswers === undefined) {
+      const unresolvedContradictions = userContradictions
+        .filter(c => !c.resolved)
+        .map(c => ({ fact: c.fact, contradiction: c.contradiction }));
+      if (unresolvedContradictions.length > 0) {
+        try {
+          const preCheck = await api.preCheckMessage({ userMessage: textMessage, unresolvedContradictions });
+          if (preCheck.needsClarification && preCheck.questions?.length) {
+            pendingOriginalMessageRef.current = textMessage;
+            setHasDeferredMessage(true);
+            setPendingClarificationQuestions({ questions: preCheck.questions, bridgeMessage: preCheck.bridgeMessage });
+            return;
+          }
+        } catch { /* fail-safe: proceed normally */ }
+      }
     }
 
     const userMsg: ChatMessage = {
@@ -479,6 +520,23 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const todayStr = new Date().toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
+    const relevantFacts = (() => {
+      if (userProfile.length === 0) return [];
+      const lowerMsg = textMessage.toLowerCase();
+      const likesDislikes = userProfile.filter(f => f.category === "like" || f.category === "dislike");
+      const generalFacts = userProfile
+        .filter(f => !f.category || f.category === "general")
+        .map(f => {
+          const words = f.text.toLowerCase().split(/\W+/).filter(w => w.length > 3);
+          const score = words.filter(w => lowerMsg.includes(w)).length;
+          return { f, score };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, 6)
+        .map(({ f }) => f);
+      return [...likesDislikes, ...generalFacts].slice(0, 8).map(f => f.text);
+    })();
+
     api.streamChatMessage(
       activeConv.id,
       {
@@ -495,7 +553,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         systemPromptMode: activeConv.systemPromptMode,
         customSystemPrompt: activeConv.customSystemPrompt,
         userContext: { date: todayStr, timezone: tz, location: userLocation || undefined },
-        userProfileFacts: userProfile.map(f => f.text),
+        userProfileFacts: relevantFacts,
+        userQuestionAnswers: userQuestionAnswers,
       },
       {
         onDelta: (chunk) => {
@@ -694,6 +753,21 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     );
   };
 
+  const proceedWithDeferredMessage = () => {
+    const orig = pendingOriginalMessageRef.current;
+    pendingOriginalMessageRef.current = null;
+    setHasDeferredMessage(false);
+    setPendingClarificationQuestions(null);
+    // Pass userQuestionAnswers: [] to bypass the contradiction pre-check on this retry.
+    if (orig) sendMessage({ message: orig, userQuestionAnswers: [] });
+  };
+
+  const clearDeferredMessage = () => {
+    pendingOriginalMessageRef.current = null;
+    setHasDeferredMessage(false);
+    setPendingClarificationQuestions(null);
+  };
+
   const stopStreaming = () => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
@@ -746,6 +820,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setTokenInspectorOpen(true);
   };
 
+  const updateSharedSettingsAction = async (patch: Parameters<typeof api.updateSharedSettings>[0]) => {
+    const updated = await api.updateSharedSettings(patch);
+    setSharedSettings(updated);
+  };
+
+  const resetSharedPromptAction = async () => {
+    const updated = await api.resetSharedPrompt();
+    setSharedSettings(updated);
+  };
+
   return (
     <TokenLabContext.Provider
       value={{
@@ -787,6 +871,14 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setUserLocation,
         userContradictions,
         setUserContradictions,
+        pendingClarificationQuestions,
+        setPendingClarificationQuestions,
+        hasDeferredMessage,
+        proceedWithDeferredMessage,
+        clearDeferredMessage,
+        sharedSettings,
+        updateSharedSettings: updateSharedSettingsAction,
+        resetSharedPrompt: resetSharedPromptAction,
         selectConversation,
         startNewConversation,
         loadDemoConversation,

@@ -23,7 +23,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { GEMINI_MODELS } from "../data/models";
+import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
 import * as api from "../services/api";
 import { AppleSlider } from "./ui/AppleSlider";
 import { AppleToggle } from "./ui/AppleToggle";
@@ -40,6 +40,9 @@ export const AdvancedLabModal: React.FC = () => {
     resetMemory,
     sessionStats,
     resetSessionStats,
+    sharedSettings,
+    updateSharedSettings,
+    resetSharedPrompt,
   } = useTokenLab();
 
   // Local state for benchmark
@@ -51,7 +54,7 @@ export const AdvancedLabModal: React.FC = () => {
   const [isResetMemoryConfirmOpen, setIsResetMemoryConfirmOpen] = useState(false);
   const [isResetStatsConfirmOpen, setIsResetStatsConfirmOpen] = useState(false);
   const [benchmarkModel, setBenchmarkModel] = useState("");
-  const [benchmarkStrategies, setBenchmarkStrategies] = useState<string[]>(["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"]);
+  const [benchmarkStrategies, setBenchmarkStrategies] = useState<string[]>(["BASELINE", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"]);
   const [benchmarkIsLive, setBenchmarkIsLive] = useState(false);
   const [defaultPromptContent, setDefaultPromptContent] = useState("");
   const [showPromptContent, setShowPromptContent] = useState(false);
@@ -67,7 +70,7 @@ export const AdvancedLabModal: React.FC = () => {
   const conv = currentConversation || {
     id: "default",
     title: "Career Exploration",
-    model: "gemini-3.5-flash-lite",
+    model: DEFAULT_MODEL_ID,
     strategy: "ADAPTIVE_HYBRID" as OptimizationStrategy,
     contextBudget: 270000,
     recentTurnsToKeep: 100,
@@ -205,7 +208,6 @@ export const AdvancedLabModal: React.FC = () => {
                       { id: "ADAPTIVE_HYBRID", title: "Adaptive Hybrid (Recommended)", desc: "Prioritized budget + stable prefix caching + incremental compaction." },
                       { id: "SEMANTIC_EVIDENCE", title: "Semantic Evidence (Experimental)", desc: "Episodic memory with typed temporal records. Retrieves relevant evidence from past episodes instead of compacting." },
                       { id: "SUMMARY_RECENT", title: "Summary + Recent Turns", desc: "Compacts older turns into a semantic summary while retaining last N turns." },
-                      { id: "SLIDING_WINDOW", title: "Turn-safe Sliding Window", desc: "Strictly evicts turns exceeding window limit without background summary." },
                       { id: "BASELINE", title: "Baseline (Full History)", desc: "Sends full historical transcript without compaction (unbounded token growth)." },
                     ].map((s) => (
                       <div
@@ -224,10 +226,15 @@ export const AdvancedLabModal: React.FC = () => {
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-slate-100">
+                    <div className="col-span-full">
+                      <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-1.5">
+                        <span className="font-semibold">Shared defaults</span> — these values apply to all conversations and all users. Mode overrides (SAVE_TOKENS / FULL_CONTEXT) still apply on top.
+                      </p>
+                    </div>
                     <AppleSlider
-                      label="Context Token Budget"
-                      value={conv.contextBudget}
-                      onChange={(val) => updateCurrentConversationSettings({ contextBudget: val })}
+                      label="Context Token Budget (Shared)"
+                      value={sharedSettings?.contextBudget ?? conv.contextBudget}
+                      onChange={(val) => updateSharedSettings({ contextBudget: val })}
                       min={1000}
                       max={270000}
                       step={1000}
@@ -238,9 +245,9 @@ export const AdvancedLabModal: React.FC = () => {
                     />
 
                     <AppleSlider
-                      label="Recent Turns to Retain"
-                      value={conv.recentTurnsToKeep}
-                      onChange={(val) => updateCurrentConversationSettings({ recentTurnsToKeep: val })}
+                      label="Recent Turns to Retain (Shared)"
+                      value={sharedSettings?.recentTurnsToKeep ?? conv.recentTurnsToKeep}
+                      onChange={(val) => updateSharedSettings({ recentTurnsToKeep: val })}
                       min={2}
                       max={100}
                       step={2}
@@ -355,47 +362,55 @@ export const AdvancedLabModal: React.FC = () => {
             {/* TAB: PROMPT & RESPONSE */}
             {effectiveTab === "prompt" && (
               <div className="space-y-6 max-w-4xl">
+                {/* Shared system prompt — affects ALL users */}
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
-                    <FileText className="w-4 h-4 text-emerald-600" />
-                    <span>System Instruction & Framing</span>
-                  </h3>
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                        <FileText className="w-4 h-4 text-emerald-600" />
+                        <span>Shared System Instruction</span>
+                        <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-semibold rounded-full border border-amber-200">Global — all users</span>
+                      </h3>
+                      <p className="text-[11px] text-slate-500 mt-1">
+                        One prompt applies to every conversation and every user on this deployment. Changing it here changes it everywhere — including for concurrent users. The Gemini prefix cache is shared so all users benefit from the cache hit.
+                      </p>
+                    </div>
+                  </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {[
-                      { id: "compact", label: "Compact (~25 tokens)", desc: "Ultra-lean role instructions" },
-                      { id: "default", label: "Standard (~65 tokens)", desc: "Balanced guidance & boundaries" },
-                      { id: "custom", label: "Custom System Prompt", desc: "User-defined prompt rules" },
+                      { id: "default", label: "Default Prompt", desc: "Original Yuzee protocol prompt. Maximises shared Gemini cache." },
+                      { id: "custom", label: "Custom Prompt", desc: "Replace with your own system instruction. All users will use this." },
                     ].map((p) => (
                       <button
                         key={p.id}
-                        onClick={() => updateCurrentConversationSettings({ systemPromptMode: p.id as any })}
+                        onClick={() => updateSharedSettings({ systemPromptMode: p.id as 'default' | 'custom' })}
                         className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
-                          conv.systemPromptMode === p.id
+                          (sharedSettings?.systemPromptMode ?? 'default') === p.id
                             ? "border-emerald-500 bg-emerald-50/50 text-emerald-950 shadow-xs"
                             : "border-slate-200 hover:border-slate-300 bg-white text-slate-700"
                         }`}
                       >
                         <div className="font-semibold text-xs text-slate-900">{p.label}</div>
-                        <div className="text-[10px] text-slate-500 mt-1">{p.desc}</div>
+                        <div className="text-[10px] text-slate-500 mt-1 leading-normal">{p.desc}</div>
                       </button>
                     ))}
                   </div>
 
-                  {conv.systemPromptMode === "custom" && (
+                  {sharedSettings?.systemPromptMode === "custom" && (
                     <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-slate-800">Custom System Instruction:</label>
+                      <label className="text-xs font-semibold text-slate-800">Custom System Instruction <span className="text-rose-500 font-normal">(applies to all users)</span>:</label>
                       <textarea
-                        rows={4}
-                        value={conv.customSystemPrompt || ""}
-                        onChange={(e) => updateCurrentConversationSettings({ customSystemPrompt: e.target.value })}
-                        placeholder="Define specific instructions, response styles, or tone rules..."
+                        rows={5}
+                        value={sharedSettings.customSystemPrompt}
+                        onChange={(e) => updateSharedSettings({ customSystemPrompt: e.target.value })}
+                        placeholder="Define specific instructions, response styles, or tone rules for all users..."
                         className="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 font-mono"
                       />
                     </div>
                   )}
 
-                  {/* Upload / View / Revert controls */}
+                  {/* Upload / View / Reset controls */}
                   <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
                     <input
                       ref={fileInputRef}
@@ -408,8 +423,7 @@ export const AdvancedLabModal: React.FC = () => {
                         const reader = new FileReader();
                         reader.onload = (ev) => {
                           const content = (ev.target?.result as string) || "";
-                          updateCurrentConversationSettings({ systemPromptMode: "custom", customSystemPrompt: content });
-                          try { localStorage.setItem("yuzee_custom_system_prompt", content); } catch {}
+                          updateSharedSettings({ systemPromptMode: "custom", customSystemPrompt: content });
                         };
                         reader.readAsText(file);
                         e.target.value = "";
@@ -420,7 +434,7 @@ export const AdvancedLabModal: React.FC = () => {
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
                     >
                       <Upload className="w-3.5 h-3.5" />
-                      <span>Upload .md File</span>
+                      <span>Upload .md / .txt</span>
                     </button>
 
                     <button
@@ -428,41 +442,47 @@ export const AdvancedLabModal: React.FC = () => {
                       className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
                     >
                       {showPromptContent ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      <span>{showPromptContent ? "Hide" : "View"} Current Prompt</span>
+                      <span>{showPromptContent ? "Hide" : "View"} Active Prompt</span>
                     </button>
 
-                    {conv.systemPromptMode !== "default" && (
+                    {sharedSettings?.systemPromptMode !== "default" && (
                       <button
-                        onClick={() => updateCurrentConversationSettings({ systemPromptMode: "default", customSystemPrompt: "" })}
+                        onClick={() => resetSharedPrompt()}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-xs font-semibold cursor-pointer"
                       >
                         <RotateCcw className="w-3.5 h-3.5" />
-                        <span>Revert to Default</span>
+                        <span>Reset to Default</span>
                       </button>
                     )}
+
+                    {sharedSettings?.updatedAt ? (
+                      <span className="ml-auto text-[10px] text-slate-400">
+                        Last changed: {new Date(sharedSettings.updatedAt).toLocaleString()}
+                      </span>
+                    ) : null}
                   </div>
 
                   {showPromptContent && (
                     <div className="space-y-1.5 pt-1">
                       <div className="text-[11px] text-slate-500 flex items-center gap-1">
                         <span className="font-semibold text-slate-700">Active prompt</span>
-                        {conv.systemPromptMode === "custom" ? " (custom)" : " (default — read-only)"}
-                        {defaultPromptContent && conv.systemPromptMode !== "custom" && (
-                          <span className="ml-auto text-[10px] text-slate-400">{defaultPromptContent.length} chars</span>
+                        <span>{sharedSettings?.systemPromptMode === "custom" ? " (custom — shared)" : " (default — read-only)"}</span>
+                        {defaultPromptContent && sharedSettings?.systemPromptMode !== "custom" && (
+                          <span className="ml-auto text-[10px] text-slate-400">{defaultPromptContent.length} chars · hash {sharedSettings?.defaultPromptHash?.slice(0, 8)}</span>
                         )}
                       </div>
                       <textarea
                         readOnly
                         rows={8}
-                        value={conv.systemPromptMode === "custom" ? (conv.customSystemPrompt || "") : defaultPromptContent}
+                        value={sharedSettings?.systemPromptMode === "custom" ? (sharedSettings.customSystemPrompt || "") : defaultPromptContent}
                         className="w-full text-[11px] font-mono p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 resize-y"
                       />
                     </div>
                   )}
 
-                  {/* Response Mode Selector */}
+                  {/* Response Mode Selector — still per-conversation */}
                   <div className="pt-3 border-t border-slate-100 space-y-2">
-                    <label className="text-xs font-semibold text-slate-800">Response Mode Directive:</label>
+                    <label className="text-xs font-semibold text-slate-800">Response Mode Directive <span className="text-slate-400 font-normal">(per conversation)</span>:</label>
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
                       {[
                         { id: "standard", label: "Standard", desc: "Balanced steps & advice" },
@@ -587,7 +607,7 @@ export const AdvancedLabModal: React.FC = () => {
                     <div>
                       <label className="text-[11px] font-semibold text-slate-700 block mb-1.5">Strategies to Include:</label>
                       <div className="space-y-1">
-                        {(["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"] as const).map(s => (
+                        {(["BASELINE", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"] as const).map(s => (
                           <label key={s} className="flex items-center gap-2 text-[11px] text-slate-700 cursor-pointer">
                             <input
                               type="checkbox"

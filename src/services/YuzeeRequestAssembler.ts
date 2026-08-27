@@ -14,6 +14,7 @@ import crypto from 'crypto';
 import { GenerateContentConfig } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
 import { estimateTokens } from './TokenBudgetMemoryManager';
+import { GEMINI_MODELS } from '../data/models';
 
 export interface ProtocolInfo {
   promptVersion: string;
@@ -79,9 +80,13 @@ export class YuzeeRequestAssembler {
     }
 
     if (fs.existsSync(schemaPath)) {
-      const buf = fs.readFileSync(schemaPath);
-      this.responseSchemaJson = JSON.parse(buf.toString('utf-8'));
-      this.schemaHash = crypto.createHash('sha256').update(buf).digest('hex');
+      try {
+        const buf = fs.readFileSync(schemaPath);
+        this.responseSchemaJson = JSON.parse(buf.toString('utf-8'));
+        this.schemaHash = crypto.createHash('sha256').update(buf).digest('hex');
+      } catch (e) {
+        console.warn(`[YuzeeRequestAssembler] Schema file could not be parsed at ${schemaPath}:`, e);
+      }
     } else {
       console.warn(`[YuzeeRequestAssembler] Schema file not found at ${schemaPath}`);
     }
@@ -181,19 +186,6 @@ export class YuzeeRequestAssembler {
       ) {
         appliedLevel = isFlashLite ? 'low' : 'medium';
       } else if (
-        lower.length < 35 ||
-        lower.startsWith('what is ') ||
-        lower.startsWith('hi ') ||
-        lower === 'hi' ||
-        lower.startsWith('hello') ||
-        lower.startsWith('format') ||
-        lower.startsWith('thank') ||
-        lower.startsWith('ok') ||
-        lower.startsWith('great') ||
-        lower.startsWith('got it')
-      ) {
-        appliedLevel = 'minimal';
-      } else if (
         lower.includes('how to') ||
         lower.includes('how do') ||
         lower.includes('how can') ||
@@ -213,15 +205,55 @@ export class YuzeeRequestAssembler {
         lower.includes('interview') ||
         lower.includes('prepare') ||
         lower.includes('resume') ||
+        lower.includes('cv') ||
         lower.includes('portfolio') ||
         lower.includes('next step') ||
         lower.includes('start') ||
         lower.includes('begin') ||
         lower.includes('advice') ||
-        lower.includes('suggest')
+        lower.includes('suggest') ||
+        lower.includes('want to become') ||
+        lower.includes('want to be') ||
+        lower.includes('want to get into') ||
+        lower.includes('looking for') ||
+        lower.includes('looking to') ||
+        lower.includes('interested in') ||
+        lower.includes('thinking about') ||
+        lower.includes('switching to') ||
+        lower.includes('switch to') ||
+        lower.includes('transition') ||
+        lower.includes('developer') ||
+        lower.includes('engineer') ||
+        lower.includes('programmer') ||
+        lower.includes('analyst') ||
+        lower.includes('data science') ||
+        lower.includes('machine learning') ||
+        lower.includes('software') ||
+        lower.includes('tech') ||
+        lower.includes('coding') ||
+        lower.includes('junior') ||
+        lower.includes('senior') ||
+        lower.includes('entry level') ||
+        lower.includes('i am') ||
+        lower.includes("i'm") ||
+        lower.includes('my goal') ||
+        lower.includes('my career')
       ) {
-        // General guidance/career prompts — upgrade to low for flash-lite instead of minimal
-        appliedLevel = 'low';
+        // General guidance/career/intent prompts — upgrade to low (flash-lite) or medium (pro)
+        appliedLevel = isFlashLite ? 'low' : 'medium';
+      } else if (
+        lower.startsWith('what is ') ||
+        lower.startsWith('hi ') ||
+        lower === 'hi' ||
+        lower.startsWith('hello') ||
+        lower.startsWith('format') ||
+        lower.startsWith('thank') ||
+        lower.startsWith('ok') ||
+        lower.startsWith('great') ||
+        lower.startsWith('got it') ||
+        (lower.length < 20 && !lower.includes('?'))
+      ) {
+        appliedLevel = 'minimal';
       } else {
         appliedLevel = isFlashLite ? 'minimal' : 'low';
       }
@@ -230,8 +262,10 @@ export class YuzeeRequestAssembler {
     // Model restrictions:
     // Gemini 3.5 Flash-Lite default is minimal
     // Gemini 3.7 Flash does not support minimal thinking level (only low, medium, high)
-    if (modelId === 'gemini-3.7-flash' && appliedLevel === 'minimal') {
-      appliedLevel = 'low';
+    // Use the model registry to check supported levels rather than hardcoding model IDs
+    const modelInfo = GEMINI_MODELS.find(m => m.id === modelId);
+    if (modelInfo && !modelInfo.supportedThinkingLevels.includes(appliedLevel as any)) {
+      appliedLevel = modelInfo.supportedThinkingLevels[0] ?? 'low';
     }
 
     const numericBudgetMap = {

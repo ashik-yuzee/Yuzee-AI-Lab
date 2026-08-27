@@ -26,13 +26,14 @@ import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
 import { initDb, logTurn, pruneExpired, isDbEnabled, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
+import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
-app.use(express.json({ limit: '50kb' }));
+app.use(express.json({ limit: '500kb' }));
 
 // Simple in-memory per-IP rate limiter (no extra dependency needed for this scale)
 const _rlWindows = new Map<string, { count: number; resetAt: number }>();
@@ -56,6 +57,7 @@ function makeRateLimit(maxPerMinute: number) {
 const requestAssembler = YuzeeRequestAssembler.getInstance();
 const memoryManager = new TokenBudgetMemoryManager();
 const cacheManager = new SystemPromptCacheManager();
+const sharedSettings = new SharedSettingsManager();
 
 /**
  * Real LLM summarizer using gemini-3.5-flash-lite.
@@ -276,6 +278,43 @@ If no contradictions, return []. Keep it short — only clear factual conflicts,
   } catch { res.json({ contradictions: [] }); }
 });
 
+// Pre-flight contradiction check — called BEFORE the main AI request.
+// Returns clarification questions only when the user's message relates to known unresolved contradictions.
+// Fail-safe: always returns { needsClarification: false } on error so the main request proceeds.
+app.post("/api/pre-check", makeRateLimit(30), async (req, res) => {
+  const { userMessage = "", unresolvedContradictions = [] } = req.body;
+  const ai = getGemini();
+  if (!ai || !userMessage || !(unresolvedContradictions as any[]).length) {
+    return res.json({ needsClarification: false });
+  }
+  const contraList = (unresolvedContradictions as any[]).slice(0, 3)
+    .map((c: any) => `• Previously stated: "${String(c.fact).slice(0, 120)}" — Now saying: "${String(c.contradiction).slice(0, 120)}"`)
+    .join('\n');
+  const prompt = `You are a pre-response classifier. A user has unresolved profile contradictions.
+
+User's message: "${String(userMessage).slice(0, 500)}"
+
+Unresolved contradictions:
+${contraList}
+
+Task: Does the user's message relate to any of these contradictions? If yes, write 1–2 targeted questions to resolve them. If no, or if the message is a simple greeting/skip, return needsClarification:false.
+
+Reply ONLY with valid JSON — no text before or after:
+Related → {"needsClarification":true,"bridgeMessage":"One sentence explaining why you need to ask","questions":[{"dimension":"snake_case","text":"Question?","ui_type":"single_select","required":true,"options":[{"id":"a","label":"Option A"},{"id":"b","label":"Option B"}]}]}
+Not related → {"needsClarification":false}`;
+  try {
+    const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    const text = (resp.text || "{}").trim();
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return res.json({ needsClarification: false });
+    const parsed = JSON.parse(match[0]);
+    if (parsed.needsClarification === true && Array.isArray(parsed.questions) && parsed.questions.length > 0) {
+      return res.json({ needsClarification: true, questions: parsed.questions, bridgeMessage: parsed.bridgeMessage });
+    }
+    return res.json({ needsClarification: false });
+  } catch { return res.json({ needsClarification: false }); }
+});
+
 // Default system prompt content (so client can display/diff)
 app.get("/api/system-prompt", (req, res) => {
   res.json({
@@ -284,6 +323,34 @@ app.get("/api/system-prompt", (req, res) => {
     bytes: requestAssembler.getPromptBytes(),
   });
 });
+
+// ── Shared Settings ───────────────────────────────────────────────────────────
+// All users share: system prompt mode + retention defaults.
+// Changes here affect every conversation on this deployment.
+
+app.get("/api/shared-settings", (_req, res) => {
+  res.json({
+    ...sharedSettings.get(),
+    defaultPromptHash: requestAssembler.getPromptHash(),
+    defaultPromptBytes: requestAssembler.getPromptBytes(),
+  });
+});
+
+app.put("/api/shared-settings", (req, res) => {
+  const { systemPromptMode, customSystemPrompt, contextBudget, recentTurnsToKeep, strategy } = req.body;
+  const patch: Record<string, any> = {};
+  if (systemPromptMode === 'default' || systemPromptMode === 'custom') patch.systemPromptMode = systemPromptMode;
+  if (typeof customSystemPrompt === 'string') patch.customSystemPrompt = customSystemPrompt;
+  if (typeof contextBudget === 'number' && contextBudget > 0) patch.contextBudget = contextBudget;
+  if (typeof recentTurnsToKeep === 'number' && recentTurnsToKeep > 0) patch.recentTurnsToKeep = recentTurnsToKeep;
+  if (typeof strategy === 'string') patch.strategy = strategy;
+  res.json(sharedSettings.update(patch));
+});
+
+app.post("/api/shared-settings/reset-prompt", (_req, res) => {
+  res.json(sharedSettings.resetPrompt());
+});
+// ─────────────────────────────────────────────────────────────────────────────
 
 // List Conversations
 app.get("/api/conversations", (req, res) => {
@@ -727,7 +794,8 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
     conv?.contextBudget || 270000,
     conv?.recentTurnsToKeep || 100,
     conv?.strategy || "ADAPTIVE_HYBRID",
-    conv?.summary || ""
+    conv?.summary || "",
+    trimmed
   );
 
   if (fastEstimate) {
@@ -868,18 +936,32 @@ app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
   } = req.body;
 
   const conv = conversationId ? conversations.get(conversationId) : null;
-  const stratsToTest = strategies || ["BASELINE", "SLIDING_WINDOW", "SUMMARY_RECENT", "ADAPTIVE_HYBRID"];
+  const stratsToTest = strategies || ["BASELINE", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"];
   const historicalMessages = conv ? conv.messages : [];
+
+  const BENCHMARK_BUDGETS: Record<string, number> = {
+    BASELINE: 8000,
+    SUMMARY_RECENT: 1500,
+    ADAPTIVE_HYBRID: 1500,
+    SEMANTIC_EVIDENCE: 6000,
+  };
+  const BENCHMARK_TURNS: Record<string, number> = {
+    BASELINE: 10,
+    SUMMARY_RECENT: 2,
+    ADAPTIVE_HYBRID: 2,
+    SEMANTIC_EVIDENCE: 20,
+  };
 
   const results = [];
 
   for (const strat of stratsToTest) {
     const mem = memoryManager.assembleMemory(
       historicalMessages,
-      strat === "BASELINE" ? 8000 : (strat === "SLIDING_WINDOW" ? 2000 : 1500),
-      strat === "BASELINE" ? 10 : (strat === "SLIDING_WINDOW" ? 4 : 2),
+      BENCHMARK_BUDGETS[strat] ?? 1500,
+      BENCHMARK_TURNS[strat] ?? 2,
       strat,
-      conv?.summary || ""
+      conv?.summary || "",
+      prompt
     );
 
     const assembledReq = requestAssembler.assembleRequest({
@@ -1050,6 +1132,10 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   const userMessageContent = req.body.message || "";
   const userEvent: UserEvent | undefined = req.body.userEvent;
 
+  if (!userMessageContent && !userEvent) {
+    return res.status(400).json({ error: "message or userEvent is required" });
+  }
+
   // Build lightweight context prefix (date, location, user profile) — injected into each turn
   const uc = req.body.userContext as { date?: string; timezone?: string; location?: string } | undefined;
   const upFacts: string[] = req.body.userProfileFacts || [];
@@ -1079,9 +1165,13 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
 
   // Strategy & Memory Budget Resolution
-  let strategy = req.body.strategy || conv.strategy;
-  let budget = req.body.contextBudget || conv.contextBudget;
-  let recentTurns = req.body.recentTurnsToKeep || conv.recentTurnsToKeep;
+  // Shared settings are the authoritative defaults so all users get consistent behaviour.
+  // Per-request body values (sent by power-user Lab controls) override the shared defaults.
+  // Mode-based presets (SAVE_TOKENS / FULL_CONTEXT) override everything below.
+  const ss = sharedSettings.get();
+  let strategy = req.body.strategy || ss.strategy || conv.strategy;
+  let budget = req.body.contextBudget || ss.contextBudget || conv.contextBudget;
+  let recentTurns = req.body.recentTurnsToKeep || ss.recentTurnsToKeep || conv.recentTurnsToKeep;
   const mode = req.body.mode || conv.mode || "AUTO";
 
   if (mode === "SAVE_TOKENS") {
@@ -1097,7 +1187,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   // 1. ASSEMBLE MEMORY ON MESSAGES BEFORE CURRENT TURN
   const memoryAssemblyStart = Date.now();
   const historicalMessages = conv.messages;
-  const mem = memoryManager.assembleMemory(historicalMessages, budget, recentTurns, strategy, conv.summary);
+  const mem = memoryManager.assembleMemory(historicalMessages, budget, recentTurns, strategy, conv.summary, userMessageContent);
   const memoryAssemblyMs = Date.now() - memoryAssemblyStart;
 
   // Capture evicted turns now (before pushing current turn) for post-response summarization
@@ -1122,6 +1212,14 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   if (!allowedModels.includes(modelId)) {
     return res.status(400).json({ error: `Unknown model: ${modelId}` });
   }
+  // System prompt is sourced from SHARED settings (not per-conversation) so:
+  // 1. All users and all conversations see identical system instruction content.
+  // 2. The Gemini explicit context cache is maximally reused across all requests
+  //    because the same content hash maps to the same remote cache entry.
+  const effectiveSystemPrompt = ss.systemPromptMode === 'custom' && ss.customSystemPrompt.trim()
+    ? ss.customSystemPrompt.trim()
+    : undefined; // undefined → assembler uses the default file-loaded prompt
+
   const assembledReq = requestAssembler.assembleRequest({
     model: modelId,
     messageText: enrichedMessage,
@@ -1131,18 +1229,23 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     recentHistoryText: mem.recentHistoryText,
     responseMode: req.body.responseMode || conv.responseMode,
     thinkingLevel: req.body.thinkingLevel || conv.thinkingLevel,
-    customSystemPrompt: req.body.customSystemPrompt || conv.customSystemPrompt,
-    systemPromptMode: req.body.systemPromptMode || conv.systemPromptMode,
+    customSystemPrompt: effectiveSystemPrompt,
+    systemPromptMode: effectiveSystemPrompt ? 'custom' : 'default',
   });
   const requestAssemblyMs = Date.now() - requestAssemblyStart;
 
   // Explicit context cache for system prompt — returns null while cache is being created (first ~1 request per model).
   // When active: systemInstruction tokens are served from cache at ~75% lower cost.
   const aiInstance = getGemini();
+  // Cache is keyed by (model, promptHash). Using sharedSettings.effectiveHash() ensures:
+  // - All users on the default prompt share the SAME cache entry → maximum reuse.
+  // - When an admin switches to a custom prompt, effectiveHash() changes → new cache
+  //   entry is created automatically and the old one is deleted.
+  const effectivePromptHash = sharedSettings.effectiveHash(requestAssembler.getPromptHash());
   let cacheName: string | null = null;
   try {
     cacheName = aiInstance
-      ? await cacheManager.getCacheForModel(modelId, aiInstance, assembledReq.systemInstruction, requestAssembler.getPromptHash())
+      ? await cacheManager.getCacheForModel(modelId, aiInstance, assembledReq.systemInstruction, effectivePromptHash)
       : null;
   } catch {
     // Cache lookup failure is non-fatal; proceed without cache
@@ -1187,7 +1290,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
           errorCode: "FUNCTION_TIMEOUT",
         });
         res.end();
-      }, VERCEL_SAFE_MS - (Date.now() - requestReceivedAt))
+      }, Math.max(100, VERCEL_SAFE_MS - (Date.now() - requestReceivedAt)))
     : null;
 
   let fullAssistantText = "";
@@ -1493,7 +1596,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   // 5. ATTACH COMPLETED TURN TO CONVERSATION RECORD
   const userMsg: MessageItem = {
-    id: `user-${Date.now()}`,
+    id: `user-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
     role: "user",
     content: userMessageContent,
     userEvent,

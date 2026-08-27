@@ -238,10 +238,45 @@ export function groupIntoTurns(
   return turns;
 }
 
+const STOP_WORDS = new Set([
+  'a','an','the','and','or','but','in','on','at','to','for','of','with','by','from',
+  'is','are','was','were','be','been','being','have','has','had','do','does','did',
+  'will','would','could','should','may','might','shall','can','not','no','so','if',
+  'as','up','it','its','i','you','we','they','he','she','that','this','these','those',
+  'my','your','our','their','me','him','her','us','them','what','how','when','where',
+  'which','who','about','into','than','then','there','here','just','also','more',
+  'some','any','all','most','other','such','only','own','same','few','both','very',
+]);
+
+function extractKeywords(text: string, maxKeywords: number = 15): string[] {
+  const freq = new Map<string, number>();
+  const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
+  for (const w of words) {
+    if (w.length < 3 || STOP_WORDS.has(w)) continue;
+    freq.set(w, (freq.get(w) || 0) + 1);
+  }
+  return [...freq.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, maxKeywords)
+    .map(([w]) => w);
+}
+
+function scoreTurnRelevance(turn: DialogueTurn, queryKeywords: string[]): number {
+  if (queryKeywords.length === 0) return 0;
+  const turnText = (turn.userMessage.content + ' ' + (turn.assistantMessage?.content || '')).toLowerCase();
+  let hits = 0;
+  for (const kw of queryKeywords) {
+    if (turnText.includes(kw)) hits++;
+  }
+  // sqrt dampening: penalise turns that only match one or two keywords weakly
+  return Math.sqrt(hits) / Math.sqrt(queryKeywords.length);
+}
+
 export class TokenBudgetMemoryManager {
   /**
    * Assembles dynamic memory adhering strictly to dynamic context token budget and whole-turn eviction.
    * ADAPTIVE_HYBRID: Immutable System Prompt + Trusted Semantic State (Capsule) + Token-Budget Recent Whole Turns + Current Turn.
+   * SEMANTIC_EVIDENCE: 3-turn recency anchor + relevance-scored historical fills remaining budget, sorted chronologically.
    * NO fake synthetic summary prose is injected into model context.
    */
   public assembleMemory(
@@ -249,7 +284,8 @@ export class TokenBudgetMemoryManager {
     dynamicBudgetTokens: number = 2000,
     recentTurnsToKeep: number = 100,
     strategy: string = 'ADAPTIVE_HYBRID',
-    existingSummary: string = ''
+    existingSummary: string = '',
+    currentMessage: string = ''
   ): MemoryAssemblyResult {
     const excludedItems: ExcludedItem[] = [];
     const summaryText = existingSummary || '';
@@ -288,6 +324,104 @@ export class TokenBudgetMemoryManager {
         removedTokens: 0,
         compactionMetrics: null,
         excludedItems: [],
+      };
+    }
+
+    if (strategy === 'SEMANTIC_EVIDENCE' && turns.length > 0) {
+      const queryText = currentMessage || '';
+      const queryKeywords = extractKeywords(queryText, 15);
+      const RECENCY_ANCHOR = Math.min(3, turns.length);
+      const recentAnchorTurns = turns.slice(-RECENCY_ANCHOR);
+      const historyPool = turns.slice(0, turns.length - RECENCY_ANCHOR);
+
+      const scored = historyPool
+        .map(turn => ({ turn, score: scoreTurnRelevance(turn, queryKeywords) }))
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score);
+
+      let accTokens = estimateTokens(summaryText);
+      const keptEvidence: DialogueTurn[] = [];
+      const keptRecent: DialogueTurn[] = [];
+
+      for (const t of recentAnchorTurns) {
+        if (accTokens + t.estimatedTokens <= dynamicBudgetTokens) {
+          keptRecent.push(t);
+          accTokens += t.estimatedTokens;
+        } else if (keptRecent.length === 0 && recentAnchorTurns.indexOf(t) === recentAnchorTurns.length - 1) {
+          // Always guarantee the most recent turn even if it individually exceeds budget —
+          // without it the model has no conversational context at all.
+          keptRecent.push(t);
+          accTokens += t.estimatedTokens;
+        }
+      }
+      for (const { turn } of scored) {
+        if (keptEvidence.length + keptRecent.length >= Math.max(1, recentTurnsToKeep)) break;
+        if (accTokens + turn.estimatedTokens > dynamicBudgetTokens) continue;
+        keptEvidence.push(turn);
+        accTokens += turn.estimatedTokens;
+      }
+
+      // Merge and sort chronologically, deduplicate
+      const seen = new Set<string>();
+      const keptTurns = [...keptEvidence, ...keptRecent]
+        .sort((a, b) => a.userMessage.createdAt - b.userMessage.createdAt)
+        .filter(t => { if (seen.has(t.id)) return false; seen.add(t.id); return true; });
+
+      const keptIds = new Set(keptTurns.map(t => t.id));
+      const evictedTurns = turns.filter(t => !keptIds.has(t.id));
+      let removedTokensSE = 0;
+      const excludedItemsSE: ExcludedItem[] = [];
+
+      for (const evicted of evictedTurns) {
+        removedTokensSE += evicted.estimatedTokens;
+        excludedItemsSE.push({
+          name: `Evicted Turn (${evicted.id})`,
+          reason: `Below relevance threshold or budget exceeded (semantic evidence strategy)`,
+          tokens: evicted.estimatedTokens,
+          preview: evicted.userMessage.content.slice(0, 65),
+        });
+      }
+
+      let compMetricsSE: CompactionMetrics | null = null;
+      if (evictedTurns.length > 0) {
+        const evictedContent = evictedTurns
+          .map(t => `User: ${t.userMessage.content}\nAsst: ${t.assistantMessage?.content || ''}`)
+          .join('\n');
+        const sourceTokens = estimateTokens(evictedContent);
+        const simSummaryTokens = Math.max(20, Math.round(sourceTokens * 0.2));
+        const compCost = sourceTokens + simSummaryTokens + 20;
+        compMetricsSE = {
+          compactionEventId: `cmp-se-${Date.now()}`,
+          sourceTurnsRange: `${evictedTurns.length} evicted by semantic relevance`,
+          sourceTokens,
+          summaryTokens: simSummaryTokens,
+          tokensRemoved: Math.max(0, sourceTokens - simSummaryTokens),
+          compactionInputTokens: sourceTokens + 20,
+          compactionOutputTokens: simSummaryTokens,
+          compactionTotalCost: compCost,
+          estimatedNetSavingsPerTurn: Math.max(1, sourceTokens - simSummaryTokens),
+          estimatedBreakEvenTurns: Math.round((compCost / Math.max(1, sourceTokens - simSummaryTokens)) * 10) / 10,
+          timestamp: Date.now(),
+          isSimulated: true,
+        };
+      }
+
+      const recentHistoryText = keptTurns
+        .map(t => {
+          const userPart = `USER: ${t.userMessage.content}`;
+          const asstPart = t.assistantMessage ? `\nASSISTANT: ${t.assistantMessage.content}` : '';
+          return `${userPart}${asstPart}`;
+        })
+        .join('\n\n');
+
+      return {
+        summaryText,
+        keptTurns,
+        recentHistoryText,
+        recentTurnsCount: keptTurns.length,
+        removedTokens: removedTokensSE,
+        compactionMetrics: compMetricsSE,
+        excludedItems: excludedItemsSE,
       };
     }
 
