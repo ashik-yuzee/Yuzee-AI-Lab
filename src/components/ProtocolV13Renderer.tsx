@@ -87,7 +87,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
   const interaction = data.interaction;
   const blocks = data.content_blocks || (data as any).blocks || [];
-  const service = data.service;
+  // Support both v1.3 (data.service) and v1.4 (data.service_trigger)
+  const service = data.service || (data as any).service_trigger;
+  const serviceFlow: string = service?.flow || service?.primary_requested_service || 'NONE';
   const followups = data.followups;
 
   // Single Select
@@ -494,6 +496,297 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           </div>
         );
 
+      case "cards": {
+        const d = (block as any).data || {};
+        const cards: any[] = d.cards || [];
+        const statusColors: Record<string, string> = {
+          recommended: "border-sky-400 bg-sky-50/60",
+          alternative: "border-violet-300 bg-violet-50/50",
+          completed: "border-emerald-300 bg-emerald-50/50",
+          current: "border-amber-400 bg-amber-50/50",
+          blocked: "border-rose-300 bg-rose-50/40",
+          warning: "border-amber-300 bg-amber-50/40",
+          neutral: "border-slate-200 bg-white",
+          upcoming: "border-slate-200 bg-white",
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {cards.map((card: any, cIdx: number) => (
+                <div key={card.id || cIdx} className={`p-3.5 rounded-xl border shadow-2xs space-y-1.5 ${statusColors[card.status] || statusColors.neutral}`}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div>
+                      <div className="font-bold text-xs text-slate-900">{card.title}</div>
+                      {card.subtitle && <div className="text-[11px] text-slate-500">{card.subtitle}</div>}
+                    </div>
+                    {card.badge && (
+                      <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700">{card.badge}</span>
+                    )}
+                  </div>
+                  {card.description && <p className="text-xs text-slate-600 leading-relaxed">{card.description}</p>}
+                  {card.facts?.length > 0 && (
+                    <div className="pt-1 border-t border-slate-200/80 grid grid-cols-2 gap-x-3 gap-y-1">
+                      {card.facts.map((f: any, fIdx: number) => (
+                        <div key={fIdx} className="flex flex-col">
+                          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">{f.label}</span>
+                          <span className="text-[11px] font-semibold text-slate-800">{f.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      case "timeline": {
+        const d = (block as any).data || {};
+        const milestones: any[] = d.milestones || [];
+        const msStatus: Record<string, { dot: string; label: string }> = {
+          completed: { dot: "bg-emerald-500", label: "bg-emerald-100 text-emerald-800" },
+          current:   { dot: "bg-amber-500 animate-pulse", label: "bg-amber-100 text-amber-900" },
+          upcoming:  { dot: "bg-slate-300", label: "bg-slate-100 text-slate-600" },
+          blocked:   { dot: "bg-rose-400", label: "bg-rose-100 text-rose-800" },
+          paused:    { dot: "bg-violet-400", label: "bg-violet-100 text-violet-800" },
+          unknown:   { dot: "bg-slate-200", label: "bg-slate-100 text-slate-500" },
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            <div className="relative pl-5 space-y-3">
+              <div className="absolute left-[7px] top-1 bottom-1 w-px bg-slate-200" />
+              {milestones.map((m: any, mIdx: number) => {
+                const s = msStatus[m.status] || msStatus.unknown;
+                return (
+                  <div key={m.id || mIdx} className="relative flex items-start gap-3">
+                    <div className={`absolute -left-5 mt-0.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm ${s.dot}`} />
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-xs font-semibold text-slate-900">{m.label}</span>
+                        {m.time_label && <span className="text-[10px] text-slate-400 font-medium">{m.time_label}</span>}
+                        {m.optional && <span className="text-[9px] text-slate-400 italic">optional</span>}
+                        <span className={`text-[9px] font-semibold uppercase px-1 py-0.5 rounded tracking-wide ${s.label}`}>{m.status}</span>
+                      </div>
+                      {m.description && <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">{m.description}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
+      case "flow": {
+        const d = (block as any).data || {};
+        const nodes: any[] = d.nodes || [];
+        const edges: any[] = d.edges || [];
+        const nodeStatus: Record<string, string> = {
+          recommended: "border-sky-400 bg-sky-50",
+          current:     "border-amber-400 bg-amber-50",
+          completed:   "border-emerald-300 bg-emerald-50",
+          blocked:     "border-rose-300 bg-rose-50",
+          neutral:     "border-slate-200 bg-white",
+          upcoming:    "border-slate-200 bg-slate-50",
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+              {nodes.map((node: any, nIdx: number) => (
+                <div key={node.id || nIdx} className={`p-3 rounded-xl border text-xs shadow-2xs ${nodeStatus[node.status] || nodeStatus.neutral}`}>
+                  <div className="flex items-start justify-between gap-1 mb-1">
+                    <span className="font-bold text-slate-900">{node.label}</span>
+                    <span className="shrink-0 text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{node.node_type}</span>
+                  </div>
+                  {node.description && <p className="text-[11px] text-slate-600 leading-relaxed">{node.description}</p>}
+                </div>
+              ))}
+            </div>
+            {edges.length > 0 && (
+              <div className="text-[10px] text-slate-400 space-y-0.5 pt-1">
+                {edges.map((e: any, eIdx: number) => (
+                  <div key={eIdx} className="flex items-center gap-1">
+                    <span className="font-medium text-slate-500">{e.from}</span>
+                    <ArrowRight className="w-3 h-3 shrink-0" />
+                    <span className="font-medium text-slate-500">{e.to}</span>
+                    {e.label && <span className="text-slate-400">· {e.label}</span>}
+                    {e.condition && <span className="italic text-slate-400">({e.condition})</span>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
+      }
+
+      case "pathway_map": {
+        const d = (block as any).data || {};
+        const lanes: any[] = d.lanes || [];
+        const laneStatus: Record<string, string> = {
+          completed: "bg-emerald-100 text-emerald-800",
+          current:   "bg-amber-100 text-amber-900",
+          upcoming:  "bg-slate-100 text-slate-600",
+          blocked:   "bg-rose-100 text-rose-800",
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {d.goal && <p className="text-xs text-slate-600 font-medium">Goal: {d.goal}</p>}
+            <div className="grid grid-cols-1 gap-2.5">
+              {lanes.map((lane: any, lIdx: number) => (
+                <div key={lane.id || lIdx} className={`p-3.5 rounded-xl border shadow-2xs ${lane.recommended ? "border-sky-400 bg-sky-50/40" : "border-slate-200 bg-white"}`}>
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <div className="font-bold text-xs text-slate-900">{lane.title}</div>
+                      {lane.summary && <p className="text-[11px] text-slate-500 mt-0.5">{lane.summary}</p>}
+                    </div>
+                    {lane.recommended && (
+                      <span className="shrink-0 text-[9px] font-bold text-sky-700 bg-sky-100 border border-sky-200 px-1.5 py-0.5 rounded uppercase tracking-wider">Recommended</span>
+                    )}
+                  </div>
+                  <div className="space-y-1.5">
+                    {(lane.steps || []).map((step: any, sIdx: number) => (
+                      <div key={step.id || sIdx} className="flex items-start gap-2 text-xs">
+                        <div className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">{sIdx + 1}</div>
+                        <div className="flex-1 min-w-0">
+                          <span className="font-semibold text-slate-800">{step.label}</span>
+                          {step.description && <span className="text-slate-500 ml-1">— {step.description}</span>}
+                          {step.status && step.status !== "upcoming" && (
+                            <span className={`ml-1.5 text-[9px] px-1 py-0.5 rounded font-semibold ${laneStatus[step.status] || "bg-slate-100 text-slate-600"}`}>{step.status}</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      case "scorecard": {
+        const d = (block as any).data || {};
+        const metrics: any[] = d.metrics || [];
+        const trendIcon = (t: string) => {
+          if (t === "up") return <TrendingUp className="w-3 h-3 text-emerald-600" />;
+          if (t === "down") return <TrendingDown className="w-3 h-3 text-rose-500" />;
+          return null;
+        };
+        const metricStatus: Record<string, string> = {
+          excellent: "text-emerald-700",
+          good:      "text-sky-700",
+          warning:   "text-amber-700",
+          critical:  "text-rose-700",
+          neutral:   "text-slate-700",
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {metrics.map((m: any, mIdx: number) => (
+                <div key={m.id || mIdx} className="p-3 rounded-xl border border-slate-200 bg-white shadow-2xs space-y-1">
+                  <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">{m.label}</div>
+                  <div className={`flex items-center gap-1 font-bold text-lg tabular-nums ${metricStatus[m.status] || metricStatus.neutral}`}>
+                    <span>{m.value_type === "percentage" ? `${m.value}%` : m.value_type === "rating" ? `${m.value}/${m.max ?? 10}` : `${m.value}${m.unit ? ` ${m.unit}` : ""}`}</span>
+                    {trendIcon(m.trend)}
+                  </div>
+                  {m.description && <p className="text-[10px] text-slate-500 leading-relaxed">{m.description}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      }
+
+      case "chart": {
+        const d = (block as any).data || {};
+        const categories: string[] = d.categories || [];
+        const series: any[] = d.series || [];
+        const chartType: string = d.chart_type || "bar";
+        const maxVal = Math.max(...series.flatMap((s: any) => s.values || [0]), 1);
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            <div className={`p-3.5 rounded-xl border border-slate-200 bg-white shadow-2xs text-xs ${d.source_status === "estimated" || d.source_status === "to_verify" ? "opacity-90" : ""}`}>
+              <div className="flex items-center justify-between mb-2.5">
+                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{chartType} chart</span>
+                {d.source_status && d.source_status !== "verified" && (
+                  <span className="text-[9px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded font-semibold">{d.source_status}</span>
+                )}
+              </div>
+              {(chartType === "bar" || chartType === "funnel") && categories.map((cat: string, cIdx: number) => (
+                <div key={cIdx} className="mb-1.5">
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="text-[11px] text-slate-600 font-medium">{cat}</span>
+                    <span className="text-[11px] font-semibold text-slate-800 tabular-nums">{series[0]?.values?.[cIdx] ?? "—"}{series[0]?.unit ? ` ${series[0].unit}` : ""}</span>
+                  </div>
+                  <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-sky-500 rounded-full" style={{ width: `${Math.round(((series[0]?.values?.[cIdx] ?? 0) / maxVal) * 100)}%` }} />
+                  </div>
+                </div>
+              ))}
+              {(chartType === "line" || chartType === "donut") && (
+                <div className="space-y-1">
+                  {series.map((s: any, sIdx: number) => (
+                    <div key={sIdx} className="flex items-center gap-2">
+                      <span className="text-[11px] font-medium text-slate-600">{s.label}:</span>
+                      <span className="text-[11px] font-semibold text-slate-800 tabular-nums">{s.values?.join(", ")}{s.unit ? ` ${s.unit}` : ""}</span>
+                    </div>
+                  ))}
+                  <div className="text-[10px] text-slate-400 mt-1">Categories: {categories.join(" · ")}</div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      case "progress": {
+        const d = (block as any).data || {};
+        const stages: any[] = d.stages || [];
+        const stageStatus: Record<string, { ring: string; label: string }> = {
+          completed: { ring: "border-emerald-500 bg-emerald-500 text-white",  label: "text-emerald-700" },
+          current:   { ring: "border-amber-500 bg-amber-500 text-white animate-pulse", label: "text-amber-800 font-bold" },
+          upcoming:  { ring: "border-slate-300 bg-white text-slate-400",       label: "text-slate-500" },
+          blocked:   { ring: "border-rose-400 bg-rose-400 text-white",          label: "text-rose-700" },
+          paused:    { ring: "border-violet-400 bg-violet-400 text-white",      label: "text-violet-700" },
+          failed:    { ring: "border-rose-600 bg-rose-600 text-white",          label: "text-rose-800" },
+          unknown:   { ring: "border-slate-200 bg-slate-100 text-slate-400",   label: "text-slate-400" },
+        };
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            <div className="flex items-start gap-0 overflow-x-auto pb-1">
+              {stages.map((stage: any, sIdx: number) => {
+                const s = stageStatus[stage.status] || stageStatus.unknown;
+                return (
+                  <React.Fragment key={stage.id || sIdx}>
+                    <div className="flex flex-col items-center min-w-[72px] max-w-[100px]">
+                      <div className={`w-8 h-8 rounded-full border-2 flex items-center justify-center text-[11px] font-bold ${s.ring}`}>
+                        {stage.status === "completed" ? "✓" : sIdx + 1}
+                      </div>
+                      <div className={`mt-1.5 text-center text-[10px] font-semibold px-1 leading-tight ${s.label}`}>{stage.label}</div>
+                      {stage.description && <div className="text-[9px] text-slate-400 text-center mt-0.5 leading-tight">{stage.description}</div>}
+                    </div>
+                    {sIdx < stages.length - 1 && (
+                      <div className="flex-1 mt-4 h-px min-w-[12px] bg-slate-200" />
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </div>
+          </div>
+        );
+      }
+
       default:
         return (
           <div key={block.id || index} className="text-xs text-slate-700">
@@ -811,7 +1104,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       )}
 
       {/* Service Handoff Block */}
-      {service && service.flow && service.flow !== "NONE" && service.actions && service.actions.length > 0 && (
+      {service && serviceFlow !== "NONE" && service.actions && service.actions.length > 0 && (
         <div className="mt-4 pt-3 border-t border-slate-200 space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">
@@ -819,7 +1112,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               <span>Verified Service Actions</span>
             </span>
             <span className="text-[10px] bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.5 rounded font-mono">
-              {service.flow}
+              {serviceFlow}
             </span>
           </div>
 

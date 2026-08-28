@@ -18,7 +18,7 @@ import {
 } from "./src/services/TokenBudgetMemoryManager";
 import { SystemPromptCacheManager } from "./src/services/SystemPromptCacheManager";
 import {
-  validateProtocolV13,
+  validateProtocol,
   validateUserEventAgainstActiveInteraction,
   TRUSTED_SERVICE_ACTIONS,
 } from "./src/protocol/validator";
@@ -1003,7 +1003,7 @@ app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
         let textToParse = fullText;
         const fenceMatch = fullText.match(/```(?:json)?\s*([\s\S]*?)```/);
         if (fenceMatch) textToParse = fenceMatch[1].trim();
-        const validation = validateProtocolV13(JSON.parse(textToParse));
+        const validation = validateProtocol(JSON.parse(textToParse));
         isValid = validation.protocolAccepted;
       } catch {
         isValid = false;
@@ -1433,7 +1433,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
 
   const validationResult = isJsonValid
-    ? validateProtocolV13(parsedResponse)
+    ? validateProtocol(parsedResponse)
     : {
         jsonParsed: false,
         schemaValid: false,

@@ -7,11 +7,13 @@
 
 import Ajv from 'ajv';
 import schemaJson from './v1.3/Yuzee_Response_Schema_v1.3.json';
+import schemaJsonV14 from './v1.4/Yuzee_Response_Schema_v1.4.json';
 import { ProtocolValidationResult, TrustedServiceAction } from '../types/ProtocolViewModel';
 import { UserEvent, UserEventInteraction } from '../types/UserEvent';
 
 const ajv = new Ajv({ allErrors: true, strict: false });
 const validateSchema = ajv.compile(schemaJson);
+const validateSchemaV14 = ajv.compile(schemaJsonV14);
 
 export interface ExtendedProtocolValidationResult extends ProtocolValidationResult {
   jsonParsed: boolean;
@@ -228,6 +230,139 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
     errors: allErrors,
     warnings,
   };
+}
+
+export function validateProtocolV14(json: any): ExtendedProtocolValidationResult {
+  const schemaErrors: string[] = [];
+  const semanticErrors: string[] = [];
+  const warnings: string[] = [];
+
+  if (!json || typeof json !== 'object') {
+    return { jsonParsed: false, schemaValid: false, semanticValid: false, protocolAccepted: false, schemaErrors: ['Response is not a valid JSON object'], semanticErrors: [], errors: ['Response is not a valid JSON object'], warnings: [] };
+  }
+
+  const isAjvValid = validateSchemaV14(json);
+  if (!isAjvValid && validateSchemaV14.errors) {
+    for (const err of validateSchemaV14.errors) {
+      schemaErrors.push(`[Schema] ${err.instancePath || 'root'}: ${err.message || 'Invalid value'}`);
+    }
+  }
+
+  if (json.schema_version !== '1.4') {
+    schemaErrors.push(`Invalid schema_version: expected "1.4", received "${json.schema_version}"`);
+  }
+  if (!Array.isArray(json.content_blocks)) schemaErrors.push('content_blocks must be an array');
+  if (!json.interaction || typeof json.interaction !== 'object') schemaErrors.push('interaction object is required');
+  if (!json.service_trigger || typeof json.service_trigger !== 'object') schemaErrors.push('service_trigger object is required in v1.4 envelope');
+  if (!json.rmo_readiness || typeof json.rmo_readiness !== 'object') schemaErrors.push('rmo_readiness object is required in v1.4 envelope');
+  if (!json.state || typeof json.state !== 'object') schemaErrors.push('state object is required');
+  if (!json.followups || typeof json.followups !== 'object') schemaErrors.push('followups object is required');
+
+  const schemaValid = isAjvValid && schemaErrors.length === 0;
+
+  // Shared semantic invariants (same as v1.3)
+  if (Array.isArray(json.content_blocks) && json.content_blocks.length > 0) {
+    const first = json.content_blocks[0];
+    if (first.type !== 'text') semanticErrors.push(`[Rule #10] First content block must be type="text". Received: "${first.type}"`);
+    if (first.level && first.level !== 'none') semanticErrors.push(`[Rule #10] First content block level must be "none".`);
+    if (first.title && first.title.trim() !== '') semanticErrors.push(`[Rule #10] First content block title must be empty string.`);
+  } else if (!Array.isArray(json.content_blocks) || json.content_blocks.length === 0) {
+    semanticErrors.push('content_blocks must be a non-empty array');
+  }
+
+  if (json.interaction && typeof json.interaction === 'object') {
+    const { kind, input_type: inputType, options = [], recommended_actions = [] } = json.interaction;
+    if (inputType === 'ranked_select' && (!Array.isArray(options) || options.length < 3 || options.length > 6)) {
+      semanticErrors.push(`[Invariant] ranked_select requires 3-6 options. Received: ${options.length}`);
+    }
+    if ((kind === 'question' || kind === 'handoff') && Array.isArray(recommended_actions) && recommended_actions.length > 0) {
+      semanticErrors.push(`[Invariant] recommended_actions must be empty [] when interaction.kind is "${kind}".`);
+    }
+    // v1.4 handoff: check rmo_readiness.missing_inputs against interaction.fields
+    if (kind === 'handoff' && json.rmo_readiness) {
+      const missingInputs: string[] = json.rmo_readiness.missing_inputs || [];
+      const fieldIds = (json.interaction.fields || []).map((f: any) => f.id);
+      for (const m of missingInputs) {
+        if (!fieldIds.includes(m)) warnings.push(`[Handoff] rmo_readiness.missing_input "${m}" not present in interaction.fields`);
+      }
+    }
+  }
+
+  if (json.state?.user_confidence) {
+    const uc = json.state.user_confidence;
+    const { score, band } = uc;
+    if (score === -1) {
+      if (band !== 'unknown') semanticErrors.push(`[Confidence] When score is -1, band must be "unknown". Received: "${band}"`);
+      if (uc.evidence_strength !== 'none') semanticErrors.push(`[Confidence] When score is -1, evidence_strength must be "none".`);
+    } else if (typeof score === 'number' && score >= 0 && score <= 100) {
+      if (score <= 39 && band !== 'low') semanticErrors.push(`[Confidence] Score ${score} (0-39) requires band="low". Received: "${band}"`);
+      else if (score >= 40 && score <= 69 && band !== 'medium') semanticErrors.push(`[Confidence] Score ${score} (40-69) requires band="medium". Received: "${band}"`);
+      else if (score >= 70 && score <= 100 && band !== 'high') semanticErrors.push(`[Confidence] Score ${score} (70-100) requires band="high". Received: "${band}"`);
+    } else {
+      semanticErrors.push(`[Confidence] score must be -1 or integer 0..100. Received: ${score}`);
+    }
+  }
+
+  // v1.4 semantic rules for new block types
+  if (Array.isArray(json.content_blocks)) {
+    for (const block of json.content_blocks) {
+      const d = block.data || {};
+
+      if (block.type === 'flow') {
+        const nodeIds = new Set((d.nodes || []).map((n: any) => n.id));
+        for (const edge of (d.edges || [])) {
+          if (edge.from && !nodeIds.has(edge.from)) warnings.push(`[flow] Edge "from" id "${edge.from}" does not reference a known node`);
+          if (edge.to && !nodeIds.has(edge.to)) warnings.push(`[flow] Edge "to" id "${edge.to}" does not reference a known node`);
+        }
+      }
+
+      if (block.type === 'chart') {
+        const catLen = (d.categories || []).length;
+        for (const s of (d.series || [])) {
+          if (Array.isArray(s.values) && s.values.length !== catLen) {
+            semanticErrors.push(`[chart] Series "${s.id}" values length (${s.values.length}) must match categories length (${catLen})`);
+          }
+        }
+      }
+
+      if (block.type === 'progress') {
+        const currentCount = (d.stages || []).filter((s: any) => s.status === 'current').length;
+        if (currentCount > 1) semanticErrors.push(`[progress] At most one stage may have status="current". Found ${currentCount}`);
+      }
+    }
+  }
+
+  // Trusted service action check (v1.4 uses service_trigger.actions)
+  if (json.service_trigger?.actions && Array.isArray(json.service_trigger.actions)) {
+    for (const act of json.service_trigger.actions) {
+      const actId = act.action_id || act.id;
+      if (actId && !TRUSTED_SERVICE_ACTIONS[actId]) {
+        warnings.push(`[Security] service_trigger action_id "${actId}" is untrusted/unregistered in server registry`);
+      }
+    }
+  }
+
+  const semanticValid = semanticErrors.length === 0;
+  const protocolAccepted = semanticValid;
+
+  return {
+    jsonParsed: true,
+    schemaValid,
+    semanticValid,
+    protocolAccepted,
+    schemaErrors,
+    semanticErrors,
+    errors: [...schemaErrors, ...semanticErrors],
+    warnings,
+  };
+}
+
+/**
+ * Version-agnostic dispatcher: routes to v1.3 or v1.4 validator based on schema_version.
+ */
+export function validateProtocol(json: any): ExtendedProtocolValidationResult {
+  if (json?.schema_version === '1.4') return validateProtocolV14(json);
+  return validateProtocolV13(json);
 }
 
 /**

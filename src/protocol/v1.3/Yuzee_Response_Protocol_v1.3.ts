@@ -3,7 +3,8 @@
  * Source of truth: Yuzee_Response_Protocol_v1.3_for_Gemini.md & Yuzee_Response_Schema_v1.3.json
  */
 
-export type YuzeeBlockType = 'heading' | 'text' | 'list' | 'steps' | 'table' | 'comparison' | 'callout' | 'key_value';
+export type YuzeeBlockType = 'heading' | 'text' | 'list' | 'steps' | 'table' | 'comparison' | 'callout' | 'key_value'
+  | 'cards' | 'timeline' | 'flow' | 'pathway_map' | 'scorecard' | 'chart' | 'progress';
 export type YuzeeBlockLevel = 'none' | 'h2' | 'h3';
 export type YuzeeVariant = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
 
@@ -64,6 +65,7 @@ export interface YuzeeContentBlock {
   items: YuzeeItem[];
   columns: YuzeeColumn[];
   rows: YuzeeRow[];
+  data?: Record<string, unknown>; // v1.4 extensibility field; empty object for legacy types
 }
 
 export interface YuzeeOption {
