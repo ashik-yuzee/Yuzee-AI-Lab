@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { X, User, MapPin, Plus, Trash2, Pencil, Check, Heart, ThumbsDown, AlertTriangle } from "lucide-react";
 
@@ -22,6 +22,8 @@ export const UserProfileModal: React.FC = () => {
   const [newFact, setNewFact] = useState("");
   const [newCategory, setNewCategory] = useState<Category>("general");
   const [locationDraft, setLocationDraft] = useState(userLocation);
+  // Keep draft in sync when location is set externally (e.g. LocationPromptModal on first load)
+  useEffect(() => { setLocationDraft(userLocation); }, [userLocation]);
   const [activeTab, setActiveTab] = useState<"profile" | "contradictions">("profile");
 
   if (!isProfileOpen) return null;

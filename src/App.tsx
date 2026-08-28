@@ -14,6 +14,7 @@ import { SettingsModal } from "./components/SettingsModal";
 import { AdvancedLabModal } from "./components/AdvancedLabModal";
 import { UserProfileModal } from "./components/UserProfileModal";
 import { ClarificationQuestionsModal } from "./components/ClarificationQuestionsModal";
+import { LocationPromptModal } from "./components/LocationPromptModal";
 
 export default function App() {
   return (
@@ -47,6 +48,7 @@ export default function App() {
         <ExportModal />
         <SettingsModal />
         <ClarificationQuestionsModal />
+        <LocationPromptModal />
       </div>
     </TokenLabProvider>
   );
