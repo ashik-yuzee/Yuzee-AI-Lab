@@ -182,6 +182,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
   const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
 
+  // Gates localStorage writes — prevents React Strict Mode's double-invoke from wiping
+  // localStorage before loadInitialData has had a chance to read and restore it.
+  const loadDone = useRef(false);
+
   // Load initial data — falls back to localStorage when server has no conversations (e.g. restart)
   const loadInitialData = useCallback(async () => {
     try {
@@ -197,9 +201,11 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       if (stats) setSessionStats(stats);
       if (ss) setSharedSettings(ss);
 
+      // Allow lsSave to run from this point on (effects fire after setConversations)
+      loadDone.current = true;
+
       if (convs && convs.length > 0) {
         setConversations(convs);
-        // Sync latest versions to localStorage
         lsSave(convs);
         setCurrentConversation(convs[0]);
         const lastAssistant = convs[0].messages?.filter((m) => m.role === "assistant").pop();
@@ -208,12 +214,13 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Server is empty — restore from localStorage (covers server restarts)
         const saved = lsLoad();
         if (saved.length > 0) {
-          // Restore all conversations to server in parallel (non-blocking on failure)
-          await Promise.allSettled(saved.map((c) => api.restoreConversation(c).catch(() => {})));
+          // Show conversations immediately; restore to server in the background
           setConversations(saved);
           setCurrentConversation(saved[0]);
           const lastAssistant = saved[0].messages?.filter((m) => m.role === "assistant").pop();
           if (lastAssistant?.telemetry) setActiveTurnTelemetry(lastAssistant.telemetry);
+          // Fire-and-forget — failures are non-fatal; server will get them on next user action
+          Promise.allSettled(saved.map((c) => api.restoreConversation(c).catch(() => {})));
         } else {
           setConversations([]);
           setCurrentConversation(null);
@@ -231,14 +238,12 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     loadInitialData();
   }, [loadInitialData]);
 
-  // Persist to localStorage on every conversation change (but not during initial load)
-  const isFirstLoad = useRef(true);
+  // Persist to localStorage after every conversation change, but only once initial load is done.
+  // Without the loadDone guard, React Strict Mode's double-invoke of effects would call
+  // lsSave([]) before loadInitialData reads localStorage, wiping all saved conversations.
   useEffect(() => {
-    if (isFirstLoad.current) {
-      isFirstLoad.current = false;
-      return;
-    }
-    lsSave(conversations); // save even empty array so deleted conversations don't resurrect on refresh
+    if (!loadDone.current) return;
+    lsSave(conversations);
   }, [conversations]);
 
   // Sync currentConversation (which has live telemetry) back to conversations when streaming ends.
