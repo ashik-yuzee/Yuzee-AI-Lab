@@ -163,7 +163,7 @@ export const PathwayWhiteboard: React.FC = () => {
     setGenError(null);
     try {
       const result = await generatePathway(msgs);
-      if (!result.nodes?.length) { setGenError("No pathway data returned. Try chatting more first."); return; }
+      if (!result.nodes?.length) { setGenError("Couldn't extract a pathway — try sending a few more messages about your goals."); return; }
       const typed = result.nodes.map((n: any) => ({
         id: n.id, label: n.label,
         type: (FLOW_TYPE_MAP[n.node_type] || "step") as NodeType,

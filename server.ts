@@ -347,7 +347,7 @@ Conversation:
 ${recent}`;
 
   try {
-    const resp = await ai.models.generateContent({ model: "gemini-2.0-flash-lite", contents: prompt });
+    const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
     const text = (resp.text || "").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.status(500).json({ error: "Invalid AI response" });
