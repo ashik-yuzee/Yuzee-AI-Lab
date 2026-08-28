@@ -799,20 +799,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
   return (
     <div className="space-y-4">
-      {/* Schema / Semantic Validation Warning if any */}
-      {(!schemaValid || !semanticValid) && (
-        <div className="p-2.5 bg-amber-50 border border-amber-300 rounded-lg text-xs text-amber-900 flex items-start gap-2">
-          <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <div>
-            <span className="font-semibold">Schema validation notice:</span>
-            <ul className="list-disc list-inside mt-0.5 space-y-0.5 text-[11px]">
-              {validationErrors.map((err, eIdx) => (
-                <li key={eIdx}>{err}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      )}
 
       {/* Content Blocks */}
       <div className="space-y-3">

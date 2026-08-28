@@ -516,6 +516,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     abortControllerRef.current = controller;
 
     let accumulatedContent = "";
+    let resolvedThinkingLevel: string | undefined;
 
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
     const todayStr = new Date().toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -557,6 +558,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userQuestionAnswers: userQuestionAnswers,
       },
       {
+        onStart: (data) => {
+          resolvedThinkingLevel = data.appliedThinkingLevel;
+        },
         onDelta: (chunk) => {
           accumulatedContent += chunk;
           setCurrentConversation((prev) => {
@@ -596,7 +600,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 ...last,
                 schemaValid: valData.schemaValid,
                 semanticValid: valData.semanticValid,
-                validationErrors: valData.validationErrors || [],
+                validationErrors: valData.errors || [],
               };
             }
             return { ...prev, messages: msgs };
@@ -610,6 +614,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             timeline: usagePayload.timeline,
             model: activeConv.model || DEFAULT_MODEL_ID,
             thinkingLevel: activeConv.thinkingLevel || "adaptive",
+            appliedThinkingLevel: resolvedThinkingLevel,
             optimizationMode: activeConv.mode || "AUTO",
             optimizationStrategy: activeConv.strategy || "ADAPTIVE_HYBRID",
             preset: activeConv.preset || "BALANCED",
