@@ -1,13 +1,14 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { X, Plus, Trash2, Link2, ZoomIn, ZoomOut, Maximize2, RotateCcw, Sparkles, Network } from "lucide-react";
+import { X, Plus, Trash2, Link2, ZoomIn, ZoomOut, Maximize2, RotateCcw, Sparkles, Network, Loader2 } from "lucide-react";
 import { useTokenLab } from "../context/TokenLabContext";
+import { generatePathway } from "../services/api";
 
 type NodeType = "goal" | "step" | "option" | "milestone" | "current" | "complete" | "blocked";
 
 interface PWNode { id: string; label: string; type: NodeType; x: number; y: number; }
 interface PWEdge { id: string; from: string; to: string; }
 
-const NW = 144, NH = 46;
+const NW = 140, NH = 44;
 
 const STYLES: Record<NodeType, { fill: string; stroke: string; text: string }> = {
   goal:      { fill: "#1e3a5f", stroke: "#1e3a5f", text: "#ffffff" },
@@ -22,6 +23,10 @@ const STYLES: Record<NodeType, { fill: string; stroke: string; text: string }> =
 const TYPE_LABELS: Record<NodeType, string> = {
   goal: "Goal", step: "Step", option: "Option", milestone: "Milestone",
   current: "Current", complete: "Complete", blocked: "Blocked",
+};
+
+const FLOW_TYPE_MAP: Record<string, NodeType> = {
+  goal: "goal", decision: "option", ok: "complete", warn: "blocked",
 };
 
 function mkEdgePath(a: PWNode, b: PWNode): string {
@@ -59,12 +64,11 @@ function autoLayout(rawNodes: Omit<PWNode, "x" | "y">[], rawEdges: { from: strin
     byLayer.get(l)!.push(n.id);
   });
   const pos = new Map<string, { x: number; y: number }>();
-  byLayer.forEach((ids, l) => ids.forEach((id, i) => pos.set(id, { x: 50 + l * (NW + 68), y: 40 + i * (NH + 52) })));
+  byLayer.forEach((ids, l) => ids.forEach((id, i) => pos.set(id, { x: 50 + l * (NW + 65), y: 40 + i * (NH + 50) })));
   return rawNodes.map(n => ({ ...n, ...(pos.get(n.id) || { x: 50, y: 50 }) } as PWNode));
 }
 
 const LS_KEY = "yuzee_whiteboard";
-const FLOW_TYPE_MAP: Record<string, NodeType> = { goal: "goal", decision: "option", ok: "complete", warn: "blocked" };
 
 export const PathwayWhiteboard: React.FC = () => {
   const { isWhiteboardOpen, setWhiteboardOpen, currentConversation } = useTokenLab();
@@ -80,13 +84,13 @@ export const PathwayWhiteboard: React.FC = () => {
   const [tx, setTx] = useState(0);
   const [ty, setTy] = useState(0);
   const [scale, setScale] = useState(1);
-  const [banner, setBanner] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+  const [genError, setGenError] = useState<string | null>(null);
   const [mouseUser, setMouseUser] = useState({ x: 0, y: 0 });
 
   const dragging  = useRef<{ id: string; ox: number; oy: number } | null>(null);
   const panRef    = useRef<{ mx: number; my: number; tx: number; ty: number } | null>(null);
   const svgRef    = useRef<SVGSVGElement>(null);
-  const lastAiId  = useRef("");
   const nodesRef  = useRef(nodes);
   const edgesRef  = useRef(edges);
   const txRef     = useRef(tx);
@@ -111,7 +115,7 @@ export const PathwayWhiteboard: React.FC = () => {
     } catch {}
   }, []);
 
-  // Non-passive wheel listener for zoom
+  // Non-passive wheel for zoom
   useEffect(() => {
     const svg = svgRef.current;
     if (!svg) return;
@@ -130,63 +134,6 @@ export const PathwayWhiteboard: React.FC = () => {
     svg.addEventListener("wheel", onWheel, { passive: false });
     return () => svg.removeEventListener("wheel", onWheel);
   }, []);
-
-  // Auto-import from last AI message
-  useEffect(() => {
-    const msgs = currentConversation?.messages || [];
-    const last = [...msgs].reverse().find(m => m.role === "assistant");
-    if (!last?.structuredResponse?.content_blocks) return;
-    const msgId = String(last.id || "");
-    if (!msgId || msgId === lastAiId.current) return;
-
-    const blocks: any[] = last.structuredResponse.content_blocks;
-    const fb = blocks.find(b => b.type === "flow"        && b.data?.nodes?.length > 0);
-    const pb = blocks.find(b => b.type === "pathway_map" && b.data?.lanes?.length > 0);
-    const tb = blocks.find(b => b.type === "timeline"    && b.data?.milestones?.length > 0);
-    if (!fb && !pb && !tb) return;
-
-    lastAiId.current = msgId;
-    let newNodes: PWNode[] = [];
-    let newEdges: PWEdge[] = [];
-
-    if (fb) {
-      const rn = (fb.data.nodes || []).map((n: any) => ({
-        id: `ai-${n.id}`, label: n.label || n.id,
-        type: (FLOW_TYPE_MAP[n.node_type] || "step") as NodeType,
-      }));
-      const re = (fb.data.edges || []).map((e: any, i: number) => ({ from: `ai-${e.from}`, to: `ai-${e.to}`, id: `ae${i}` }));
-      newNodes = autoLayout(rn, re);
-      newEdges = re;
-    } else if (pb) {
-      let y = 40;
-      pb.data.lanes.forEach((lane: any, li: number) => {
-        let x = 50;
-        (lane.steps || []).forEach((step: any, si: number) => {
-          newNodes.push({ id: `ai-l${li}s${si}`, label: step.label, type: "step", x, y });
-          if (si > 0) newEdges.push({ id: `ae-l${li}s${si}`, from: `ai-l${li}s${si - 1}`, to: `ai-l${li}s${si}` });
-          x += NW + 62;
-        });
-        y += NH + 52;
-      });
-    } else if (tb) {
-      const sMap: Record<string, NodeType> = { complete: "complete", current: "current", upcoming: "step" };
-      tb.data.milestones.forEach((ms: any, i: number) => {
-        newNodes.push({ id: `ai-ms${i}`, label: ms.label, type: sMap[ms.status] || "milestone", x: 50 + i * (NW + 62), y: 60 });
-        if (i > 0) newEdges.push({ id: `ae-ms${i}`, from: `ai-ms${i - 1}`, to: `ai-ms${i}` });
-      });
-    }
-
-    if (newNodes.length === 0) return;
-    const curNodes = nodesRef.current;
-    const xOff = curNodes.length > 0 ? Math.max(...curNodes.map(n => n.x + NW)) + 80 : 0;
-    const placed = newNodes.map(n => ({ ...n, x: n.x + xOff }));
-    setNodes(prev => { const u = [...prev, ...placed]; persist(u, [...edgesRef.current, ...newEdges]); return u; });
-    setEdges(prev => [...prev, ...newEdges]);
-    setBanner(`Imported ${placed.length} node${placed.length > 1 ? "s" : ""} from AI`);
-    setTimeout(() => setBanner(null), 4500);
-    setWhiteboardOpen(true);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentConversation?.messages?.length]);
 
   // Keyboard shortcuts
   const deleteSelected = useCallback(() => {
@@ -207,6 +154,34 @@ export const PathwayWhiteboard: React.FC = () => {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [deleteSelected, editingId]);
+
+  // Generate pathway from conversation
+  const handleGenerate = async () => {
+    const msgs = (currentConversation?.messages || []).map(m => ({ role: m.role, content: m.content }));
+    if (msgs.length === 0) { setGenError("Start a conversation first, then generate."); return; }
+    setGenerating(true);
+    setGenError(null);
+    try {
+      const result = await generatePathway(msgs);
+      if (!result.nodes?.length) { setGenError("No pathway data returned. Try chatting more first."); return; }
+      const typed = result.nodes.map((n: any) => ({
+        id: n.id, label: n.label,
+        type: (FLOW_TYPE_MAP[n.node_type] || "step") as NodeType,
+      }));
+      const re = result.edges.map((e: any, i: number) => ({ from: e.from, to: e.to, id: `ge${i}` }));
+      const laid = autoLayout(typed, re);
+      setNodes(laid);
+      setEdges(re);
+      persist(laid, re);
+      setSelected(null);
+      // Fit after a short delay to let SVG render
+      setTimeout(fitView, 80);
+    } catch (err: any) {
+      setGenError(err?.message || "Generation failed");
+    } finally {
+      setGenerating(false);
+    }
+  };
 
   const toUser = useCallback((cx: number, cy: number) => {
     const r = svgRef.current?.getBoundingClientRect();
@@ -274,8 +249,7 @@ export const PathwayWhiteboard: React.FC = () => {
   const handleNodeDbl = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     const node = nodesRef.current.find(n => n.id === id)!;
-    setEditingId(id);
-    setEditText(node.label);
+    setEditingId(id); setEditText(node.label);
   };
 
   const commitEdit = (id: string) => {
@@ -289,144 +263,140 @@ export const PathwayWhiteboard: React.FC = () => {
   };
 
   const fitView = () => {
-    if (nodes.length === 0) return;
-    const pad = 44;
-    const x0 = Math.min(...nodes.map(n => n.x)) - pad;
-    const y0 = Math.min(...nodes.map(n => n.y)) - pad;
-    const x1 = Math.max(...nodes.map(n => n.x + NW)) + pad;
-    const y1 = Math.max(...nodes.map(n => n.y + NH)) + pad;
+    const cur = nodesRef.current;
+    if (cur.length === 0) return;
+    const pad = 36;
+    const x0 = Math.min(...cur.map(n => n.x)) - pad;
+    const y0 = Math.min(...cur.map(n => n.y)) - pad;
+    const x1 = Math.max(...cur.map(n => n.x + NW)) + pad;
+    const y1 = Math.max(...cur.map(n => n.y + NH)) + pad;
     const r = svgRef.current?.getBoundingClientRect();
     if (!r) return;
     const z = Math.min(r.width / (x1 - x0), r.height / (y1 - y0), 2.5);
-    setScale(z);
-    setTx(-x0 * z);
-    setTy(-y0 * z);
+    setScale(z); setTx(-x0 * z); setTy(-y0 * z);
   };
 
   if (!isWhiteboardOpen) return null;
 
   const nodeMap = new Map(nodes.map(n => [n.id, n]));
   const connSrc = connectFrom ? nodeMap.get(connectFrom) : null;
+  const hasChat = (currentConversation?.messages?.length || 0) > 0;
 
   return (
-    <aside className="fixed right-0 top-14 bottom-0 z-40 w-[500px] bg-white border-l border-slate-200 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+    <aside className="w-[380px] shrink-0 flex flex-col bg-white border-l border-slate-200 overflow-hidden">
       {/* Header */}
-      <div className="px-4 py-2.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-violet-600 flex items-center justify-center shrink-0">
-            <Network className="w-3.5 h-3.5 text-white" />
+      <div className="px-3 py-2.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-violet-600 flex items-center justify-center shrink-0">
+            <Network className="w-3 h-3 text-white" />
           </div>
-          <div>
-            <h2 className="text-sm font-bold text-slate-900 leading-tight">Pathway Whiteboard</h2>
-            <p className="text-[10px] text-slate-500 leading-tight">{nodes.length} nodes · {edges.length} edges</p>
-          </div>
+          <span className="text-sm font-bold text-slate-900">Pathway</span>
+          <span className="text-[10px] text-slate-400">{nodes.length > 0 ? `${nodes.length} nodes` : ""}</span>
         </div>
         <div className="flex items-center gap-0.5">
-          <button onClick={fitView} title="Fit to view" className="p-1.5 text-slate-400 hover:text-violet-700 hover:bg-violet-50 rounded-lg transition-colors cursor-pointer">
+          <button onClick={fitView} title="Fit to view" disabled={nodes.length === 0} className="p-1 text-slate-400 hover:text-violet-700 hover:bg-violet-50 rounded transition-colors cursor-pointer disabled:opacity-30">
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
           <button
-            onClick={() => { setNodes([]); setEdges([]); setSelected(null); persist([], []); }}
-            title="Clear whiteboard"
-            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+            onClick={() => { setNodes([]); setEdges([]); setSelected(null); persist([], []); setGenError(null); }}
+            title="Clear whiteboard" disabled={nodes.length === 0}
+            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded transition-colors cursor-pointer disabled:opacity-30"
           >
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
-          <button onClick={() => setWhiteboardOpen(false)} className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded-lg transition-colors cursor-pointer">
+          <button onClick={() => setWhiteboardOpen(false)} className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200 rounded transition-colors cursor-pointer ml-1">
             <X className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Toolbar */}
-      <div className="px-3 py-2 border-b border-slate-100 bg-white flex items-center gap-1.5 shrink-0 flex-wrap">
-        {/* Add node */}
-        <div className="flex rounded-lg border border-slate-200 overflow-hidden">
-          <button
-            onClick={() => setMode(mode === "add" ? "select" : "add")}
-            title="Add node (click canvas to place)"
-            className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium transition-colors cursor-pointer ${
-              mode === "add" ? "bg-violet-600 text-white" : "bg-white text-slate-700 hover:bg-violet-50 hover:text-violet-700"
-            }`}
-          >
-            <Plus className="w-3 h-3" />Add
-          </button>
-          <div className="w-px bg-slate-200" />
-          <select
-            value={addType}
-            onChange={e => setAddType(e.target.value as NodeType)}
-            className="text-xs px-2 py-1.5 bg-white text-slate-600 border-none outline-none cursor-pointer"
-          >
-            {(Object.keys(TYPE_LABELS) as NodeType[]).map(t => (
-              <option key={t} value={t}>{TYPE_LABELS[t]}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Connect */}
+      {/* Generate button */}
+      <div className="px-3 py-2.5 border-b border-slate-100 bg-white shrink-0">
         <button
-          onClick={() => { setMode(mode === "connect" ? "select" : "connect"); setConnectFrom(null); }}
-          title="Connect two nodes with an edge"
-          className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors cursor-pointer ${
-            mode === "connect"
-              ? "bg-sky-600 text-white border-sky-600"
-              : "bg-white text-slate-700 border-slate-200 hover:bg-sky-50 hover:text-sky-700 hover:border-sky-200"
-          }`}
+          onClick={handleGenerate}
+          disabled={generating || !hasChat}
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold transition-colors cursor-pointer bg-violet-600 hover:bg-violet-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+          title={!hasChat ? "Start a conversation first" : "Generate pathway from your chat"}
         >
-          <Link2 className="w-3 h-3" />
-          {connectFrom ? "→ Pick target" : "Connect"}
+          {generating ? (
+            <><Loader2 className="w-4 h-4 animate-spin" />Generating…</>
+          ) : (
+            <><Sparkles className="w-4 h-4" />Generate Pathway</>
+          )}
         </button>
-
-        {/* Delete */}
-        <button
-          onClick={deleteSelected}
-          disabled={!selected}
-          title="Delete selected node and its edges (Del)"
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 text-slate-700 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 disabled:opacity-35 disabled:cursor-not-allowed transition-colors cursor-pointer"
-        >
-          <Trash2 className="w-3 h-3" />Delete
-        </button>
-
-        {/* Zoom controls */}
-        <div className="ml-auto flex items-center gap-0.5">
-          <button onClick={() => setScale(s => Math.min(3, s * 1.2))} title="Zoom in" className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded cursor-pointer">
-            <ZoomIn className="w-3.5 h-3.5" />
-          </button>
-          <span className="text-[10px] text-slate-400 w-9 text-center font-mono">{Math.round(scale * 100)}%</span>
-          <button onClick={() => setScale(s => Math.max(0.2, s / 1.2))} title="Zoom out" className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded cursor-pointer">
-            <ZoomOut className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        {genError && <p className="text-[10px] text-rose-500 mt-1.5 leading-tight">{genError}</p>}
+        {!hasChat && !genError && (
+          <p className="text-[10px] text-slate-400 mt-1.5">Chat with Oala first, then generate your pathway.</p>
+        )}
       </div>
 
-      {/* Import banner */}
-      {banner && (
-        <div className="px-3 py-2 bg-violet-50 border-b border-violet-100 flex items-center gap-2 text-xs text-violet-800 font-medium shrink-0">
-          <Sparkles className="w-3.5 h-3.5 shrink-0 text-violet-500" />
-          {banner}
+      {/* Edit toolbar — only when nodes exist */}
+      {nodes.length > 0 && (
+        <div className="px-2.5 py-1.5 border-b border-slate-100 bg-white flex items-center gap-1 shrink-0">
+          {/* Add */}
+          <div className="flex rounded-md border border-slate-200 overflow-hidden">
+            <button
+              onClick={() => setMode(mode === "add" ? "select" : "add")}
+              title="Add node"
+              className={`flex items-center gap-1 px-2 py-1 text-[11px] font-medium transition-colors cursor-pointer ${mode === "add" ? "bg-violet-600 text-white" : "bg-white text-slate-600 hover:bg-slate-50"}`}
+            >
+              <Plus className="w-2.5 h-2.5" />Add
+            </button>
+            <div className="w-px bg-slate-200" />
+            <select value={addType} onChange={e => setAddType(e.target.value as NodeType)} className="text-[11px] px-1.5 py-1 bg-white text-slate-600 border-none outline-none cursor-pointer">
+              {(Object.keys(TYPE_LABELS) as NodeType[]).map(t => <option key={t} value={t}>{TYPE_LABELS[t]}</option>)}
+            </select>
+          </div>
+          {/* Connect */}
+          <button
+            onClick={() => { setMode(mode === "connect" ? "select" : "connect"); setConnectFrom(null); }}
+            title="Connect two nodes"
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border transition-colors cursor-pointer ${mode === "connect" ? "bg-sky-600 text-white border-sky-600" : "bg-white text-slate-600 border-slate-200 hover:bg-sky-50 hover:border-sky-200"}`}
+          >
+            <Link2 className="w-2.5 h-2.5" />{connectFrom ? "→ Target" : "Connect"}
+          </button>
+          {/* Delete */}
+          <button
+            onClick={deleteSelected} disabled={!selected}
+            title="Delete selected (Del)"
+            className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium border border-slate-200 text-slate-600 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          >
+            <Trash2 className="w-2.5 h-2.5" />Delete
+          </button>
+          {/* Zoom */}
+          <div className="ml-auto flex items-center gap-0.5">
+            <button onClick={() => setScale(s => Math.min(3, s * 1.2))} title="Zoom in" className="p-0.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded cursor-pointer"><ZoomIn className="w-3 h-3" /></button>
+            <span className="text-[9px] text-slate-400 w-7 text-center font-mono">{Math.round(scale * 100)}%</span>
+            <button onClick={() => setScale(s => Math.max(0.2, s / 1.2))} title="Zoom out" className="p-0.5 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded cursor-pointer"><ZoomOut className="w-3 h-3" /></button>
+          </div>
         </div>
       )}
 
       {/* Mode hint */}
       {(mode === "add" || mode === "connect") && (
-        <div className="px-3 py-1.5 bg-amber-50 border-b border-amber-100 text-xs text-amber-800 shrink-0">
-          {mode === "add"
-            ? `Click canvas to place a "${TYPE_LABELS[addType]}" node · Esc to cancel`
-            : connectFrom ? "Click the target node to connect · Esc to cancel" : "Click the source node to start an edge"}
+        <div className="px-3 py-1 bg-amber-50 border-b border-amber-100 text-[10px] text-amber-700 shrink-0">
+          {mode === "add" ? `Click canvas to place "${TYPE_LABELS[addType]}" · Esc to cancel`
+            : connectFrom ? "Click target node · Esc to cancel" : "Click source node to start edge"}
         </div>
       )}
 
       {/* Canvas */}
       <div className="flex-1 relative overflow-hidden bg-[#f9fafb]">
-        {nodes.length === 0 && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
-            <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center mb-3">
-              <Network className="w-7 h-7 text-slate-300" />
+        {nodes.length === 0 && !generating && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none px-6 text-center">
+            <div className="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center mb-3">
+              <Network className="w-6 h-6 text-slate-300" />
             </div>
-            <p className="text-sm font-semibold text-slate-400">No pathway yet</p>
-            <p className="text-xs text-slate-300 mt-1 max-w-[220px] text-center leading-relaxed">
-              Add nodes via the toolbar, or chat — AI pathway blocks appear here automatically.
+            <p className="text-xs font-semibold text-slate-400">No pathway yet</p>
+            <p className="text-[11px] text-slate-300 mt-1 leading-relaxed">
+              Chat with Oala, then click <strong className="text-slate-400">Generate Pathway</strong> above.
             </p>
+          </div>
+        )}
+        {generating && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none">
+            <Loader2 className="w-8 h-8 text-violet-400 animate-spin mb-2" />
+            <p className="text-xs text-slate-400">Building your pathway…</p>
           </div>
         )}
         <svg
@@ -443,7 +413,7 @@ export const PathwayWhiteboard: React.FC = () => {
             <pattern id="wb-dots" width="20" height="20" patternUnits="userSpaceOnUse"
               patternTransform={`translate(${((tx % 20) + 20) % 20} ${((ty % 20) + 20) % 20})`}
             >
-              <circle cx="10" cy="10" r="0.9" fill="#d1d5db" />
+              <circle cx="10" cy="10" r="0.8" fill="#d1d5db" />
             </pattern>
             <marker id="wb-arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
               <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
@@ -452,13 +422,10 @@ export const PathwayWhiteboard: React.FC = () => {
               <polygon points="0 0, 8 3, 0 6" fill="#0ea5e9" />
             </marker>
             <marker id="wb-arr-gh" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
-              <polygon points="0 0, 8 3, 0 6" fill="#0ea5e9" opacity="0.55" />
+              <polygon points="0 0, 8 3, 0 6" fill="#0ea5e9" opacity="0.5" />
             </marker>
           </defs>
-
-          {/* Background dot grid */}
           <rect width="100%" height="100%" fill="url(#wb-dots)" />
-
           <g transform={`translate(${tx}, ${ty}) scale(${scale})`}>
             {/* Edges */}
             {edges.map(e => {
@@ -468,87 +435,57 @@ export const PathwayWhiteboard: React.FC = () => {
               const d = mkEdgePath(src, tgt);
               return (
                 <g key={e.id}>
-                  {/* Wide transparent hit area for click-to-delete */}
-                  <path d={d} fill="none" stroke="transparent" strokeWidth={12} style={{ cursor: "pointer" }}
-                    onClick={() => deleteEdge(e.id)} />
-                  <path d={d} fill="none"
-                    stroke={hi ? "#0ea5e9" : "#94a3b8"}
-                    strokeWidth={hi ? 2 : 1.5}
-                    markerEnd={`url(#wb-arr${hi ? "-hi" : ""})`}
-                    opacity={hi ? 1 : 0.8}
-                    pointerEvents="none"
-                  />
+                  <path d={d} fill="none" stroke="transparent" strokeWidth={10} style={{ cursor: "pointer" }} onClick={() => deleteEdge(e.id)} />
+                  <path d={d} fill="none" stroke={hi ? "#0ea5e9" : "#94a3b8"} strokeWidth={hi ? 2 : 1.5}
+                    markerEnd={`url(#wb-arr${hi ? "-hi" : ""})`} opacity={hi ? 1 : 0.8} pointerEvents="none" />
                 </g>
               );
             })}
-
-            {/* Ghost edge while in connect mode */}
+            {/* Ghost edge while connecting */}
             {connSrc && (
-              <line
-                x1={connSrc.x + NW / 2} y1={connSrc.y + NH / 2}
-                x2={mouseUser.x} y2={mouseUser.y}
+              <line x1={connSrc.x + NW / 2} y1={connSrc.y + NH / 2} x2={mouseUser.x} y2={mouseUser.y}
                 stroke="#0ea5e9" strokeWidth={1.5} strokeDasharray="5 4"
-                markerEnd="url(#wb-arr-gh)" opacity={0.65} pointerEvents="none"
-              />
+                markerEnd="url(#wb-arr-gh)" opacity={0.6} pointerEvents="none" />
             )}
-
             {/* Nodes */}
             {nodes.map(n => {
               const s = STYLES[n.type];
               const isSel  = selected === n.id;
               const isConn = connectFrom === n.id;
-              const accentStroke = isSel || isConn ? "#0ea5e9" : s.stroke;
-              const hasTypeBadge = n.type !== "step";
-              const labelY = hasTypeBadge ? NH / 2 + 7 : NH / 2 + 4;
-
+              const hasBadge = n.type !== "step";
               return (
-                <g key={n.id} className="pnode"
-                  transform={`translate(${n.x}, ${n.y})`}
+                <g key={n.id} className="pnode" transform={`translate(${n.x}, ${n.y})`}
                   onMouseDown={ev => handleNodeDown(ev, n.id)}
                   onClick={ev => handleNodeClick(ev, n.id)}
                   onDoubleClick={ev => handleNodeDbl(ev, n.id)}
                   style={{ cursor: mode === "connect" ? "crosshair" : "grab" }}
                 >
-                  <rect
-                    width={NW} height={NH} rx={9}
-                    fill={s.fill}
-                    stroke={accentStroke}
+                  <rect width={NW} height={NH} rx={8} fill={s.fill}
+                    stroke={isSel || isConn ? "#0ea5e9" : s.stroke}
                     strokeWidth={isSel || isConn ? 2.5 : 1.5}
-                    style={{ filter: isSel ? "drop-shadow(0 2px 10px rgba(14,165,233,0.3))" : "none" }}
+                    style={{ filter: isSel ? "drop-shadow(0 2px 8px rgba(14,165,233,0.28))" : "none" }}
                   />
-                  {/* Type label badge */}
-                  {hasTypeBadge && (
-                    <text x={6} y={11} fontSize={7} fontWeight={700}
-                      fill={s.text} opacity={0.45}
-                      style={{ userSelect: "none", textTransform: "uppercase", letterSpacing: "0.04em" }}
-                      pointerEvents="none"
-                    >
-                      {n.type}
+                  {hasBadge && (
+                    <text x={5} y={10} fontSize={7} fontWeight={700} fill={s.text} opacity={0.45}
+                      style={{ userSelect: "none" }} pointerEvents="none">
+                      {n.type.toUpperCase()}
                     </text>
                   )}
-                  {/* Editable label */}
                   {editingId === n.id ? (
-                    <foreignObject x={5} y={labelY - 10} width={NW - 10} height={22}>
-                      <input
-                        autoFocus
-                        value={editText}
+                    <foreignObject x={5} y={hasBadge ? 16 : 12} width={NW - 10} height={20}>
+                      <input autoFocus value={editText}
                         onChange={ev => setEditText(ev.target.value)}
                         onBlur={() => commitEdit(n.id)}
                         onKeyDown={ev => { if (ev.key === "Enter") commitEdit(n.id); if (ev.key === "Escape") setEditingId(null); }}
-                        style={{
-                          width: "100%", height: "100%", border: "none", background: "transparent",
-                          outline: "none", fontSize: 11, fontWeight: 600, color: s.text,
-                          textAlign: "center", padding: 0,
-                        }}
+                        style={{ width: "100%", height: "100%", border: "none", background: "transparent", outline: "none", fontSize: 11, fontWeight: 600, color: s.text, textAlign: "center", padding: 0 }}
                       />
                     </foreignObject>
                   ) : (
-                    <text x={NW / 2} y={labelY}
+                    <text x={NW / 2} y={hasBadge ? NH / 2 + 7 : NH / 2 + 4}
                       textAnchor="middle" fontSize={11} fontWeight={n.type === "goal" ? 700 : 600}
-                      fill={s.text} pointerEvents="none"
-                      style={{ userSelect: "none" }}
+                      fill={s.text} pointerEvents="none" style={{ userSelect: "none" }}
                     >
-                      {n.label.length > 20 ? n.label.slice(0, 19) + "…" : n.label}
+                      {n.label.length > 19 ? n.label.slice(0, 18) + "…" : n.label}
                     </text>
                   )}
                 </g>
@@ -559,13 +496,9 @@ export const PathwayWhiteboard: React.FC = () => {
       </div>
 
       {/* Status bar */}
-      <div className="px-3 py-1.5 border-t border-slate-100 bg-white flex items-center justify-between shrink-0">
-        <span className="text-[10px] text-slate-400">Drag pan · Scroll zoom · Dbl-click edit · Click edge removes it</span>
-        {selected && (
-          <span className="text-[10px] text-sky-600 font-medium truncate max-w-[130px]">
-            {nodes.find(n => n.id === selected)?.label}
-          </span>
-        )}
+      <div className="px-3 py-1 border-t border-slate-100 bg-white flex items-center justify-between shrink-0">
+        <span className="text-[9px] text-slate-400">Drag pan · Scroll zoom · Dbl-click edit · Click edge removes</span>
+        {selected && <span className="text-[9px] text-sky-600 font-medium truncate max-w-[100px]">{nodes.find(n => n.id === selected)?.label}</span>}
       </div>
     </aside>
   );

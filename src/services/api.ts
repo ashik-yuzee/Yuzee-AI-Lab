@@ -215,6 +215,19 @@ export async function preCheckMessage(payload: {
   } catch { return { needsClarification: false }; }
 }
 
+export async function generatePathway(
+  messages: { role: string; content: string }[]
+): Promise<{ nodes: any[]; edges: any[] }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/pathway/generate`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
+    });
+    return res.ok ? res.json() : { nodes: [], edges: [] };
+  } catch { return { nodes: [], edges: [] }; }
+}
+
 export async function detectContradictions(
   userMessage: string,
   profileFacts: string[]

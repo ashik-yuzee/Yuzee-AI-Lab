@@ -315,6 +315,50 @@ Not related → {"needsClarification":false}`;
   } catch { return res.json({ needsClarification: false }); }
 });
 
+// Pathway whiteboard generation — uses flash-lite for minimal token cost
+app.post("/api/pathway/generate", makeRateLimit(20), async (req, res) => {
+  const { messages = [] } = req.body as { messages: { role: string; content: string }[] };
+  const ai = getGemini();
+  if (!ai) return res.status(503).json({ error: "AI unavailable" });
+
+  // Take last 8 exchanges, truncated, to minimise tokens
+  const recent = (messages as any[])
+    .filter(m => m.role === "user" || m.role === "assistant")
+    .slice(-16)
+    .map(m => `${m.role === "user" ? "User" : "AI"}: ${String(m.content || "").slice(0, 250)}`)
+    .join("\n");
+
+  if (!recent.trim()) return res.status(400).json({ error: "No messages" });
+
+  const prompt = `You are a career pathway visualizer. Given this career conversation, extract the key career steps and goals as a directed flow graph.
+
+Return ONLY valid JSON — no markdown, no explanation:
+{"nodes":[{"id":"n1","label":"Current Role","node_type":"goal"},{"id":"n2","label":"Next Step","node_type":"step"}],"edges":[{"from":"n1","to":"n2"}]}
+
+node_type options: "goal" (main target), "step" (action/milestone), "decision" (choice point), "ok" (achieved), "warn" (obstacle/risk)
+Rules:
+- 5 to 10 nodes max
+- Labels: 2-5 words, specific and actionable
+- Start with the user's current situation as the first "goal" node
+- Show a logical career progression
+- Add "decision" nodes where there are genuine choice points
+
+Conversation:
+${recent}`;
+
+  try {
+    const resp = await ai.models.generateContent({ model: "gemini-2.0-flash-lite", contents: prompt });
+    const text = (resp.text || "").trim();
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return res.status(500).json({ error: "Invalid AI response" });
+    const parsed = JSON.parse(match[0]);
+    if (!Array.isArray(parsed.nodes)) return res.status(500).json({ error: "Missing nodes" });
+    return res.json({ nodes: parsed.nodes, edges: parsed.edges || [] });
+  } catch (e: any) {
+    return res.status(500).json({ error: e?.message || "Generation failed" });
+  }
+});
+
 // Default system prompt content (so client can display/diff)
 app.get("/api/system-prompt", (req, res) => {
   res.json({
