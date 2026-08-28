@@ -15,6 +15,7 @@ import { AdvancedLabModal } from "./components/AdvancedLabModal";
 import { UserProfileModal } from "./components/UserProfileModal";
 import { ClarificationQuestionsModal } from "./components/ClarificationQuestionsModal";
 import { LocationPromptModal } from "./components/LocationPromptModal";
+import { PathwayWhiteboard } from "./components/PathwayWhiteboard";
 
 export default function App() {
   return (
@@ -35,6 +36,8 @@ export default function App() {
 
           {/* Right Telemetry & Context Diagnostics Drawer */}
           <TokenInspector />
+          {/* Pathway Whiteboard Side Panel */}
+          <PathwayWhiteboard />
         </div>
 
         {/* Global Modals & Dialogs */}

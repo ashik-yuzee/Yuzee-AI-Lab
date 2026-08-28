@@ -52,6 +52,8 @@ interface TokenLabContextType {
   // Modals & Panels
   isTokenInspectorOpen: boolean;
   setTokenInspectorOpen: (open: boolean) => void;
+  isWhiteboardOpen: boolean;
+  setWhiteboardOpen: (open: boolean) => void;
   isAdvancedLabOpen: boolean;
   setAdvancedLabOpen: (open: boolean) => void;
   activeLabTab: string;
@@ -150,6 +152,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Modals & Panels State
   const [isTokenInspectorOpen, setTokenInspectorOpen] = useState<boolean>(false);
+  const [isWhiteboardOpen, setWhiteboardOpen] = useState<boolean>(false);
   const [isAdvancedLabOpen, setAdvancedLabOpen] = useState<boolean>(false);
   const [activeLabTab, setActiveLabTab] = useState<string>("context");
   const [isContextInspectorOpen, setContextInspectorOpen] = useState<boolean>(false);
@@ -848,6 +851,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         activeTurnTelemetry,
         isTokenInspectorOpen,
         setTokenInspectorOpen,
+        isWhiteboardOpen,
+        setWhiteboardOpen,
         isAdvancedLabOpen,
         setAdvancedLabOpen,
         activeLabTab,

@@ -9,6 +9,7 @@ import {
   Activity,
   Settings,
   User,
+  Network,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -26,6 +27,8 @@ export const Navbar: React.FC = () => {
     setSidebarOpen,
     isTokenInspectorOpen,
     setTokenInspectorOpen,
+    isWhiteboardOpen,
+    setWhiteboardOpen,
     setSettingsOpen,
     setProfileOpen,
     userProfile,
@@ -221,9 +224,24 @@ export const Navbar: React.FC = () => {
           </span>
         )}
 
+        {/* Whiteboard toggle */}
+        <button
+          id="btn-toggle-whiteboard"
+          onClick={() => { setWhiteboardOpen(!isWhiteboardOpen); if (!isWhiteboardOpen) setTokenInspectorOpen(false); }}
+          className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+            isWhiteboardOpen
+              ? "bg-violet-50 border-violet-300 text-violet-700"
+              : "bg-white border-slate-200 text-slate-500 hover:text-violet-700 hover:bg-violet-50 hover:border-violet-200"
+          }`}
+          title="Pathway Whiteboard"
+          aria-label="Pathway Whiteboard"
+        >
+          <Network className="w-4 h-4" />
+        </button>
+
         <button
           id="btn-header-telemetry-pill"
-          onClick={() => setTokenInspectorOpen(!isTokenInspectorOpen)}
+          onClick={() => { setTokenInspectorOpen(!isTokenInspectorOpen); if (!isTokenInspectorOpen) setWhiteboardOpen(false); }}
           className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
             isTokenInspectorOpen
               ? "bg-sky-50 border-sky-300 text-sky-900 font-semibold shadow-xs"
