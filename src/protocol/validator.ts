@@ -309,18 +309,68 @@ export function validateProtocolV14(json: any): ExtendedProtocolValidationResult
       const d = block.data || {};
 
       if (block.type === 'flow') {
-        const nodeIds = new Set((d.nodes || []).map((n: any) => n.id));
+        const rawNodes: any[] = d.nodes || [];
+        const nodeIds = new Set(rawNodes.map((n: any) => n.id));
+        // Duplicate node ID check
+        if (nodeIds.size !== rawNodes.length) {
+          const seen = new Set<string>();
+          for (const n of rawNodes) {
+            if (seen.has(n.id)) semanticErrors.push(`[flow] Duplicate node id "${n.id}" in block "${block.id}"`);
+            seen.add(n.id);
+          }
+        }
+        // Edge endpoint existence
         for (const edge of (d.edges || [])) {
           if (edge.from && !nodeIds.has(edge.from)) warnings.push(`[flow] Edge "from" id "${edge.from}" does not reference a known node`);
           if (edge.to && !nodeIds.has(edge.to)) warnings.push(`[flow] Edge "to" id "${edge.to}" does not reference a known node`);
         }
       }
 
+      if (block.type === 'pathway_map') {
+        const rawLanes: any[] = d.lanes || [];
+        const laneIds = new Set(rawLanes.map((l: any) => l.id));
+        if (laneIds.size !== rawLanes.length) semanticErrors.push(`[pathway_map] Duplicate lane ids in block "${block.id}"`);
+        for (const lane of rawLanes) {
+          const steps: any[] = lane.steps || [];
+          const stepIds = new Set(steps.map((s: any) => s.id));
+          if (stepIds.size !== steps.length) semanticErrors.push(`[pathway_map] Duplicate step ids in lane "${lane.id}"`);
+        }
+      }
+
+      if (block.type === 'timeline') {
+        const rawMs: any[] = d.milestones || [];
+        const msIds = new Set(rawMs.map((m: any) => m.id));
+        if (msIds.size !== rawMs.length) semanticErrors.push(`[timeline] Duplicate milestone ids in block "${block.id}"`);
+        const validStatuses = new Set(['completed','current','upcoming','blocked','paused','unknown']);
+        for (const m of rawMs) {
+          if (m.status && !validStatuses.has(m.status)) semanticErrors.push(`[timeline] Invalid milestone status "${m.status}" in block "${block.id}"`);
+        }
+      }
+
+      if (block.type === 'scorecard') {
+        for (const m of (d.metrics || [])) {
+          const numericTypes = ['number','percentage','rating'];
+          if (numericTypes.includes(m.value_type)) {
+            if (typeof m.value !== 'number') semanticErrors.push(`[scorecard] Metric "${m.id}" value must be a number when value_type="${m.value_type}"`);
+            if (m.max !== undefined && m.max !== null && typeof m.max !== 'number') semanticErrors.push(`[scorecard] Metric "${m.id}" max must be a number`);
+          }
+        }
+      }
+
       if (block.type === 'chart') {
         const catLen = (d.categories || []).length;
+        const allowedTypes = ['bar','line','donut','funnel'];
+        if (d.chart_type && !allowedTypes.includes(d.chart_type)) {
+          semanticErrors.push(`[chart] chart_type "${d.chart_type}" not in allowed set [${allowedTypes.join(',')}]`);
+        }
         for (const s of (d.series || [])) {
-          if (Array.isArray(s.values) && s.values.length !== catLen) {
-            semanticErrors.push(`[chart] Series "${s.id}" values length (${s.values.length}) must match categories length (${catLen})`);
+          if (Array.isArray(s.values)) {
+            if (s.values.length !== catLen) {
+              semanticErrors.push(`[chart] Series "${s.id}" values length (${s.values.length}) must match categories length (${catLen})`);
+            }
+            for (const v of s.values) {
+              if (typeof v !== 'number') semanticErrors.push(`[chart] Series "${s.id}" contains non-numeric value: ${JSON.stringify(v)}`);
+            }
           }
         }
       }
