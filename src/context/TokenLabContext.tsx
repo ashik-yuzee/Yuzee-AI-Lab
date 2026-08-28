@@ -54,6 +54,8 @@ interface TokenLabContextType {
   setTokenInspectorOpen: (open: boolean) => void;
   isWhiteboardOpen: boolean;
   setWhiteboardOpen: (open: boolean) => void;
+  whiteboardGenerateTick: number;
+  triggerWhiteboardGenerate: () => void;
   isAdvancedLabOpen: boolean;
   setAdvancedLabOpen: (open: boolean) => void;
   activeLabTab: string;
@@ -153,6 +155,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Modals & Panels State
   const [isTokenInspectorOpen, setTokenInspectorOpen] = useState<boolean>(false);
   const [isWhiteboardOpen, setWhiteboardOpen] = useState<boolean>(false);
+  const [whiteboardGenerateTick, setWhiteboardGenerateTick] = useState<number>(0);
+  const triggerWhiteboardGenerate = useCallback(() => setWhiteboardGenerateTick(t => t + 1), []);
   const [isAdvancedLabOpen, setAdvancedLabOpen] = useState<boolean>(false);
   const [activeLabTab, setActiveLabTab] = useState<string>("context");
   const [isContextInspectorOpen, setContextInspectorOpen] = useState<boolean>(false);
@@ -665,6 +669,12 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             performance.measure('yuzee_e2e_latency', 'yuzee_send_clicked', 'yuzee_response_complete');
           } catch { /* marks may be cleared between calls */ }
           setIsStreaming(false);
+          // Auto-open whiteboard and generate pathway when user asks for one
+          if (/\b(pathway|roadmap|career path|career plan|action plan|map out|plan out|next steps?|step[- ]by[- ]step|whiteboard|visuali[sz]e|visual.{0,5}map|build.{0,15}(path|plan|road|map)|create.{0,15}(path|plan|road|map)|show.{0,10}(path|plan|map)|generate.{0,10}(path|plan|map)|draw.{0,10}(path|plan|map))\b/i.test(textMessage)) {
+            setWhiteboardOpen(true);
+            setTokenInspectorOpen(false);
+            setTimeout(() => setWhiteboardGenerateTick(t => t + 1), 400);
+          }
           abortControllerRef.current = null;
           setCurrentConversation((prev) => {
             if (!prev) return prev;
@@ -858,6 +868,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setTokenInspectorOpen,
         isWhiteboardOpen,
         setWhiteboardOpen,
+        whiteboardGenerateTick,
+        triggerWhiteboardGenerate,
         isAdvancedLabOpen,
         setAdvancedLabOpen,
         activeLabTab,
