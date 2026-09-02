@@ -120,7 +120,7 @@ export const Navbar: React.FC = () => {
         <button
           id="btn-toggle-sidebar"
           onClick={() => setSidebarOpen(!isSidebarOpen)}
-          className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 lg:hidden focus:outline-hidden cursor-pointer"
+          className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-hidden cursor-pointer"
           title="Toggle Navigation"
           aria-label="Toggle Navigation"
         >

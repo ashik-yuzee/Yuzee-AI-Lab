@@ -8,3 +8,4 @@ coverage/
 !.env.example
 # Runtime shared state — not committed; recreated from defaults on first start
 data/shared-settings.json
+data/conversations.json

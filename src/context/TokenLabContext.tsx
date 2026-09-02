@@ -166,7 +166,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAnalyticsOpen, setAnalyticsOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
-  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<{ id: string; text: string; category?: string; addedAt: number }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }

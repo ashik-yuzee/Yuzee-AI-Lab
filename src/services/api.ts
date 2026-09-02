@@ -216,18 +216,54 @@ export async function preCheckMessage(payload: {
 }
 
 export async function generatePathway(
-  messages: { role: string; content: string }[]
+  messages: { role: string; content: string }[],
+  style?: string,
+  answers?: Record<string, string>
 ): Promise<{ nodes: any[]; edges: any[] }> {
   const res = await fetch(`${API_BASE}/api/pathway/generate`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, style, answers }),
   });
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
     throw new Error(body.error || `Server error ${res.status}`);
   }
   return res.json();
+}
+
+export async function fetchWhiteboardStats(): Promise<{ calls: number; inputTokens: number; outputTokens: number }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/pathway/stats`);
+    return res.ok ? res.json() : { calls: 0, inputTokens: 0, outputTokens: 0 };
+  } catch { return { calls: 0, inputTokens: 0, outputTokens: 0 }; }
+}
+
+export async function explainPathwayNode(payload: {
+  nodeLabel: string; nodeSubtitle: string; question: string; goalContext?: string;
+}): Promise<{ answer: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/pathway/explain`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return res.ok ? res.json() : { answer: "Could not get an explanation." };
+  } catch { return { answer: "Could not get an explanation." }; }
+}
+
+export async function recommendPathwayNodes(
+  nodes: { id: string; label: string; type: string }[],
+  goalContext?: string
+): Promise<{ suggestions: { label: string; type: string; subtitle: string; reason: string }[] }> {
+  try {
+    const res = await fetch(`${API_BASE}/api/pathway/recommend`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nodes, goalContext }),
+    });
+    return res.ok ? res.json() : { suggestions: [] };
+  } catch { return { suggestions: [] }; }
 }
 
 export async function detectContradictions(

@@ -21,6 +21,8 @@ import {
   Cpu,
   Code2,
   Brain,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 
 function modelShortName(modelId: string): string {
@@ -48,6 +50,29 @@ export const ChatArea: React.FC = () => {
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
+  const [speakingId, setSpeakingId] = React.useState<string | null>(null);
+
+  const speakMessage = React.useCallback((id: string, text: string) => {
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    if (speakingId === id) { synth.cancel(); setSpeakingId(null); return; }
+    synth.cancel();
+    const plain = text.replace(/[#*`_~[\]()>]/g, "").replace(/\n+/g, " ").trim();
+    const utter = new SpeechSynthesisUtterance(plain.slice(0, 3000));
+    const setVoice = () => {
+      const v = synth.getVoices().find(v => v.name.includes("Google") && v.lang === "en-US")
+             || synth.getVoices().find(v => !v.localService && v.lang.startsWith("en"))
+             || synth.getVoices().find(v => v.lang.startsWith("en"));
+      if (v) utter.voice = v;
+      utter.rate = 0.93; utter.pitch = 1.05;
+      utter.onstart = () => setSpeakingId(id);
+      utter.onend = utter.onerror = () => setSpeakingId(null);
+      synth.speak(utter);
+    };
+    synth.getVoices().length === 0
+      ? synth.addEventListener("voiceschanged", setVoice, { once: true })
+      : setVoice();
+  }, [speakingId]);
 
   useEffect(() => { return () => { if (copyTimerRef.current) clearTimeout(copyTimerRef.current); }; }, []);
 
@@ -368,6 +393,14 @@ export const ChatArea: React.FC = () => {
                                     <Code2 className="w-3.5 h-3.5" />
                                   </button>
                                 )}
+                                <button
+                                  onClick={() => speakMessage(msg.id, msg.content ?? "")}
+                                  className={`p-1 rounded hover:bg-slate-100 ${speakingId === msg.id ? "text-violet-500" : "text-slate-400 hover:text-slate-700"}`}
+                                  title={speakingId === msg.id ? "Stop speaking" : "Read aloud"}
+                                  aria-label="Read aloud"
+                                >
+                                  {speakingId === msg.id ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
+                                </button>
                                 <button
                                   onClick={() => copyMessage(msg.id, msg.content ?? "")}
                                   className="p-1 text-slate-400 hover:text-slate-700 rounded hover:bg-slate-100"

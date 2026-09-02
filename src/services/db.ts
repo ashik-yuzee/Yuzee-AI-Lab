@@ -1,6 +1,24 @@
 import pg from "pg";
+import fs from "fs/promises";
+import path from "path";
 const { Pool } = pg;
 
+// ---- Local JSON file fallback (used when DATABASE_URL is absent) ----
+const LOCAL_FILE = path.join(process.cwd(), "data", "conversations.json");
+
+async function readLocal(): Promise<any[]> {
+  try { return JSON.parse(await fs.readFile(LOCAL_FILE, "utf-8")); }
+  catch { return []; }
+}
+
+async function writeLocal(convs: any[]): Promise<void> {
+  try {
+    await fs.mkdir(path.dirname(LOCAL_FILE), { recursive: true });
+    await fs.writeFile(LOCAL_FILE, JSON.stringify(convs, null, 2));
+  } catch (err) { console.error("[local-db] write failed:", err); }
+}
+
+// ---- PostgreSQL pool (optional) ----
 // Optional — if DATABASE_URL is absent the app works without logging
 const pool = process.env.DATABASE_URL
   ? new Pool({
@@ -178,7 +196,13 @@ export async function logTurn(turn: TurnLog): Promise<void> {
 // ---- Conversation persistence ----
 
 export async function saveConversation(conv: any): Promise<void> {
-  if (!pool) return;
+  if (!pool) {
+    const all = await readLocal();
+    const idx = all.findIndex((c: any) => c.id === conv.id);
+    if (idx >= 0) all[idx] = conv; else all.push(conv);
+    await writeLocal(all);
+    return;
+  }
   try {
     await pool.query(
       `INSERT INTO conversations (
@@ -270,7 +294,11 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
 }
 
 export async function deleteConversation(id: string): Promise<void> {
-  if (!pool) return;
+  if (!pool) {
+    const all = await readLocal();
+    await writeLocal(all.filter((c: any) => c.id !== id));
+    return;
+  }
   try {
     await pool.query("DELETE FROM conversations WHERE id = $1", [id]);
   } catch (err) {
@@ -279,7 +307,7 @@ export async function deleteConversation(id: string): Promise<void> {
 }
 
 export async function loadConversations(): Promise<any[]> {
-  if (!pool) return [];
+  if (!pool) return readLocal();
   try {
     const convResult = await pool.query(
       `SELECT * FROM conversations WHERE expires_at > NOW() ORDER BY updated_at DESC LIMIT 500`
@@ -339,4 +367,40 @@ export async function loadConversations(): Promise<any[]> {
 
 export function isDbEnabled(): boolean {
   return pool !== null;
+}
+
+export async function keepAlive(): Promise<void> {
+  if (!pool) return;
+  try { await pool.query("SELECT 1"); } catch (err) { console.error("[db] keepAlive failed:", err); }
+}
+
+export async function loadSessionStats(): Promise<{
+  calls: number; modelInput: number; uncachedInput: number;
+  modelOutput: number; thinking: number; cached: number;
+} | null> {
+  if (!pool) return null;
+  try {
+    const r = await pool.query(`
+      SELECT
+        COUNT(*)                                                        AS calls,
+        COALESCE(SUM(input_tokens)         FILTER (WHERE NOT is_mock), 0) AS model_input,
+        COALESCE(SUM(uncached_input_tokens) FILTER (WHERE NOT is_mock), 0) AS uncached_input,
+        COALESCE(SUM(output_tokens)        FILTER (WHERE NOT is_mock), 0) AS model_output,
+        COALESCE(SUM(thinking_tokens)      FILTER (WHERE NOT is_mock), 0) AS thinking,
+        COALESCE(SUM(cached_tokens)        FILTER (WHERE NOT is_mock), 0) AS cached
+      FROM conversation_logs WHERE expires_at > NOW()
+    `);
+    const row = r.rows[0];
+    return {
+      calls:        parseInt(row.calls)         || 0,
+      modelInput:   parseInt(row.model_input)   || 0,
+      uncachedInput:parseInt(row.uncached_input) || 0,
+      modelOutput:  parseInt(row.model_output)  || 0,
+      thinking:     parseInt(row.thinking)      || 0,
+      cached:       parseInt(row.cached)        || 0,
+    };
+  } catch (err) {
+    console.error("[db] loadSessionStats failed:", err);
+    return null;
+  }
 }

@@ -362,119 +362,39 @@ export const AdvancedLabModal: React.FC = () => {
             {/* TAB: PROMPT & RESPONSE */}
             {effectiveTab === "prompt" && (
               <div className="space-y-6 max-w-4xl">
-                {/* Shared system prompt — affects ALL users */}
+                {/* System Prompt — read-only view */}
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
                         <FileText className="w-4 h-4 text-emerald-600" />
-                        <span>Shared System Instruction</span>
-                        <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-semibold rounded-full border border-amber-200">Global — all users</span>
+                        <span>Active System Prompt</span>
+                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-semibold rounded-full border border-slate-200">Read-only · v0.12</span>
                       </h3>
                       <p className="text-[11px] text-slate-500 mt-1">
-                        One prompt applies to every conversation and every user on this deployment. Changing it here changes it everywhere — including for concurrent users. The Gemini prefix cache is shared so all users benefit from the cache hit.
+                        The Yuzee production prompt is shared across all users and sessions. It is versioned and cache-optimised for Gemini.
                       </p>
                     </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2">
-                    {[
-                      { id: "default", label: "Default Prompt", desc: "Original Yuzee protocol prompt. Maximises shared Gemini cache." },
-                      { id: "custom", label: "Custom Prompt", desc: "Replace with your own system instruction. All users will use this." },
-                    ].map((p) => (
-                      <button
-                        key={p.id}
-                        onClick={() => updateSharedSettings({ systemPromptMode: p.id as 'default' | 'custom' })}
-                        className={`p-3 rounded-lg border text-left transition-all cursor-pointer ${
-                          (sharedSettings?.systemPromptMode ?? 'default') === p.id
-                            ? "border-emerald-500 bg-emerald-50/50 text-emerald-950 shadow-xs"
-                            : "border-slate-200 hover:border-slate-300 bg-white text-slate-700"
-                        }`}
-                      >
-                        <div className="font-semibold text-xs text-slate-900">{p.label}</div>
-                        <div className="text-[10px] text-slate-500 mt-1 leading-normal">{p.desc}</div>
-                      </button>
-                    ))}
-                  </div>
-
-                  {sharedSettings?.systemPromptMode === "custom" && (
-                    <div className="space-y-1.5">
-                      <label className="text-xs font-semibold text-slate-800">Custom System Instruction <span className="text-rose-500 font-normal">(applies to all users)</span>:</label>
-                      <textarea
-                        rows={5}
-                        value={sharedSettings.customSystemPrompt}
-                        onChange={(e) => updateSharedSettings({ customSystemPrompt: e.target.value })}
-                        placeholder="Define specific instructions, response styles, or tone rules for all users..."
-                        className="w-full text-xs p-2.5 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 font-mono"
-                      />
-                    </div>
-                  )}
-
-                  {/* Upload / View / Reset controls */}
-                  <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept=".md,.txt"
-                      className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          const content = (ev.target?.result as string) || "";
-                          updateSharedSettings({ systemPromptMode: "custom", customSystemPrompt: content });
-                        };
-                        reader.readAsText(file);
-                        e.target.value = "";
-                      }}
-                    />
-                    <button
-                      onClick={() => fileInputRef.current?.click()}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold cursor-pointer"
-                    >
-                      <Upload className="w-3.5 h-3.5" />
-                      <span>Upload .md / .txt</span>
-                    </button>
-
                     <button
                       onClick={() => setShowPromptContent(v => !v)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap"
                     >
                       {showPromptContent ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      <span>{showPromptContent ? "Hide" : "View"} Active Prompt</span>
+                      <span>{showPromptContent ? "Hide" : "View"} Prompt</span>
                     </button>
-
-                    {sharedSettings?.systemPromptMode !== "default" && (
-                      <button
-                        onClick={() => resetSharedPrompt()}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-xs font-semibold cursor-pointer"
-                      >
-                        <RotateCcw className="w-3.5 h-3.5" />
-                        <span>Reset to Default</span>
-                      </button>
-                    )}
-
-                    {sharedSettings?.updatedAt ? (
-                      <span className="ml-auto text-[10px] text-slate-400">
-                        Last changed: {new Date(sharedSettings.updatedAt).toLocaleString()}
-                      </span>
-                    ) : null}
                   </div>
 
                   {showPromptContent && (
-                    <div className="space-y-1.5 pt-1">
-                      <div className="text-[11px] text-slate-500 flex items-center gap-1">
-                        <span className="font-semibold text-slate-700">Active prompt</span>
-                        <span>{sharedSettings?.systemPromptMode === "custom" ? " (custom — shared)" : " (default — read-only)"}</span>
-                        {defaultPromptContent && sharedSettings?.systemPromptMode !== "custom" && (
-                          <span className="ml-auto text-[10px] text-slate-400">{defaultPromptContent.length} chars · hash {sharedSettings?.defaultPromptHash?.slice(0, 8)}</span>
-                        )}
+                    <div className="space-y-1.5">
+                      <div className="flex items-center gap-2 text-[10px] text-slate-400">
+                        <span>{defaultPromptContent.length.toLocaleString()} chars</span>
+                        <span>·</span>
+                        <span>hash {sharedSettings?.defaultPromptHash?.slice(0, 8) ?? '—'}</span>
                       </div>
                       <textarea
                         readOnly
                         rows={8}
-                        value={sharedSettings?.systemPromptMode === "custom" ? (sharedSettings.customSystemPrompt || "") : defaultPromptContent}
+                        value={defaultPromptContent}
                         className="w-full text-[11px] font-mono p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-slate-700 resize-y"
                       />
                     </div>

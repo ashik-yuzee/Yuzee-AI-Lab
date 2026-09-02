@@ -4,6 +4,7 @@ import crypto from "crypto";
 // vite is only needed for local dev — dynamic import keeps it out of the Vercel bundle
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import fs from "fs/promises";
 
 import { YuzeeRequestAssembler } from "./src/services/YuzeeRequestAssembler";
 import {
@@ -25,7 +26,7 @@ import {
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
-import { initDb, logTurn, pruneExpired, isDbEnabled, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
+import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
@@ -149,6 +150,22 @@ interface ConversationItem {
 }
 
 const conversations: Map<string, ConversationItem> = new Map();
+
+// Whiteboard generation stats (tracked separately from chat)
+const whiteboardStats = { calls: 0, inputTokens: 0, outputTokens: 0 };
+
+// Local stats file for persistence without PostgreSQL
+const LOCAL_STATS_FILE = path.join(process.cwd(), "data", "session-stats.json");
+async function saveLocalStats() {
+  try {
+    await fs.mkdir(path.dirname(LOCAL_STATS_FILE), { recursive: true });
+    await fs.writeFile(LOCAL_STATS_FILE, JSON.stringify(sessionStats));
+  } catch {}
+}
+async function loadLocalStats(): Promise<typeof sessionStats | null> {
+  try { return JSON.parse(await fs.readFile(LOCAL_STATS_FILE, "utf-8")); }
+  catch { return null; }
+}
 
 // Session Cumulative Counters
 const sessionStats = {
@@ -315,13 +332,16 @@ Not related → {"needsClarification":false}`;
   } catch { return res.json({ needsClarification: false }); }
 });
 
-// Pathway whiteboard generation — uses flash-lite for minimal token cost
+// Pathway whiteboard generation
 app.post("/api/pathway/generate", makeRateLimit(20), async (req, res) => {
-  const { messages = [] } = req.body as { messages: { role: string; content: string }[] };
+  const { messages = [], style = "structured", answers = {} } = req.body as {
+    messages: { role: string; content: string }[];
+    style?: string;
+    answers?: Record<string, string>;
+  };
   const ai = getGemini();
   if (!ai) return res.status(503).json({ error: "AI unavailable" });
 
-  // Take last 8 exchanges, truncated, to minimise tokens
   const recent = (messages as any[])
     .filter(m => m.role === "user" || m.role === "assistant")
     .slice(-16)
@@ -330,24 +350,59 @@ app.post("/api/pathway/generate", makeRateLimit(20), async (req, res) => {
 
   if (!recent.trim()) return res.status(400).json({ error: "No messages" });
 
-  const prompt = `You are a career pathway visualizer. Given this career conversation, extract the key career steps and goals as a directed flow graph.
+  const styleGuides: Record<string, string> = {
+    "structured": `STYLE: Structured Learning (methodical, certification-led).
+Heavy on verified online courses (Coursera, edX, LinkedIn Learning). Each phase has 2-3 courses before projects.
+Timeline: 5-6 months at 10-15 hrs/week. Certifications appear as milestones.`,
+    "project-driven": `STYLE: Project-Driven (learn by building).
+Include at least 1 real project in Phase 1. Courses are brief and supporting; projects are the focus.
+Each phase ships something tangible. Timeline: 4-5 months at 15-20 hrs/week.`,
+    "fast-track": `STYLE: Fast Track / Intensive.
+Use FREE resources only (YouTube, freeCodeCamp, official docs, GitHub). Skip beginner fluff — go straight to core skills.
+Phases are short and dense. 2-3 months at 25-40 hrs/week. Maximum 4 phases total.`,
+    "self-paced": `STYLE: Self-Paced / Flexible.
+Mix of free and paid resources. Comfortable, sustainable pace. Each phase has wider options.
+6-12 months at 5-10 hrs/week. Learning can pause and resume without losing momentum.`,
+  };
+  const styleGuide = styleGuides[style] || styleGuides["structured"];
 
-Return ONLY valid JSON — no markdown, no explanation:
-{"nodes":[{"id":"n1","label":"Current Role","node_type":"goal"},{"id":"n2","label":"Next Step","node_type":"step"}],"edges":[{"from":"n1","to":"n2"}]}
+  const answerLines = Object.entries(answers)
+    .filter(([, v]) => v)
+    .map(([k, v]) => `- ${k}: ${v}`)
+    .join("\n");
+  const learnerProfile = answerLines ? `\nLEARNER PROFILE (tailor the pathway to this):\n${answerLines}\n` : "";
 
-node_type options: "goal" (main target), "step" (action/milestone), "decision" (choice point), "ok" (achieved), "warn" (obstacle/risk)
-Rules:
-- 5 to 10 nodes max
-- Labels: 2-5 words, specific and actionable
-- Start with the user's current situation as the first "goal" node
-- Show a logical career progression
-- Add "decision" nodes where there are genuine choice points
+  const prompt = `You are a senior career coach generating a complete phased career roadmap.
+${learnerProfile}
+${styleGuide}
+
+Return ONLY raw JSON. No markdown, no code fences. Just the JSON object.
+
+Schema: {"nodes":[{"id":"n0","label":"3-6 word title","subtitle":"tag1 · tag2 · tag3","description":"1-2 sentence explanation of why this step matters and what to expect","node_type":"..."}],"edges":[{"from":"n0","to":"n1"}]}
+
+NODE TYPES (use exactly these strings):
+  "goal"      — Career destination (exactly 1, first). subtitle = inspiring 1-line tagline.
+  "phase"     — Section header. subtitle = time estimate e.g. "4-6 weeks".
+  "course"    — A specific online course. subtitle = "Platform · duration · cost hint".
+  "skill"     — A tool/technology to learn. subtitle = "key topics · tool names".
+  "project"   — A real portfolio project. subtitle = "tech stack · what it delivers".
+  "resume"    — Resume/LinkedIn/portfolio action. subtitle = "specific actionable tip".
+  "apply"     — Job search / interview step. subtitle = "concrete tactic · platform".
+  "milestone" — Phase checkpoint / achievement. subtitle = "what the learner has now".
+
+IMPORTANT — subtitles as tag-style: use " · " to separate 2-4 concise tags (max 4 words each).
+STRUCTURE: strictly linear. goal → phase → items → milestone → phase → items → milestone → ...
+PHASES: 4-5 phases. 18-24 total nodes. Real names, real platforms, real specifics.
 
 Conversation:
 ${recent}`;
 
   try {
-    const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    const resp = await ai.models.generateContent({ model: "gemini-3.7-flash", contents: prompt });
+    // Track whiteboard token usage separately
+    whiteboardStats.calls++;
+    whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount     ?? 0;
+    whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount  ?? 0;
     const text = (resp.text || "").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.status(500).json({ error: "Invalid AI response" });
@@ -358,6 +413,64 @@ ${recent}`;
     return res.status(500).json({ error: e?.message || "Generation failed" });
   }
 });
+
+// Pathway builder — recommendation engine
+app.post("/api/pathway/recommend", makeRateLimit(30), async (req, res) => {
+  const { nodes = [], goalContext = "" } = req.body as {
+    nodes: { id: string; label: string; type: string }[];
+    goalContext?: string;
+  };
+  const ai = getGemini();
+  if (!ai) return res.status(503).json({ suggestions: [] });
+  if (nodes.length === 0) return res.json({ suggestions: [] });
+
+  const nodeList = nodes.map(n => `${n.type}: ${n.label}`).join("\n");
+  const prompt = `Career pathway builder. Current nodes:\n${nodeList}\n${goalContext ? `Goal: ${goalContext}` : ""}
+
+Suggest exactly 3 next steps to add. Return ONLY JSON:
+{"suggestions":[{"type":"course|skill|project|resume|apply|milestone","label":"specific real name","subtitle":"3-6 word detail","reason":"one short reason"}]}
+
+Rules: Be specific (real course names, real skills, real tools). Consider logical next step from what exists.`;
+
+  try {
+    const resp = await ai.models.generateContent({ model: "gemini-2.5-flash-lite-preview-06-17", contents: prompt });
+    const text = (resp.text || "").trim();
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return res.json({ suggestions: [] });
+    const parsed = JSON.parse(match[0]);
+    return res.json({ suggestions: parsed.suggestions || [] });
+  } catch {
+    return res.json({ suggestions: [] });
+  }
+});
+
+// Pathway node explanation (mini Q&A per step)
+app.post("/api/pathway/explain", makeRateLimit(30), async (req, res) => {
+  const { nodeLabel = "", nodeSubtitle = "", question = "", goalContext = "" } = req.body as {
+    nodeLabel: string; nodeSubtitle: string; question: string; goalContext: string;
+  };
+  try {
+    const prompt = `You are a career counsellor. A learner is looking at this step in their career pathway:
+Step: "${nodeLabel}"
+Tags: "${nodeSubtitle}"
+Goal context: "${goalContext || "career development"}"
+
+The learner asks: "${question}"
+
+Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON, just plain text.`;
+    const aiClient = getGemini();
+    if (!aiClient) return res.json({ answer: "AI not configured." });
+    const resp = await aiClient.models.generateContent({ model: "gemini-3.7-flash", contents: prompt });
+    whiteboardStats.calls++;
+    whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount    ?? 0;
+    whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    return res.json({ answer: (resp.text || "").trim() });
+  } catch {
+    return res.json({ answer: "Sorry, I couldn't get an explanation right now." });
+  }
+});
+
+app.get("/api/pathway/stats", (_req, res) => res.json(whiteboardStats));
 
 // Default system prompt content (so client can display/diff)
 app.get("/api/system-prompt", (req, res) => {
@@ -1636,6 +1749,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
     const baselineEst = inputTokens + conv.messages.length * 120;
     sessionStats.baselineEstimatedTokens += baselineEst;
+    saveLocalStats().catch(() => {}); // persist so stats survive server restart
   }
 
   // 5. ATTACH COMPLETED TURN TO CONVERSATION RECORD
@@ -1759,16 +1873,40 @@ async function startServer() {
     });
   }
 
-  // Init DB before opening the port so the schema exists for the first request
+  // Init DB (creates schema if PostgreSQL is configured)
   await initDb();
+  // Always load persisted conversations — local JSON file when no DATABASE_URL, PostgreSQL otherwise
+  const loaded = await loadConversations();
+  for (const conv of loaded) {
+    if (!conversations.has(conv.id)) conversations.set(conv.id, conv);
+  }
+  if (loaded.length) console.log(`[startup] Loaded ${loaded.length} conversations`);
+  // Load local stats file regardless of DB — provides fallback persistence
+  const localStats = await loadLocalStats();
+  if (localStats) {
+    Object.assign(sessionStats, localStats);
+    console.log(`[startup] Loaded session stats from local file (${localStats.userFacingChatCalls ?? 0} calls)`);
+  }
+
   if (isDbEnabled()) {
-    const loaded = await loadConversations();
-    for (const conv of loaded) {
-      if (!conversations.has(conv.id)) conversations.set(conv.id, conv);
+    // Rehydrate session stats from DB so a server restart doesn't reset cost/token counters
+    const stats = await loadSessionStats();
+    if (stats) {
+      sessionStats.userFacingChatCalls     = stats.calls;
+      sessionStats.totalModelInputTokens   = stats.modelInput;
+      sessionStats.totalUncachedInputTokens = stats.uncachedInput;
+      sessionStats.totalModelOutputTokens  = stats.modelOutput;
+      sessionStats.totalThinkingTokens     = stats.thinking;
+      sessionStats.totalCachedTokens       = stats.cached;
+      sessionStats.totalUserFacingTokens   = stats.uncachedInput + stats.modelOutput;
+      sessionStats.baselineEstimatedTokens = stats.modelInput + stats.calls * 120;
+      console.log(`[db] Rehydrated session stats: ${stats.calls} calls`);
     }
-    if (loaded.length) console.log(`[db] Loaded ${loaded.length} conversations from DB`);
-    const iv = setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
-    iv.unref(); // don't prevent clean process exit
+    const pruneIv = setInterval(() => pruneExpired(), 6 * 60 * 60 * 1000);
+    pruneIv.unref();
+    // Keep-alive ping every hour to prevent Supabase free-tier auto-pause
+    const pingIv = setInterval(() => keepAlive(), 60 * 60 * 1000);
+    pingIv.unref();
   }
 
   app.listen(PORT, "0.0.0.0", () => {

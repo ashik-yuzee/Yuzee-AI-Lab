@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef, useCallback } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { ArrowUp, Square, Cpu } from "lucide-react";
+import { ArrowUp, Square, Cpu, Mic, MicOff } from "lucide-react";
 import { GEMINI_MODELS } from "../data/models";
 
 function modelShortName(modelId: string): string {
@@ -11,7 +11,26 @@ function modelShortName(modelId: string): string {
 export const Composer: React.FC = () => {
   const { sendMessage, isStreaming, stopStreaming, currentConversation } = useTokenLab();
   const [text, setText] = useState("");
+  const [listening, setListening] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recRef = useRef<any>(null);
+
+  const toggleMic = useCallback(() => {
+    if (listening) { recRef.current?.stop(); return; }
+    const SR = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) { alert("Voice input requires Chrome or Edge."); return; }
+    const rec = new SR();
+    rec.lang = "en-US"; rec.interimResults = true; rec.continuous = false;
+    rec.onstart  = () => setListening(true);
+    rec.onresult = (e: any) => {
+      const t = Array.from(e.results).map((r: any) => r[0].transcript).join("");
+      setText(t);
+      if (textareaRef.current) { textareaRef.current.style.height = "auto"; textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`; }
+    };
+    rec.onerror = () => setListening(false);
+    rec.onend   = () => setListening(false);
+    recRef.current = rec; rec.start();
+  }, [listening]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -60,7 +79,7 @@ export const Composer: React.FC = () => {
         </div>
 
         {/* Input Textarea & Action Button */}
-        <div className="relative flex items-center bg-white border border-slate-300 focus-within:border-sky-500 focus-within:ring-2 focus-within:ring-sky-100 rounded-xl transition-all shadow-xs p-1.5 gap-2">
+        <div className={`relative flex items-center bg-white border focus-within:ring-2 focus-within:ring-sky-100 rounded-xl transition-all shadow-xs p-1.5 gap-2 ${listening ? "border-red-400 ring-2 ring-red-100" : "border-slate-300 focus-within:border-sky-500"}`}>
           <textarea
             id="composer-input"
             ref={textareaRef}
@@ -71,6 +90,14 @@ export const Composer: React.FC = () => {
             placeholder="Ask Yuzee about career pathways, certification roadmaps, or skill requirements..."
             className="flex-1 max-h-44 min-h-[38px] px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 bg-transparent resize-none focus:outline-hidden leading-relaxed"
           />
+
+          <button
+            onClick={toggleMic}
+            className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center transition-all cursor-pointer ${listening ? "bg-red-50 text-red-500 hover:bg-red-100" : "text-slate-400 hover:bg-slate-100 hover:text-slate-600"}`}
+            title={listening ? "Stop listening" : "Voice input"}
+          >
+            {listening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+          </button>
 
           {isStreaming ? (
             <button
