@@ -1847,7 +1847,18 @@ const RUBBISH_JOKES = [
   "I showed that message to three career advisors and none of them could help either. Try again in plain English and I'll give you genuinely useful guidance!",
 ];
 
-function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish'): YuzeeResponseV13 {
+const IDLE_JOKES = [
+  "Ha! I see you're in a chatty mood. Love the energy. But I'm strictly a career person — think of me as that one friend who always steers the conversation back to 'have you updated your LinkedIn?' What career stuff can I help with?",
+  "Careful — I'm fluent in career advice but terrible at small talk. My therapist says it's a problem. Anyway, what's your career situation?",
+  "I would tell you a joke but I only know career puns. Why did the developer quit? Because they didn't get arrays. ...Now can we talk about your actual career?",
+  "Bold move coming to a career counsellor for casual chat. Bolder move than most people make with their CVs, honestly. What can I actually help you with?",
+  "Fun fact: I haven't had a day off since I was deployed. No weather updates, no jokes, no vibes — just pathways and certifications. Let's talk careers!",
+  "My hobbies include: career planning, job readiness assessments, and gently redirecting people who ask me what time it is. What's your career goal?",
+  "I don't do weather, but I do forecast 100% chance of career clarity if you tell me where you're trying to go. What's the goal?",
+  "I tried googling 'how to do small talk' and it just gave me a list of networking tips. So — what industry are you in?",
+];
+
+function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish' | 'idle'): YuzeeResponseV13 {
   let text: string;
   let intent: string;
   if (kind === 'greeting') {
@@ -1856,6 +1867,9 @@ function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish'): YuzeeRes
   } else if (kind === 'farewell') {
     text = "You're welcome — happy to help anytime. Come back whenever you need career guidance!";
     intent = "PAUSE_CLOSURE";
+  } else if (kind === 'idle') {
+    text = IDLE_JOKES[Math.floor(Math.random() * IDLE_JOKES.length)];
+    intent = "GENERAL_DELIVERY";
   } else {
     text = RUBBISH_JOKES[Math.floor(Math.random() * RUBBISH_JOKES.length)];
     intent = "GENERAL_DELIVERY";

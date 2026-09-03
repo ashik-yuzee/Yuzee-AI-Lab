@@ -292,7 +292,7 @@ export class YuzeeRequestAssembler {
    *   'farewell'  — closing/thanks, no career content
    *   'career'    — send to Gemini
    */
-  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'rubbish' | 'career' {
+  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'rubbish' | 'idle' | 'career' {
     const t = text.trim().toLowerCase().replace(/[!?.,']+$/, '').trim();
 
     // Rubbish detection — check before greeting/farewell so "aaaa" doesn't slip through
@@ -312,8 +312,30 @@ export class YuzeeRequestAssembler {
       /^(that('s| is) (great|helpful|perfect|all|enough)|no (more )?questions?|i('m| am) (done|good|all set|all good))$/,
     ];
 
+    const idlePatterns = [
+      // Laughter / reactions
+      /^(lo+l+o*|lmao|lmfao|rofl|ha(ha)+|he(he)+|hah|lel|lulz|xd|😂|🤣|omg|omfg|wtf|smh|fml)$/,
+      // Indifference
+      /^(meh|whatever|whatevs|idc|i don'?t care|boring|ugh|bleh|mmmh?|hmm+)$/,
+      // I'm bored
+      /^i('m| am) bored(\s+(rn|right now|today|tbh))?$/,
+      // Compliments to the bot
+      /^you('re| are) (funny|hilarious|great|amazing|cool|nice|smart|the best)$/,
+      /^(nice one|good one|haha nice|that('s| is) funny|made me (laugh|smile))$/,
+      // Non-career questions to deflect
+      /^(what('s| is) the (time|weather|date|temp(erature)?)|what day is it)$/,
+      /^(tell me a joke|say something funny|make me laugh|entertain me)$/,
+      /^(sing( me a song)?|dance|do a trick|flip a coin|roll (a )?d(ice|6|20))$/,
+      /^(what('s| is) (your (name|age|favourite|favorite|hobby|hobbies))|do you (like|love|hate|eat|sleep|dream))$/,
+      /^(are you (a robot|an ai|sentient|alive|human|real)|who (made|built|created) you)$/,
+      /^(how old are you|where are you from|what are you|who are you)$/,
+      // Just vibes
+      /^(nothing|never ?mind|no ?thing|just (browsing|looking|chilling|vibing|kidding|joking)|jk|nm|nvm|nevermind)$/,
+    ];
+
     if (greetingPatterns.some(p => p.test(t))) return 'greeting';
     if (farewellPatterns.some(p => p.test(t))) return 'farewell';
+    if (idlePatterns.some(p => p.test(t))) return 'idle';
     return 'career';
   }
 
