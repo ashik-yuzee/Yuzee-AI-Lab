@@ -114,7 +114,7 @@ export class YuzeeRequestAssembler {
 
   public getProtocolInfo(isConfigured: boolean = false, trustedServicesCount: number = 4): ProtocolInfo {
     return {
-      promptVersion: '0.12',
+      promptVersion: '1.6',
       protocolVersion: '1.3',
       schemaVersion: '1.3',
       promptHash: this.promptHash,

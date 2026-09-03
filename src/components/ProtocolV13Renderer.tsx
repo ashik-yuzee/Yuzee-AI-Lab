@@ -293,7 +293,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           <div key={block.id || index} className="text-sm leading-relaxed text-slate-800 space-y-1">
             {block.title && <h4 className="font-semibold text-slate-900 mb-1">{block.title}</h4>}
             <div className="prose prose-slate prose-sm max-w-none prose-p:my-0.5 prose-li:my-0 prose-headings:text-slate-900">
-              <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).body || ""}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).content || (block as any).body || ""}</Markdown>
             </div>
           </div>
         );

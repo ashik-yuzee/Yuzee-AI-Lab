@@ -369,7 +369,7 @@ export const AdvancedLabModal: React.FC = () => {
                       <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
                         <FileText className="w-4 h-4 text-emerald-600" />
                         <span>Active System Prompt</span>
-                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-semibold rounded-full border border-slate-200">Read-only · v0.12</span>
+                        <span className="px-1.5 py-0.5 bg-slate-100 text-slate-600 text-[10px] font-semibold rounded-full border border-slate-200">Read-only · v1.6</span>
                       </h3>
                       <p className="text-[11px] text-slate-500 mt-1">
                         The Yuzee production prompt is shared across all users and sessions. It is versioned and cache-optimised for Gemini.

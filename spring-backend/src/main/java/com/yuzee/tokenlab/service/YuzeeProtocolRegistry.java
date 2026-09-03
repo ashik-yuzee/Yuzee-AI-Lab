@@ -13,7 +13,7 @@ import java.util.HexFormat;
 @Component
 public class YuzeeProtocolRegistry {
 
-    public static final String PROMPT_VERSION = "0.12";
+    public static final String PROMPT_VERSION = "1.6";
     public static final String PROTOCOL_VERSION = "1.3";
     public static final String SCHEMA_VERSION = "1.3";
     public static final String TARGET_RUNTIME_MODEL = "gemini-3.7-flash";

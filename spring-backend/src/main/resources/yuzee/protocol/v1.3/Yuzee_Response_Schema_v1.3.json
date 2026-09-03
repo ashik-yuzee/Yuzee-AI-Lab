@@ -47,7 +47,8 @@
         "SOCRATIC_DIRECTION",
         "CONTEXT_CLARIFICATION",
         "ROUTE_SELECTION",
-        "GENERAL_DELIVERY"
+        "GENERAL_DELIVERY",
+        "OFF_TOPIC_REDIRECT"
       ]
     },
     "content_blocks": {
@@ -101,6 +102,10 @@
           "text": {
             "type": "string",
             "description": "Primary block text. Required key; empty when unused."
+          },
+          "content": {
+            "type": "string",
+            "description": "Alias for text — accepted when model outputs content instead of text."
           },
           "items": {
             "type": "array",

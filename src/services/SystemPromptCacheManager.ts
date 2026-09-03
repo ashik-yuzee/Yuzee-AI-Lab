@@ -83,7 +83,7 @@ export class SystemPromptCacheManager {
         config: {
           systemInstruction,
           ttl: `${TTL_SECONDS}s`,
-          displayName: `yuzee-prompt-v0.12-${model}`,
+          displayName: `yuzee-prompt-v1.6-${model}`,
         },
       });
       if (cache.name) {
