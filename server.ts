@@ -1837,14 +1837,33 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
 });
 
-function makeBypassResponse(kind: 'greeting' | 'farewell'): YuzeeResponseV13 {
-  const text = kind === 'greeting'
-    ? "Hi! I'm Oala, your Yuzee career counsellor. What career challenge can I help you with today? I can help with pathway planning, skill gap analysis, course options, job readiness, and more."
-    : "You're welcome — happy to help anytime. Come back whenever you need career guidance!";
+const RUBBISH_JOKES = [
+  "Did your cat just walk across the keyboard? That's either the world's most creative career question or feline sabotage. I'm here when you're ready — what career challenge can I help with?",
+  "I ran that through my career translator and got: *suspicious static*. Let's try again — what's on your career radar?",
+  "That message has the energy of someone falling asleep mid-type. Impressive. I'll be here when you wake up — ready to tackle your career questions!",
+  "My AI brain attempted to decode that and came back with: 'Please send help and maybe a CV.' Was I close? Let me know what you actually need!",
+  "Either you've discovered a new programming language or your keyboard staged a rebellion. Either way, I'm impressed. What career question were you actually going for?",
+  "That's not a career question — that's performance art. I respect it. But whenever you're ready to talk pathways, skills, or job moves, I'm all yours.",
+  "I showed that message to three career advisors and none of them could help either. Try again in plain English and I'll give you genuinely useful guidance!",
+];
+
+function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish'): YuzeeResponseV13 {
+  let text: string;
+  let intent: string;
+  if (kind === 'greeting') {
+    text = "Hi! I'm Oala, your Yuzee career counsellor. What career challenge can I help you with today? I can help with pathway planning, skill gap analysis, course options, job readiness, and more.";
+    intent = "SOCRATIC_DIRECTION";
+  } else if (kind === 'farewell') {
+    text = "You're welcome — happy to help anytime. Come back whenever you need career guidance!";
+    intent = "PAUSE_CLOSURE";
+  } else {
+    text = RUBBISH_JOKES[Math.floor(Math.random() * RUBBISH_JOKES.length)];
+    intent = "GENERAL_DELIVERY";
+  }
   return {
     schema_version: "1.3",
     current_mode: "A_CONVERSATION",
-    response_intent: kind === 'greeting' ? "SOCRATIC_DIRECTION" : "PAUSE_CLOSURE",
+    response_intent: intent as any,
     content_blocks: [{ id: "b1", type: "text", level: "none", variant: "default", title: "", text, items: [], columns: [], rows: [] }],
     interaction: { kind: "none", input_type: "none", question_id: "", question: "", options: [], allow_other_input: false, other_input_label: "", fields: [], recommended_actions: [] },
     service: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },

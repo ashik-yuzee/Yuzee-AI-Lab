@@ -292,8 +292,11 @@ export class YuzeeRequestAssembler {
    *   'farewell'  — closing/thanks, no career content
    *   'career'    — send to Gemini
    */
-  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'career' {
+  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'rubbish' | 'career' {
     const t = text.trim().toLowerCase().replace(/[!?.,']+$/, '').trim();
+
+    // Rubbish detection — check before greeting/farewell so "aaaa" doesn't slip through
+    if (this._isRubbish(t)) return 'rubbish';
 
     const greetingPatterns = [
       /^(hi|hey|hello|howdy|hiya|sup|yo)(\s+(there|oala|yuzee|bot|ai|friend))?$/,
@@ -312,6 +315,33 @@ export class YuzeeRequestAssembler {
     if (greetingPatterns.some(p => p.test(t))) return 'greeting';
     if (farewellPatterns.some(p => p.test(t))) return 'farewell';
     return 'career';
+  }
+
+  private _isRubbish(t: string): boolean {
+    if (!t || t.length < 2) return true;
+
+    // Pure symbol/emoji noise with no letters
+    if (/^[^a-z0-9]+$/i.test(t)) return true;
+
+    // Same character repeated 5+ times ("aaaaaaa", "!!!!!!!")
+    if (/(.)\1{4,}/.test(t)) return true;
+
+    // Keyboard row mash — 5+ consecutive chars from the same row
+    const rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+    for (const row of rows) {
+      for (let i = 0; i <= row.length - 5; i++) {
+        if (t.includes(row.slice(i, i + 5))) return true;
+        // Also check reverse
+        const rev = row.slice(i, i + 5).split('').reverse().join('');
+        if (t.includes(rev)) return true;
+      }
+    }
+
+    // Every "word" has no vowels AND is longer than 2 chars (filters SQL, AWS, etc.)
+    const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
+    if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
+
+    return false;
   }
 
   /**
