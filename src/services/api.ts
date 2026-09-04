@@ -326,6 +326,7 @@ export function streamChatMessage(
     userContext?: { date?: string; timezone?: string; location?: string };
     userProfileFacts?: string[];
     userQuestionAnswers?: any[];
+    isOptionSelection?: boolean;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal

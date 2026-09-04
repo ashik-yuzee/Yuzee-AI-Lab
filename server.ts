@@ -1454,7 +1454,10 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   let isMockResponse = false;
 
   // Greeting/farewell bypass — skip Gemini entirely, costs 0 tokens
-  const messageClass = requestAssembler.classifyUserMessage(userMessageContent);
+  // Option selections are pre-validated UI choices; bypass rubbish/classification check
+  const messageClass = req.body.isOptionSelection
+    ? 'career'
+    : requestAssembler.classifyUserMessage(userMessageContent);
   if (messageClass !== 'career') {
     if (timeoutHandle) clearTimeout(timeoutHandle); // prevent timer firing after res.end()
     fullAssistantText = JSON.stringify(makeBypassResponse(messageClass));

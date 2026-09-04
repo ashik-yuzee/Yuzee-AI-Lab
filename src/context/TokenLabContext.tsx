@@ -568,6 +568,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userContext: { date: todayStr, timezone: tz, location: userLocation || undefined },
         userProfileFacts: relevantFacts,
         userQuestionAnswers: userQuestionAnswers,
+        isOptionSelection: userEventPayload?.type === "option_selected",
       },
       {
         onStart: (data) => {
