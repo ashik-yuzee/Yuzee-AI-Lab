@@ -42,9 +42,13 @@ public class TextQualityFilter {
             }
         }
 
-        // Language detection via Tika/Optimaize
+        // Single keyword with no context — no career value regardless of language
+        if (!t.contains(" ")) return true;
+
+        // Language detection via Tika/Optimaize — only English passes
         LanguageResult result = detector.detect(t);
         if (result == null || !result.isReasonablyCertain()) return true;
+        if (!"en".equals(result.getLanguage())) return true;
 
         return false;
     }

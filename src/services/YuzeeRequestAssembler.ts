@@ -337,6 +337,7 @@ export class YuzeeRequestAssembler {
     if (greetingPatterns.some(p => p.test(t))) return 'greeting';
     if (farewellPatterns.some(p => p.test(t))) return 'farewell';
     if (idlePatterns.some(p => p.test(t))) return 'idle';
+    if (!/\s/.test(t)) return 'rubbish'; // single keyword, no context
     return 'career';
   }
 
@@ -364,8 +365,8 @@ export class YuzeeRequestAssembler {
     const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
     if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
 
-    // Language detection: franc returns 'und' when text matches no known language
-    if (franc(t, { minLength: 3 }) === 'und') return true;
+    // Language detection: only English passes; non-English and unidentifiable both rejected
+    if (franc(t, { minLength: 3 }) !== 'eng') return true;
 
     return false;
   }
