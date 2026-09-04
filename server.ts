@@ -984,7 +984,7 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
         totalAssembledTokens: total,
         removedTokens: mem.removedTokens,
         includedSections: [
-          { name: "Yuzee Main Prompt v3.7+", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysTokens, preview: sysPrompt.slice(0, 75) },
+          { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysTokens, preview: sysPrompt.slice(0, 75) },
           ...(careerTokens > 0 ? [{ name: "Structured Memory Capsule", description: "Verified user constraints & goals", tokens: careerTokens, preview: careerStr.slice(0, 75) }] : []),
           ...(sumTokens > 0 ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: sumTokens, preview: mem.summaryText.slice(0, 75) }] : []),
           ...(recTokens > 0 ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: recTokens, preview: mem.recentHistoryText.slice(0, 75) }] : []),
@@ -1023,7 +1023,7 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
     totalAssembledTokens: total,
     removedTokens: mem.removedTokens,
     includedSections: [
-      { name: "Yuzee Main Prompt v3.7+", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysRes.count, preview: sysPrompt.slice(0, 75) },
+      { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysRes.count, preview: sysPrompt.slice(0, 75) },
       ...(careerRes.count > 0 ? [{ name: "Structured Memory Capsule", description: "Verified user constraints & goals", tokens: careerRes.count, preview: careerStr.slice(0, 75) }] : []),
       ...(sumRes.count > 0 ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: sumRes.count, preview: mem.summaryText.slice(0, 75) }] : []),
       ...(recRes.count > 0 ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: recRes.count, preview: mem.recentHistoryText.slice(0, 75) }] : []),
@@ -1728,7 +1728,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     totalAssembledTokens: inputTokens,
     removedTokens: mem.removedTokens,
     includedSections: [
-      { name: "Yuzee Main Prompt v3.7+", description: "Authoritative counsellor instruction (systemInstruction)", tokens: estimateTokens(assembledReq.systemInstruction), preview: assembledReq.systemInstruction.slice(0, 75) },
+      { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: estimateTokens(assembledReq.systemInstruction), preview: assembledReq.systemInstruction.slice(0, 75) },
       ...(mem.summaryText ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: estimateTokens(mem.summaryText), preview: mem.summaryText.slice(0, 75) }] : []),
       ...(mem.recentHistoryText ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: estimateTokens(mem.recentHistoryText), preview: mem.recentHistoryText.slice(0, 75) }] : []),
       { name: "Current User Input", description: "Active incoming prompt / UserEvent", tokens: userPromptTokens, preview: userMessageContent.slice(0, 75) },
