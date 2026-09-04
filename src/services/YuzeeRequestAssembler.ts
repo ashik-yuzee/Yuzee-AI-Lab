@@ -365,8 +365,10 @@ export class YuzeeRequestAssembler {
     const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
     if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
 
-    // Language detection: only English passes; non-English and unidentifiable both rejected
-    if (franc(t, { minLength: 3 }) !== 'eng') return true;
+    // Language detection: only English passes; 'und' (undetermined/too short) is allowed through
+    // so that short UI option selections like "career change" aren't rejected
+    const langCode = franc(t, { minLength: 3 });
+    if (langCode !== 'eng' && langCode !== 'und') return true;
 
     return false;
   }
@@ -517,6 +519,7 @@ export class YuzeeRequestAssembler {
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
       responseMimeType: 'application/json',
+      temperature: 1,
       maxOutputTokens,
       ...(thinkingConfig ? { thinkingConfig: thinkingConfig as any } : {}),
     };
