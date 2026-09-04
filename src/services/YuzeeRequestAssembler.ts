@@ -11,6 +11,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { franc } from 'franc-min';
 import { GenerateContentConfig } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
 import { estimateTokens } from './TokenBudgetMemoryManager';
@@ -362,6 +363,9 @@ export class YuzeeRequestAssembler {
     // Every "word" has no vowels AND is longer than 2 chars (filters SQL, AWS, etc.)
     const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
     if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
+
+    // Language detection: franc returns 'und' when text matches no known language
+    if (franc(t, { minLength: 3 }) === 'und') return true;
 
     return false;
   }
