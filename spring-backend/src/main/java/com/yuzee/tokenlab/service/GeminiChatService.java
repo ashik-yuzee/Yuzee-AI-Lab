@@ -261,9 +261,10 @@ public class GeminiChatService {
         boolean isFlashLite = model != null && model.contains("flash-lite");
         return switch (mode) {
             case QUICK    -> isFlashLite ? 512  : 1024;
-            case STANDARD -> isFlashLite ? 1024 : 2048;
-            case EXPLAIN, EXPLORE, DECIDE -> isFlashLite ? 1536 : 3072;
-            case DETAIL   -> isFlashLite ? 2048 : 4096;
+            case STANDARD -> isFlashLite ? 2048 : 4096;
+            case EXPLAIN, EXPLORE, DECIDE -> isFlashLite ? 3072 : 6144;
+            case DETAIL   -> isFlashLite ? 4096 : 8192;
+            case VANILLA  -> 8192; // no artificial cap — matches AI Studio default
         };
     }
 

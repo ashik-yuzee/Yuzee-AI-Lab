@@ -34,6 +34,7 @@ public class ContextAssembler {
             case EXPLORE -> "[User Selected Mode: Explore]";
             case DETAIL -> "[User Selected Mode: Detail]";
             case DECIDE -> "[User Selected Mode: Decide]";
+            case VANILLA -> "[User Selected Mode: Standard]";
         };
     }
 

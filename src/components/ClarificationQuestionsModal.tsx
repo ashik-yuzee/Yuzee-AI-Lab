@@ -15,13 +15,16 @@ export const ClarificationQuestionsModal: React.FC = () => {
 
   if (!pendingClarificationQuestions) return null;
 
-  const { questions, bridgeMessage } = pendingClarificationQuestions;
+  const { questions, bridgeMessage, originalMessage } = pendingClarificationQuestions;
 
   const handleSubmit = (answers: ClarificationAnswer[]) => {
     const lines = answers
       .filter(a => a.selected_values.length > 0 || a.self_input)
       .map(a => `• ${a.dimension.replace(/_/g, " ")}: ${a.self_input || a.selected_values.join(", ")}`);
-    const displayText = lines.join("\n") || "Submitted answers";
+    const answersText = lines.join("\n") || "Submitted answers";
+    const displayText = originalMessage
+      ? `${originalMessage}\n\n${answersText}`
+      : answersText;
 
     const questionAnswers = answers.map((a, i) => ({
       question_id: a.question_id,

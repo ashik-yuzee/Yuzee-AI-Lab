@@ -65,7 +65,7 @@ export type ModelId = string;
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high' | 'adaptive';
 
-export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED';
+export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA';
 
 export type OptimizationStrategy =
   | 'BASELINE'          // Baseline / Full History (High token usage)
@@ -74,9 +74,9 @@ export type OptimizationStrategy =
   | 'ADAPTIVE_HYBRID'   // Token-budget Prioritized Adaptive Hybrid (Default)
   | 'SEMANTIC_EVIDENCE'; // Episodic memory with typed temporal long-term records
 
-export type PresetMode = 'MAX_QUALITY' | 'BALANCED' | 'MAX_SAVINGS' | 'ADVANCED';
+export type PresetMode = 'MAX_QUALITY' | 'BALANCED' | 'MAX_SAVINGS' | 'ADVANCED' | 'VANILLA';
 
-export type ResponseMode = 'quick' | 'standard' | 'explain' | 'explore' | 'detail' | 'decide';
+export type ResponseMode = 'quick' | 'standard' | 'explain' | 'explore' | 'detail' | 'decide' | 'vanilla';
 
 export type QualityFeedbackType = 
   | 'good' 
@@ -260,6 +260,9 @@ export interface Conversation {
   useInteractionsApi?: boolean;
   useFlashLiteUtility?: boolean;
   previousInteractionId?: string;
+  temperature?: number;
+  topP?: number;
+  maxOutputTokens?: number;
   messages: ChatMessage[];
   compactionHistory: CompactionMetrics[];
 }

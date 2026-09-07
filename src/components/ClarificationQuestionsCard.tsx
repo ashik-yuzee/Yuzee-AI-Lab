@@ -152,9 +152,12 @@ export const ClarificationQuestionsCard: React.FC<Props> = ({ questions, bridgeM
                   const isMulti = q.ui_type === "multi_select";
                   const selected = answers[q.id].selected.includes(opt.value);
                   return (
-                    <label
+                    <div
                       key={opt.value}
-                      className={`flex items-start gap-2.5 p-2.5 rounded-lg border cursor-pointer transition-all ${selected ? "bg-sky-50 border-sky-300" : "bg-slate-50 border-slate-200 hover:border-slate-300"} ${disabled ? "opacity-60 cursor-default" : ""}`}
+                      role={isMulti ? "checkbox" : "radio"}
+                      aria-checked={selected}
+                      onClick={() => !disabled && toggleSelect(q.id, opt.value, isMulti)}
+                      className={`flex items-start gap-2.5 p-2.5 rounded-lg border transition-all ${selected ? "bg-sky-50 border-sky-300" : "bg-slate-50 border-slate-200 hover:border-slate-300"} ${disabled ? "opacity-60 cursor-default" : "cursor-pointer"}`}
                     >
                       <div className="mt-0.5 shrink-0">
                         {isMulti ? (
@@ -167,12 +170,11 @@ export const ClarificationQuestionsCard: React.FC<Props> = ({ questions, bridgeM
                           </div>
                         )}
                       </div>
-                      <div className="flex-1 min-w-0" onClick={() => !disabled && toggleSelect(q.id, opt.value, isMulti)}>
+                      <div className="flex-1 min-w-0">
                         <p className="text-xs font-semibold text-slate-900">{opt.label}</p>
                         {opt.description && <p className="text-[11px] text-slate-500 mt-0.5">{opt.description}</p>}
                       </div>
-                      <input type={isMulti ? "checkbox" : "radio"} className="sr-only" checked={selected} onChange={() => !disabled && toggleSelect(q.id, opt.value, isMulti)} />
-                    </label>
+                    </div>
                   );
                 })}
                 {q.allow_self_input !== false && (

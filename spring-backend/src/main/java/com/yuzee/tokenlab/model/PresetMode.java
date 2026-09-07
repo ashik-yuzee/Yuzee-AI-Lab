@@ -4,5 +4,6 @@ public enum PresetMode {
     MAX_QUALITY,
     BALANCED,
     MAX_SAVINGS,
-    ADVANCED
+    ADVANCED,
+    VANILLA
 }

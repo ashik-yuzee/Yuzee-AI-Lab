@@ -21,7 +21,32 @@ export async function fetchCapabilities(): Promise<CapabilitiesResponse> {
 export async function fetchConversations(): Promise<Conversation[]> {
   const res = await fetch(`${API_BASE}/api/conversations`);
   if (!res.ok) throw new Error("Failed to fetch conversations");
-  return res.json();
+  const convs: any[] = await res.json();
+  return convs.map((conv: any) => ({
+    ...conv,
+    messages: (conv.messages || []).map((m: any) => {
+      // Server stores telemetry as flat fields; reconstruct the nested telemetry object
+      if (m.role === "assistant" && m.usage && !m.telemetry) {
+        return {
+          ...m,
+          telemetry: {
+            usage: m.usage,
+            contextMetrics: m.contextMetrics ?? null,
+            compactionMetrics: m.compactionMetrics ?? null,
+            model: m.model ?? "",
+            thinkingLevel: m.thinkingLevel ?? "minimal",
+            optimizationStrategy: m.optimizationStrategy ?? "ADAPTIVE_HYBRID",
+            preset: m.preset ?? "BALANCED",
+            responseMode: m.responseMode ?? "standard",
+            recentTurnsCount: m.recentTurnsCount ?? 0,
+            hasSummary: m.hasSummary ?? false,
+            timestamp: m.createdAt ?? Date.now(),
+          },
+        };
+      }
+      return m;
+    }),
+  }));
 }
 
 export async function createConversation(title?: string, model?: string, strategy?: OptimizationStrategy): Promise<Conversation> {
@@ -323,6 +348,9 @@ export function streamChatMessage(
     careerContext?: any;
     systemPromptMode?: string;
     customSystemPrompt?: string;
+    temperature?: number;
+    topP?: number;
+    maxOutputTokens?: number;
     userContext?: { date?: string; timezone?: string; location?: string };
     userProfileFacts?: string[];
     userQuestionAnswers?: any[];

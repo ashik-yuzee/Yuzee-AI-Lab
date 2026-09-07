@@ -45,6 +45,7 @@ interface ProtocolV13RendererProps {
   onInteract?: (event: UserEvent) => void;
   readOnly?: boolean;
   conversationId?: string;
+  hideRecommendedActions?: boolean;
 }
 
 export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
@@ -55,6 +56,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   onInteract,
   readOnly = false,
   conversationId,
+  hideRecommendedActions = false,
 }) => {
   // Interaction State
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -80,7 +82,18 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
     setRankedItems(data?.interaction?.options || []);
   }, [data?.interaction?.options]);
 
+  // Safe failure: show error state when semantic invariants fail
   if (!data) return null;
+  if (semanticValid === false && validationErrors.length > 0) {
+    return (
+      <div className="p-3.5 rounded-xl border border-rose-300 bg-rose-50 text-xs space-y-1.5" role="alert">
+        <p className="font-semibold text-rose-900">Response validation failed — content not rendered.</p>
+        <ul className="text-rose-800 space-y-0.5 list-disc list-inside">
+          {validationErrors.map((e, i) => <li key={i}>{e}</li>)}
+        </ul>
+      </div>
+    );
+  }
 
   // Model may omit id or leave it empty — fall back to value so it matches the server's trusted list
   const optId = (opt: YuzeeOption): string => opt.id || opt.value;
@@ -298,80 +311,177 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           </div>
         );
 
-      case "list":
-        return (
-          <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            <div className="space-y-1.5">
-              {block.items?.map((item: YuzeeItem) => (
-                <div
-                  key={item.id}
-                  className="flex items-start gap-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-xs"
-                >
-                  <div className="mt-0.5 shrink-0">
-                    <CheckCircle2 className="w-4 h-4 text-sky-600" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <span className="font-semibold text-slate-900">{item.title}</span>
-                    {(item.text || item.value) && (
-                      <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
+      case "list": {
+        const listItemStyle = (status: string): { bg: string; icon: React.ReactNode; chip: React.ReactNode } => {
+          switch (status) {
+            case "current":
+              return {
+                bg: "bg-amber-50 border-amber-300",
+                icon: <span className="w-4 h-4 rounded-full bg-amber-500 shrink-0 mt-0.5 animate-pulse motion-reduce:animate-none" aria-hidden="true" />,
+                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">Current</span>,
+              };
+            case "next":
+              return {
+                bg: "bg-slate-50 border-slate-300",
+                icon: <ArrowRight className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-sky-100 text-sky-700 rounded">Next</span>,
+              };
+            case "complete":
+              return {
+                bg: "bg-emerald-50 border-emerald-200",
+                icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded">Done</span>,
+              };
+            case "warning":
+              return {
+                bg: "bg-amber-50 border-amber-200",
+                icon: <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded">Note</span>,
+              };
+            case "blocked":
+              return {
+                bg: "bg-rose-50 border-rose-300",
+                icon: <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-rose-100 text-rose-800 rounded">Blocked</span>,
+              };
+            case "positive":
+              return {
+                bg: "bg-emerald-50 border-emerald-200",
+                icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: null,
+              };
+            case "negative":
+              return {
+                bg: "bg-rose-50/60 border-rose-200",
+                icon: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: null,
+              };
+            default:
+              return {
+                bg: "bg-slate-50 border-slate-200",
+                icon: <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />,
+                chip: null,
+              };
+          }
+        };
 
-      case "steps":
+        {
+          const WORKFLOW_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
+          const isWorkflow = block.items?.some((i: YuzeeItem) => WORKFLOW_STATUSES.has(i.status || ""));
+          const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
+
+          return (
+            <div key={block.id || index} className="space-y-2">
+              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+
+              {useGrid ? (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  {block.items?.map((item: YuzeeItem, iIdx: number) => {
+                    const isNegative = item.status === "negative";
+                    const isPositive = item.status === "positive";
+                    return (
+                      <div
+                        key={item.id}
+                        className={`flex items-start gap-2 p-2 rounded-lg border text-xs
+                          ${isNegative ? "bg-rose-50/50 border-rose-200" : isPositive ? "bg-emerald-50/50 border-emerald-200" : "bg-white border-slate-200"}`}
+                      >
+                        <span className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold mt-0.5
+                          ${isNegative ? "bg-rose-100 text-rose-600" : isPositive ? "bg-emerald-100 text-emerald-700" : "bg-sky-100 text-sky-700"}`}>
+                          {iIdx + 1}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
+                          {(item.text || item.value) && (
+                            <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  {block.items?.map((item: YuzeeItem) => {
+                    const { bg, icon, chip } = listItemStyle(item.status || "");
+                    return (
+                      <div key={item.id} className={`flex items-start gap-2.5 p-2.5 rounded-lg border text-xs ${bg}`}>
+                        {icon}
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-start justify-between gap-2">
+                            <span className="font-semibold text-slate-900">{item.title}</span>
+                            {chip}
+                          </div>
+                          {(item.text || item.value) && (
+                            <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        }
+      }
+
+      case "steps": {
+        const stepStyle = (status: string, sIdx: number): { row: string; badge: React.ReactNode; chip: { cls: string; label: string } | null } => {
+          switch (status) {
+            case "complete":
+              return {
+                row: "bg-emerald-50/60 border-emerald-200 text-slate-900",
+                badge: <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]" aria-label="Completed">✓</div>,
+                chip: { cls: "bg-emerald-100 text-emerald-800", label: "Done" },
+              };
+            case "current":
+              return {
+                row: "bg-amber-50/80 border-amber-300 text-amber-950 shadow-2xs",
+                badge: <div className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-[10px] animate-pulse motion-reduce:animate-none" aria-label="Current step">{sIdx + 1}</div>,
+                chip: { cls: "bg-amber-100 text-amber-900", label: "Current" },
+              };
+            case "next":
+              return {
+                row: "bg-sky-50/40 border-sky-200 text-slate-800",
+                badge: <div className="w-5 h-5 rounded-full bg-sky-200 text-sky-800 flex items-center justify-center font-semibold text-[10px]" aria-label="Next step">{sIdx + 1}</div>,
+                chip: { cls: "bg-sky-100 text-sky-800", label: "Next" },
+              };
+            case "warning":
+              return {
+                row: "bg-amber-50/50 border-amber-200 text-slate-800",
+                badge: <div className="w-5 h-5 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-[10px]" aria-label="Warning">!</div>,
+                chip: { cls: "bg-amber-100 text-amber-800", label: "Note" },
+              };
+            case "blocked":
+              return {
+                row: "bg-rose-50 border-rose-300 text-slate-800",
+                badge: <div className="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-[10px]" aria-label="Blocked">✕</div>,
+                chip: { cls: "bg-rose-100 text-rose-800", label: "Blocked" },
+              };
+            default:
+              return {
+                row: "bg-white border-slate-200 text-slate-700",
+                badge: <div className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-[10px]" aria-label={`Step ${sIdx + 1}`}>{sIdx + 1}</div>,
+                chip: null,
+              };
+          }
+        };
+
         return (
           <div key={block.id || index} className="space-y-3">
             {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
             <div className="space-y-2">
               {block.items?.map((item: YuzeeItem, sIdx: number) => {
-                const isComplete = item.status === "complete";
-                const isCurrent = item.status === "current";
+                const { row, badge, chip } = stepStyle(item.status || "", sIdx);
                 return (
-                  <div
-                    key={item.id || sIdx}
-                    className={`flex items-start gap-3 p-3 rounded-xl border text-xs transition-colors ${
-                      isCurrent
-                        ? "bg-amber-50/80 border-amber-300 text-amber-950 shadow-2xs"
-                        : isComplete
-                        ? "bg-emerald-50/60 border-emerald-200 text-slate-900"
-                        : "bg-white border-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <div className="mt-0.5 shrink-0">
-                      {isComplete ? (
-                        <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">
-                          ✓
-                        </div>
-                      ) : isCurrent ? (
-                        <div className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-[10px] animate-pulse">
-                          {sIdx + 1}
-                        </div>
-                      ) : (
-                        <div className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-[10px]">
-                          {sIdx + 1}
-                        </div>
-                      )}
-                    </div>
-
+                  <div key={item.id || sIdx} className={`flex items-start gap-3 p-3 rounded-xl border text-xs transition-colors ${row}`}>
+                    <div className="mt-0.5 shrink-0">{badge}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
                         <span className="font-semibold text-slate-900">{item.title}</span>
-                        {item.status && (
-                          <span
-                            className={`px-1.5 py-0.5 text-[9px] font-semibold uppercase rounded tracking-wider ${
-                              isComplete
-                                ? "bg-emerald-100 text-emerald-800"
-                                : isCurrent
-                                ? "bg-amber-100 text-amber-900"
-                                : "bg-slate-100 text-slate-600"
-                            }`}
-                          >
-                            {item.status}
+                        {chip && (
+                          <span className={`px-1.5 py-0.5 text-[9px] font-semibold uppercase rounded tracking-wider ${chip.cls}`}>
+                            {chip.label}
                           </span>
                         )}
                       </div>
@@ -385,6 +495,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             </div>
           </div>
         );
+      }
 
       case "table": {
         const columns = block.columns || [];
@@ -400,7 +511,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 <thead className="bg-slate-50 border-b border-slate-200">
                   <tr>
                     {columns.map((col) => (
-                      <th key={col.key} className="px-3 py-2.5 font-semibold text-slate-700">
+                      <th key={col.key} scope="col" className="px-3 py-2.5 font-semibold text-slate-700">
                         {col.label}
                       </th>
                     ))}
@@ -443,20 +554,58 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         );
       }
 
-      case "comparison":
+      case "comparison": {
+        const cmpCols: Array<{ key: string; label: string }> = block.columns || [];
+        const cmpRows: Array<{ id?: string; criteria?: string; cells?: Array<{ key: string; value: string }> }> = block.rows || [];
         return (
           <div key={block.id || index} className="space-y-2">
             {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {block.items?.map((item: YuzeeItem, cIdx: number) => (
-                <div key={item.id || cIdx} className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1.5 shadow-2xs">
-                  <div className="font-bold text-xs text-slate-900">{item.title}</div>
-                  <p className="text-xs text-slate-600 leading-relaxed">{item.text || item.value}</p>
+
+            {/* Desktop: side-by-side table */}
+            <div className="hidden sm:block rounded-xl border border-slate-200 overflow-hidden bg-white">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead className="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    {cmpRows.some((r) => r.criteria) && <th scope="col" className="px-3 py-2.5 font-semibold text-slate-500 w-28">Criteria</th>}
+                    {cmpCols.map((col) => (
+                      <th key={col.key} scope="col" className="px-3 py-2.5 font-bold text-slate-900">{col.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {cmpRows.map((row, rIdx) => (
+                    <tr key={row.id || rIdx} className="hover:bg-slate-50/50">
+                      {cmpRows.some((r) => r.criteria) && <td className="px-3 py-2.5 font-medium text-slate-600">{row.criteria || row.id}</td>}
+                      {cmpCols.map((col) => {
+                        const cell = row.cells?.find((c) => c.key === col.key);
+                        return <td key={col.key} className="px-3 py-2.5 text-slate-800">{cell?.value || "—"}</td>;
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile: per-criterion cards — all options labeled, nothing dropped */}
+            <div className="sm:hidden space-y-2">
+              {cmpRows.map((row, rIdx) => (
+                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5 text-xs shadow-2xs">
+                  {(row.criteria || row.id) && <div className="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">{row.criteria || row.id}</div>}
+                  {cmpCols.map((col) => {
+                    const cell = row.cells?.find((c) => c.key === col.key);
+                    return (
+                      <div key={col.key} className="flex justify-between items-baseline gap-2">
+                        <span className="text-slate-500 text-[11px] font-medium">{col.label}:</span>
+                        <span className="font-semibold text-slate-900 text-right">{cell?.value || "—"}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               ))}
             </div>
           </div>
         );
+      }
 
       case "callout": {
         const variantStyles: Record<string, string> = {
@@ -474,6 +623,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           <div
             key={block.id || index}
             className={`p-3.5 rounded-xl border text-xs leading-relaxed ${currentStyle} shadow-2xs space-y-1`}
+            role={block.variant === 'danger' || block.variant === 'warning' ? 'alert' : undefined}
           >
             {block.title && <h4 className="font-semibold text-xs tracking-tight">{block.title}</h4>}
             <p className="whitespace-pre-wrap">{block.text}</p>
@@ -548,7 +698,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const milestones: any[] = d.milestones || [];
         const msStatus: Record<string, { dot: string; label: string }> = {
           completed: { dot: "bg-emerald-500", label: "bg-emerald-100 text-emerald-800" },
-          current:   { dot: "bg-amber-500 animate-pulse", label: "bg-amber-100 text-amber-900" },
+          current:   { dot: "bg-amber-500 animate-pulse motion-reduce:animate-none", label: "bg-amber-100 text-amber-900" },
           upcoming:  { dot: "bg-slate-300", label: "bg-slate-100 text-slate-600" },
           blocked:   { dot: "bg-rose-400", label: "bg-rose-100 text-rose-800" },
           paused:    { dot: "bg-violet-400", label: "bg-violet-100 text-violet-800" },
@@ -754,7 +904,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const stages: any[] = d.stages || [];
         const stageStatus: Record<string, { ring: string; label: string }> = {
           completed: { ring: "border-emerald-500 bg-emerald-500 text-white",  label: "text-emerald-700" },
-          current:   { ring: "border-amber-500 bg-amber-500 text-white animate-pulse", label: "text-amber-800 font-bold" },
+          current:   { ring: "border-amber-500 bg-amber-500 text-white animate-pulse motion-reduce:animate-none", label: "text-amber-800 font-bold" },
           upcoming:  { ring: "border-slate-300 bg-white text-slate-400",       label: "text-slate-500" },
           blocked:   { ring: "border-rose-400 bg-rose-400 text-white",          label: "text-rose-700" },
           paused:    { ring: "border-violet-400 bg-violet-400 text-white",      label: "text-violet-700" },
@@ -897,7 +1047,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   return (
                     <div
                       key={optId(opt)}
-                      onClick={() => toggleMultiOption(optId(opt))}
+                      role="checkbox"
+                      aria-checked={isChecked}
+                      tabIndex={submitted ? -1 : 0}
+                      onClick={() => !submitted && toggleMultiOption(optId(opt))}
+                      onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !submitted) { e.preventDefault(); toggleMultiOption(optId(opt)); } }}
                       className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                         isChecked
                           ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"
@@ -1024,13 +1178,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {interaction.fields.map((fld: YuzeeField) => (
                   <div key={fld.id} className="space-y-1">
-                    <label className="text-[11px] font-semibold text-slate-700 block">
-                      {fld.label} {fld.required && <span className="text-rose-500">*</span>}
+                    <label htmlFor={`field-${fld.id}`} className="text-[11px] font-semibold text-slate-700 block">
+                      {fld.label} {fld.required && <span className="text-rose-500" aria-hidden="true">*</span>}
                     </label>
 
                     {fld.input_type === "australian_location" || fld.input_type === "single_select" ? (
                       <AppleSelect
-                        id={`select-field-${fld.id}`}
+                        id={`field-${fld.id}`}
                         value={fieldValues[fld.id] || ""}
                         options={(fld.options || []).map((opt) => ({
                           value: opt.value || opt.label,
@@ -1044,11 +1198,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       />
                     ) : (
                       <input
+                        id={`field-${fld.id}`}
                         type="text"
                         placeholder={`Enter ${fld.label.toLowerCase()}...`}
                         value={fieldValues[fld.id] || ""}
                         disabled={submitted}
                         required={fld.required}
+                        aria-required={fld.required}
                         onChange={(e) => setFieldValues({ ...fieldValues, [fld.id]: e.target.value })}
                         className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:border-sky-500"
                       />
@@ -1073,8 +1229,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         </div>
       )}
 
-      {/* Recommended Actions — shown regardless of interaction kind/input_type */}
-      {interaction && interaction.recommended_actions && interaction.recommended_actions.length > 0 && !submitted && (
+      {/* Recommended Actions — suppressed when ChatArea renders them in the floating bar */}
+      {!hideRecommendedActions && interaction && interaction.kind === "none" && interaction.recommended_actions && interaction.recommended_actions.length > 0 && !submitted && (
         <div className="pt-1 flex flex-wrap gap-1.5">
           {interaction.recommended_actions.map((act) => (
             <button
@@ -1090,7 +1246,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       )}
 
       {/* Service Handoff Block */}
-      {service && serviceFlow !== "NONE" && service.actions && service.actions.length > 0 && (
+      {service && serviceFlow !== "NONE" && service.trigger_now !== false && service.actions && service.actions.length > 0 && (
         <div className="mt-4 pt-3 border-t border-slate-200 space-y-2.5">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-bold uppercase tracking-wider text-indigo-700 flex items-center gap-1.5">

@@ -22,6 +22,7 @@ import {
   Upload,
   Eye,
   EyeOff,
+  Wand2,
 } from "lucide-react";
 import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
 import * as api from "../services/api";
@@ -80,6 +81,9 @@ export const AdvancedLabModal: React.FC = () => {
     systemPromptMode: "default",
     useInteractionsApi: false,
     useFlashLiteUtility: true,
+    temperature: undefined,
+    topP: undefined,
+    maxOutputTokens: undefined,
   };
 
   const handleCareerFieldChange = (field: keyof StructuredMemoryCapsule, value: string) => {
@@ -128,6 +132,7 @@ export const AdvancedLabModal: React.FC = () => {
     { id: "context", label: "Context & Memory", icon: Layers },
     { id: "reasoning", label: "Thinking & Reasoning", icon: Brain },
     { id: "prompt", label: "Prompt & Response", icon: FileText },
+    { id: "generation", label: "Generation Parameters", icon: Wand2 },
     { id: "optimization", label: "Optimization & Economics", icon: Sliders },
     { id: "benchmark", label: "Benchmark Matrix", icon: Play },
     { id: "analytics", label: "Session Analytics", icon: BarChart3 },
@@ -403,13 +408,14 @@ export const AdvancedLabModal: React.FC = () => {
                   {/* Response Mode Selector — still per-conversation */}
                   <div className="pt-3 border-t border-slate-100 space-y-2">
                     <label className="text-xs font-semibold text-slate-800">Response Mode Directive <span className="text-slate-400 font-normal">(per conversation)</span>:</label>
-                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {[
                         { id: "standard", label: "Standard", desc: "Balanced steps & advice" },
                         { id: "quick", label: "Quick / Concise", desc: "High-density bullet points" },
                         { id: "explain", label: "Explain Deeply", desc: "Prerequisites & concepts" },
                         { id: "explore", label: "Explore Paths", desc: "Comparative pathways" },
                         { id: "decide", label: "Decision Matrix", desc: "Pros, cons & costs" },
+                        { id: "vanilla", label: "Vanilla", desc: "No cap — 8192 tokens, AI Studio parity" },
                       ].map((m) => (
                         <button
                           key={m.id}
@@ -431,6 +437,170 @@ export const AdvancedLabModal: React.FC = () => {
             )}
 
             {/* TAB: OPTIMIZATION ENGINE & ECONOMICS */}
+            {/* TAB: GENERATION PARAMETERS */}
+            {effectiveTab === "generation" && (
+              <div className="space-y-6 max-w-4xl">
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-5">
+                  <div className="flex items-start gap-2">
+                    <Wand2 className="w-4 h-4 text-violet-600 mt-0.5 shrink-0" />
+                    <div>
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">Generation Parameters</h3>
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-relaxed">
+                        Override the model's sampling behaviour per-conversation. Changes apply to the next message sent.
+                        Leave a field at its default to let the server decide automatically.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Temperature */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-slate-800">Temperature</span>
+                      <div className="group relative flex items-center">
+                        <Info className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-64 p-2.5 bg-slate-900 text-white text-[11px] leading-relaxed rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
+                          <strong>Temperature</strong> controls randomness. Lower = more predictable and focused (good for factual tasks). Higher = more creative and varied. Gemini default is 1. Range: 0 – 2.
+                        </div>
+                      </div>
+                      {conv.temperature != null && (
+                        <button
+                          onClick={() => updateCurrentConversationSettings({ temperature: undefined })}
+                          className="ml-auto text-[10px] text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                          title="Reset to default"
+                        >
+                          reset
+                        </button>
+                      )}
+                    </div>
+                    <AppleSlider
+                      label=""
+                      value={conv.temperature ?? 1}
+                      onChange={(val) => updateCurrentConversationSettings({ temperature: val })}
+                      min={0}
+                      max={2}
+                      step={0.05}
+                      unit=""
+                      minLabel="0 (Deterministic)"
+                      maxLabel="2 (Creative)"
+                      helperText={conv.temperature != null ? `${conv.temperature.toFixed(2)}` : "1.00 (default)"}
+                    />
+                    <div className="flex justify-between text-[10px] text-slate-400 px-0.5">
+                      <span>Precise / Factual</span>
+                      <span className="font-mono font-medium text-violet-700">{(conv.temperature ?? 1).toFixed(2)}</span>
+                      <span>Creative / Varied</span>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-slate-100" />
+
+                  {/* Top-P */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-slate-800">Top-P (Nucleus Sampling)</span>
+                      <div className="group relative flex items-center">
+                        <Info className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-64 p-2.5 bg-slate-900 text-white text-[11px] leading-relaxed rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
+                          <strong>Top-P</strong> restricts token selection to the smallest group of tokens whose cumulative probability exceeds P. 0.9 = consider top 90% of probable tokens. Lower values make output more focused. Use with or instead of temperature. Leave unset to use Gemini's default.
+                        </div>
+                      </div>
+                      {conv.topP != null ? (
+                        <button
+                          onClick={() => updateCurrentConversationSettings({ topP: undefined })}
+                          className="ml-auto text-[10px] text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                          title="Reset to default"
+                        >
+                          reset
+                        </button>
+                      ) : (
+                        <span className="ml-auto text-[10px] text-slate-400">not set (Gemini default)</span>
+                      )}
+                    </div>
+                    <AppleSlider
+                      label=""
+                      value={conv.topP ?? 0.95}
+                      onChange={(val) => updateCurrentConversationSettings({ topP: val })}
+                      min={0.1}
+                      max={1}
+                      step={0.05}
+                      unit=""
+                      minLabel="0.1 (Narrow)"
+                      maxLabel="1.0 (All tokens)"
+                      helperText={conv.topP != null ? `${conv.topP.toFixed(2)}` : "unset"}
+                    />
+                    <div className="flex justify-between text-[10px] text-slate-400 px-0.5">
+                      <span>Focused</span>
+                      <span className="font-mono font-medium text-violet-700">{conv.topP != null ? conv.topP.toFixed(2) : "—"}</span>
+                      <span>Broad</span>
+                    </div>
+                    {conv.topP == null && (
+                      <button
+                        onClick={() => updateCurrentConversationSettings({ topP: 0.95 })}
+                        className="text-[11px] text-violet-600 hover:text-violet-800 font-medium cursor-pointer"
+                      >
+                        + Enable Top-P override
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="border-t border-slate-100" />
+
+                  {/* Max Output Tokens */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-semibold text-slate-800">Max Output Tokens</span>
+                      <div className="group relative flex items-center">
+                        <Info className="w-3.5 h-3.5 text-slate-400 cursor-help" />
+                        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 w-64 p-2.5 bg-slate-900 text-white text-[11px] leading-relaxed rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
+                          <strong>Max Output Tokens</strong> caps how long the model's response can be. The server sets this automatically based on response mode (standard = 6 144, explain/detail = 8 192). Override here to force a shorter or longer response.
+                        </div>
+                      </div>
+                      {conv.maxOutputTokens != null && (
+                        <button
+                          onClick={() => updateCurrentConversationSettings({ maxOutputTokens: undefined })}
+                          className="ml-auto text-[10px] text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                          title="Reset to auto"
+                        >
+                          reset to auto
+                        </button>
+                      )}
+                    </div>
+                    <AppleSlider
+                      label=""
+                      value={conv.maxOutputTokens ?? 6144}
+                      onChange={(val) => updateCurrentConversationSettings({ maxOutputTokens: val })}
+                      min={256}
+                      max={65536}
+                      step={256}
+                      unit="tokens"
+                      minLabel="256"
+                      maxLabel="65 536"
+                      helperText={conv.maxOutputTokens != null ? `${conv.maxOutputTokens.toLocaleString()} tokens` : "auto (per response mode)"}
+                    />
+                    <div className="flex justify-between text-[10px] text-slate-400 px-0.5">
+                      <span>Short</span>
+                      <span className="font-mono font-medium text-violet-700">
+                        {conv.maxOutputTokens != null ? conv.maxOutputTokens.toLocaleString() : "auto"}
+                      </span>
+                      <span>Long</span>
+                    </div>
+                    {conv.maxOutputTokens == null && (
+                      <button
+                        onClick={() => updateCurrentConversationSettings({ maxOutputTokens: 6144 })}
+                        className="text-[11px] text-violet-600 hover:text-violet-800 font-medium cursor-pointer"
+                      >
+                        + Enable output token override
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Info footer */}
+                  <div className="p-3 bg-violet-50/60 rounded-xl border border-violet-100 text-[11px] text-violet-800 leading-relaxed">
+                    <strong>Tip:</strong> Temperature and Top-P both control randomness — using both simultaneously can lead to unpredictable results. Gemini recommends adjusting one at a time. For structured JSON output (Protocol v1.3), a temperature of 1 with Top-P unset is the safest starting point.
+                  </div>
+                </div>
+              </div>
+            )}
+
             {effectiveTab === "optimization" && (
               <div className="space-y-6 max-w-4xl">
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">

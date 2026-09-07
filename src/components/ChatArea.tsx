@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
+import { RecommendedAction } from "../protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
 import Markdown from "react-markdown";
@@ -36,6 +37,7 @@ function modelChipStyle(modelId: string): string {
   return 'bg-sky-50 border-sky-200 text-sky-800';
 }
 
+
 export const ChatArea: React.FC = () => {
   const {
     currentConversation,
@@ -51,6 +53,17 @@ export const ChatArea: React.FC = () => {
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
   const [speakingId, setSpeakingId] = React.useState<string | null>(null);
+
+  // Derive suggestions from last non-streaming assistant message
+  const allMessages = currentConversation?.messages || [];
+  const lastAssistant = [...allMessages].reverse().find(m => m.role === 'assistant' && !m.isStreaming);
+  const lastStructured = lastAssistant?.structuredResponse as YuzeeResponseV13 | undefined;
+  const suggestedActions = (!isStreaming && lastStructured?.interaction?.kind === 'none')
+    ? (lastStructured.interaction.recommended_actions || [])
+    : [];
+  const hasSuggestions = suggestedActions.length > 0;
+
+  const isLastAssistantMsg = (msgId: string) => lastAssistant?.id === msgId;
 
   const speakMessage = React.useCallback((id: string, text: string) => {
     const synth = window.speechSynthesis;
@@ -294,6 +307,7 @@ export const ChatArea: React.FC = () => {
                               onInteract={handleInteractionEvent}
                               readOnly={msg.isStreaming}
                               conversationId={currentConversation?.id}
+                              hideRecommendedActions={isLastAssistantMsg(msg.id)}
                             />
                           ) : (
                             !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
@@ -423,6 +437,31 @@ export const ChatArea: React.FC = () => {
           <div ref={messagesEndRef} />
         </div>
       </div>
+
+      {/* Next steps floating popup — visually attached to the composer, not the messages */}
+      {hasSuggestions && (
+        <div className="px-3 sm:px-4 pb-2">
+          <div className="bg-white border border-slate-200 rounded-xl shadow-md px-3 py-2.5 flex items-center gap-2 flex-wrap">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest shrink-0">Next steps</span>
+            {suggestedActions.map((act: RecommendedAction) => (
+              <button
+                key={act.id}
+                type="button"
+                onClick={() => sendMessage({
+                  type: "action_clicked",
+                  action_id: act.id,
+                  value: act.message,
+                  userEvent: { interaction: { question_id: "recommended_action", selected_option_ids: [act.id], self_input: act.message } },
+                  timestamp: Date.now(),
+                } as any)}
+                className="px-3 py-1 bg-slate-50 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-slate-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+              >
+                {act.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Chat Composer */}
       <Composer />

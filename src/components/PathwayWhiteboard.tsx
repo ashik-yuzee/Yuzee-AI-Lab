@@ -8,6 +8,9 @@ import {
 } from "lucide-react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { generatePathway, recommendPathwayNodes, explainPathwayNode, fetchWhiteboardStats } from "../services/api";
+import { calcTurnCost, formatCost } from "../data/models";
+
+const PATHWAY_MODEL = "gemini-3.7-flash";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 type NodeType =
@@ -212,7 +215,7 @@ function useTts(enabled: boolean) {
 export const PathwayWhiteboard: React.FC = () => {
   const {
     isWhiteboardOpen, setWhiteboardOpen, currentConversation,
-    whiteboardGenerateTick, setSidebarOpen,
+    whiteboardGenerateTick, setSidebarOpen, setWhiteboardHasPathway,
   } = useTokenLab();
 
   const [panelWidth, setPanelWidth] = useState(() => {
@@ -342,7 +345,7 @@ export const PathwayWhiteboard: React.FC = () => {
     }
     return stopAnim;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isWhiteboardOpen, currentConversation?.id]);
+  }, [isWhiteboardOpen, currentConversation?.id, currentConversation?.messages?.length]);
 
   // Animate subsequent questions when user answers one
   useEffect(() => {
@@ -537,6 +540,8 @@ export const PathwayWhiteboard: React.FC = () => {
 
   // Derived
   const hasPathway    = nodes.length > 0;
+  // Sync to context so Navbar can update its label
+  useEffect(() => { setWhiteboardHasPathway(hasPathway); }, [hasPathway, setWhiteboardHasPathway]);
   const isBusy        = fetching || streaming;
   const showPreGen    = !hasPathway && !isBusy;
   const selectedNode  = selected ? nodes.find(n => n.id === selected) ?? null : null;
@@ -587,11 +592,10 @@ export const PathwayWhiteboard: React.FC = () => {
         setGenProgress(Math.round((i / typed.length) * 100));
         await new Promise(r => setTimeout(r, STREAM_DELAY_MS));
         if (streamId.current !== myId) return;
-        setNodes(prev => {
-          const updated = [...prev, typed[i]];
-          if (i % 4 === 0 || i === typed.length - 1) persist(updated, selectedStyle, answers);
-          return updated;
-        });
+        // Compute accumulated outside setNodes so persist runs even if component unmounts mid-stream
+        const accumulated = typed.slice(0, i + 1);
+        setNodes(accumulated);
+        if (i % 4 === 0 || i === typed.length - 1) persist(accumulated, selectedStyle, answers);
         setStreamCount(i + 1);
         requestAnimationFrame(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior:"smooth" }));
       }
@@ -844,11 +848,20 @@ export const PathwayWhiteboard: React.FC = () => {
           {actionNodeCount > 0 && (
             <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500">{actionNodeCount} steps</span>
           )}
-          {wbTokens && wbTokens.calls > 0 && (
-            <span className="text-[8.5px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 border border-indigo-100 font-mono" title="Pathway AI tokens used this session">
-              {((wbTokens.inputTokens + wbTokens.outputTokens) / 1000).toFixed(1)}k tok
-            </span>
-          )}
+          {wbTokens && wbTokens.calls > 0 && (() => {
+            const cost = calcTurnCost(PATHWAY_MODEL, { inputTokens: wbTokens.inputTokens, outputTokens: wbTokens.outputTokens });
+            return (
+              <span
+                className="flex items-center gap-1 px-1.5 py-0.5 rounded-lg bg-indigo-50 border border-indigo-100 text-[10px] font-mono text-indigo-600"
+                title={`Pathway AI — ${wbTokens.calls} generation${wbTokens.calls !== 1 ? "s" : ""} this session`}
+              >
+                <span className="text-indigo-400">WB</span>
+                In <strong>{wbTokens.inputTokens.toLocaleString()}</strong>
+                · Out <strong>{wbTokens.outputTokens.toLocaleString()}</strong>
+                {cost != null && <span className="text-indigo-400 ml-0.5">{formatCost(cost)}</span>}
+              </span>
+            );
+          })()}
 
           <div className="flex items-center gap-0.5 ml-auto">
             <button onClick={() => { setTtsEnabled(v => !v); tts.stop(); }}

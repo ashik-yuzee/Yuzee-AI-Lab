@@ -29,6 +29,8 @@ export const Navbar: React.FC = () => {
     setTokenInspectorOpen,
     isWhiteboardOpen,
     setWhiteboardOpen,
+    triggerWhiteboardGenerate,
+    whiteboardHasPathway,
     setSettingsOpen,
     setProfileOpen,
     userProfile,
@@ -98,6 +100,13 @@ export const Navbar: React.FC = () => {
       badge: "Baseline",
       badgeColor: "slate",
     },
+    {
+      value: "VANILLA",
+      label: "Vanilla (AI Studio)",
+      description: "No optimisation, no compaction, 8192 token output cap",
+      badge: "Vanilla",
+      badgeColor: "purple",
+    },
   ];
 
   // Latest turn telemetry — show uncached input when cache is active
@@ -128,9 +137,7 @@ export const Navbar: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold shadow-xs">
-            <span className="text-sm font-semibold tracking-tight">Y</span>
-          </div>
+          <img src="/favicon.svg" alt="Yuzee" className="w-7 h-7 rounded-lg shadow-xs" />
           <div>
             <div className="flex items-center gap-2">
               <span className="font-semibold text-slate-900 tracking-tight text-sm">Yuzee AI</span>
@@ -185,6 +192,30 @@ export const Navbar: React.FC = () => {
           <FlaskConical className="w-3.5 h-3.5 text-indigo-600" />
           <span>Lab</span>
         </button>
+
+        {/* Pathway Button — toggles whiteboard; auto-generates only when no pathway exists */}
+        <button
+          id="btn-build-pathway"
+          onClick={() => {
+            if (isWhiteboardOpen) {
+              setWhiteboardOpen(false);
+            } else {
+              setWhiteboardOpen(true);
+              setTokenInspectorOpen(false);
+              if (!whiteboardHasPathway) setTimeout(() => triggerWhiteboardGenerate(), 400);
+            }
+          }}
+          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
+            isWhiteboardOpen
+              ? "bg-violet-50 border-violet-300 text-violet-800 font-semibold"
+              : "bg-white border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300"
+          }`}
+          title={isWhiteboardOpen ? "Close pathway" : whiteboardHasPathway ? "Open pathway" : "Build pathway on whiteboard"}
+          aria-label="Pathway"
+        >
+          <Network className="w-3.5 h-3.5 text-violet-600" />
+          <span>{whiteboardHasPathway ? "Pathway" : "Build pathway"}</span>
+        </button>
       </div>
 
       {/* Right: Settings + Conv Cost + Telemetry Pill */}
@@ -224,20 +255,6 @@ export const Navbar: React.FC = () => {
           </span>
         )}
 
-        {/* Whiteboard toggle */}
-        <button
-          id="btn-toggle-whiteboard"
-          onClick={() => { setWhiteboardOpen(!isWhiteboardOpen); if (!isWhiteboardOpen) setTokenInspectorOpen(false); }}
-          className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
-            isWhiteboardOpen
-              ? "bg-violet-50 border-violet-300 text-violet-700"
-              : "bg-white border-slate-200 text-slate-500 hover:text-violet-700 hover:bg-violet-50 hover:border-violet-200"
-          }`}
-          title="Pathway Whiteboard"
-          aria-label="Pathway Whiteboard"
-        >
-          <Network className="w-4 h-4" />
-        </button>
 
         <button
           id="btn-header-telemetry-pill"

@@ -56,6 +56,8 @@ interface TokenLabContextType {
   setWhiteboardOpen: (open: boolean) => void;
   whiteboardGenerateTick: number;
   triggerWhiteboardGenerate: () => void;
+  whiteboardHasPathway: boolean;
+  setWhiteboardHasPathway: (v: boolean) => void;
   isAdvancedLabOpen: boolean;
   setAdvancedLabOpen: (open: boolean) => void;
   activeLabTab: string;
@@ -84,8 +86,8 @@ interface TokenLabContextType {
   setUserLocation: (loc: string) => void;
   userContradictions: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[];
   setUserContradictions: (c: { id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]) => void;
-  pendingClarificationQuestions: { questions: any[]; bridgeMessage?: string } | null;
-  setPendingClarificationQuestions: (q: { questions: any[]; bridgeMessage?: string } | null) => void;
+  pendingClarificationQuestions: { questions: any[]; bridgeMessage?: string; originalMessage?: string } | null;
+  setPendingClarificationQuestions: (q: { questions: any[]; bridgeMessage?: string; originalMessage?: string } | null) => void;
   hasDeferredMessage: boolean;
   proceedWithDeferredMessage: () => void;
   clearDeferredMessage: () => void;
@@ -157,6 +159,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isWhiteboardOpen, setWhiteboardOpen] = useState<boolean>(false);
   const [whiteboardGenerateTick, setWhiteboardGenerateTick] = useState<number>(0);
   const triggerWhiteboardGenerate = useCallback(() => setWhiteboardGenerateTick(t => t + 1), []);
+  const [whiteboardHasPathway, setWhiteboardHasPathway] = useState<boolean>(false);
   const [isAdvancedLabOpen, setAdvancedLabOpen] = useState<boolean>(false);
   const [activeLabTab, setActiveLabTab] = useState<string>("context");
   const [isContextInspectorOpen, setContextInspectorOpen] = useState<boolean>(false);
@@ -177,7 +180,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [userContradictions, setUserContradictions] = useState<{ id: string; fact: string; contradiction: string; detectedAt: number; resolved?: boolean }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_contradictions") || "[]"); } catch { return []; }
   });
-  const [pendingClarificationQuestions, setPendingClarificationQuestions] = useState<{ questions: any[]; bridgeMessage?: string } | null>(null);
+  const [pendingClarificationQuestions, setPendingClarificationQuestions] = useState<{ questions: any[]; bridgeMessage?: string; originalMessage?: string } | null>(null);
   const [hasDeferredMessage, setHasDeferredMessage] = useState(false);
   const pendingOriginalMessageRef = useRef<string | null>(null);
   const [sharedSettings, setSharedSettings] = useState<import('../services/api').SharedSettings | null>(null);
@@ -212,8 +215,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setConversations(convs);
         lsSave(convs);
         setCurrentConversation(convs[0]);
-        const lastAssistant = convs[0].messages?.filter((m) => m.role === "assistant").pop();
-        if (lastAssistant?.telemetry) setActiveTurnTelemetry(lastAssistant.telemetry);
+        const lastWithTelemetry = [...(convs[0].messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+        if (lastWithTelemetry?.telemetry) setActiveTurnTelemetry(lastWithTelemetry.telemetry);
       } else {
         // Server is empty — restore from localStorage (covers server restarts)
         const saved = lsLoad();
@@ -221,8 +224,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           // Show conversations immediately; restore to server in the background
           setConversations(saved);
           setCurrentConversation(saved[0]);
-          const lastAssistant = saved[0].messages?.filter((m) => m.role === "assistant").pop();
-          if (lastAssistant?.telemetry) setActiveTurnTelemetry(lastAssistant.telemetry);
+          const lastWithTelemetry = [...(saved[0].messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+          if (lastWithTelemetry?.telemetry) setActiveTurnTelemetry(lastWithTelemetry.telemetry);
           // Fire-and-forget — failures are non-fatal; server will get them on next user action
           Promise.allSettled(saved.map((c) => api.restoreConversation(c).catch(() => {})));
         } else {
@@ -287,9 +290,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     if (found) {
       setCurrentConversation(found);
       if (found.model) { setSelectedModel(found.model); pendingModel.current = found.model; }
-      const lastAssistant = found.messages?.filter((m) => m.role === "assistant").pop();
-      if (lastAssistant?.telemetry) {
-        setActiveTurnTelemetry(lastAssistant.telemetry);
+      const lastWithTelemetry = [...(found.messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+      if (lastWithTelemetry?.telemetry) {
+        setActiveTurnTelemetry(lastWithTelemetry.telemetry);
       } else {
         setActiveTurnTelemetry(null);
       }
@@ -297,6 +300,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const startNewConversation = async (title?: string): Promise<Conversation> => {
+    // Don't create a duplicate if the current conversation is already empty
+    if (currentConversation && (!currentConversation.messages || currentConversation.messages.length === 0)) {
+      return currentConversation;
+    }
     const newConv = await api.createConversation(
       title || "New Career Exploration",
       currentConversation?.model || pendingModel.current,
@@ -312,9 +319,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const demoConv = await api.loadDemoConversation();
     setConversations((prev) => [demoConv, ...prev.filter(c => c.id !== demoConv.id)]);
     setCurrentConversation(demoConv);
-    const lastAssistant = demoConv.messages?.filter((m) => m.role === "assistant").pop();
-    if (lastAssistant?.telemetry) {
-      setActiveTurnTelemetry(lastAssistant.telemetry);
+    const lastWithTelemetry = [...(demoConv.messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+    if (lastWithTelemetry?.telemetry) {
+      setActiveTurnTelemetry(lastWithTelemetry.telemetry);
     }
     return demoConv;
   };
@@ -327,8 +334,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (currentConversation?.id === id) {
           if (remaining.length > 0) {
             setCurrentConversation(remaining[0]);
-            const lastAssistant = remaining[0].messages?.filter((m) => m.role === "assistant").pop();
-            setActiveTurnTelemetry(lastAssistant?.telemetry || null);
+            const lastWithTelemetry = [...(remaining[0].messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+            setActiveTurnTelemetry(lastWithTelemetry?.telemetry || null);
           } else {
             setCurrentConversation(null);
             setActiveTurnTelemetry(null);
@@ -385,6 +392,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           responseMode: "standard",
         };
         break;
+      case "VANILLA":
+        updates = {
+          mode: "VANILLA",
+          strategy: "BASELINE",
+          thinkingLevel: "minimal",
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
+          responseMode: "vanilla",
+        };
+        break;
       case "ADVANCED":
         updates = { mode: "ADVANCED" };
         break;
@@ -426,6 +443,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           recentTurnsToKeep: 2,
           contextBudget: 1000,
           responseMode: "quick",
+        };
+        break;
+      case "VANILLA":
+        updates = {
+          preset,
+          strategy: "BASELINE",
+          thinkingLevel: "minimal",
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
+          responseMode: "vanilla",
         };
         break;
       case "ADVANCED":
@@ -495,7 +522,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           if (preCheck.needsClarification && preCheck.questions?.length) {
             pendingOriginalMessageRef.current = textMessage;
             setHasDeferredMessage(true);
-            setPendingClarificationQuestions({ questions: preCheck.questions, bridgeMessage: preCheck.bridgeMessage });
+            setPendingClarificationQuestions({ questions: preCheck.questions, bridgeMessage: preCheck.bridgeMessage, originalMessage: textMessage });
             return;
           }
         } catch { /* fail-safe: proceed normally */ }
@@ -565,6 +592,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         careerContext: activeConv.careerContext,
         systemPromptMode: activeConv.systemPromptMode,
         customSystemPrompt: activeConv.customSystemPrompt,
+        temperature: activeConv.temperature,
+        topP: activeConv.topP,
+        maxOutputTokens: activeConv.maxOutputTokens,
         userContext: { date: todayStr, timezone: tz, location: userLocation || undefined },
         userProfileFacts: relevantFacts,
         userQuestionAnswers: userQuestionAnswers,
@@ -625,7 +655,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             contextMetrics: usagePayload.contextMetrics,
             compactionMetrics: usagePayload.compactionMetrics,
             timeline: usagePayload.timeline,
-            model: activeConv.model || DEFAULT_MODEL_ID,
+            model: usagePayload.model || activeConv.model || DEFAULT_MODEL_ID,
             thinkingLevel: activeConv.thinkingLevel || "adaptive",
             appliedThinkingLevel: resolvedThinkingLevel,
             optimizationMode: activeConv.mode || "AUTO",
@@ -871,6 +901,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setWhiteboardOpen,
         whiteboardGenerateTick,
         triggerWhiteboardGenerate,
+        whiteboardHasPathway,
+        setWhiteboardHasPathway,
         isAdvancedLabOpen,
         setAdvancedLabOpen,
         activeLabTab,

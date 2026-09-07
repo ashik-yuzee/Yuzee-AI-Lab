@@ -11,7 +11,6 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { franc } from 'franc-min';
 import { GenerateContentConfig } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
 import { estimateTokens } from './TokenBudgetMemoryManager';
@@ -296,9 +295,6 @@ export class YuzeeRequestAssembler {
   public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'rubbish' | 'idle' | 'career' {
     const t = text.trim().toLowerCase().replace(/[!?.,']+$/, '').trim();
 
-    // Rubbish detection — check before greeting/farewell so "aaaa" doesn't slip through
-    if (this._isRubbish(t)) return 'rubbish';
-
     const greetingPatterns = [
       /^(hi|hey|hello|howdy|hiya|sup|yo)(\s+(there|oala|yuzee|bot|ai|friend))?$/,
       /^good\s+(morning|afternoon|evening|day)(\s+(oala|yuzee))?$/,
@@ -337,7 +333,10 @@ export class YuzeeRequestAssembler {
     if (greetingPatterns.some(p => p.test(t))) return 'greeting';
     if (farewellPatterns.some(p => p.test(t))) return 'farewell';
     if (idlePatterns.some(p => p.test(t))) return 'idle';
-    if (!/\s/.test(t)) return 'rubbish'; // single keyword, no context
+
+    // Rubbish detection — after known-safe patterns so "hello" isn't rejected by franc
+    if (this._isRubbish(t)) return 'rubbish';
+    if (!/\s/.test(t)) return 'rubbish'; // single unknown keyword, no context
     return 'career';
   }
 
@@ -364,11 +363,6 @@ export class YuzeeRequestAssembler {
     // Every "word" has no vowels AND is longer than 2 chars (filters SQL, AWS, etc.)
     const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
     if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
-
-    // Language detection: only English passes; 'und' (undetermined/too short) is allowed through
-    // so that short UI option selections like "career change" aren't rejected
-    const langCode = franc(t, { minLength: 3 });
-    if (langCode !== 'eng' && langCode !== 'und') return true;
 
     return false;
   }
@@ -468,6 +462,9 @@ export class YuzeeRequestAssembler {
     thinkingLevel?: string;
     customSystemPrompt?: string;
     systemPromptMode?: string;
+    temperature?: number;
+    topP?: number;
+    maxOutputTokens?: number;
   }): AssembledGeminiRequest {
     const requestReceivedAt = Date.now();
     const aiRequestId = `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -509,7 +506,7 @@ export class YuzeeRequestAssembler {
     // 5. Config resolution
     const model = params.model || 'gemini-3.5-flash-lite';
     const responseMode = params.responseMode || 'standard';
-    const maxOutputTokens = this.resolveOutputBudget(responseMode, model);
+    const maxOutputTokens = params.maxOutputTokens ?? this.resolveOutputBudget(responseMode, model);
     const { thinkingConfig, appliedThinkingLevel, numericBudget } = this.resolveThinkingConfig(
       model,
       params.thinkingLevel || 'adaptive',
@@ -519,8 +516,9 @@ export class YuzeeRequestAssembler {
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
       responseMimeType: 'application/json',
-      temperature: 1,
+      temperature: params.temperature ?? 1,
       maxOutputTokens,
+      ...(params.topP != null ? { topP: params.topP } : {}),
       ...(thinkingConfig ? { thinkingConfig: thinkingConfig as any } : {}),
     };
 

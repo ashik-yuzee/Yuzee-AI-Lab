@@ -1388,6 +1388,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     thinkingLevel: req.body.thinkingLevel || conv.thinkingLevel,
     customSystemPrompt: effectiveSystemPrompt,
     systemPromptMode: effectiveSystemPrompt ? 'custom' : 'default',
+    temperature: req.body.temperature != null ? Number(req.body.temperature) : undefined,
+    topP: req.body.topP != null ? Number(req.body.topP) : undefined,
+    maxOutputTokens: req.body.maxOutputTokens != null ? Math.round(Number(req.body.maxOutputTokens)) : undefined,
   });
   const requestAssemblyMs = Date.now() - requestAssemblyStart;
 
@@ -1469,6 +1472,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     sendEvent("structured", bypassParsed);
     sendEvent("usage", {
       usage: { currentUserTokens: estimateTokens(userMessageContent), inputTokens: 0, outputTokens: 0, thinkingTokens: null, cachedTokens: null, toolTokens: null, totalTokens: 0, finishReason: 'STOP', isMock: true, sources: { inputTokens: "bypass", outputTokens: "bypass", thinkingTokens: "unavailable", cachedTokens: "unavailable", currentUserTokens: "estimate" }, timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt } },
+      model: assembledReq.model,
       contextMetrics: null,
       compactionMetrics: null,
       timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt },
@@ -1790,6 +1794,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   sendEvent("usage", {
     usage: usageMetrics,
+    model: assembledReq.model,
     contextMetrics: contextBreakdown,
     compactionMetrics: mem.compactionMetrics,
     timeline,
@@ -1883,8 +1888,9 @@ function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish' | 'idle'):
     response_intent: intent as any,
     content_blocks: [{ id: "b1", type: "text", level: "none", variant: "default", title: "", text, items: [], columns: [], rows: [] }],
     interaction: { kind: "none", input_type: "none", question_id: "", question: "", options: [], allow_other_input: false, other_input_label: "", fields: [], recommended_actions: [] },
-    service: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },
-    state: { active_response_mode: "standard", effective_response_mode: "standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: [], failed_attempts: 0, loop_count_same_issue: 0 } },
+    service_trigger: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },
+    rmo_readiness: false,
+    state: { active_response_mode: "standard", effective_response_mode: "standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: false, failed_attempts: 0, loop_count_same_issue: 0, security_breach_count: 0, active_security_penalty: 0 } },
     followups: { enabled: false, cancel_on_user_message: true, topic_lock: false, topic_key: "", triggers: [] },
   };
 }

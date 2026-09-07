@@ -107,8 +107,9 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
     schemaErrors.push('interaction object is required in envelope');
   }
 
-  if (!json.service || typeof json.service !== 'object') {
-    schemaErrors.push('service object is required in envelope');
+  const serviceObj = json.service_trigger ?? json.service;
+  if (!serviceObj || typeof serviceObj !== 'object') {
+    schemaErrors.push('service_trigger object is required in envelope');
   }
 
   if (!json.state || typeof json.state !== 'object') {
@@ -162,9 +163,9 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
       }
     }
 
-    // Handoff interaction fields agreement with service missing_inputs
-    if (kind === 'handoff' && json.service && typeof json.service === 'object') {
-      const missingInputs: string[] = json.service.missing_inputs || [];
+    // Handoff interaction fields agreement with service_trigger missing_inputs
+    if (kind === 'handoff' && serviceObj && typeof serviceObj === 'object') {
+      const missingInputs: string[] = serviceObj.missing_inputs || [];
       const fields: Array<{ id: string }> = json.interaction.fields || [];
       const fieldIds = fields.map((f) => f.id);
       
@@ -205,8 +206,8 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
   // -------------------------------------------------------------
   // Layer 3: Trusted Service Action Registry Check
   // -------------------------------------------------------------
-  if (json.service?.actions && Array.isArray(json.service.actions)) {
-    for (const act of json.service.actions) {
+  if (serviceObj?.actions && Array.isArray(serviceObj.actions)) {
+    for (const act of serviceObj.actions) {
       const actId = act.action_id || act.id;
       if (actId && !TRUSTED_SERVICE_ACTIONS[actId]) {
         warnings.push(`[Security] Service action_id "${actId}" is untrusted/unregistered in server registry`);

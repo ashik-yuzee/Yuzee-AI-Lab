@@ -6,5 +6,6 @@ public enum ResponseMode {
     EXPLAIN,
     EXPLORE,
     DETAIL,
-    DECIDE
+    DECIDE,
+    VANILLA
 }

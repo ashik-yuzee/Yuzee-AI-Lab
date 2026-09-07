@@ -48,7 +48,7 @@
         "CONTEXT_CLARIFICATION",
         "ROUTE_SELECTION",
         "GENERAL_DELIVERY",
-        "OFF_TOPIC_REDIRECT"
+        "FLEXIBLE_WORK_READINESS"
       ]
     },
     "content_blocks": {
@@ -183,6 +183,10 @@
               "properties": {
                 "id": {
                   "type": "string"
+                },
+                "criteria": {
+                  "type": "string",
+                  "description": "Row label for table/comparison blocks."
                 },
                 "cells": {
                   "type": "array",
@@ -412,7 +416,7 @@
         "recommended_actions"
       ]
     },
-    "service": {
+    "service_trigger": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -505,6 +509,11 @@
                 "type": "string",
                 "description": "Backend action identifier from the verified Yuzee service catalog; never invent an unsupported action."
               },
+              "rmo_type": {
+                "type": "string",
+                "enum": ["RMO", "DIRECT_APPLICATION", "OTHER", ""],
+                "description": "RMO sub-type when flow=RMO."
+              },
               "requires_confirmation": {
                 "type": "boolean"
               }
@@ -514,6 +523,7 @@
               "title",
               "description",
               "action_id",
+              "rmo_type",
               "requires_confirmation"
             ]
           }
@@ -573,10 +583,7 @@
           "additionalProperties": false,
           "properties": {
             "explained": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "boolean"
             },
             "failed_attempts": {
               "type": "integer",
@@ -585,12 +592,22 @@
             "loop_count_same_issue": {
               "type": "integer",
               "minimum": 0
+            },
+            "security_breach_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "active_security_penalty": {
+              "type": "integer",
+              "minimum": 0
             }
           },
           "required": [
             "explained",
             "failed_attempts",
-            "loop_count_same_issue"
+            "loop_count_same_issue",
+            "security_breach_count",
+            "active_security_penalty"
           ]
         },
         "user_confidence": {
@@ -675,6 +692,10 @@
         "progress"
       ]
     },
+    "rmo_readiness": {
+      "type": "boolean",
+      "description": "True when all RMO preconditions are met and the service handoff can proceed immediately."
+    },
     "followups": {
       "type": "object",
       "additionalProperties": false,
@@ -739,7 +760,8 @@
     "response_intent",
     "content_blocks",
     "interaction",
-    "service",
+    "service_trigger",
+    "rmo_readiness",
     "state",
     "followups"
   ]

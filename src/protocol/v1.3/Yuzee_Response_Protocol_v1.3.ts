@@ -52,6 +52,7 @@ export interface YuzeeCell {
 
 export interface YuzeeRow {
   id: string;
+  criteria?: string;
   cells: YuzeeCell[];
 }
 
@@ -106,6 +107,7 @@ export interface ServiceAction {
   title: string;
   description: string;
   action_id: string;
+  rmo_type?: 'RMO' | 'DIRECT_APPLICATION' | 'OTHER' | '';
   requires_confirmation: boolean;
 }
 
@@ -130,9 +132,11 @@ export interface UserConfidenceState {
 }
 
 export interface YuzeeProgress {
-  explained: string[];
+  explained: boolean;
   failed_attempts: number;
   loop_count_same_issue: number;
+  security_breach_count: number;
+  active_security_penalty: number;
 }
 
 export interface YuzeeState {
@@ -164,9 +168,12 @@ export interface YuzeeResponseV13 {
   response_intent: string;
   content_blocks: YuzeeContentBlock[];
   interaction: YuzeeInteraction;
-  service: YuzeeService;
+  service_trigger: YuzeeService;
+  rmo_readiness: boolean;
   state: YuzeeState;
   followups: YuzeeFollowups;
+  /** @deprecated use service_trigger */
+  service?: YuzeeService;
 }
 
 export function interactionRenderer(input: InteractionInputType): string | null {
