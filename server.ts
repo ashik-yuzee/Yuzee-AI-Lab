@@ -700,7 +700,7 @@ app.post("/api/conversations", (req, res) => {
     strategy,
     preset,
     responseMode: req.body?.responseMode || "vanilla",
-    thinkingLevel: req.body?.thinkingLevel || "high",
+    thinkingLevel: req.body?.thinkingLevel || "medium",
     contextBudget: req.body?.contextBudget || 270000,
     recentTurnsToKeep: req.body?.recentTurnsToKeep || 100,
     careerContext: req.body?.careerContext || {

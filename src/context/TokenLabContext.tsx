@@ -315,7 +315,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       title || "New Career Exploration",
       currentConversation?.model || pendingModel.current,
       "BASELINE",
-      { mode: "VANILLA", thinkingLevel: "high", responseMode: "vanilla", contextBudget: 270000, recentTurnsToKeep: 100, temperature: 1, topP: 0.95 }
+      { mode: "VANILLA", thinkingLevel: "medium", responseMode: "vanilla", contextBudget: 270000, recentTurnsToKeep: 100 }
     );
     setConversations((prev) => [newConv, ...prev]);
     setCurrentConversation(newConv);
