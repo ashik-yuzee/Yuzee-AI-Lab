@@ -453,6 +453,24 @@ export class YuzeeRequestAssembler {
   }
 
   /**
+   * Strips fields Gemini's responseSchema doesn't support:
+   * - additionalProperties (not in Gemini Schema spec)
+   * - enum on integer/number types (Gemini only supports string enums)
+   * The AJV copy used for validation is untouched.
+   */
+  private sanitizeSchemaForGemini(node: any): any {
+    if (!node || typeof node !== 'object') return node;
+    if (Array.isArray(node)) return node.map((n: any) => this.sanitizeSchemaForGemini(n));
+    const out: any = {};
+    for (const [k, v] of Object.entries(node)) {
+      if (k === 'additionalProperties') continue;
+      if (k === 'enum' && (node.type === 'integer' || node.type === 'number')) continue;
+      out[k] = typeof v === 'object' && v !== null ? this.sanitizeSchemaForGemini(v) : v;
+    }
+    return out;
+  }
+
+  /**
    * Assembles the complete Gemini request adhering to:
    * 1. System prompt in config.systemInstruction ONLY (never copied into contents)
    * 2. Current user message / UserEvent appended ONCE
@@ -524,7 +542,7 @@ export class YuzeeRequestAssembler {
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
       responseMimeType: 'application/json',
-      responseSchema: this.responseSchemaJson ?? undefined,
+      responseSchema: this.responseSchemaJson ? this.sanitizeSchemaForGemini(this.responseSchemaJson) : undefined,
       maxOutputTokens,
       ...(params.temperature != null ? { temperature: params.temperature } : {}),
       ...(params.topP != null ? { topP: params.topP } : {}),
