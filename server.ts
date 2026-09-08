@@ -661,8 +661,22 @@ app.post("/api/shared-settings/reset-prompt", (_req, res) => {
 });
 // ─────────────────────────────────────────────────────────────────────────────
 
-// List Conversations
-app.get("/api/conversations", (req, res) => {
+// List Conversations — serve from DB when available so deletes cross instances
+app.get("/api/conversations", async (req, res) => {
+  if (isDbEnabled()) {
+    try {
+      const fromDb = await loadConversations();
+      // Merge any in-flight (not-yet-persisted) conversations created this session
+      const dbIds = new Set(fromDb.map((c: any) => c.id));
+      const inFlight = Array.from(conversations.values()).filter((c) => !dbIds.has(c.id));
+      const merged = [...fromDb, ...inFlight].sort((a: any, b: any) => b.updatedAt - a.updatedAt);
+      // Sync Map to match DB (remove deleted entries)
+      for (const [id] of conversations) if (!dbIds.has(id) && !inFlight.find((c) => c.id === id)) conversations.delete(id);
+      return res.json(merged);
+    } catch {
+      // fall through to in-memory
+    }
+  }
   const list = Array.from(conversations.values()).sort((a, b) => b.updatedAt - a.updatedAt);
   res.json(list);
 });
@@ -672,7 +686,7 @@ app.post("/api/conversations", (req, res) => {
   const id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const title = req.body?.title || "New Career Exploration";
   const model = req.body?.model || "gemini-3.5-flash";
-  const mode = req.body?.mode || "AUTO";
+  const mode = req.body?.mode || "VANILLA";
   const strategy = req.body?.strategy || "ADAPTIVE_HYBRID";
   const preset = req.body?.preset || "BALANCED";
 
@@ -685,8 +699,8 @@ app.post("/api/conversations", (req, res) => {
     mode,
     strategy,
     preset,
-    responseMode: req.body?.responseMode || "standard",
-    thinkingLevel: req.body?.thinkingLevel || "adaptive",
+    responseMode: req.body?.responseMode || "vanilla",
+    thinkingLevel: req.body?.thinkingLevel || "high",
     contextBudget: req.body?.contextBudget || 270000,
     recentTurnsToKeep: req.body?.recentTurnsToKeep || 100,
     careerContext: req.body?.careerContext || {
