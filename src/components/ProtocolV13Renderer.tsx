@@ -46,6 +46,7 @@ interface ProtocolV13RendererProps {
   readOnly?: boolean;
   conversationId?: string;
   hideRecommendedActions?: boolean;
+  onOpenPathway?: () => void;
 }
 
 export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
@@ -57,6 +58,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   readOnly = false,
   conversationId,
   hideRecommendedActions = false,
+  onOpenPathway,
 }) => {
   // Interaction State
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
@@ -312,117 +314,126 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         );
 
       case "list": {
-        const listItemStyle = (status: string): { bg: string; icon: React.ReactNode; chip: React.ReactNode } => {
-          switch (status) {
-            case "current":
-              return {
-                bg: "bg-amber-50 border-amber-300",
-                icon: <span className="w-4 h-4 rounded-full bg-amber-500 shrink-0 mt-0.5 animate-pulse motion-reduce:animate-none" aria-hidden="true" />,
-                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded">Current</span>,
-              };
-            case "next":
-              return {
-                bg: "bg-slate-50 border-slate-300",
-                icon: <ArrowRight className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-sky-100 text-sky-700 rounded">Next</span>,
-              };
-            case "complete":
-              return {
-                bg: "bg-emerald-50 border-emerald-200",
-                icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded">Done</span>,
-              };
-            case "warning":
-              return {
-                bg: "bg-amber-50 border-amber-200",
-                icon: <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-amber-100 text-amber-700 rounded">Note</span>,
-              };
-            case "blocked":
-              return {
-                bg: "bg-rose-50 border-rose-300",
-                icon: <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: <span className="shrink-0 text-[9px] font-bold uppercase px-1.5 py-0.5 bg-rose-100 text-rose-800 rounded">Blocked</span>,
-              };
-            case "positive":
-              return {
-                bg: "bg-emerald-50 border-emerald-200",
-                icon: <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: null,
-              };
-            case "negative":
-              return {
-                bg: "bg-rose-50/60 border-rose-200",
-                icon: <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: null,
-              };
-            default:
-              return {
-                bg: "bg-slate-50 border-slate-200",
-                icon: <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" aria-hidden="true" />,
-                chip: null,
-              };
-          }
-        };
+        const WORKFLOW_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
+        const isWorkflow = block.items?.some((i: YuzeeItem) => WORKFLOW_STATUSES.has(i.status || ""));
+        const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
 
-        {
-          const WORKFLOW_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
-          const isWorkflow = block.items?.some((i: YuzeeItem) => WORKFLOW_STATUSES.has(i.status || ""));
-          const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
-
+        if (isWorkflow) {
           return (
             <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-
-              {useGrid ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                  {block.items?.map((item: YuzeeItem, iIdx: number) => {
-                    const isNegative = item.status === "negative";
-                    const isPositive = item.status === "positive";
-                    return (
-                      <div
-                        key={item.id}
-                        className={`flex items-start gap-2 p-2 rounded-lg border text-xs
-                          ${isNegative ? "bg-rose-50/50 border-rose-200" : isPositive ? "bg-emerald-50/50 border-emerald-200" : "bg-white border-slate-200"}`}
-                      >
-                        <span className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold mt-0.5
-                          ${isNegative ? "bg-rose-100 text-rose-600" : isPositive ? "bg-emerald-100 text-emerald-700" : "bg-sky-100 text-sky-700"}`}>
-                          {iIdx + 1}
-                        </span>
-                        <div className="min-w-0">
-                          <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
-                          {(item.text || item.value) && (
-                            <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>
-                          )}
+              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{block.title}</h4>}
+              <div className="space-y-2">
+                {block.items?.map((item: YuzeeItem) => {
+                  const s = item.status || "";
+                  if (s === "current") return (
+                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50 via-orange-50/30 to-amber-50/10 p-4 shadow-sm">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-amber-400 to-orange-500 rounded-r" />
+                      <div className="pl-3">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse motion-reduce:animate-none" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Current</span>
                         </div>
+                        <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                        {(item.text || item.value) && <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="space-y-1.5">
-                  {block.items?.map((item: YuzeeItem) => {
-                    const { bg, icon, chip } = listItemStyle(item.status || "");
-                    return (
-                      <div key={item.id} className={`flex items-start gap-2.5 p-2.5 rounded-lg border text-xs ${bg}`}>
-                        {icon}
-                        <div className="min-w-0 flex-1">
+                    </div>
+                  );
+                  if (s === "next") return (
+                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs hover:border-indigo-200 transition-colors group">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-indigo-200 rounded-r group-hover:bg-indigo-400 transition-colors" />
+                      <div className="pl-3 flex items-start gap-3">
+                        <div className="shrink-0 w-5 h-5 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center mt-0.5 group-hover:bg-indigo-100 transition-colors">
+                          <ArrowRight className="w-3 h-3 text-indigo-500" />
+                        </div>
+                        <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2">
-                            <span className="font-semibold text-slate-900">{item.title}</span>
-                            {chip}
+                            <p className="text-sm font-semibold text-slate-800 leading-snug">{item.title}</p>
+                            <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded-md">Next</span>
                           </div>
-                          {(item.text || item.value) && (
-                            <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>
-                          )}
+                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.text || item.value}</p>}
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
+                    </div>
+                  );
+                  if (s === "complete") return (
+                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50/30 p-4 opacity-70">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400 rounded-r" />
+                      <div className="pl-3 flex items-start gap-3">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm font-semibold text-slate-600 line-through decoration-emerald-300">{item.title}</p>
+                          {(item.text || item.value) && <p className="text-xs text-slate-400 mt-1">{item.text || item.value}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                  if (s === "blocked") return (
+                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-rose-200 bg-rose-50/40 p-4">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-rose-400 rounded-r" />
+                      <div className="pl-3 flex items-start gap-3">
+                        <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-slate-800">{item.title}</p>
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded-md">Blocked</span>
+                          </div>
+                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1">{item.text || item.value}</p>}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                  // warning / default fallback
+                  return (
+                    <div key={item.id} className="flex items-start gap-2.5 p-3 rounded-xl border border-amber-200 bg-amber-50/40 text-xs">
+                      <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
+                      <div className="min-w-0 flex-1">
+                        <span className="font-semibold text-slate-900">{item.title}</span>
+                        {(item.text || item.value) && <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         }
+
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {useGrid ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {block.items?.map((item: YuzeeItem, iIdx: number) => {
+                  const isNegative = item.status === "negative";
+                  const isPositive = item.status === "positive";
+                  return (
+                    <div key={item.id} className={`flex items-start gap-2 p-2 rounded-lg border text-xs ${isNegative ? "bg-rose-50/50 border-rose-200" : isPositive ? "bg-emerald-50/50 border-emerald-200" : "bg-white border-slate-200"}`}>
+                      <span className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold mt-0.5 ${isNegative ? "bg-rose-100 text-rose-600" : isPositive ? "bg-emerald-100 text-emerald-700" : "bg-sky-100 text-sky-700"}`}>
+                        {iIdx + 1}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
+                        {(item.text || item.value) && <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {block.items?.map((item: YuzeeItem) => (
+                  <div key={item.id} className="flex items-start gap-2.5 p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-xs">
+                    <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                    <div className="min-w-0 flex-1">
+                      <span className="font-semibold text-slate-900">{item.title}</span>
+                      {(item.text || item.value) && <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        );
       }
 
       case "steps": {
@@ -971,7 +982,21 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   };
 
   // Care text: the empathetic opening from response_intent (Oala HTML pattern)
-  const careText = data.response_intent?.trim();
+  // Suppress internal protocol labels like SOCRATIC_DIRECTION, ACTION_PLAN, EXPLORE_OPTIONS
+  const rawCareText = data.response_intent?.trim();
+  const isProtocolLabel = rawCareText ? /^[A-Z][A-Z_]{2,}$/.test(rawCareText) : false;
+  const careText = isProtocolLabel ? "" : rawCareText;
+
+  // Pathway button: show when response has workflow/action-plan character
+  const hasWorkflowBlocks = blocks.some((b: YuzeeContentBlock) =>
+    (b.type === "list" || b.type === "steps") &&
+    b.items?.some((i: YuzeeItem) => i.status === "current" || i.status === "next")
+  );
+  const responseIntentStr = (data.response_intent || "") + (data as any).response_direction || "";
+  const suggestPathway = onOpenPathway && (
+    hasWorkflowBlocks ||
+    /ACTION_PLAN|GOAL|PATHWAY|ROADMAP|PLAN/i.test(responseIntentStr)
+  );
 
   return (
     <div className="space-y-4">
@@ -994,6 +1019,20 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       <div className="space-y-3">
         {blocks.map((block, idx) => renderBlock(block, idx))}
       </div>
+
+      {/* Pathway CTA — show when response maps a journey */}
+      {suggestPathway && !readOnly && (
+        <div className="pt-1">
+          <button
+            type="button"
+            onClick={onOpenPathway}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-xs font-semibold shadow-sm shadow-indigo-200 hover:from-indigo-600 hover:to-violet-600 transition-all cursor-pointer"
+          >
+            <GraduationCap className="w-3.5 h-3.5" />
+            Build my pathway →
+          </button>
+        </div>
+      )}
 
       {/* Structured Interaction Section — only when there's an actual input type */}
       {interaction && interaction.kind !== "none" && interaction.input_type !== "none" && (

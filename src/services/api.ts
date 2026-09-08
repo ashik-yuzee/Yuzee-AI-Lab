@@ -391,12 +391,25 @@ export function streamChatMessage(
     };
 
     try {
-      const response = await fetch(`${API_BASE}/api/conversations/${conversationId}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        signal: controller.signal,
-      });
+      const fetchWithRetry = async () => {
+        const delays = [500, 1000];
+        for (let attempt = 0; ; attempt++) {
+          try {
+            return await fetch(`${API_BASE}/api/conversations/${conversationId}/messages`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+              signal: controller.signal,
+            });
+          } catch (err: any) {
+            const isTransient = err.name !== "AbortError" &&
+              /Failed to fetch|NetworkError|net::ERR_/i.test(err.message ?? "");
+            if (!isTransient || attempt >= delays.length) throw err;
+            await new Promise(res => setTimeout(res, delays[attempt]));
+          }
+        }
+      };
+      const response = await fetchWithRetry();
 
       if (!response.ok || !response.body) {
         throw new Error(`Chat streaming failed with status ${response.status}`);

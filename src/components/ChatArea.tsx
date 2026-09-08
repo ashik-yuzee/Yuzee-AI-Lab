@@ -24,6 +24,7 @@ import {
   Brain,
   Volume2,
   VolumeX,
+  RotateCcw,
 } from "lucide-react";
 
 function modelShortName(modelId: string): string {
@@ -48,6 +49,8 @@ export const ChatArea: React.FC = () => {
     setPendingClarificationQuestions,
     dailyCostWarning,
     dismissCostWarning,
+    setWhiteboardOpen,
+    setTokenInspectorOpen,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -154,7 +157,14 @@ export const ChatArea: React.FC = () => {
 
   const messages = currentConversation?.messages || [];
 
-  const errorDisplay = (errorCode?: string, errorMsg?: string) => {
+  const retryLastMessage = () => {
+    const msgs = currentConversation?.messages || [];
+    for (let i = msgs.length - 1; i >= 0; i--) {
+      if (msgs[i].role === "user") { sendMessage(msgs[i].content); break; }
+    }
+  };
+
+  const errorDisplay = (errorCode?: string, errorMsg?: string, onRetry?: () => void) => {
     const configs: Record<string, { icon: React.ReactNode; title: string; detail: string; color: string }> = {
       RATE_LIMIT: {
         icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />,
@@ -191,10 +201,22 @@ export const ChatArea: React.FC = () => {
     return (
       <div className={`flex items-start gap-2.5 p-3 border rounded-lg text-sm ${cfg.color}`}>
         {cfg.icon}
-        <div>
+        <div className="flex-1 min-w-0">
           <p className="font-semibold text-[13px]">{cfg.title}</p>
           <p className="text-xs mt-0.5 opacity-80">{cfg.detail}</p>
         </div>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            disabled={isStreaming}
+            className="shrink-0 flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-current opacity-60 hover:opacity-100 disabled:opacity-30 text-xs font-semibold transition-opacity cursor-pointer"
+            title="Retry"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            Retry
+          </button>
+        )}
       </div>
     );
   };
@@ -331,6 +353,7 @@ export const ChatArea: React.FC = () => {
                               readOnly={msg.isStreaming}
                               conversationId={currentConversation?.id}
                               hideRecommendedActions={isLastAssistantMsg(msg.id)}
+                              onOpenPathway={isLastAssistantMsg(msg.id) ? () => { setWhiteboardOpen(true); setTokenInspectorOpen(false); } : undefined}
                             />
                           ) : (
                             !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
@@ -341,7 +364,7 @@ export const ChatArea: React.FC = () => {
                           )}
 
                           {/* Error Banner */}
-                          {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error)}
+                          {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 
                           {/* Streaming Indicator */}
                           {msg.isStreaming && (
