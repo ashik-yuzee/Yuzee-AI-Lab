@@ -458,15 +458,28 @@ export class YuzeeRequestAssembler {
    * - enum on integer/number types (Gemini only supports string enums)
    * The AJV copy used for validation is untouched.
    */
+  /**
+   * Prepares the JSON Schema for Gemini's responseSchema field.
+   * Gemini's REST API (proto) has specific requirements vs plain JSON Schema:
+   *   - no additionalProperties
+   *   - enum values must be strings (no integer/number enum values, no empty strings)
+   *   - maxItems / minItems must be JSON strings (proto uint64 → string in JSON)
+   *   - minimum / maximum on integers may be unsupported — strip to avoid INVALID_ARGUMENT
+   */
   private sanitizeSchemaForGemini(node: any): any {
     if (!node || typeof node !== 'object') return node;
     if (Array.isArray(node)) return node.map((n: any) => this.sanitizeSchemaForGemini(n));
     const out: any = {};
     for (const [k, v] of Object.entries(node)) {
       if (k === 'additionalProperties') continue;
-      // Gemini rejects integer/number enums (only string enums supported)
+      if (k === 'minimum' || k === 'maximum') continue;
+      // maxItems/minItems must be strings (proto uint64 JSON encoding)
+      if ((k === 'maxItems' || k === 'minItems') && typeof v === 'number') {
+        out[k] = String(v);
+        continue;
+      }
+      // Gemini only accepts string enum values; integer/number enums and empty strings are rejected
       if (k === 'enum' && (node.type === 'integer' || node.type === 'number')) continue;
-      // Gemini rejects empty-string enum values
       if (k === 'enum' && Array.isArray(v)) {
         const filtered = (v as any[]).filter((e: any) => e !== '');
         if (filtered.length === 0) continue;
