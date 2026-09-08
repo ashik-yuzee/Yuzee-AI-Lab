@@ -464,7 +464,15 @@ export class YuzeeRequestAssembler {
     const out: any = {};
     for (const [k, v] of Object.entries(node)) {
       if (k === 'additionalProperties') continue;
+      // Gemini rejects integer/number enums (only string enums supported)
       if (k === 'enum' && (node.type === 'integer' || node.type === 'number')) continue;
+      // Gemini rejects empty-string enum values
+      if (k === 'enum' && Array.isArray(v)) {
+        const filtered = (v as any[]).filter((e: any) => e !== '');
+        if (filtered.length === 0) continue;
+        out[k] = filtered;
+        continue;
+      }
       out[k] = typeof v === 'object' && v !== null ? this.sanitizeSchemaForGemini(v) : v;
     }
     return out;
