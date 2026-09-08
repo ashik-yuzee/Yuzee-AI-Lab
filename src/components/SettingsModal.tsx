@@ -17,7 +17,7 @@ export const SettingsModal: React.FC = () => {
   } = useTokenLab();
   const [clearConfirm, setClearConfirm] = useState(false);
   const [cleared, setCleared] = useState(false);
-  const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number } | null>(null);
+  const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number; whiteboard?: { calls: number; inputTokens: number; outputTokens: number; costUsd: number } } | null>(null);
 
   useEffect(() => {
     if (isSettingsOpen) fetchLifetimeStats().then(setLifetime).catch(() => {});
@@ -182,8 +182,10 @@ export const SettingsModal: React.FC = () => {
                 <div className="text-[11px] text-slate-400">Loading…</div>
               ) : (
                 <>
+                  {/* Chat stats */}
+                  <div className="text-[10px] font-semibold text-violet-500 uppercase tracking-wider">Chat</div>
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500">Total API calls</span>
+                    <span className="text-slate-500">API calls</span>
                     <span className="font-mono font-semibold">{lifetime.calls.toLocaleString()}</span>
                   </div>
                   <div className="flex items-center justify-between">
@@ -205,8 +207,37 @@ export const SettingsModal: React.FC = () => {
                     </div>
                   )}
                   <div className="flex items-center justify-between pt-1 border-t border-violet-200 mt-1">
-                    <span className="font-semibold text-slate-700">Lifetime cost</span>
+                    <span className="font-semibold text-slate-700">Chat cost</span>
                     <span className="font-mono font-bold text-violet-800">{formatCost(lifetime.costUsd)}</span>
+                  </div>
+
+                  {/* Whiteboard / Pathway stats */}
+                  {lifetime.whiteboard && (lifetime.whiteboard.calls > 0 || true) && (
+                    <>
+                      <div className="text-[10px] font-semibold text-violet-500 uppercase tracking-wider pt-1">Pathway / Whiteboard</div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500">API calls</span>
+                        <span className="font-mono font-semibold">{(lifetime.whiteboard.calls).toLocaleString()}</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500">Input tokens</span>
+                        <span className="font-mono font-semibold">{(lifetime.whiteboard.inputTokens / 1000).toFixed(1)}k</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500">Output tokens</span>
+                        <span className="font-mono font-semibold">{(lifetime.whiteboard.outputTokens / 1000).toFixed(1)}k</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-500">Whiteboard cost</span>
+                        <span className="font-mono font-semibold text-violet-700">{formatCost(lifetime.whiteboard.costUsd)}</span>
+                      </div>
+                    </>
+                  )}
+
+                  {/* Combined total */}
+                  <div className="flex items-center justify-between pt-1 border-t border-violet-300 mt-1">
+                    <span className="font-bold text-slate-800">Total lifetime cost</span>
+                    <span className="font-mono font-bold text-violet-900">{formatCost(lifetime.costUsd + (lifetime.whiteboard?.costUsd ?? 0))}</span>
                   </div>
                 </>
               )}

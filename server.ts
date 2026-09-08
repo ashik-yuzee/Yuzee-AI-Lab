@@ -504,11 +504,14 @@ ${recent}`;
 
   try {
     const resp = await ai.models.generateContent({ model: "gemini-3.7-flash", contents: prompt });
-    // Track whiteboard token usage separately
+    const wbIn = resp.usageMetadata?.promptTokenCount ?? 0;
+    const wbOut = resp.usageMetadata?.candidatesTokenCount ?? 0;
     whiteboardStats.calls++;
-    whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount     ?? 0;
-    whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount  ?? 0;
-    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/generate', model: 'gemini-3.7-flash', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
+    whiteboardStats.inputTokens  += wbIn;
+    whiteboardStats.outputTokens += wbOut;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/generate', model: 'gemini-3.7-flash', inputTokens: wbIn, outputTokens: wbOut });
+    const wbIp = ((req.ip ?? req.socket?.remoteAddress ?? 'unknown') as string).replace(/^::ffff:/, '');
+    logTurn({ ip: wbIp, conversationId: 'whiteboard', messageId: `wb-gen-${Date.now()}`, model: 'gemini-3.7-flash', inputTokens: wbIn, outputTokens: wbOut, estimatedCostUsd: (wbIn * 0.10 + wbOut * 0.40) / 1_000_000, isWhiteboard: true }).catch(() => {});
     const text = (resp.text || "").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.status(500).json({ error: "Invalid AI response" });
@@ -571,10 +574,14 @@ Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON,
     const aiClient = getGemini();
     if (!aiClient) return res.json({ answer: "AI not configured." });
     const resp = await aiClient.models.generateContent({ model: "gemini-3.7-flash", contents: prompt });
+    const exIn = resp.usageMetadata?.promptTokenCount ?? 0;
+    const exOut = resp.usageMetadata?.candidatesTokenCount ?? 0;
     whiteboardStats.calls++;
-    whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount    ?? 0;
-    whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
-    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/explain', model: 'gemini-3.7-flash', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
+    whiteboardStats.inputTokens  += exIn;
+    whiteboardStats.outputTokens += exOut;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/explain', model: 'gemini-3.7-flash', inputTokens: exIn, outputTokens: exOut });
+    const exIp = ((req.ip ?? req.socket?.remoteAddress ?? 'unknown') as string).replace(/^::ffff:/, '');
+    logTurn({ ip: exIp, conversationId: 'whiteboard', messageId: `wb-exp-${Date.now()}`, model: 'gemini-3.7-flash', inputTokens: exIn, outputTokens: exOut, estimatedCostUsd: (exIn * 0.10 + exOut * 0.40) / 1_000_000, isWhiteboard: true }).catch(() => {});
     return res.json({ answer: (resp.text || "").trim() });
   } catch {
     return res.json({ answer: "Sorry, I couldn't get an explanation right now." });
@@ -597,7 +604,7 @@ app.get("/api/tokens/log", async (_req, res) => {
 app.get("/api/tokens/lifetime-stats", async (_req, res) => {
   const stats = await loadLifetimeStats();
   if (stats) return void res.json(stats);
-  res.json({ calls: 0, inputTokens: 0, outputTokens: 0, cachedTokens: 0, thinkingTokens: 0, costUsd: 0 });
+  res.json({ calls: 0, inputTokens: 0, outputTokens: 0, cachedTokens: 0, thinkingTokens: 0, costUsd: 0, whiteboard: { calls: 0, inputTokens: 0, outputTokens: 0, costUsd: 0 } });
 });
 
 // Daily cost — used by client to show $1/$5/$10/$15+ threshold warnings
@@ -1829,7 +1836,12 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   const hasProviderUsage = !isMockResponse && !!realUsageMetadata;
   const inputTokens = realUsageMetadata?.promptTokenCount ?? (estimateTokens(assembledReq.systemInstruction) + estimateTokens(assembledReq.contents));
   const outputTokens = realUsageMetadata?.candidatesTokenCount ?? estimateTokens(fullAssistantText);
-  const thinkingTokens = realUsageMetadata?.thinkingTokenCount ?? (realUsageMetadata?.thoughtsTokenCount ?? null);
+  // thinkingTokenCount is explicit on 2.5+ models; derive from total delta on others
+  const explicitThinking = realUsageMetadata?.thinkingTokenCount ?? realUsageMetadata?.thoughtsTokenCount ?? null;
+  const derivedThinking = (realUsageMetadata && realUsageMetadata.totalTokenCount != null)
+    ? Math.max(0, (realUsageMetadata.totalTokenCount - (realUsageMetadata.promptTokenCount ?? 0) - (realUsageMetadata.candidatesTokenCount ?? 0)))
+    : null;
+  const thinkingTokens = explicitThinking ?? (derivedThinking && derivedThinking > 0 ? derivedThinking : null);
   // Only report cached tokens when provider confirms a real cache hit (non-null, non-zero)
   const cachedTokensRaw = realUsageMetadata?.cachedContentTokenCount ?? null;
   const cachedTokens = (cachedTokensRaw !== null && cachedTokensRaw > 0) ? cachedTokensRaw : null;

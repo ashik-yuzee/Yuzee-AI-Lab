@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS conversation_logs (
   latency_ms          INT,
   finish_reason       TEXT,
   is_mock       BOOLEAN     NOT NULL DEFAULT FALSE,
+  is_whiteboard BOOLEAN     NOT NULL DEFAULT FALSE,
   user_input    TEXT,
   assistant_output TEXT,
   error_code    TEXT
@@ -101,6 +102,7 @@ const MIGRATION_SQLS = [
   `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS user_input TEXT`,
   `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS assistant_output TEXT`,
   `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS error_code TEXT`,
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS is_whiteboard BOOLEAN NOT NULL DEFAULT FALSE`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS mode TEXT DEFAULT 'AUTO'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS compaction_history JSONB DEFAULT '[]'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS active_interaction JSONB`,
@@ -162,6 +164,7 @@ export interface TurnLog {
   latencyMs?: number | null;
   finishReason?: string | null;
   isMock?: boolean;
+  isWhiteboard?: boolean;
   userInput?: string | null;
   assistantOutput?: string | null;
   errorCode?: string | null;
@@ -177,9 +180,9 @@ export async function logTurn(turn: TurnLog): Promise<void> {
       `INSERT INTO conversation_logs (
         ip, conversation_id, message_id, model,
         input_tokens, uncached_input_tokens, cached_tokens, output_tokens, thinking_tokens,
-        estimated_cost_usd, latency_ms, finish_reason, is_mock,
+        estimated_cost_usd, latency_ms, finish_reason, is_mock, is_whiteboard,
         user_input, assistant_output, error_code
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)
       ON CONFLICT DO NOTHING`,
       [
         turn.ip,
@@ -195,6 +198,7 @@ export async function logTurn(turn: TurnLog): Promise<void> {
         turn.latencyMs ?? null,
         turn.finishReason ?? null,
         turn.isMock ?? false,
+        turn.isWhiteboard ?? false,
         turn.userInput ? turn.userInput.slice(0, MAX_INPUT_CHARS) : null,
         turn.assistantOutput ? turn.assistantOutput.slice(0, MAX_OUTPUT_CHARS) : null,
         turn.errorCode ?? null,
@@ -381,27 +385,40 @@ export function isDbEnabled(): boolean {
   return pool !== null;
 }
 
-export async function loadLifetimeStats(): Promise<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number } | null> {
+export async function loadLifetimeStats(): Promise<{
+  calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number;
+  whiteboard: { calls: number; inputTokens: number; outputTokens: number; costUsd: number };
+} | null> {
   if (!pool) return null;
   try {
     const r = await pool.query(`
       SELECT
-        COUNT(*)::int                                                        AS calls,
-        COALESCE(SUM(input_tokens)        FILTER (WHERE NOT is_mock), 0)::int AS input_tokens,
-        COALESCE(SUM(output_tokens)       FILTER (WHERE NOT is_mock), 0)::int AS output_tokens,
-        COALESCE(SUM(cached_tokens)       FILTER (WHERE NOT is_mock), 0)::int AS cached_tokens,
-        COALESCE(SUM(thinking_tokens)     FILTER (WHERE NOT is_mock), 0)::int AS thinking_tokens,
-        COALESCE(SUM(estimated_cost_usd)  FILTER (WHERE NOT is_mock), 0)::float AS cost_usd
+        COUNT(*)          FILTER (WHERE NOT is_mock AND NOT is_whiteboard)                    AS calls,
+        COALESCE(SUM(input_tokens)   FILTER (WHERE NOT is_mock AND NOT is_whiteboard), 0)    AS input_tokens,
+        COALESCE(SUM(output_tokens)  FILTER (WHERE NOT is_mock AND NOT is_whiteboard), 0)    AS output_tokens,
+        COALESCE(SUM(cached_tokens)  FILTER (WHERE NOT is_mock AND NOT is_whiteboard), 0)    AS cached_tokens,
+        COALESCE(SUM(thinking_tokens)FILTER (WHERE NOT is_mock AND NOT is_whiteboard), 0)    AS thinking_tokens,
+        COALESCE(SUM(estimated_cost_usd) FILTER (WHERE NOT is_mock AND NOT is_whiteboard), 0) AS cost_usd,
+        COUNT(*)          FILTER (WHERE is_whiteboard AND NOT is_mock)                        AS wb_calls,
+        COALESCE(SUM(input_tokens)   FILTER (WHERE is_whiteboard AND NOT is_mock), 0)        AS wb_input,
+        COALESCE(SUM(output_tokens)  FILTER (WHERE is_whiteboard AND NOT is_mock), 0)        AS wb_output,
+        COALESCE(SUM(estimated_cost_usd) FILTER (WHERE is_whiteboard AND NOT is_mock), 0)    AS wb_cost
       FROM conversation_logs
     `);
     const row = r.rows[0];
     return {
-      calls:         parseInt(row.calls)          || 0,
-      inputTokens:   parseInt(row.input_tokens)   || 0,
-      outputTokens:  parseInt(row.output_tokens)  || 0,
-      cachedTokens:  parseInt(row.cached_tokens)  || 0,
-      thinkingTokens:parseInt(row.thinking_tokens)|| 0,
-      costUsd:       parseFloat(row.cost_usd)     || 0,
+      calls:          parseInt(row.calls)          || 0,
+      inputTokens:    parseInt(row.input_tokens)   || 0,
+      outputTokens:   parseInt(row.output_tokens)  || 0,
+      cachedTokens:   parseInt(row.cached_tokens)  || 0,
+      thinkingTokens: parseInt(row.thinking_tokens)|| 0,
+      costUsd:        parseFloat(row.cost_usd)     || 0,
+      whiteboard: {
+        calls:       parseInt(row.wb_calls) || 0,
+        inputTokens: parseInt(row.wb_input) || 0,
+        outputTokens:parseInt(row.wb_output)|| 0,
+        costUsd:     parseFloat(row.wb_cost)|| 0,
+      },
     };
   } catch { return null; }
 }
