@@ -48,7 +48,7 @@ function requireAuth(req: express.Request, res: express.Response, next: express.
 
 // Bypass auth for /api/auth/* paths; protect everything else
 app.use('/api', (req: express.Request, res: express.Response, next: express.NextFunction) => {
-  if (req.path.startsWith('/auth/')) return next();
+  if (req.path.startsWith('/auth/') || req.path === '/db-status') return next();
   requireAuth(req, res, next);
 });
 
