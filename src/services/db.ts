@@ -19,18 +19,8 @@ async function writeLocal(convs: any[]): Promise<void> {
 }
 
 // ---- PostgreSQL pool (optional) ----
-// Optional — if DATABASE_URL is absent the app works without logging
-const pool = process.env.DATABASE_URL
-  ? new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: { rejectUnauthorized: false },
-      // Force IPv4 — Render free tier cannot route IPv6 to Supabase
-      family: 4,
-      max: 5,
-      idleTimeoutMillis: 30_000,
-      connectionTimeoutMillis: 5_000,
-    })
-  : null;
+// Lazy — initialized in initDb() so dotenv has run before we read DATABASE_URL
+let pool: InstanceType<typeof Pool> | null = null;
 
 // ---- Schema ----
 
@@ -117,6 +107,15 @@ const MIGRATION_SQLS = [
 ];
 
 export async function initDb(): Promise<void> {
+  if (!pool && process.env.DATABASE_URL) {
+    pool = new Pool({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
+      max: 5,
+      idleTimeoutMillis: 30_000,
+      connectionTimeoutMillis: 5_000,
+    });
+  }
   if (!pool) return;
   try {
     await pool.query(TABLE_TURN_LOGS);

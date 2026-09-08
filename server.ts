@@ -4,6 +4,7 @@ import crypto from "crypto";
 // vite is only needed for local dev — dynamic import keeps it out of the Vercel bundle
 import { GoogleGenAI } from "@google/genai";
 import dotenv from "dotenv";
+import dns from "dns";
 import fs from "fs/promises";
 
 import { YuzeeRequestAssembler } from "./src/services/YuzeeRequestAssembler";
@@ -30,6 +31,8 @@ import { initDb, logTurn, pruneExpired, keepAlive, dbPing, loadSessionStats, isD
 import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
+// Force IPv4 DNS — Render free tier cannot route to IPv6 (Supabase resolves to both)
+dns.setDefaultResultOrder('ipv4first');
 
 const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
