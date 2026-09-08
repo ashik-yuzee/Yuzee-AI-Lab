@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: yuzee-ai-token-lab
+  ai:
+    google:
+      genai:
+        api-key: ${GEMINI_API_KEY:}
+        chat:
+          options:
+            model: gemini-3.6-flash
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+yuzee:
+  token-lab:
+    default-model: gemini-3.6-flash
+    allowed-models:
+      - gemini-3.6-flash
+      - gemini-3.5-flash
+      - gemini-3.5-flash-lite
+      - gemini-3.1-flash-lite
+    default-strategy: ADAPTIVE_HYBRID
+    default-context-budget: 270000
+    default-recent-turns: 100
+    enable-deep-diagnostics: true
+    enable-experimental-interactions: false
+    semantic-memory:
+      soft-max-tokens-per-episode: 800
+      soft-max-turns-per-episode: 6
+      boundary-threshold: 0.55
+      max-evidence-tokens: 600
+      max-structured-memories: 8
+      max-historical-episodes: 3
+      enable-extraction: false
