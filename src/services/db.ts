@@ -77,7 +77,6 @@ const TABLE_TURN_LOGS = `
 CREATE TABLE IF NOT EXISTS conversation_logs (
   id            BIGSERIAL PRIMARY KEY,
   logged_at     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  expires_at    TIMESTAMPTZ NOT NULL DEFAULT (NOW() + INTERVAL '30 days'),
   ip            TEXT        NOT NULL,
   conversation_id TEXT      NOT NULL,
   message_id    TEXT        NOT NULL,
@@ -97,7 +96,6 @@ CREATE TABLE IF NOT EXISTS conversation_logs (
 )`;
 
 const INDEX_SQLS = [
-  `CREATE INDEX IF NOT EXISTS idx_convlog_expires ON conversation_logs (expires_at)`,
   `CREATE INDEX IF NOT EXISTS idx_convlog_ip      ON conversation_logs (ip, logged_at DESC)`,
   `CREATE INDEX IF NOT EXISTS idx_convlog_conv    ON conversation_logs (conversation_id)`,
   `CREATE INDEX IF NOT EXISTS idx_conv_updated    ON conversations (updated_at DESC)`,
@@ -115,21 +113,20 @@ export async function initDb(): Promise<void> {
       try { await pool.query(sql); } catch (e) { console.warn("[db] Index warning:", e); }
     }
     console.log("[db] Schema ready");
-    const { rowCount } = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
-    if (rowCount) console.log(`[db] Pruned ${rowCount} expired turn log rows on startup`);
+    // conversation_logs rows are never deleted — permanent audit trail
   } catch (err) {
     console.error("[db] Init failed:", err);
   }
 }
 
-// Run every 6 hours to keep the tables lean
+// Prune expired conversations and conversation_logs older than 90 days
 export async function pruneExpired(): Promise<void> {
   if (!pool) return;
   try {
-    const r1 = await pool.query("DELETE FROM conversation_logs WHERE expires_at < NOW()");
-    const r2 = await pool.query("DELETE FROM conversations WHERE expires_at < NOW()");
-    const pruned = (r1.rowCount ?? 0) + (r2.rowCount ?? 0);
-    if (pruned) console.log(`[db] Pruned ${pruned} expired rows`);
+    const r1 = await pool.query("DELETE FROM conversations WHERE expires_at < NOW()");
+    if (r1.rowCount) console.log(`[db] Pruned ${r1.rowCount} expired conversations`);
+    const r2 = await pool.query("DELETE FROM conversation_logs WHERE logged_at < NOW() - INTERVAL '90 days'");
+    if (r2.rowCount) console.log(`[db] Pruned ${r2.rowCount} old token log rows (>90 days)`);
   } catch (err) {
     console.error("[db] Prune failed:", err);
   }
@@ -168,7 +165,8 @@ export async function logTurn(turn: TurnLog): Promise<void> {
         input_tokens, uncached_input_tokens, cached_tokens, output_tokens, thinking_tokens,
         estimated_cost_usd, latency_ms, finish_reason, is_mock,
         user_input, assistant_output, error_code
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      ON CONFLICT DO NOTHING`,
       [
         turn.ip,
         turn.conversationId,
@@ -369,6 +367,17 @@ export function isDbEnabled(): boolean {
   return pool !== null;
 }
 
+export async function loadDailyCost(): Promise<number | null> {
+  if (!pool) return null;
+  try {
+    const r = await pool.query(
+      `SELECT COALESCE(SUM(estimated_cost_usd), 0)::float AS total
+       FROM conversation_logs WHERE logged_at >= CURRENT_DATE AND NOT is_mock`
+    );
+    return parseFloat(r.rows[0].total) || 0;
+  } catch { return null; }
+}
+
 export async function keepAlive(): Promise<void> {
   if (!pool) return;
   try { await pool.query("SELECT 1"); } catch (err) { console.error("[db] keepAlive failed:", err); }
@@ -388,7 +397,7 @@ export async function loadSessionStats(): Promise<{
         COALESCE(SUM(output_tokens)        FILTER (WHERE NOT is_mock), 0) AS model_output,
         COALESCE(SUM(thinking_tokens)      FILTER (WHERE NOT is_mock), 0) AS thinking,
         COALESCE(SUM(cached_tokens)        FILTER (WHERE NOT is_mock), 0) AS cached
-      FROM conversation_logs WHERE expires_at > NOW()
+      FROM conversation_logs
     `);
     const row = r.rows[0];
     return {

@@ -26,7 +26,7 @@ import {
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
-import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
+import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, loadDailyCost, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
@@ -35,6 +35,46 @@ const app = express();
 const PORT = parseInt(process.env.PORT || "3000", 10);
 
 app.use(express.json({ limit: '500kb' }));
+
+// ── Authentication ────────────────────────────────────────────────────────────
+const AUTH_SESSIONS = new Set<string>();
+
+function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  if (!token || !AUTH_SESSIONS.has(token)) return void res.status(401).json({ error: 'Unauthorized' });
+  next();
+}
+
+// Bypass auth for /api/auth/* paths; protect everything else
+app.use('/api', (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  if (req.path.startsWith('/auth/')) return next();
+  requireAuth(req, res, next);
+});
+
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body;
+  const ADMIN_USER = process.env.ADMIN_USERNAME || 'yuzeeadmin';
+  const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'yuzeeadmin@2026';
+  if (username !== ADMIN_USER || password !== ADMIN_PASS) {
+    return void res.status(401).json({ error: 'Invalid credentials' });
+  }
+  const token = crypto.randomBytes(32).toString('hex');
+  AUTH_SESSIONS.add(token);
+  res.json({ token });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const auth = req.headers.authorization || '';
+  AUTH_SESSIONS.delete(auth.startsWith('Bearer ') ? auth.slice(7) : '');
+  res.json({ ok: true });
+});
+
+app.get('/api/auth/check', (req, res) => {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  res.json({ authenticated: AUTH_SESSIONS.has(token) });
+});
 
 // Simple in-memory per-IP rate limiter (no extra dependency needed for this scale)
 const _rlWindows = new Map<string, { count: number; resetAt: number }>();
@@ -91,6 +131,7 @@ async function summarizeEvictedTurns(
     sessionStats.compactionInputTokens += response.usageMetadata.promptTokenCount || 0;
     sessionStats.compactionOutputTokens += response.usageMetadata.candidatesTokenCount || 0;
     sessionStats.compactionTotalTokens += response.usageMetadata.totalTokenCount || 0;
+    appendTokenLog({ ts: Date.now(), endpoint: 'compaction/summarize', model: 'gemini-3.5-flash-lite', inputTokens: response.usageMetadata.promptTokenCount || 0, outputTokens: response.usageMetadata.candidatesTokenCount || 0 });
   }
 
   return text;
@@ -153,6 +194,49 @@ const conversations: Map<string, ConversationItem> = new Map();
 
 // Whiteboard generation stats (tracked separately from chat)
 const whiteboardStats = { calls: 0, inputTokens: 0, outputTokens: 0 };
+
+// Utility model stats (profile extraction, contradiction detection, pre-check, title gen, pathway recommend)
+const utilityStats = { calls: 0, inputTokens: 0, outputTokens: 0 };
+
+// Append-only token usage log — never truncated or deleted; one JSON line per call
+const TOKEN_LOG_FILE = path.join(process.cwd(), "data", "token-log.ndjson");
+async function appendTokenLog(entry: {
+  ts: number; endpoint: string; model: string;
+  inputTokens: number; outputTokens: number; cachedTokens?: number;
+  estimatedCostUsd?: number; conversationId?: string;
+}): Promise<void> {
+  const cached = entry.cachedTokens ?? 0;
+  const cost = entry.estimatedCostUsd ?? (calcTurnCost(entry.model, {
+    inputTokens: entry.inputTokens,
+    outputTokens: entry.outputTokens,
+    uncachedInputTokens: entry.inputTokens - cached,
+    cachedTokens: cached,
+  }) ?? 0);
+  const logLine = JSON.stringify({ ...entry, estimatedCostUsd: cost, datetime: new Date(entry.ts).toISOString() });
+  try {
+    await fs.mkdir(path.dirname(TOKEN_LOG_FILE), { recursive: true });
+    await fs.appendFile(TOKEN_LOG_FILE, logLine + '\n');
+  } catch {}
+}
+
+// Retry wrapper for Gemini 429 / quota errors with exponential backoff
+async function withRetry<T>(fn: () => Promise<T>, maxRetries = 2, baseDelayMs = 2000): Promise<T> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try { return await fn(); }
+    catch (err: any) {
+      const msg = String(err?.message || err?.status || '');
+      const is429 = err?.status === 429 || msg.includes('429') || msg.toLowerCase().includes('quota') || msg.toLowerCase().includes('resource_exhausted');
+      if (is429 && attempt < maxRetries) {
+        const delay = baseDelayMs * Math.pow(2, attempt);
+        console.warn(`[gemini] 429 rate limit — retry ${attempt + 1}/${maxRetries} in ${delay}ms`);
+        await new Promise(r => setTimeout(r, delay));
+        continue;
+      }
+      throw err;
+    }
+  }
+  throw new Error('withRetry: exhausted');
+}
 
 // Local stats file for persistence without PostgreSQL
 const LOCAL_STATS_FILE = path.join(process.cwd(), "data", "session-stats.json");
@@ -263,6 +347,10 @@ Return ONLY a JSON array of NEW fact objects not already known. If none, return 
 Example: [{"text":"Works as IT support","category":"general"},{"text":"Likes hands-on learning","category":"like"},{"text":"Dislikes online-only courses","category":"dislike"}]`;
   try {
     const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    utilityStats.calls++;
+    utilityStats.inputTokens += resp.usageMetadata?.promptTokenCount ?? 0;
+    utilityStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/extract-profile-facts', model: 'gemini-3.5-flash-lite', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     const text = (resp.text || "[]").trim();
     const match = text.match(/\[[\s\S]*\]/);
     const raw = match ? JSON.parse(match[0]) : [];
@@ -288,6 +376,10 @@ Return ONLY a JSON array of contradiction objects. Each object: {"fact": "the st
 If no contradictions, return []. Keep it short — only clear factual conflicts, not vague differences.`;
   try {
     const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    utilityStats.calls++;
+    utilityStats.inputTokens += resp.usageMetadata?.promptTokenCount ?? 0;
+    utilityStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/detect-contradictions', model: 'gemini-3.5-flash-lite', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     const text = (resp.text || "[]").trim();
     const match = text.match(/\[[\s\S]*\]/);
     const contradictions = match ? JSON.parse(match[0]) : [];
@@ -321,6 +413,10 @@ Related → {"needsClarification":true,"bridgeMessage":"One sentence explaining 
 Not related → {"needsClarification":false}`;
   try {
     const resp = await ai.models.generateContent({ model: "gemini-3.5-flash-lite", contents: prompt });
+    utilityStats.calls++;
+    utilityStats.inputTokens += resp.usageMetadata?.promptTokenCount ?? 0;
+    utilityStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pre-check', model: 'gemini-3.5-flash-lite', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     const text = (resp.text || "{}").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.json({ needsClarification: false });
@@ -403,6 +499,7 @@ ${recent}`;
     whiteboardStats.calls++;
     whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount     ?? 0;
     whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount  ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/generate', model: 'gemini-3.7-flash', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     const text = (resp.text || "").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.status(500).json({ error: "Invalid AI response" });
@@ -434,6 +531,10 @@ Rules: Be specific (real course names, real skills, real tools). Consider logica
 
   try {
     const resp = await ai.models.generateContent({ model: "gemini-2.5-flash-lite-preview-06-17", contents: prompt });
+    utilityStats.calls++;
+    utilityStats.inputTokens += resp.usageMetadata?.promptTokenCount ?? 0;
+    utilityStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/recommend', model: 'gemini-2.5-flash-lite-preview-06-17', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     const text = (resp.text || "").trim();
     const match = text.match(/\{[\s\S]*\}/);
     if (!match) return res.json({ suggestions: [] });
@@ -464,6 +565,7 @@ Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON,
     whiteboardStats.calls++;
     whiteboardStats.inputTokens  += resp.usageMetadata?.promptTokenCount    ?? 0;
     whiteboardStats.outputTokens += resp.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/explain', model: 'gemini-3.7-flash', inputTokens: resp.usageMetadata?.promptTokenCount ?? 0, outputTokens: resp.usageMetadata?.candidatesTokenCount ?? 0 });
     return res.json({ answer: (resp.text || "").trim() });
   } catch {
     return res.json({ answer: "Sorry, I couldn't get an explanation right now." });
@@ -471,6 +573,33 @@ Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON,
 });
 
 app.get("/api/pathway/stats", (_req, res) => res.json(whiteboardStats));
+
+app.get("/api/tokens/utility-stats", (_req, res) => res.json({ whiteboard: whiteboardStats, utility: utilityStats }));
+
+app.get("/api/tokens/log", async (_req, res) => {
+  try {
+    const content = await fs.readFile(TOKEN_LOG_FILE, 'utf-8');
+    const lines = content.trim().split('\n').filter(Boolean);
+    res.json({ entries: lines.slice(-500).map(l => JSON.parse(l)), total: lines.length });
+  } catch { res.json({ entries: [], total: 0 }); }
+});
+
+// Daily cost — used by client to show $1/$5/$10/$15+ threshold warnings
+app.get("/api/tokens/daily-cost", async (_req, res) => {
+  const today = new Date().toISOString().slice(0, 10);
+  // Try DB first via exported helper, then fall back to NDJSON file
+  const dbTotal = await loadDailyCost();
+  if (dbTotal !== null) return void res.json({ totalCostUsd: dbTotal, source: 'db' });
+  try {
+    const content = await fs.readFile(TOKEN_LOG_FILE, 'utf-8');
+    const total = content.trim().split('\n').filter(Boolean)
+      .reduce((sum, line) => {
+        try { const e = JSON.parse(line); return e.datetime?.startsWith(today) ? sum + (e.estimatedCostUsd || 0) : sum; }
+        catch { return sum; }
+      }, 0);
+    res.json({ totalCostUsd: total, source: 'file' });
+  } catch { res.json({ totalCostUsd: 0, source: 'none' }); }
+});
 
 // Default system prompt content (so client can display/diff)
 app.get("/api/system-prompt", (req, res) => {
@@ -835,6 +964,10 @@ app.post("/api/conversations/:id/generate-title", makeRateLimit(10), async (req,
       contents: `Write a short title (4-6 words, no quotes, no punctuation at end) summarising this conversation:\n\n${excerpt}`,
       config: { maxOutputTokens: 20 },
     });
+    utilityStats.calls++;
+    utilityStats.inputTokens += response.usageMetadata?.promptTokenCount ?? 0;
+    utilityStats.outputTokens += response.usageMetadata?.candidatesTokenCount ?? 0;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/generate-title', model: 'gemini-3.5-flash-lite', inputTokens: response.usageMetadata?.promptTokenCount ?? 0, outputTokens: response.usageMetadata?.candidatesTokenCount ?? 0 });
     const title = (response.text || "").trim().replace(/^["'`]|["'`]$/g, "").replace(/[.!?]$/, "").slice(0, 60);
     if (!title) return res.status(500).json({ error: "Empty title generated" });
     conv.title = title;
@@ -1499,11 +1632,11 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   try {
     if (aiInstance) {
       // Real Gemini API Invocation — uses explicit cache when available, systemInstruction otherwise
-      const stream = await aiInstance.models.generateContentStream({
+      const stream = await withRetry(() => aiInstance!.models.generateContentStream({
         model: assembledReq.model,
         contents: assembledReq.contents,
         config: geminiConfig,
-      });
+      }));
 
       for await (const chunk of stream) {
         if (timeoutFired) break;
@@ -1819,6 +1952,19 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     userInput: userMessageContent,
     assistantOutput: fullAssistantText,
   }).catch(() => {});
+
+  if (!isMockResponse) {
+    appendTokenLog({
+      ts: Date.now(),
+      endpoint: '/api/conversations/:id/messages',
+      model: modelId,
+      inputTokens: usageMetrics.inputTokens ?? 0,
+      outputTokens: usageMetrics.outputTokens ?? 0,
+      cachedTokens: usageMetrics.cachedTokens ?? 0,
+      estimatedCostUsd: calcTurnCost(modelId, usageMetrics) ?? 0,
+      conversationId: conv.id,
+    }).catch(() => {});
+  }
 
   sendEvent("done", { aiRequestId: assembledReq.aiRequestId });
   } catch (e: any) {

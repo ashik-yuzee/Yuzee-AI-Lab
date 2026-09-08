@@ -608,21 +608,20 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       }
 
       case "callout": {
-        const variantStyles: Record<string, string> = {
-          info: "bg-sky-50/80 border-sky-300 text-sky-950",
-          success: "bg-emerald-50/80 border-emerald-300 text-emerald-950",
-          warning: "bg-amber-50/80 border-amber-300 text-amber-950",
-          danger: "bg-rose-50/80 border-rose-300 text-rose-950",
-          muted: "bg-slate-100 border-slate-200 text-slate-800",
-          default: "bg-slate-50 border-slate-200 text-slate-900",
+        // Left-border accent style matching the Yuzee HTML design spec
+        const variantStyles: Record<string, { border: string; bg: string; text: string }> = {
+          info:    { border: "border-l-sky-500",     bg: "bg-sky-50",     text: "text-sky-950" },
+          success: { border: "border-l-emerald-500", bg: "bg-emerald-50", text: "text-emerald-950" },
+          warning: { border: "border-l-amber-500",   bg: "bg-amber-50",   text: "text-amber-950" },
+          danger:  { border: "border-l-rose-500",    bg: "bg-rose-50",    text: "text-rose-950" },
+          muted:   { border: "border-l-slate-400",   bg: "bg-slate-50",   text: "text-slate-700" },
+          default: { border: "border-l-blue-500",    bg: "bg-blue-50",    text: "text-slate-900" },
         };
-
-        const currentStyle = variantStyles[block.variant || "default"] || variantStyles.default;
-
+        const vs = variantStyles[block.variant || "default"] || variantStyles.default;
         return (
           <div
             key={block.id || index}
-            className={`p-3.5 rounded-xl border text-xs leading-relaxed ${currentStyle} shadow-2xs space-y-1`}
+            className={`border-l-4 ${vs.border} ${vs.bg} ${vs.text} px-3.5 py-2.5 rounded-r-xl text-xs leading-relaxed space-y-1`}
             role={block.variant === 'danger' || block.variant === 'warning' ? 'alert' : undefined}
           >
             {block.title && <h4 className="font-semibold text-xs tracking-tight">{block.title}</h4>}
@@ -937,6 +936,30 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         );
       }
 
+      case "checklist":
+        return (
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+              {block.items?.map((item: YuzeeItem, iIdx: number) => (
+                <div key={item.id || iIdx} className="flex items-start gap-2 p-2 rounded-lg border text-xs bg-white border-slate-200">
+                  <span className="shrink-0 w-4 h-4 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center mt-0.5">
+                    <svg className="w-2.5 h-2.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
+                    {(item.text || item.value) && (
+                      <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
       default:
         return (
           <div key={block.id || index} className="text-xs text-slate-700">
@@ -947,8 +970,25 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
     }
   };
 
+  // Care text: the empathetic opening from response_intent (Oala HTML pattern)
+  const careText = data.response_intent?.trim();
+
   return (
     <div className="space-y-4">
+
+      {/* Oala header */}
+      <div className="flex items-center gap-2.5 mb-1">
+        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm select-none shrink-0">O</div>
+        <div>
+          <div className="text-xs font-bold text-slate-800 leading-none">Oala</div>
+          <div className="text-[10px] text-slate-400 leading-none mt-0.5">Yuzee counsellor</div>
+        </div>
+      </div>
+
+      {/* Care text — warm opening sentence reflecting user's situation */}
+      {careText && careText !== "none" && (
+        <p className="text-sm text-slate-700 leading-relaxed font-normal">{careText}</p>
+      )}
 
       {/* Content Blocks */}
       <div className="space-y-3">

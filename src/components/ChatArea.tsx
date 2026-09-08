@@ -46,6 +46,8 @@ export const ChatArea: React.FC = () => {
     inspectTurnTelemetry,
     capabilities,
     setPendingClarificationQuestions,
+    dailyCostWarning,
+    dismissCostWarning,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -199,6 +201,27 @@ export const ChatArea: React.FC = () => {
 
   return (
     <div id="chat-viewport" className="flex-1 flex flex-col h-full bg-slate-50/50 overflow-hidden relative">
+      {/* Daily cost threshold warning banner */}
+      {dailyCostWarning.level && (
+        <div className={`flex items-center justify-between px-4 py-2 text-xs border-b ${
+          dailyCostWarning.level === '$15+' ? 'bg-red-50 border-red-300 text-red-900' :
+          dailyCostWarning.level === '$10'  ? 'bg-orange-50 border-orange-300 text-orange-900' :
+          dailyCostWarning.level === '$5'   ? 'bg-amber-50 border-amber-300 text-amber-900' :
+                                              'bg-yellow-50 border-yellow-300 text-yellow-900'
+        }`}>
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0" />
+            <span>
+              <strong>Daily spend alert:</strong> today's Gemini cost has reached{' '}
+              <strong>${dailyCostWarning.totalCostUsd.toFixed(4)}</strong>
+              {dailyCostWarning.level === '$15+' ? ' — over $15 threshold' : ` (crossed ${dailyCostWarning.level} mark)`}.
+              {dailyCostWarning.level === '$15+' && ' This warning appears on every turn above $15.'}
+            </span>
+          </div>
+          <button onClick={dismissCostWarning} className="ml-4 shrink-0 font-bold opacity-60 hover:opacity-100 cursor-pointer">✕</button>
+        </div>
+      )}
+
       {/* Notice if API Key not set */}
       {capabilities && !capabilities.geminiApiKeyPresent && (
         <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-xs text-amber-800 flex items-center justify-between">

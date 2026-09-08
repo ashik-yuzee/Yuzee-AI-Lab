@@ -29,8 +29,6 @@ export const Navbar: React.FC = () => {
     setTokenInspectorOpen,
     isWhiteboardOpen,
     setWhiteboardOpen,
-    triggerWhiteboardGenerate,
-    whiteboardHasPathway,
     setSettingsOpen,
     setProfileOpen,
     userProfile,
@@ -193,28 +191,20 @@ export const Navbar: React.FC = () => {
           <span>Lab</span>
         </button>
 
-        {/* Pathway Button — toggles whiteboard; auto-generates only when no pathway exists */}
+        {/* Pathway Button — toggles whiteboard panel */}
         <button
-          id="btn-build-pathway"
-          onClick={() => {
-            if (isWhiteboardOpen) {
-              setWhiteboardOpen(false);
-            } else {
-              setWhiteboardOpen(true);
-              setTokenInspectorOpen(false);
-              if (!whiteboardHasPathway) setTimeout(() => triggerWhiteboardGenerate(), 400);
-            }
-          }}
+          id="btn-pathway"
+          onClick={() => { setWhiteboardOpen(!isWhiteboardOpen); if (!isWhiteboardOpen) setTokenInspectorOpen(false); }}
           className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
             isWhiteboardOpen
               ? "bg-violet-50 border-violet-300 text-violet-800 font-semibold"
               : "bg-white border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300"
           }`}
-          title={isWhiteboardOpen ? "Close pathway" : whiteboardHasPathway ? "Open pathway" : "Build pathway on whiteboard"}
+          title={isWhiteboardOpen ? "Close pathway" : "Open pathway"}
           aria-label="Pathway"
         >
           <Network className="w-3.5 h-3.5 text-violet-600" />
-          <span>{whiteboardHasPathway ? "Pathway" : "Build pathway"}</span>
+          <span>Pathway</span>
         </button>
       </div>
 

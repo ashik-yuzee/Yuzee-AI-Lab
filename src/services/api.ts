@@ -49,11 +49,11 @@ export async function fetchConversations(): Promise<Conversation[]> {
   }));
 }
 
-export async function createConversation(title?: string, model?: string, strategy?: OptimizationStrategy): Promise<Conversation> {
+export async function createConversation(title?: string, model?: string, strategy?: OptimizationStrategy, extra?: Partial<Conversation>): Promise<Conversation> {
   const res = await fetch(`${API_BASE}/api/conversations`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title, model, strategy }),
+    body: JSON.stringify({ title, model, strategy, ...extra }),
   });
   if (!res.ok) throw new Error("Failed to create conversation");
   return res.json();
@@ -156,6 +156,15 @@ export async function fetchSessionStats(): Promise<SessionCumulativeStats> {
   const res = await fetch(`${API_BASE}/api/tokens/session-stats`);
   if (!res.ok) throw new Error("Failed to fetch session stats");
   return res.json();
+}
+
+export async function fetchDailyCost(): Promise<number> {
+  try {
+    const res = await fetch(`${API_BASE}/api/tokens/daily-cost`);
+    if (!res.ok) return 0;
+    const data = await res.json();
+    return data.totalCostUsd ?? 0;
+  } catch { return 0; }
 }
 
 export async function resetSessionStats(): Promise<void> {

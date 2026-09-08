@@ -4,7 +4,7 @@
  */
 
 export type YuzeeBlockType = 'heading' | 'text' | 'list' | 'steps' | 'table' | 'comparison' | 'callout' | 'key_value'
-  | 'cards' | 'timeline' | 'flow' | 'pathway_map' | 'scorecard' | 'chart' | 'progress';
+  | 'cards' | 'timeline' | 'flow' | 'pathway_map' | 'scorecard' | 'chart' | 'progress' | 'checklist';
 export type YuzeeBlockLevel = 'none' | 'h2' | 'h3';
 export type YuzeeVariant = 'default' | 'info' | 'success' | 'warning' | 'danger' | 'muted';
 

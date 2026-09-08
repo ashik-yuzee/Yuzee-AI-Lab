@@ -94,6 +94,8 @@ interface TokenLabContextType {
   sharedSettings: import('../services/api').SharedSettings | null;
   updateSharedSettings: (patch: Parameters<typeof import('../services/api').updateSharedSettings>[0]) => Promise<void>;
   resetSharedPrompt: () => Promise<void>;
+  dailyCostWarning: { level: '$1' | '$5' | '$10' | '$15+' | null; totalCostUsd: number };
+  dismissCostWarning: () => void;
 
   // Actions
   selectConversation: (id: string) => Promise<void>;
@@ -188,6 +190,11 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const abortControllerRef = useRef<AbortController | null>(null);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
   const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
+
+  // Daily cost warning state
+  const [dailyCostWarning, setDailyCostWarning] = useState<{ level: '$1' | '$5' | '$10' | '$15+' | null; totalCostUsd: number }>({ level: null, totalCostUsd: 0 });
+  // Track which fixed thresholds have already been shown this session
+  const shownThresholds = useRef<Set<string>>(new Set());
 
   // Gates localStorage writes — prevents React Strict Mode's double-invoke from wiping
   // localStorage before loadInitialData has had a chance to read and restore it.
@@ -307,7 +314,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const newConv = await api.createConversation(
       title || "New Career Exploration",
       currentConversation?.model || pendingModel.current,
-      "ADAPTIVE_HYBRID"
+      "BASELINE",
+      { mode: "VANILLA", thinkingLevel: "minimal", responseMode: "vanilla", contextBudget: 270000, recentTurnsToKeep: 100 }
     );
     setConversations((prev) => [newConv, ...prev]);
     setCurrentConversation(newConv);
@@ -516,7 +524,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const unresolvedContradictions = userContradictions
         .filter(c => !c.resolved)
         .map(c => ({ fact: c.fact, contradiction: c.contradiction }));
-      if (unresolvedContradictions.length > 0) {
+      if (unresolvedContradictions.length > 0 && textMessage.trim().length > 20) {
         try {
           const preCheck = await api.preCheckMessage({ userMessage: textMessage, unresolvedContradictions });
           if (preCheck.needsClarification && preCheck.questions?.length) {
@@ -684,6 +692,20 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           });
 
           refreshStats();
+          // Daily cost threshold warnings: $1, $5, $10 once each; $15+ every turn above $15
+          api.fetchDailyCost().then(cost => {
+            const THRESHOLDS: Array<[number, '$1' | '$5' | '$10']> = [[1, '$1'], [5, '$5'], [10, '$10']];
+            for (const [limit, label] of THRESHOLDS) {
+              if (cost >= limit && !shownThresholds.current.has(label)) {
+                shownThresholds.current.add(label);
+                setDailyCostWarning({ level: label, totalCostUsd: cost });
+                return;
+              }
+            }
+            if (cost >= 15) {
+              setDailyCostWarning({ level: '$15+', totalCostUsd: cost });
+            }
+          }).catch(() => {});
         },
         onCompaction: (compaction) => {
           setCurrentConversation((prev) => {
@@ -723,46 +745,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               setCurrentConversation((prev) => prev && prev.id === activeConv.id ? { ...prev, title } : prev);
               setConversations((prev) => prev.map((c) => (c.id === activeConv.id ? { ...c, title } : c)));
             }).catch(() => {});
-          }
-          // Extract new user profile facts from this turn (fire-and-forget)
-          if (textMessage && accumulatedContent) {
-            api.extractProfileFacts(textMessage, accumulatedContent, userProfile.map(f => f.text))
-              .then(({ facts }) => {
-                if (facts.length > 0) {
-                  setUserProfile(prev => {
-                    const newFacts = (facts as Array<{ text: string; category?: string } | string>).map((f, i) => ({
-                      id: `fact-${Date.now()}-${i}`,
-                      text: typeof f === "string" ? f : f.text,
-                      category: typeof f === "string" ? "general" : (f.category || "general"),
-                      addedAt: Date.now(),
-                    }));
-                    const updated = [...prev, ...newFacts];
-                    try { localStorage.setItem("yuzee_user_profile", JSON.stringify(updated)); } catch {}
-                    return updated;
-                  });
-                }
-              })
-              .catch(() => {});
-            // Detect contradictions (fire-and-forget, only if we have profile facts)
-            if (userProfile.length > 0) {
-              api.detectContradictions(textMessage, userProfile.map(f => f.text))
-                .then(({ contradictions }) => {
-                  if (contradictions.length > 0) {
-                    setUserContradictions(prev => {
-                      const newC = contradictions.map((c, i) => ({
-                        id: `c-${Date.now()}-${i}`,
-                        fact: c.fact,
-                        contradiction: c.contradiction,
-                        detectedAt: Date.now(),
-                        resolved: false,
-                      }));
-                      const updated = [...prev, ...newC];
-                      try { localStorage.setItem("yuzee_contradictions", JSON.stringify(updated)); } catch {}
-                      return updated;
-                    });
-                  }
-                }).catch(() => {});
-            }
           }
         },
         onProtocolValidationError: (data) => {
@@ -874,6 +856,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setTokenInspectorOpen(true);
   };
 
+  const dismissCostWarning = () => setDailyCostWarning({ level: null, totalCostUsd: 0 });
+
   const updateSharedSettingsAction = async (patch: Parameters<typeof api.updateSharedSettings>[0]) => {
     const updated = await api.updateSharedSettings(patch);
     setSharedSettings(updated);
@@ -939,6 +923,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         sharedSettings,
         updateSharedSettings: updateSharedSettingsAction,
         resetSharedPrompt: resetSharedPromptAction,
+        dailyCostWarning,
+        dismissCostWarning,
         selectConversation,
         startNewConversation,
         loadDemoConversation,

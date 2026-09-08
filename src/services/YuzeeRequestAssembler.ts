@@ -138,7 +138,8 @@ export class YuzeeRequestAssembler {
       case 'explain':
       case 'explore':
       case 'decide':  return 8192;
-      case 'detail':  return 8192;
+      case 'detail':
+      case 'vanilla': return 8192;
       default:        return 6144;
     }
   }
