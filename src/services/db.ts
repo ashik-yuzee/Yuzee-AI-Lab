@@ -23,8 +23,9 @@ async function writeLocal(convs: any[]): Promise<void> {
 const pool = process.env.DATABASE_URL
   ? new Pool({
       connectionString: process.env.DATABASE_URL,
-      // Supabase requires SSL; rejectUnauthorized:false accepts their CA without a local cert bundle
       ssl: { rejectUnauthorized: false },
+      // Force IPv4 — Render free tier cannot route IPv6 to Supabase
+      family: 4,
       max: 5,
       idleTimeoutMillis: 30_000,
       connectionTimeoutMillis: 5_000,
