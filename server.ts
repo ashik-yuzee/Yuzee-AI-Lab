@@ -26,7 +26,7 @@ import {
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
-import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, loadDailyCost, loadLifetimeStats, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
+import { initDb, logTurn, pruneExpired, keepAlive, dbPing, loadSessionStats, isDbEnabled, loadDailyCost, loadLifetimeStats, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
@@ -74,6 +74,12 @@ app.get('/api/auth/check', (req, res) => {
   const auth = req.headers.authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
   res.json({ authenticated: AUTH_SESSIONS.has(token) });
+});
+
+// DB health — no auth required, lets you verify the connection instantly
+app.get('/api/db-status', async (_req, res) => {
+  const ping = await dbPing();
+  res.json({ enabled: isDbEnabled(), ...ping });
 });
 
 // Simple in-memory per-IP rate limiter (no extra dependency needed for this scale)

@@ -103,6 +103,18 @@ const INDEX_SQLS = [
   `CREATE INDEX IF NOT EXISTS idx_msg_conv        ON messages (conversation_id, created_at ASC)`,
 ];
 
+// Additive migrations — safe to run on every startup, idempotent
+const MIGRATION_SQLS = [
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS uncached_input_tokens INT`,
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS thinking_tokens INT`,
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS user_input TEXT`,
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS assistant_output TEXT`,
+  `ALTER TABLE conversation_logs ADD COLUMN IF NOT EXISTS error_code TEXT`,
+  `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS mode TEXT DEFAULT 'AUTO'`,
+  `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS compaction_history JSONB DEFAULT '[]'`,
+  `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS active_interaction JSONB`,
+];
+
 export async function initDb(): Promise<void> {
   if (!pool) return;
   try {
@@ -112,8 +124,10 @@ export async function initDb(): Promise<void> {
     for (const sql of INDEX_SQLS) {
       try { await pool.query(sql); } catch (e) { console.warn("[db] Index warning:", e); }
     }
+    for (const sql of MIGRATION_SQLS) {
+      try { await pool.query(sql); } catch (e) { console.warn("[db] Migration warning:", e); }
+    }
     console.log("[db] Schema ready");
-    // conversation_logs rows are never deleted — permanent audit trail
   } catch (err) {
     console.error("[db] Init failed:", err);
   }
@@ -406,6 +420,19 @@ export async function loadDailyCost(): Promise<number | null> {
 export async function keepAlive(): Promise<void> {
   if (!pool) return;
   try { await pool.query("SELECT 1"); } catch (err) { console.error("[db] keepAlive failed:", err); }
+}
+
+export async function dbPing(): Promise<{ ok: boolean; conversations: number; logs: number; error?: string }> {
+  if (!pool) return { ok: false, conversations: 0, logs: 0, error: 'no pool' };
+  try {
+    const [c, l] = await Promise.all([
+      pool.query('SELECT COUNT(*)::int AS n FROM conversations'),
+      pool.query('SELECT COUNT(*)::int AS n FROM conversation_logs'),
+    ]);
+    return { ok: true, conversations: c.rows[0].n, logs: l.rows[0].n };
+  } catch (e: any) {
+    return { ok: false, conversations: 0, logs: 0, error: e.message };
+  }
 }
 
 export async function loadSessionStats(): Promise<{
