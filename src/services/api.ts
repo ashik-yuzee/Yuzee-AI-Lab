@@ -368,6 +368,7 @@ export function streamChatMessage(
     temperature?: number;
     topP?: number;
     maxOutputTokens?: number;
+    useMultiTurn?: boolean;
     userContext?: { date?: string; timezone?: string; location?: string };
     userProfileFacts?: string[];
     userQuestionAnswers?: any[];

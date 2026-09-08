@@ -104,7 +104,7 @@ export const ChatArea: React.FC = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentConversation?.messages, isStreaming]);
+  }, [currentConversation?.messages, isStreaming, hasSuggestions]);
 
   // Trigger clarification modal when last non-streaming assistant message is a counsellor gate.
   // Track the last processed message ID so switching conversations doesn't re-trigger old gates.

@@ -459,7 +459,8 @@
           "description": "True when the service opportunity is now allowed to surface."
         },
         "needs_more_clarity": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "True when the service classification itself is unclear — i.e. additional user input is required to determine which service/RMO applies. This is NOT a counselling completeness flag. When service_intent_detected=false or classification confidence is HIGH, this should normally be false."
         },
         "actions": {
           "type": "array",

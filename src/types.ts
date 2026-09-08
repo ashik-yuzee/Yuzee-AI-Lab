@@ -263,6 +263,7 @@ export interface Conversation {
   temperature?: number;
   topP?: number;
   maxOutputTokens?: number;
+  useMultiTurn?: boolean;
   messages: ChatMessage[];
   compactionHistory: CompactionMetrics[];
 }

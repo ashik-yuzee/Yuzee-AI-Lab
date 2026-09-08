@@ -19,11 +19,18 @@ import {
   DialogueTurn,
 } from "./src/services/TokenBudgetMemoryManager";
 import { SystemPromptCacheManager } from "./src/services/SystemPromptCacheManager";
+import { estimateContentsTokens } from "./src/services/MultiTurnRequestBuilder";
 import {
   validateProtocol,
   validateUserEventAgainstActiveInteraction,
   TRUSTED_SERVICE_ACTIONS,
 } from "./src/protocol/validator";
+import {
+  applyServerSecurityState,
+  computeNextSecurityState,
+  normaliseSecurityFields,
+  SecurityPenalty,
+} from "./src/protocol/securityOverride";
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
@@ -195,6 +202,8 @@ interface ConversationItem {
   useInteractionsApi?: boolean;
   useFlashLiteUtility?: boolean;
   activeInteraction?: any;
+  securityBreachCount: number;
+  activeSecurityPenalty: SecurityPenalty;
   messages: MessageItem[];
   compactionHistory: any[];
 }
@@ -716,6 +725,8 @@ app.post("/api/conversations", (req, res) => {
     customSystemPrompt: req.body?.customSystemPrompt || "",
     useInteractionsApi: req.body?.useInteractionsApi || false,
     useFlashLiteUtility: req.body?.useFlashLiteUtility ?? true,
+    securityBreachCount: 0,
+    activeSecurityPenalty: '',
     messages: [],
     compactionHistory: [],
   };
@@ -877,6 +888,8 @@ app.post("/api/conversations/load-demo", (req, res) => {
         createdAt: Date.now() - 60000,
       },
     ],
+    securityBreachCount: 0,
+    activeSecurityPenalty: '',
     compactionHistory: [],
   };
 
@@ -964,6 +977,8 @@ app.post("/api/conversations/restore", (req, res) => {
     useInteractionsApi: data.useInteractionsApi || false,
     useFlashLiteUtility: data.useFlashLiteUtility ?? true,
     activeInteraction: data.activeInteraction || null,
+    securityBreachCount: data.securityBreachCount ?? 0,
+    activeSecurityPenalty: data.activeSecurityPenalty ?? '',
     messages: Array.isArray(data.messages) ? data.messages : [],
     compactionHistory: Array.isArray(data.compactionHistory) ? data.compactionHistory : [],
   };
@@ -1340,7 +1355,7 @@ app.post("/api/benchmark", makeRateLimit(10), async (req, res) => {
       const ttft = firstChunkTime ? firstChunkTime - startTime : null;
       const genTime = firstChunkTime ? Date.now() - firstChunkTime : null;
 
-      const inputTokens = usageMeta?.promptTokenCount ?? estimateTokens(assembledReq.contents) + estimateTokens(assembledReq.systemInstruction);
+      const inputTokens = usageMeta?.promptTokenCount ?? estimateContentsTokens(assembledReq.contents) + estimateTokens(assembledReq.systemInstruction);
       const outputTokens = usageMeta?.candidatesTokenCount ?? estimateTokens(fullText);
       const thinkingTokens = usageMeta?.thinkingTokenCount ?? null;
       const cachedTokens = usageMeta?.cachedContentTokenCount ?? null;
@@ -1447,6 +1462,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       customSystemPrompt: req.body.customSystemPrompt || "",
       useInteractionsApi: req.body.useInteractionsApi || false,
       useFlashLiteUtility: req.body.useFlashLiteUtility ?? true,
+      securityBreachCount: 0,
+      activeSecurityPenalty: '',
       messages: [],
       compactionHistory: [],
     };
@@ -1561,6 +1578,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     temperature: req.body.temperature != null ? Number(req.body.temperature) : undefined,
     topP: req.body.topP != null ? Number(req.body.topP) : undefined,
     maxOutputTokens: req.body.maxOutputTokens != null ? Math.round(Number(req.body.maxOutputTokens)) : undefined,
+    useMultiTurn: req.body.useMultiTurn !== false,
+    keptTurns: mem.keptTurns,
   });
   const requestAssemblyMs = Date.now() - requestAssemblyStart;
 
@@ -1766,6 +1785,25 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     }
   }
 
+  // Server-authoritative security state: override Gemini's values before validation.
+  // Gemini's responseSchema marks active_security_penalty as nullable (because "" was
+  // stripped from the enum), so Gemini may output null. normaliseSecurityFields coerces
+  // null → canonical defaults. computeNextSecurityState never reads model output —
+  // breach count only changes via explicit authoritative server events (authoritativeBreachDelta).
+  if (isJsonValid && parsedResponse !== null) {
+    normaliseSecurityFields(parsedResponse);
+    const { newBreachCount, newPenalty } = computeNextSecurityState(
+      conv.securityBreachCount ?? 0
+      // authoritativeBreachDelta defaults to 0; increment here only on real server events
+    );
+    conv.securityBreachCount = newBreachCount;
+    conv.activeSecurityPenalty = newPenalty;
+    applyServerSecurityState(parsedResponse, newBreachCount, newPenalty);
+    // Resync the raw text so stored content and fallback parse paths
+    // never expose null from Gemini's nullable schema output.
+    fullAssistantText = JSON.stringify(parsedResponse);
+  }
+
   const validationResult = isJsonValid
     ? validateProtocol(parsedResponse)
     : {
@@ -1848,7 +1886,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   };
 
   const hasProviderUsage = !isMockResponse && !!realUsageMetadata;
-  const inputTokens = realUsageMetadata?.promptTokenCount ?? (estimateTokens(assembledReq.systemInstruction) + estimateTokens(assembledReq.contents));
+  const inputTokens = realUsageMetadata?.promptTokenCount ?? (estimateTokens(assembledReq.systemInstruction) + estimateContentsTokens(assembledReq.contents));
   const outputTokens = realUsageMetadata?.candidatesTokenCount ?? estimateTokens(fullAssistantText);
   // thinkingTokenCount is explicit on 2.5+ models; derive from total delta on others
   const explicitThinking = realUsageMetadata?.thinkingTokenCount ?? realUsageMetadata?.thoughtsTokenCount ?? null;

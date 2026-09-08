@@ -176,6 +176,16 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
     }
   }
 
+  // Security Penalty Invariant: penalty requires at least one breach (warning — content still renders)
+  if (json.state?.progress) {
+    const prog = json.state.progress;
+    if (prog.active_security_penalty && prog.active_security_penalty !== '' && prog.security_breach_count === 0) {
+      warnings.push(
+        `[Invariant] active_security_penalty="${prog.active_security_penalty}" requires security_breach_count >= 1, but got security_breach_count=0`
+      );
+    }
+  }
+
   // User Confidence State Invariants
   if (json.state?.user_confidence) {
     const uc = json.state.user_confidence;
@@ -285,6 +295,16 @@ export function validateProtocolV14(json: any): ExtendedProtocolValidationResult
       for (const m of missingInputs) {
         if (!fieldIds.includes(m)) warnings.push(`[Handoff] rmo_readiness.missing_input "${m}" not present in interaction.fields`);
       }
+    }
+  }
+
+  // Security Penalty Invariant (v1.4 — warning, content still renders)
+  if (json.state?.progress) {
+    const prog = json.state.progress;
+    if (prog.active_security_penalty && prog.active_security_penalty !== '' && prog.security_breach_count === 0) {
+      warnings.push(
+        `[Invariant] active_security_penalty="${prog.active_security_penalty}" requires security_breach_count >= 1, but got security_breach_count=0`
+      );
     }
   }
 

@@ -13,8 +13,9 @@ import path from 'path';
 import crypto from 'crypto';
 import { GenerateContentConfig } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
-import { estimateTokens } from './TokenBudgetMemoryManager';
+import { estimateTokens, DialogueTurn } from './TokenBudgetMemoryManager';
 import { GEMINI_MODELS } from '../data/models';
+import { Content, buildMultiTurnContents } from './MultiTurnRequestBuilder';
 
 export interface ProtocolInfo {
   promptVersion: string;
@@ -32,7 +33,7 @@ export interface AssembledGeminiRequest {
   aiRequestId: string;
   model: string;
   systemInstruction: string;
-  contents: string;
+  contents: string | Content[];
   geminiConfig: GenerateContentConfig;
   appliedThinkingLevel: 'minimal' | 'low' | 'medium' | 'high';
   numericThinkingBudget: number;
@@ -460,10 +461,15 @@ export class YuzeeRequestAssembler {
     if (node.format) out.format = node.format;
     if (typeof node.nullable === 'boolean') out.nullable = node.nullable;
 
-    // Only string enums with non-empty values; drop enums on integer/number types entirely
+    // Only string enums with non-empty values; drop enums on integer/number types entirely.
+    // When "" was a valid option (e.g. active_security_penalty), mark nullable so Gemini
+    // knows the field can be absent/empty — without this, Gemini is constrained to always
+    // pick a non-empty value even when no penalty is active.
     if (Array.isArray(node.enum) && node.type !== 'integer' && node.type !== 'number') {
+      const hadEmptyString = node.enum.some((e: any) => e === '');
       const filtered = node.enum.filter((e: any) => typeof e === 'string' && e !== '');
       if (filtered.length > 0) out.enum = filtered;
+      if (hadEmptyString) out.nullable = true;
     }
 
     if (node.properties && typeof node.properties === 'object') {
@@ -501,6 +507,10 @@ export class YuzeeRequestAssembler {
     temperature?: number;
     topP?: number;
     maxOutputTokens?: number;
+    /** When true, produce proper Gemini multi-turn Content[] instead of single-text string. Default: false. */
+    useMultiTurn?: boolean;
+    /** Kept dialogue turns from TokenBudgetMemoryManager. Required when useMultiTurn is true. */
+    keptTurns?: DialogueTurn[];
   }): AssembledGeminiRequest {
     const requestReceivedAt = Date.now();
     const aiRequestId = `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -535,9 +545,20 @@ export class YuzeeRequestAssembler {
     // 4. Assembled Contents for Gemini
     // Ordering: Dynamic Context (Capsule/Summary/History) -> Current User Turn
     // NOTE: SYSTEM PROMPT IS EXCLUDED FROM CONTENTS (Sent in dedicated systemInstruction field)
-    const contents = dynamicContextStr
-      ? `${dynamicContextStr}\n\nCURRENT_USER_INPUT:\n${currentUserStr}`
-      : `CURRENT_USER_INPUT:\n${currentUserStr}`;
+    let contents: string | Content[];
+    if (params.useMultiTurn === true && Array.isArray(params.keptTurns)) {
+      contents = buildMultiTurnContents({
+        careerCapsule: careerStr,
+        summary: params.summaryText || '',
+        keptTurns: params.keptTurns,
+        currentUserInput: currentUserStr,
+        richHistory: true,
+      });
+    } else {
+      contents = dynamicContextStr
+        ? `${dynamicContextStr}\n\nCURRENT_USER_INPUT:\n${currentUserStr}`
+        : `CURRENT_USER_INPUT:\n${currentUserStr}`;
+    }
 
     // 5. Config resolution
     const model = params.model || 'gemini-3.5-flash-lite';

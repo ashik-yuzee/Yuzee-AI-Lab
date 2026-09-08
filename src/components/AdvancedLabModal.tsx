@@ -84,6 +84,7 @@ export const AdvancedLabModal: React.FC = () => {
     temperature: undefined,
     topP: undefined,
     maxOutputTokens: undefined,
+    useMultiTurn: true,
   };
 
   const handleCareerFieldChange = (field: keyof StructuredMemoryCapsule, value: string) => {
@@ -592,6 +593,16 @@ export const AdvancedLabModal: React.FC = () => {
                       </button>
                     )}
                   </div>
+
+                  <div className="border-t border-slate-100" />
+
+                  {/* Multi-turn */}
+                  <AppleToggle
+                    label="Multi-turn Content Array"
+                    description="Send conversation history as a proper Content[] array (alternating user/model roles) instead of a single text blob. This matches how Gemini AI Studio works by default and gives the model native turn-awareness."
+                    checked={conv.useMultiTurn ?? true}
+                    onChange={(checked) => updateCurrentConversationSettings({ useMultiTurn: checked })}
+                  />
 
                   {/* Info footer */}
                   <div className="p-3 bg-violet-50/60 rounded-xl border border-violet-100 text-[11px] text-violet-800 leading-relaxed">
