@@ -981,7 +981,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm select-none shrink-0">O</div>
         <div>
           <div className="text-xs font-bold text-slate-800 leading-none">Oala</div>
-          <div className="text-[10px] text-slate-400 leading-none mt-0.5">Yuzee counsellor</div>
+          <div className="text-[10px] text-slate-400 leading-none mt-0.5">Oala · AI counsellor</div>
         </div>
       </div>
 

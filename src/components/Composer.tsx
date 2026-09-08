@@ -87,7 +87,7 @@ export const Composer: React.FC = () => {
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Yuzee about career pathways, certification roadmaps, or skill requirements..."
+            placeholder="Ask Oala about career pathways, certification roadmaps, or skill requirements..."
             className="flex-1 max-h-44 min-h-[38px] px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 bg-transparent resize-none focus:outline-hidden leading-relaxed"
           />
 

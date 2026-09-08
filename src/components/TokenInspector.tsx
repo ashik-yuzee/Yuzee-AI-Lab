@@ -45,8 +45,8 @@ export const TokenInspector: React.FC = () => {
             <Activity className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Token Telemetry Inspector</h2>
-            <p className="text-[11px] text-slate-500">Live request usage & context diagnostics</p>
+            <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Conversation Telemetry</h2>
+            <p className="text-[11px] text-slate-500">Live turn usage & context diagnostics for this conversation</p>
           </div>
         </div>
 

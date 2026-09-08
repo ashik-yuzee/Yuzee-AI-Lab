@@ -84,7 +84,7 @@ export const ClarificationQuestionsModal: React.FC = () => {
         {/* Escape hatch */}
         <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/50 shrink-0">
           <div className="flex flex-wrap gap-2">
-            {["Skip this for now", "I am not sure yet", "Show me a simple path first", "Tell me what Yuzee can do"].map(label => (
+            {["Skip this for now", "I am not sure yet", "Show me a simple path first", "Tell me what Oala can do"].map(label => (
               <button
                 key={label}
                 onClick={() => {

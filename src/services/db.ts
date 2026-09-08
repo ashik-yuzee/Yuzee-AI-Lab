@@ -367,6 +367,31 @@ export function isDbEnabled(): boolean {
   return pool !== null;
 }
 
+export async function loadLifetimeStats(): Promise<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number } | null> {
+  if (!pool) return null;
+  try {
+    const r = await pool.query(`
+      SELECT
+        COUNT(*)::int                                                        AS calls,
+        COALESCE(SUM(input_tokens)        FILTER (WHERE NOT is_mock), 0)::int AS input_tokens,
+        COALESCE(SUM(output_tokens)       FILTER (WHERE NOT is_mock), 0)::int AS output_tokens,
+        COALESCE(SUM(cached_tokens)       FILTER (WHERE NOT is_mock), 0)::int AS cached_tokens,
+        COALESCE(SUM(thinking_tokens)     FILTER (WHERE NOT is_mock), 0)::int AS thinking_tokens,
+        COALESCE(SUM(estimated_cost_usd)  FILTER (WHERE NOT is_mock), 0)::float AS cost_usd
+      FROM conversation_logs
+    `);
+    const row = r.rows[0];
+    return {
+      calls:         parseInt(row.calls)          || 0,
+      inputTokens:   parseInt(row.input_tokens)   || 0,
+      outputTokens:  parseInt(row.output_tokens)  || 0,
+      cachedTokens:  parseInt(row.cached_tokens)  || 0,
+      thinkingTokens:parseInt(row.thinking_tokens)|| 0,
+      costUsd:       parseFloat(row.cost_usd)     || 0,
+    };
+  } catch { return null; }
+}
+
 export async function loadDailyCost(): Promise<number | null> {
   if (!pool) return null;
   try {

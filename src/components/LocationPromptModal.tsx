@@ -93,7 +93,7 @@ export const LocationPromptModal: React.FC = () => {
           <div>
             <h2 className="text-base font-semibold text-slate-900 leading-tight">Where are you located?</h2>
             <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-              Yuzee uses your location to give relevant course options, job markets, and career guidance for your region.
+              Oala uses your location to give relevant course options, job markets, and career guidance for your region.
             </p>
           </div>
         </div>

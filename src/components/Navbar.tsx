@@ -78,10 +78,17 @@ export const Navbar: React.FC = () => {
 
   const modeOptions: AppleSelectOption[] = [
     {
+      value: "VANILLA",
+      label: "Vanilla (AI Studio)",
+      description: "No optimisation, no compaction, 8192 token output cap",
+      badge: "Default",
+      badgeColor: "purple",
+    },
+    {
       value: "AUTO",
       label: "Auto (Balanced)",
       description: "Dynamic budget, prefix caching, adaptive thinking",
-      badge: "Default",
+      badge: "Adaptive",
       badgeColor: "blue",
     },
     {
@@ -98,13 +105,6 @@ export const Navbar: React.FC = () => {
       badge: "Baseline",
       badgeColor: "slate",
     },
-    {
-      value: "VANILLA",
-      label: "Vanilla (AI Studio)",
-      description: "No optimisation, no compaction, 8192 token output cap",
-      badge: "Vanilla",
-      badgeColor: "purple",
-    },
   ];
 
   // Latest turn telemetry — show uncached input when cache is active
@@ -114,11 +114,14 @@ export const Navbar: React.FC = () => {
   const inputTokens = cachedTokens > 0 ? uncachedInput : rawInput;
   const outputTokens = activeTurnTelemetry?.usage?.outputTokens || 0;
 
-  // Conversation total cost — sum across all assistant messages
+  // Conversation total cost — sum across all assistant messages; fallback model to conv model
   const convTotalCost = (currentConversation?.messages || []).reduce((sum, m) => {
-    if (m.role !== "assistant" || !m.telemetry?.usage || !m.telemetry?.model) return sum;
-    return sum + (calcTurnCost(m.telemetry.model, m.telemetry.usage) ?? 0);
+    if (m.role !== "assistant" || !m.telemetry?.usage) return sum;
+    const model = m.telemetry?.model || currentConversation?.model || "";
+    if (!model) return sum;
+    return sum + (calcTurnCost(model, m.telemetry.usage) ?? 0);
   }, 0);
+  const hasAssistantMsg = (currentConversation?.messages || []).some(m => m.role === "assistant");
 
   return (
     <header id="main-header" className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
@@ -135,13 +138,10 @@ export const Navbar: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-2.5">
-          <img src="/favicon.svg" alt="Yuzee" className="w-7 h-7 rounded-lg shadow-xs" />
+          <img src="/favicon.svg" alt="Oala" className="w-7 h-7 rounded-lg shadow-xs" />
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-900 tracking-tight text-sm">Yuzee AI</span>
-              <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-200 rounded">
-                Token Lab
-              </span>
+              <span className="font-semibold text-slate-900 tracking-tight text-sm">Oala AI Lab</span>
             </div>
           </div>
         </div>
@@ -235,12 +235,12 @@ export const Navbar: React.FC = () => {
           <Settings className="w-4 h-4" />
         </button>
 
-        {convTotalCost > 0 && (
+        {hasAssistantMsg && (
           <span
             className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] font-mono font-semibold"
-            title="Estimated cost for this conversation only (not the full session). Session totals are in the sidebar."
+            title="Estimated cost for this conversation. All-conversation totals are in the Overall Telemetry sidebar."
           >
-            <span className="font-normal text-emerald-600 text-[10px]">Chat</span>
+            <span className="font-normal text-emerald-600 text-[10px]">Conv</span>
             {formatCost(convTotalCost)}
           </span>
         )}
@@ -254,8 +254,8 @@ export const Navbar: React.FC = () => {
               ? "bg-sky-50 border-sky-300 text-sky-900 font-semibold shadow-xs"
               : "bg-slate-50 hover:bg-white border-slate-200 text-slate-700 hover:border-sky-300"
           }`}
-          title="Click to view full turn & session telemetry diagnostics"
-          aria-label="Token Telemetry"
+          title="Conversation Telemetry — click to view full turn & context diagnostics"
+          aria-label="Conversation Telemetry"
         >
           <Activity className="w-3.5 h-3.5 text-sky-600" />
           <span className="text-[11px]">

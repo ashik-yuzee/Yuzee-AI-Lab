@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3 } from "lucide-react";
+import { fetchLifetimeStats } from "../services/api";
+import { formatCost } from "../data/models";
 
 export const SettingsModal: React.FC = () => {
   const {
@@ -15,6 +17,11 @@ export const SettingsModal: React.FC = () => {
   } = useTokenLab();
   const [clearConfirm, setClearConfirm] = useState(false);
   const [cleared, setCleared] = useState(false);
+  const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number } | null>(null);
+
+  useEffect(() => {
+    if (isSettingsOpen) fetchLifetimeStats().then(setLifetime).catch(() => {});
+  }, [isSettingsOpen]);
 
   if (!isSettingsOpen) return null;
 
@@ -160,6 +167,49 @@ export const SettingsModal: React.FC = () => {
               >
                 <Download className="w-3 h-3" /> Export
               </button>
+            </div>
+          </div>
+
+          {/* Lifetime Consumption — non-resettable */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="w-3.5 h-3.5 text-violet-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Lifetime Token Consumption</span>
+              <span className="text-[10px] text-slate-400 ml-auto">cannot be reset</span>
+            </div>
+            <div className="bg-violet-50 border border-violet-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">
+              {lifetime === null ? (
+                <div className="text-[11px] text-slate-400">Loading…</div>
+              ) : (
+                <>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Total API calls</span>
+                    <span className="font-mono font-semibold">{lifetime.calls.toLocaleString()}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Input tokens</span>
+                    <span className="font-mono font-semibold">{(lifetime.inputTokens / 1000).toFixed(1)}k</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Cached reads</span>
+                    <span className="font-mono font-semibold text-emerald-700">{(lifetime.cachedTokens / 1000).toFixed(1)}k</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-500">Output tokens</span>
+                    <span className="font-mono font-semibold">{(lifetime.outputTokens / 1000).toFixed(1)}k</span>
+                  </div>
+                  {lifetime.thinkingTokens > 0 && (
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-500">Thinking tokens</span>
+                      <span className="font-mono font-semibold text-indigo-700">{(lifetime.thinkingTokens / 1000).toFixed(1)}k</span>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between pt-1 border-t border-violet-200 mt-1">
+                    <span className="font-semibold text-slate-700">Lifetime cost</span>
+                    <span className="font-mono font-bold text-violet-800">{formatCost(lifetime.costUsd)}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 

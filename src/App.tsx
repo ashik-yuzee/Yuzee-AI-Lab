@@ -44,10 +44,10 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
     <div className="min-h-screen flex items-center justify-center bg-slate-50">
       <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8 w-full max-w-sm">
         <div className="flex items-center gap-2.5 mb-6">
-          <img src="/favicon.svg" alt="Yuzee" className="w-8 h-8 rounded-lg shadow-xs" />
+          <img src="/favicon.svg" alt="Oala" className="w-8 h-8 rounded-lg shadow-xs" />
           <div>
-            <p className="font-semibold text-slate-900 text-sm">Yuzee AI</p>
-            <p className="text-[11px] text-slate-500">Token Lab — Admin Access</p>
+            <p className="font-semibold text-slate-900 text-sm">Oala AI Lab</p>
+            <p className="text-[11px] text-slate-500">Admin Access</p>
           </div>
         </div>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">

@@ -26,7 +26,7 @@ import {
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
 import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
-import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, loadDailyCost, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
+import { initDb, logTurn, pruneExpired, keepAlive, loadSessionStats, isDbEnabled, loadDailyCost, loadLifetimeStats, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
 dotenv.config();
@@ -582,6 +582,13 @@ app.get("/api/tokens/log", async (_req, res) => {
     const lines = content.trim().split('\n').filter(Boolean);
     res.json({ entries: lines.slice(-500).map(l => JSON.parse(l)), total: lines.length });
   } catch { res.json({ entries: [], total: 0 }); }
+});
+
+// Lifetime stats — all-time totals, non-resettable
+app.get("/api/tokens/lifetime-stats", async (_req, res) => {
+  const stats = await loadLifetimeStats();
+  if (stats) return void res.json(stats);
+  res.json({ calls: 0, inputTokens: 0, outputTokens: 0, cachedTokens: 0, thinkingTokens: 0, costUsd: 0 });
 });
 
 // Daily cost — used by client to show $1/$5/$10/$15+ threshold warnings

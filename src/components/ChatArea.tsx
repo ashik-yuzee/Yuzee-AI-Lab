@@ -249,7 +249,7 @@ export const ChatArea: React.FC = () => {
                   What are you planning next?
                 </h1>
                 <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
-                  Test Yuzee career guidance with Protocol v1.3 JSON validation and context token optimization.
+                  Test Oala career guidance with Protocol v1.3 JSON validation and context token optimization.
                 </p>
               </div>
 

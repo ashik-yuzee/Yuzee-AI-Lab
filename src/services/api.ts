@@ -158,6 +158,14 @@ export async function fetchSessionStats(): Promise<SessionCumulativeStats> {
   return res.json();
 }
 
+export async function fetchLifetimeStats(): Promise<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number } | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/tokens/lifetime-stats`);
+    if (!res.ok) return null;
+    return res.json();
+  } catch { return null; }
+}
+
 export async function fetchDailyCost(): Promise<number> {
   try {
     const res = await fetch(`${API_BASE}/api/tokens/daily-cost`);
