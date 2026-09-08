@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { OptimizationMode } from "../types";
 import {
@@ -38,6 +38,10 @@ export const Navbar: React.FC = () => {
   } = useTokenLab();
 
   const currentMode: OptimizationMode = (currentConversation?.mode as OptimizationMode) || "AUTO";
+  const [localMode, setLocalMode] = useState<OptimizationMode | null>(null);
+  const displayMode = localMode ?? currentMode;
+  // Reset local override when switching conversations
+  useEffect(() => { setLocalMode(null); }, [currentConversation?.id]);
 
   // Server-driven model registry
   const availableList = capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS;
@@ -165,9 +169,9 @@ export const Navbar: React.FC = () => {
         <div className="hidden sm:block">
           <AppleSelect
             id="select-optimization-mode"
-            value={currentMode}
+            value={displayMode}
             options={modeOptions}
-            onChange={(newMode) => applyOptimizationMode(newMode as OptimizationMode)}
+            onChange={(newMode) => { setLocalMode(newMode as OptimizationMode); applyOptimizationMode(newMode as OptimizationMode); }}
             leadingIcon={Sparkles}
             compact
             popoverWidth="w-72 sm:w-84"
