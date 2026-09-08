@@ -11,7 +11,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { GenerateContentConfig, ThinkingLevel } from '@google/genai';
+import { GenerateContentConfig } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
 import { estimateTokens } from './TokenBudgetMemoryManager';
 import { GEMINI_MODELS } from '../data/models';
@@ -267,25 +267,9 @@ export class YuzeeRequestAssembler {
     };
     const numericBudget = numericBudgetMap[appliedLevel];
 
-    // Gemini 3.x uses ThinkingLevel enum; Gemini 2.5 uses numeric thinkingBudget
-    const thinkingMechanism = modelInfo?.thinkingMechanism ?? 'level';
-    let thinkingConfig: { thinkingLevel?: ThinkingLevel; thinkingBudget?: number } | undefined;
-
-    if (thinkingMechanism === 'level') {
-      const levelMap: Record<string, ThinkingLevel> = {
-        minimal: ThinkingLevel.MINIMAL,
-        low: ThinkingLevel.LOW,
-        medium: ThinkingLevel.MEDIUM,
-        high: ThinkingLevel.HIGH,
-      };
-      thinkingConfig = { thinkingLevel: levelMap[appliedLevel] ?? ThinkingLevel.MEDIUM };
-    } else {
-      // ponytail: budget path only for Gemini 2.5 (thinkingMechanism: 'budget')
-      thinkingConfig = numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined;
-    }
-
     return {
-      thinkingConfig,
+      // omit thinkingConfig entirely when budget=0; sending {thinkingBudget:0} causes INVALID_ARGUMENT
+      thinkingConfig: numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined,
       appliedThinkingLevel: appliedLevel,
       numericBudget,
     };
@@ -459,35 +443,40 @@ export class YuzeeRequestAssembler {
    * The AJV copy used for validation is untouched.
    */
   /**
-   * Prepares the JSON Schema for Gemini's responseSchema field.
-   * Gemini's REST API (proto) has specific requirements vs plain JSON Schema:
-   *   - no additionalProperties
-   *   - enum values must be strings (no integer/number enum values, no empty strings)
-   *   - maxItems / minItems must be JSON strings (proto uint64 → string in JSON)
-   *   - minimum / maximum on integers may be unsupported — strip to avoid INVALID_ARGUMENT
+   * Converts a JSON Schema object to a Gemini-compatible Schema using a strict whitelist.
+   * Gemini's responseSchema is a proto-defined subset of JSON Schema.
+   * Whitelist: type, description, nullable, format, enum, properties, required, items, anyOf.
+   * Everything else (additionalProperties, minimum, maximum, maxItems, minItems, title, etc.) is stripped.
+   * Enum: only non-empty string values are kept; integer/number type enums are dropped entirely.
    */
   private sanitizeSchemaForGemini(node: any): any {
     if (!node || typeof node !== 'object') return node;
     if (Array.isArray(node)) return node.map((n: any) => this.sanitizeSchemaForGemini(n));
+
     const out: any = {};
-    for (const [k, v] of Object.entries(node)) {
-      if (k === 'additionalProperties') continue;
-      if (k === 'minimum' || k === 'maximum') continue;
-      // maxItems/minItems must be strings (proto uint64 JSON encoding)
-      if ((k === 'maxItems' || k === 'minItems') && typeof v === 'number') {
-        out[k] = String(v);
-        continue;
-      }
-      // Gemini only accepts string enum values; integer/number enums and empty strings are rejected
-      if (k === 'enum' && (node.type === 'integer' || node.type === 'number')) continue;
-      if (k === 'enum' && Array.isArray(v)) {
-        const filtered = (v as any[]).filter((e: any) => e !== '');
-        if (filtered.length === 0) continue;
-        out[k] = filtered;
-        continue;
-      }
-      out[k] = typeof v === 'object' && v !== null ? this.sanitizeSchemaForGemini(v) : v;
+
+    if (node.type) out.type = node.type;
+    if (node.description) out.description = node.description;
+    if (node.format) out.format = node.format;
+    if (typeof node.nullable === 'boolean') out.nullable = node.nullable;
+
+    // Only string enums with non-empty values; drop enums on integer/number types entirely
+    if (Array.isArray(node.enum) && node.type !== 'integer' && node.type !== 'number') {
+      const filtered = node.enum.filter((e: any) => typeof e === 'string' && e !== '');
+      if (filtered.length > 0) out.enum = filtered;
     }
+
+    if (node.properties && typeof node.properties === 'object') {
+      out.properties = {};
+      for (const [k, v] of Object.entries(node.properties)) {
+        out.properties[k] = this.sanitizeSchemaForGemini(v);
+      }
+    }
+
+    if (Array.isArray(node.required)) out.required = node.required;
+    if (node.items) out.items = this.sanitizeSchemaForGemini(node.items);
+    if (Array.isArray(node.anyOf)) out.anyOf = node.anyOf.map((n: any) => this.sanitizeSchemaForGemini(n));
+
     return out;
   }
 
