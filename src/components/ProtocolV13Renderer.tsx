@@ -326,69 +326,76 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 {block.items?.map((item: YuzeeItem) => {
                   const s = item.status || "";
                   if (s === "current") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-amber-200/80 bg-gradient-to-br from-amber-50 via-orange-50/30 to-amber-50/10 p-4 shadow-sm">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-amber-400 to-orange-500 rounded-r" />
+                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-amber-200 bg-amber-50/50 p-4">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-amber-400 rounded-r" />
                       <div className="pl-3">
                         <div className="flex items-center gap-1.5 mb-1.5">
                           <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse motion-reduce:animate-none" />
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600">Current</span>
+                          <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-700">Currently Here</span>
                         </div>
-                        <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                        <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
                         {(item.text || item.value) && <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
                       </div>
                     </div>
                   );
                   if (s === "next") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-4 shadow-2xs hover:border-indigo-200 transition-colors group">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-indigo-200 rounded-r group-hover:bg-indigo-400 transition-colors" />
-                      <div className="pl-3 flex items-start gap-3">
-                        <div className="shrink-0 w-5 h-5 rounded-full bg-indigo-50 border border-indigo-200 flex items-center justify-center mt-0.5 group-hover:bg-indigo-100 transition-colors">
-                          <ArrowRight className="w-3 h-3 text-indigo-500" />
+                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-indigo-200 bg-white p-4 shadow-xs">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-indigo-500 rounded-r" />
+                      <div className="pl-4 flex items-start gap-3">
+                        <div className="shrink-0 w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
+                          <ArrowRight className="w-4 h-4 text-indigo-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="text-sm font-semibold text-slate-800 leading-snug">{item.title}</p>
-                            <span className="shrink-0 text-[9px] font-bold uppercase tracking-wider text-indigo-500 bg-indigo-50 border border-indigo-100 px-1.5 py-0.5 rounded-md">Next</span>
+                          <div className="flex items-start justify-between gap-2 mb-1">
+                            <span className="text-[10px] font-semibold uppercase tracking-widest text-indigo-500">Recommended First Step</span>
+                            <span className="shrink-0 text-[9px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">Next</span>
                           </div>
-                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.text || item.value}</p>}
+                          <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
+                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
                         </div>
                       </div>
                     </div>
                   );
                   if (s === "complete") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50/30 p-4 opacity-70">
+                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50 p-4 opacity-70">
                       <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400 rounded-r" />
                       <div className="pl-3 flex items-start gap-3">
                         <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                         <div>
-                          <p className="text-sm font-semibold text-slate-600 line-through decoration-emerald-300">{item.title}</p>
+                          <p className="text-sm font-medium text-slate-500 line-through decoration-slate-300">{item.title}</p>
                           {(item.text || item.value) && <p className="text-xs text-slate-400 mt-1">{item.text || item.value}</p>}
                         </div>
                       </div>
                     </div>
                   );
                   if (s === "blocked") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-2xl border border-rose-200 bg-rose-50/40 p-4">
+                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-rose-200 bg-rose-50/40 p-4">
                       <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-rose-400 rounded-r" />
                       <div className="pl-3 flex items-start gap-3">
                         <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-sm font-semibold text-slate-800">{item.title}</p>
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded-md">Blocked</span>
+                          <div className="flex items-center gap-2 mb-0.5">
+                            <p className="text-sm font-semibold text-slate-900">{item.title}</p>
+                            <span className="text-[9px] font-semibold uppercase tracking-wide text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded-full">Blocked</span>
                           </div>
-                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1">{item.text || item.value}</p>}
+                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.text || item.value}</p>}
                         </div>
                       </div>
                     </div>
                   );
-                  // warning / default fallback
+                  // warning / default fallback — "also consider" alternative path
                   return (
-                    <div key={item.id} className="flex items-start gap-2.5 p-3 rounded-xl border border-amber-200 bg-amber-50/40 text-xs">
-                      <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                      <div className="min-w-0 flex-1">
-                        <span className="font-semibold text-slate-900">{item.title}</span>
-                        {(item.text || item.value) && <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>}
+                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4">
+                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-300 rounded-r" />
+                      <div className="pl-4 flex items-start gap-3">
+                        <div className="shrink-0 w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+                          <Layers className="w-3.5 h-3.5 text-slate-500" />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Also Consider</div>
+                          <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
+                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
+                        </div>
                       </div>
                     </div>
                   );
@@ -1003,10 +1010,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
       {/* Oala header */}
       <div className="flex items-center gap-2.5 mb-1">
-        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-black text-sm select-none shrink-0">O</div>
+        <div className="relative shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm select-none">O</div>
+          <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-400 border-[1.5px] border-white rounded-full" />
+        </div>
         <div>
-          <div className="text-xs font-bold text-slate-800 leading-none">Oala</div>
-          <div className="text-[10px] text-slate-400 leading-none mt-0.5">Oala · AI counsellor</div>
+          <div className="text-xs font-bold text-slate-900 leading-none">Oala</div>
+          <div className="text-[10px] text-slate-400 leading-none mt-0.5">AI counsellor</div>
         </div>
       </div>
 
