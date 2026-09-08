@@ -111,15 +111,29 @@ export interface ServiceAction {
   requires_confirmation: boolean;
 }
 
+export type PrimaryRequestedService =
+  | 'NONE'
+  | 'EDU_OFFER_RMO'
+  | 'JOB_MATCH_RMO'
+  | 'APPRENTICESHIP_RMO'
+  | 'TRAINEESHIP_RMO'
+  | 'INTERNSHIP_RMO'
+  | 'WORK_PLACEMENT_RMO'
+  | 'RPL_RMO'
+  | 'EARN_AND_LEARN_RMO'
+  | 'GRAD_PROGRAM_RMO'
+  | 'PATHWAY_RMO'
+  | 'OTHER_YUZEE_SERVICE';
+
+export type ServiceClassificationConfidence = 'HIGH' | 'MEDIUM' | 'LOW';
+
 export interface YuzeeService {
-  flow: 'NONE' | 'RMO' | 'DIRECT_APPLICATION' | 'OTHER_YUZEE_SERVICE';
-  intent_detected: boolean;
-  goal_summary: string;
-  trigger: '' | 'user_request' | 'system_flag' | 'ai_inferred';
-  confidence: '' | 'high' | 'medium' | 'low';
-  selected_rmo: '' | 'Education' | 'Job' | 'CareerPathway' | 'EarnAndLearn' | 'Apprenticeship' | 'Business' | 'StaffUpskilling';
-  offer_target: '' | 'course' | 'job' | 'pathway' | 'mixed';
-  missing_inputs: Array<'goal' | 'location' | 'residency'>;
+  service_intent_detected: boolean;
+  primary_requested_service: PrimaryRequestedService;
+  confidence: ServiceClassificationConfidence;
+  reason: string;
+  trigger_now: boolean;
+  needs_more_clarity: boolean;
   actions: ServiceAction[];
 }
 
@@ -131,12 +145,14 @@ export interface UserConfidenceState {
   reason_codes: ConfidenceReasonCode[];
 }
 
+export type SecurityPenalty = '' | '10_min_timeout' | '24_hr_ban';
+
 export interface YuzeeProgress {
   explained: boolean;
   failed_attempts: number;
   loop_count_same_issue: number;
   security_breach_count: number;
-  active_security_penalty: number;
+  active_security_penalty: SecurityPenalty;
 }
 
 export interface YuzeeState {
@@ -149,9 +165,8 @@ export interface YuzeeState {
 }
 
 export interface FollowupTrigger {
-  after_seconds: 10 | 300 | 600;
+  delay_seconds: 10 | 300 | 600;
   message: string;
-  suggested_replies: string[];
 }
 
 export interface YuzeeFollowups {
@@ -162,6 +177,15 @@ export interface YuzeeFollowups {
   triggers: FollowupTrigger[];
 }
 
+export type RmoReadinessStatus = 'READY' | 'PARTIAL' | 'NOT_READY';
+
+export interface YuzeeRmoReadiness {
+  readiness: RmoReadinessStatus;
+  ready_to_generate: boolean;
+  missing_inputs: Array<'goal' | 'location' | 'residency'>;
+  verification_required: boolean;
+}
+
 export interface YuzeeResponseV13 {
   schema_version: '1.3';
   current_mode: 'A_CONVERSATION' | 'B_DELIVERY' | 'S_SERVICE_HANDOFF';
@@ -169,11 +193,9 @@ export interface YuzeeResponseV13 {
   content_blocks: YuzeeContentBlock[];
   interaction: YuzeeInteraction;
   service_trigger: YuzeeService;
-  rmo_readiness: boolean;
+  rmo_readiness: YuzeeRmoReadiness;
   state: YuzeeState;
   followups: YuzeeFollowups;
-  /** @deprecated use service_trigger */
-  service?: YuzeeService;
 }
 
 export function interactionRenderer(input: InteractionInputType): string | null {

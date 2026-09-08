@@ -107,7 +107,7 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
     schemaErrors.push('interaction object is required in envelope');
   }
 
-  const serviceObj = json.service_trigger ?? json.service;
+  const serviceObj = json.service_trigger;
   if (!serviceObj || typeof serviceObj !== 'object') {
     schemaErrors.push('service_trigger object is required in envelope');
   }
@@ -163,15 +163,14 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
       }
     }
 
-    // Handoff interaction fields agreement with service_trigger missing_inputs
-    if (kind === 'handoff' && serviceObj && typeof serviceObj === 'object') {
-      const missingInputs: string[] = serviceObj.missing_inputs || [];
+    // Handoff interaction fields agreement with rmo_readiness.missing_inputs (v1.6 contract)
+    if (kind === 'handoff' && json.rmo_readiness && typeof json.rmo_readiness === 'object') {
+      const missingInputs: string[] = json.rmo_readiness.missing_inputs || [];
       const fields: Array<{ id: string }> = json.interaction.fields || [];
       const fieldIds = fields.map((f) => f.id);
-      
       for (const m of missingInputs) {
         if (!fieldIds.includes(m)) {
-          warnings.push(`[Handoff] Service missing_input "${m}" not present in interaction.fields`);
+          warnings.push(`[Handoff] rmo_readiness.missing_input "${m}" not present in interaction.fields`);
         }
       }
     }

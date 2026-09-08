@@ -420,73 +420,46 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "flow": {
+        "service_intent_detected": {
+          "type": "boolean",
+          "description": "True only if the user explicitly asked Yuzee to perform/start a service."
+        },
+        "primary_requested_service": {
           "type": "string",
           "enum": [
             "NONE",
-            "RMO",
-            "DIRECT_APPLICATION",
+            "EDU_OFFER_RMO",
+            "JOB_MATCH_RMO",
+            "APPRENTICESHIP_RMO",
+            "TRAINEESHIP_RMO",
+            "INTERNSHIP_RMO",
+            "WORK_PLACEMENT_RMO",
+            "RPL_RMO",
+            "EARN_AND_LEARN_RMO",
+            "GRAD_PROGRAM_RMO",
+            "PATHWAY_RMO",
             "OTHER_YUZEE_SERVICE"
-          ]
-        },
-        "intent_detected": {
-          "type": "boolean"
-        },
-        "goal_summary": {
-          "type": "string"
-        },
-        "trigger": {
-          "type": "string",
-          "enum": [
-            "",
-            "user_request",
-            "system_flag",
-            "ai_inferred"
           ]
         },
         "confidence": {
           "type": "string",
           "enum": [
-            "",
-            "high",
-            "medium",
-            "low"
-          ]
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ],
+          "description": "Service classification confidence only; never user decision confidence."
         },
-        "selected_rmo": {
+        "reason": {
           "type": "string",
-          "enum": [
-            "",
-            "Education",
-            "Job",
-            "CareerPathway",
-            "EarnAndLearn",
-            "Apprenticeship",
-            "Business",
-            "StaffUpskilling"
-          ]
+          "description": "Short internal classification reason; must not be copied into user-visible content."
         },
-        "offer_target": {
-          "type": "string",
-          "enum": [
-            "",
-            "course",
-            "job",
-            "pathway",
-            "mixed"
-          ]
+        "trigger_now": {
+          "type": "boolean",
+          "description": "True when the service opportunity is now allowed to surface."
         },
-        "missing_inputs": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "goal",
-              "location",
-              "residency"
-            ]
-          },
-          "maxItems": 3
+        "needs_more_clarity": {
+          "type": "boolean"
         },
         "actions": {
           "type": "array",
@@ -512,7 +485,7 @@
               "rmo_type": {
                 "type": "string",
                 "enum": ["RMO", "DIRECT_APPLICATION", "OTHER", ""],
-                "description": "RMO sub-type when flow=RMO."
+                "description": "RMO sub-type."
               },
               "requires_confirmation": {
                 "type": "boolean"
@@ -530,14 +503,12 @@
         }
       },
       "required": [
-        "flow",
-        "intent_detected",
-        "goal_summary",
-        "trigger",
+        "service_intent_detected",
+        "primary_requested_service",
         "confidence",
-        "selected_rmo",
-        "offer_target",
-        "missing_inputs",
+        "reason",
+        "trigger_now",
+        "needs_more_clarity",
         "actions"
       ]
     },
@@ -598,8 +569,8 @@
               "minimum": 0
             },
             "active_security_penalty": {
-              "type": "integer",
-              "minimum": 0
+              "type": "string",
+              "enum": ["", "10_min_timeout", "24_hr_ban"]
             }
           },
           "required": [
@@ -693,8 +664,30 @@
       ]
     },
     "rmo_readiness": {
-      "type": "boolean",
-      "description": "True when all RMO preconditions are met and the service handoff can proceed immediately."
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "readiness": {
+          "type": "string",
+          "enum": ["READY", "PARTIAL", "NOT_READY"]
+        },
+        "ready_to_generate": {
+          "type": "boolean"
+        },
+        "missing_inputs": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "enum": ["goal", "location", "residency"]
+          },
+          "description": "Concrete inputs missing for active service generation/handoff only."
+        },
+        "verification_required": {
+          "type": "boolean"
+        }
+      },
+      "required": ["readiness", "ready_to_generate", "missing_inputs", "verification_required"]
     },
     "followups": {
       "type": "object",
@@ -719,7 +712,7 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "after_seconds": {
+              "delay_seconds": {
                 "type": "integer",
                 "enum": [
                   10,
@@ -729,18 +722,11 @@
               },
               "message": {
                 "type": "string"
-              },
-              "suggested_replies": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
               }
             },
             "required": [
-              "after_seconds",
-              "message",
-              "suggested_replies"
+              "delay_seconds",
+              "message"
             ]
           }
         }

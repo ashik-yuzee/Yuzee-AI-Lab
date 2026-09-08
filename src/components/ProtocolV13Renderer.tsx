@@ -102,9 +102,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
   const interaction = data.interaction;
   const blocks = data.content_blocks || (data as any).blocks || [];
-  // Support both v1.3 (data.service) and v1.4 (data.service_trigger)
-  const service = data.service || (data as any).service_trigger;
-  const serviceFlow: string = service?.flow || service?.primary_requested_service || 'NONE';
+  const service = data.service_trigger;
+  const serviceFlow: string = service?.primary_requested_service || 'NONE';
   const followups = data.followups;
 
   // Single Select

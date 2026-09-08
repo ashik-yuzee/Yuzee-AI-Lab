@@ -2076,9 +2076,9 @@ function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish' | 'idle'):
     response_intent: intent as any,
     content_blocks: [{ id: "b1", type: "text", level: "none", variant: "default", title: "", text, items: [], columns: [], rows: [] }],
     interaction: { kind: "none", input_type: "none", question_id: "", question: "", options: [], allow_other_input: false, other_input_label: "", fields: [], recommended_actions: [] },
-    service_trigger: { flow: "NONE", intent_detected: false, goal_summary: "", trigger: "", confidence: "", selected_rmo: "", offer_target: "", missing_inputs: [], actions: [] },
-    rmo_readiness: false,
-    state: { active_response_mode: "standard", effective_response_mode: "standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: false, failed_attempts: 0, loop_count_same_issue: 0, security_breach_count: 0, active_security_penalty: 0 } },
+    service_trigger: { service_intent_detected: false, primary_requested_service: "NONE", confidence: "LOW", reason: "", trigger_now: false, needs_more_clarity: false, actions: [] },
+    rmo_readiness: { readiness: "NOT_READY", ready_to_generate: false, missing_inputs: [], verification_required: false },
+    state: { active_response_mode: "Standard", effective_response_mode: "Standard", mode_source: "default", safety_override_applied: false, user_confidence: { score: -1, band: "unknown", evidence_strength: "none", trend: "unknown", reason_codes: [] }, progress: { explained: false, failed_attempts: 0, loop_count_same_issue: 0, security_breach_count: 0, active_security_penalty: "" } },
     followups: { enabled: false, cancel_on_user_message: true, topic_lock: false, topic_key: "", triggers: [] },
   };
 }

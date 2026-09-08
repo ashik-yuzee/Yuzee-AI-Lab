@@ -130,12 +130,21 @@ export function formatAssistantMessageForContext(rawContent: string): string {
         const textParts: string[] = [];
 
         for (const block of blocks) {
-          if (block.text && block.text.trim()) {
+          if (block.type === 'heading' && block.title && block.title.trim()) {
+            const hLevel = block.level === 'h3' ? '###' : '##';
+            textParts.push(`${hLevel} ${block.title.trim()}`);
+          } else if (block.text && block.text.trim()) {
             textParts.push(block.text.trim());
           }
           if (block.items && Array.isArray(block.items) && block.items.length > 0) {
             const itemTexts = block.items
-              .map((it: any) => `- ${it.title ? `**${it.title}**: ` : ''}${it.text || it.value || ''}`)
+              .map((it: any) => {
+                const label = it.title ? `**${it.title}**` : '';
+                const body = it.text || '';
+                const val = it.value ? ` [value: ${it.value}]` : '';
+                const status = it.status && it.status !== '' ? ` [${it.status}]` : '';
+                return `- ${label}${label && body ? ': ' : ''}${body}${val}${status}`.trim();
+              })
               .filter(Boolean);
             if (itemTexts.length > 0) {
               textParts.push(itemTexts.join('\n'));

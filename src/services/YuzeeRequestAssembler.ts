@@ -11,7 +11,7 @@
 import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
-import { GenerateContentConfig } from '@google/genai';
+import { GenerateContentConfig, ThinkingLevel } from '@google/genai';
 import { UserEvent } from '../types/UserEvent';
 import { estimateTokens } from './TokenBudgetMemoryManager';
 import { GEMINI_MODELS } from '../data/models';
@@ -267,9 +267,25 @@ export class YuzeeRequestAssembler {
     };
     const numericBudget = numericBudgetMap[appliedLevel];
 
+    // Gemini 3.x uses ThinkingLevel enum; Gemini 2.5 uses numeric thinkingBudget
+    const thinkingMechanism = modelInfo?.thinkingMechanism ?? 'level';
+    let thinkingConfig: { thinkingLevel?: ThinkingLevel; thinkingBudget?: number } | undefined;
+
+    if (thinkingMechanism === 'level') {
+      const levelMap: Record<string, ThinkingLevel> = {
+        minimal: ThinkingLevel.MINIMAL,
+        low: ThinkingLevel.LOW,
+        medium: ThinkingLevel.MEDIUM,
+        high: ThinkingLevel.HIGH,
+      };
+      thinkingConfig = { thinkingLevel: levelMap[appliedLevel] ?? ThinkingLevel.MEDIUM };
+    } else {
+      // ponytail: budget path only for Gemini 2.5 (thinkingMechanism: 'budget')
+      thinkingConfig = numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined;
+    }
+
     return {
-      // omit thinkingConfig entirely when budget=0; sending {thinkingBudget:0} causes INVALID_ARGUMENT on some models
-      thinkingConfig: numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined,
+      thinkingConfig,
       appliedThinkingLevel: appliedLevel,
       numericBudget,
     };
@@ -384,22 +400,23 @@ export class YuzeeRequestAssembler {
    * Format structured userEvent or raw text into model-facing input
    */
   public formatUserEvent(messageText: string, userEvent?: UserEvent, selectedMode: string = 'Standard'): string {
-    const canonicalMode = this.normalizeModeCapitalization(
+    // Only treat as explicit user selection when the userEvent carries a ui.selected_mode
+    // (i.e. the user actively chose a mode). Passing selectedMode from the default param value
+    // alone does NOT count as explicit — that would cause mode_source="tag" on every turn.
+    const explicitMode =
       userEvent?.ui?.selected_mode ||
-      userEvent?.userEvent?.ui?.selected_mode ||
-      selectedMode
-    );
+      userEvent?.userEvent?.ui?.selected_mode;
 
-    const eventPayload: any = {
-      ui: {
-        selected_mode: canonicalMode,
-      },
-    };
+    const eventPayload: any = { ui: {} };
 
     if (userEvent?.ui) {
-      eventPayload.ui = { ...eventPayload.ui, ...userEvent.ui, selected_mode: canonicalMode };
+      eventPayload.ui = { ...userEvent.ui };
     } else if (userEvent?.userEvent?.ui) {
-      eventPayload.ui = { ...eventPayload.ui, ...userEvent.userEvent.ui, selected_mode: canonicalMode };
+      eventPayload.ui = { ...userEvent.userEvent.ui };
+    }
+
+    if (explicitMode) {
+      eventPayload.ui.selected_mode = this.normalizeModeCapitalization(explicitMode);
     }
 
     if (userEvent?.interaction) {
@@ -507,6 +524,7 @@ export class YuzeeRequestAssembler {
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
       responseMimeType: 'application/json',
+      responseSchema: this.responseSchemaJson ?? undefined,
       maxOutputTokens,
       ...(params.temperature != null ? { temperature: params.temperature } : {}),
       ...(params.topP != null ? { topP: params.topP } : {}),
