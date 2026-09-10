@@ -318,57 +318,38 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
 
         if (isWorkflow) {
-          const rowStyle: Record<string, { bg: string; numBg: string; border: string; shadow?: string }> = {
-            current:  { bg: "bg-gradient-to-r from-amber-50 to-orange-50/60",  numBg: "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm",  border: "border-amber-200", shadow: "shadow-[0_0_0_3px_rgba(251,146,60,0.14)] shadow-sm" },
-            next:     { bg: "bg-gradient-to-r from-sky-50/60 to-indigo-50/40", numBg: "bg-gradient-to-br from-sky-400 to-indigo-500 text-white shadow-sm",    border: "border-slate-200/80" },
-            complete: { bg: "bg-gradient-to-r from-emerald-50 to-teal-50/60",  numBg: "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm",  border: "border-emerald-200" },
-            blocked:  { bg: "bg-gradient-to-r from-rose-50 to-pink-50/60",     numBg: "bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-sm",     border: "border-rose-200" },
-            warning:  { bg: "bg-gradient-to-r from-amber-50/40 to-slate-50",   numBg: "bg-slate-200 text-slate-600",                                          border: "border-slate-200" },
-          };
-          const pillStyle: Record<string, string> = {
-            current:  "bg-amber-100 text-amber-800",
-            next:     "bg-sky-100 text-sky-700",
-            complete: "bg-emerald-100 text-emerald-800",
-            blocked:  "bg-rose-100 text-rose-700",
-            warning:  "bg-slate-100 text-slate-600",
+          const statusColor: Record<string, string> = {
+            current:  "text-blue-600",
+            next:     "text-purple-600",
+            complete: "text-emerald-600",
+            blocked:  "text-rose-600",
+            warning:  "text-amber-600",
           };
           return (
-            <div key={block.id || index} className="space-y-3">
+            <div key={block.id || index} className="space-y-2">
               {(block.title || block.text) && (
-                <div>
-                  {block.title && <h4 className="text-sm font-bold text-slate-900 tracking-tight">{block.title}</h4>}
-                  {block.text && <p className="text-xs text-slate-500 mt-0.5">{block.text}</p>}
+                <div className="mb-1">
+                  {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+                  {block.text && <p className="text-sm text-slate-500 mt-0.5">{block.text}</p>}
                 </div>
               )}
-              <div className="space-y-2">
+              <ul className="border-t border-slate-100">
                 {block.items?.map((item: YuzeeItem, iIdx: number) => {
                   const s = item.status || "";
-                  const r = rowStyle[s] || { bg: "bg-white", numBg: "bg-slate-100 text-slate-700", border: "border-slate-200" };
-                  const pillCls = pillStyle[s];
-                  const pillLabel = s ? s.charAt(0).toUpperCase() + s.slice(1) : null;
+                  const scls = statusColor[s] || "text-slate-400";
                   return (
-                    <div
-                      key={item.id || iIdx}
-                      className={`flex items-start gap-3 border rounded-2xl p-4 ${r.bg} ${r.border} ${r.shadow ?? ""}`}
-                    >
-                      <div className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-extrabold text-xs ${r.numBg}`}>
-                        {s === "complete" ? "✓" : iIdx + 1}
+                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100">
+                      <div className="flex items-baseline justify-between gap-4 mb-1">
+                        <p className="text-[15px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                        {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-900 leading-snug mb-1">{item.title}</p>
-                        {(item.text || item.value) && (
-                          <p className="text-xs text-slate-500 leading-relaxed">{item.text || item.value}</p>
-                        )}
-                      </div>
-                      {pillLabel && pillCls && (
-                        <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${pillCls}`}>
-                          {pillLabel}
-                        </span>
+                      {(item.text || item.value) && (
+                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
                       )}
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           );
         }
@@ -376,100 +357,63 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         // Icon + side-panel layout when items carry side_label / icon fields
         const hasSidePanel = block.items?.some((i: YuzeeItem) => i.side_label || i.side_text || (i as any).icon);
         if (hasSidePanel) {
-          const iconBgs = ["bg-indigo-100", "bg-emerald-100", "bg-amber-100", "bg-rose-100", "bg-violet-100", "bg-sky-100"];
-          const iconTexts = ["text-indigo-700", "text-emerald-700", "text-amber-700", "text-rose-600", "text-violet-700", "text-sky-700"];
           return (
             <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-              <div className="space-y-2">
+              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+              <ul className="border-t border-slate-100">
                 {block.items?.map((item: YuzeeItem, iIdx: number) => {
                   const icon = (item as any).icon as string | undefined;
                   const sideLabel = item.side_label || (item as any).side_label;
                   const sideText = item.side_text || (item as any).side_text;
-                  const ibg = iconBgs[iIdx % iconBgs.length];
-                  const itxt = iconTexts[iIdx % iconTexts.length];
                   return (
-                    <div key={item.id || iIdx} className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white">
-                      {/* Icon */}
-                      <div className={`shrink-0 w-9 h-9 rounded-xl ${ibg} flex items-center justify-center text-base`} aria-hidden="true">
-                        {icon ? (
-                          <span>{icon}</span>
-                        ) : (
-                          <span className={`font-bold text-xs ${itxt}`}>{String(iIdx + 1).padStart(2, "0")}</span>
-                        )}
-                      </div>
-                      {/* Main content */}
+                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100 flex items-start gap-4">
+                      {icon && <span className="shrink-0 text-lg leading-none mt-0.5">{icon}</span>}
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
-                        {item.text && <p className="text-xs text-slate-600 mt-1 leading-relaxed">{item.text}</p>}
+                        <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                        {item.text && <p className="text-sm text-slate-500 leading-relaxed">{item.text}</p>}
                       </div>
-                      {/* Right panel */}
                       {(sideLabel || sideText) && (
-                        <div className="shrink-0 w-36 sm:w-44 text-right">
-                          {sideLabel && (
-                            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 leading-tight mb-1">{sideLabel}</p>
-                          )}
-                          {sideText && (
-                            <p className="text-[11px] text-slate-600 leading-relaxed">{sideText}</p>
-                          )}
+                        <div className="shrink-0 w-36 text-right">
+                          {sideLabel && <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">{sideLabel}</p>}
+                          {sideText && <p className="text-xs text-slate-500 leading-relaxed">{sideText}</p>}
                         </div>
                       )}
-                    </div>
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
           );
         }
 
-        // Default: numbered card grid
-        const LIST_PALETTE = [
-          { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",    chip: "bg-indigo-100 text-indigo-600" },
-          { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",   chip: "bg-emerald-100 text-emerald-700" },
-          { grad: "bg-gradient-to-br from-amber-50 to-orange-100",   chip: "bg-amber-100 text-amber-700" },
-          { grad: "bg-gradient-to-br from-violet-50 to-purple-100",  chip: "bg-violet-100 text-violet-700" },
-          { grad: "bg-gradient-to-br from-rose-50 to-pink-100",      chip: "bg-rose-100 text-rose-600" },
-          { grad: "bg-gradient-to-br from-sky-50 to-cyan-100",       chip: "bg-sky-100 text-sky-700" },
-        ];
+        // Default: numbered ruled rows
         const items = block.items || [];
-        const colCls =
-          items.length <= 1 ? "grid-cols-1" :
-          items.length === 2 ? "grid-cols-1 sm:grid-cols-2" :
-          items.length === 3 ? "grid-cols-1 sm:grid-cols-3" :
-          "grid-cols-1 sm:grid-cols-2";
         return (
-          <div key={block.id || index} className="space-y-3">
+          <div key={block.id || index} className="space-y-2">
             {(block.title || block.text) && (
-              <div>
-                {block.title && <h4 className="text-sm font-bold text-slate-900 tracking-tight">{block.title}</h4>}
-                {block.text && <p className="text-xs text-slate-500 mt-0.5">{block.text}</p>}
+              <div className="mb-1">
+                {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+                {block.text && <p className="text-sm text-slate-500 mt-0.5">{block.text}</p>}
               </div>
             )}
-            <div className={`grid gap-3 ${colCls}`}>
+            <ul className="border-t border-slate-100">
               {items.map((item: YuzeeItem, iIdx: number) => {
-                const isNegative = item.status === "negative";
-                const isPositive = item.status === "positive";
-                const c = isNegative
-                  ? { grad: "bg-gradient-to-br from-rose-50 to-pink-100", chip: "bg-rose-100 text-rose-600" }
-                  : isPositive
-                  ? { grad: "bg-gradient-to-br from-emerald-50 to-teal-100", chip: "bg-emerald-100 text-emerald-700" }
-                  : LIST_PALETTE[iIdx % LIST_PALETTE.length];
                 const emoji = (item as any).icon as string | undefined;
+                const tag = emoji || String(iIdx + 1).padStart(2, "0");
+                const tagCls = item.status === "negative" ? "text-rose-500" : item.status === "positive" ? "text-emerald-600" : "text-slate-400";
                 return (
-                  <div key={item.id || iIdx} className={`${c.grad} rounded-2xl p-5 flex flex-col gap-3 min-h-[140px] shadow-sm border border-white/80`}>
-                    <div className={`self-start px-2 py-0.5 rounded-lg text-[11px] font-bold tracking-wide ${c.chip}`}>
-                      {emoji ? <span className="text-sm">{emoji}</span> : String(iIdx + 1).padStart(2, "0")}
-                    </div>
-                    <div className="flex-1 space-y-1.5">
-                      <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                  <li key={item.id || iIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                    <span className={`text-[11px] font-bold tracking-[0.13em] uppercase pt-0.5 ${tagCls}`}>{tag}</span>
+                    <div>
+                      <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-xs text-slate-600 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
                       )}
                     </div>
-                  </div>
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         );
       }
@@ -478,110 +422,57 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const WORKFLOW_STEP_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
         const hasStepStatuses = block.items?.some((i: YuzeeItem) => WORKFLOW_STEP_STATUSES.has(i.status || ""));
 
-        // Numbered card grid — when no workflow statuses are present
+        // Numbered ruled rows — when no workflow statuses are present
         if (!hasStepStatuses) {
-          const cardPalette = [
-            { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   chip: "bg-indigo-100 text-indigo-600" },
-            { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",  chip: "bg-emerald-100 text-emerald-700" },
-            { grad: "bg-gradient-to-br from-amber-50 to-orange-100",  chip: "bg-amber-100 text-amber-700" },
-            { grad: "bg-gradient-to-br from-rose-50 to-pink-100",     chip: "bg-rose-100 text-rose-600" },
-            { grad: "bg-gradient-to-br from-violet-50 to-purple-100", chip: "bg-violet-100 text-violet-700" },
-            { grad: "bg-gradient-to-br from-sky-50 to-cyan-100",      chip: "bg-sky-100 text-sky-700" },
-          ];
           const stepItems = block.items || [];
-          const stepCols =
-            stepItems.length <= 2 ? "sm:grid-cols-2" :
-            stepItems.length === 3 ? "sm:grid-cols-3" :
-            "sm:grid-cols-2";
           return (
-            <div key={block.id || index} className="space-y-3">
-              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-              <div className={`grid grid-cols-1 ${stepCols} gap-3`}>
-                {block.items?.map((item: YuzeeItem, sIdx: number) => {
-                  const { grad, chip } = cardPalette[sIdx % cardPalette.length];
-                  return (
-                    <div key={item.id || sIdx} className={`${grad} rounded-2xl p-5 flex flex-col gap-3 shadow-sm border border-white/80`}>
-                      <div className={`self-start px-2 py-0.5 rounded-lg text-[11px] font-bold tracking-wide ${chip}`}>{String(sIdx + 1).padStart(2, "0")}</div>
-                      <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+            <div key={block.id || index} className="space-y-2">
+              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+              <ul className="border-t border-slate-100">
+                {stepItems.map((item: YuzeeItem, sIdx: number) => (
+                  <li key={item.id || sIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                    <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 pt-0.5">{String(sIdx + 1).padStart(2, "0")}</span>
+                    <div>
+                      <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-xs text-slate-600 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
                       )}
                     </div>
-                  );
-                })}
-              </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           );
         }
 
-        // Status-driven compact rows
-        const stepStyle = (status: string, sIdx: number): { row: string; badge: React.ReactNode; chip: { cls: string; label: string } | null } => {
-          switch (status) {
-            case "complete":
-              return {
-                row: "bg-emerald-50/60 border-emerald-200 text-slate-900",
-                badge: <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]" aria-label="Completed">✓</div>,
-                chip: { cls: "bg-emerald-100 text-emerald-800", label: "Done" },
-              };
-            case "current":
-              return {
-                row: "bg-amber-50/80 border-amber-300 text-amber-950 shadow-2xs",
-                badge: <div className="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-[10px] animate-pulse motion-reduce:animate-none" aria-label="Current step">{sIdx + 1}</div>,
-                chip: { cls: "bg-amber-100 text-amber-900", label: "Current" },
-              };
-            case "next":
-              return {
-                row: "bg-sky-50/40 border-sky-200 text-slate-800",
-                badge: <div className="w-5 h-5 rounded-full bg-sky-200 text-sky-800 flex items-center justify-center font-semibold text-[10px]" aria-label="Next step">{sIdx + 1}</div>,
-                chip: { cls: "bg-sky-100 text-sky-800", label: "Next" },
-              };
-            case "warning":
-              return {
-                row: "bg-amber-50/50 border-amber-200 text-slate-800",
-                badge: <div className="w-5 h-5 rounded-full bg-amber-200 text-amber-900 flex items-center justify-center font-bold text-[10px]" aria-label="Warning">!</div>,
-                chip: { cls: "bg-amber-100 text-amber-800", label: "Note" },
-              };
-            case "blocked":
-              return {
-                row: "bg-rose-50 border-rose-300 text-slate-800",
-                badge: <div className="w-5 h-5 rounded-full bg-rose-600 text-white flex items-center justify-center font-bold text-[10px]" aria-label="Blocked">✕</div>,
-                chip: { cls: "bg-rose-100 text-rose-800", label: "Blocked" },
-              };
-            default:
-              return {
-                row: "bg-white border-slate-200 text-slate-700",
-                badge: <div className="w-5 h-5 rounded-full bg-slate-200 text-slate-700 flex items-center justify-center font-semibold text-[10px]" aria-label={`Step ${sIdx + 1}`}>{sIdx + 1}</div>,
-                chip: null,
-              };
-          }
+        // Status-driven ruled rows
+        const stepStatusColor: Record<string, string> = {
+          current:  "text-blue-600",
+          next:     "text-purple-600",
+          complete: "text-emerald-600",
+          blocked:  "text-rose-600",
+          warning:  "text-amber-600",
         };
-
         return (
-          <div key={block.id || index} className="space-y-3">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            <div className="space-y-2">
+          <div key={block.id || index} className="space-y-2">
+            {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+            <ul className="border-t border-slate-100">
               {block.items?.map((item: YuzeeItem, sIdx: number) => {
-                const { row, badge, chip } = stepStyle(item.status || "", sIdx);
+                const s = item.status || "";
+                const scls = stepStatusColor[s] || "text-slate-400";
                 return (
-                  <div key={item.id || sIdx} className={`flex items-start gap-3 p-3 rounded-xl border text-xs transition-colors ${row}`}>
-                    <div className="mt-0.5 shrink-0">{badge}</div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-semibold text-slate-900">{item.title}</span>
-                        {chip && (
-                          <span className={`px-1.5 py-0.5 text-[9px] font-semibold uppercase rounded tracking-wider ${chip.cls}`}>
-                            {chip.label}
-                          </span>
-                        )}
-                      </div>
-                      {(item.text || item.value) && (
-                        <p className="text-slate-600 mt-1 leading-relaxed">{item.text || item.value}</p>
-                      )}
+                  <li key={item.id || sIdx} className="py-4 border-b border-slate-100">
+                    <div className="flex items-baseline justify-between gap-4 mb-1">
+                      <p className="text-[15px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                      {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                     </div>
-                  </div>
+                    {(item.text || item.value) && (
+                      <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                    )}
+                  </li>
                 );
               })}
-            </div>
+            </ul>
           </div>
         );
       }
@@ -697,29 +588,35 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       }
 
       case "callout": {
-        const calloutVariants: Record<string, { grad: string; iconBg: string; iconText: string; text: string; symbol: string }> = {
-          info:    { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   iconBg: "bg-indigo-100",  iconText: "text-indigo-600",  text: "text-slate-800",  symbol: "→" },
-          success: { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",  iconBg: "bg-emerald-100", iconText: "text-emerald-700", text: "text-slate-800",  symbol: "✓" },
-          warning: { grad: "bg-gradient-to-br from-amber-50 to-orange-100",  iconBg: "bg-amber-100",   iconText: "text-amber-700",   text: "text-slate-800",  symbol: "!" },
-          danger:  { grad: "bg-gradient-to-br from-rose-50 to-pink-100",     iconBg: "bg-rose-100",    iconText: "text-rose-700",    text: "text-slate-800",  symbol: "✕" },
-          muted:   { grad: "bg-gradient-to-br from-slate-50 to-slate-100",   iconBg: "bg-slate-200",   iconText: "text-slate-600",   text: "text-slate-700",  symbol: "·" },
-          default: { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   iconBg: "bg-indigo-100",  iconText: "text-indigo-600",  text: "text-slate-800",  symbol: "→" },
+        const calloutBorder: Record<string, string> = {
+          info:    "border-blue-500",
+          default: "border-blue-500",
+          success: "border-emerald-500",
+          warning: "border-amber-500",
+          danger:  "border-rose-500",
+          muted:   "border-slate-300",
         };
-        const cv = calloutVariants[block.variant || "default"] || calloutVariants.default;
-        const customIcon = (block as any).icon as string | undefined;
+        const calloutLabel: Record<string, string> = {
+          info:    "text-blue-600",
+          default: "text-blue-600",
+          success: "text-emerald-600",
+          warning: "text-amber-600",
+          danger:  "text-rose-600",
+          muted:   "text-slate-500",
+        };
+        const v = block.variant || "default";
+        const bc = calloutBorder[v] || calloutBorder.default;
+        const lc = calloutLabel[v] || calloutLabel.default;
         return (
           <div
             key={block.id || index}
-            className={`${cv.grad} rounded-2xl p-4 flex gap-3 shadow-sm border border-white/80`}
-            role={block.variant === "danger" || block.variant === "warning" ? "alert" : undefined}
+            className={`pl-5 border-l-[3px] ${bc} py-0.5`}
+            role={v === "danger" || v === "warning" ? "alert" : undefined}
           >
-            <div className={`shrink-0 w-8 h-8 rounded-full ${cv.iconBg} flex items-center justify-center font-bold text-sm ${cv.iconText}`} aria-hidden="true">
-              {customIcon || cv.symbol}
-            </div>
-            <div className={`flex-1 min-w-0 text-xs leading-relaxed ${cv.text}`}>
-              {block.title && <p className="font-bold text-sm text-slate-900 mb-1 leading-snug">{block.title}</p>}
-              <p className="leading-relaxed">{block.text}</p>
-            </div>
+            {block.title && (
+              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-1.5 ${lc}`}>{block.title}</span>
+            )}
+            <p className="text-[15px] leading-[1.7] text-slate-700">{block.text}</p>
           </div>
         );
       }
