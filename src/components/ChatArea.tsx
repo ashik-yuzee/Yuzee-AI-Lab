@@ -35,7 +35,7 @@ function modelShortName(modelId: string): string {
 function modelChipStyle(modelId: string): string {
   if (modelId.includes('lite')) return 'bg-amber-50 border-amber-200 text-amber-800';
   if (modelId.includes('2.5') || modelId.includes('2.0')) return 'bg-slate-100 border-slate-200 text-slate-600';
-  return 'bg-sky-50 border-sky-200 text-sky-800';
+  return 'bg-blue-50 border-blue-200 text-blue-700';
 }
 
 
@@ -222,7 +222,7 @@ export const ChatArea: React.FC = () => {
   };
 
   return (
-    <div id="chat-viewport" className="flex-1 flex flex-col h-full bg-slate-50/50 overflow-hidden relative">
+    <div id="chat-viewport" className="flex-1 flex flex-col h-full bg-[#f7f8fa] overflow-hidden relative">
       {/* Daily cost threshold warning banner */}
       {dailyCostWarning.level && (
         <div className={`flex items-center justify-between px-4 py-2 text-xs border-b ${
@@ -257,38 +257,39 @@ export const ChatArea: React.FC = () => {
       )}
 
       {/* Messages Scroll Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-        <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex-1 overflow-y-auto px-4 py-8 space-y-6">
+        <div className="max-w-5xl mx-auto space-y-6">
           {messages.length === 0 ? (
             /* Empty State */
             <div id="empty-state-card" className="py-8 text-center space-y-6">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-sky-100 border border-sky-200 text-sky-700 shadow-xs mb-2">
+              <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white border border-[#e6e9ee] text-[#2f6fed] shadow-sm mb-2">
                 <Sparkles className="w-7 h-7" />
               </div>
 
               <div className="space-y-2">
-                <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-[22px] font-bold text-[#1c1f26] tracking-tight">
                   What are you planning next?
                 </h1>
-                <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
+                <p className="text-[15px] text-[#5b6472] max-w-lg mx-auto leading-[1.65]">
                   Test Oala career guidance with Protocol v1.3 JSON validation and context token optimization.
                 </p>
               </div>
 
               {/* Starter Prompts */}
-              <div className="grid sm:grid-cols-2 gap-2.5 pt-4 text-left max-w-xl mx-auto">
+              <div className="grid sm:grid-cols-2 gap-2.5 pt-4 text-left max-w-2xl mx-auto">
                 {starterPrompts.map((p, idx) => (
                   <button
                     key={idx}
                     id={`starter-prompt-${idx}`}
                     onClick={() => sendMessage(p.prompt)}
-                    className="p-3 bg-white border border-slate-200 hover:border-sky-300 hover:bg-sky-50/40 rounded-xl text-left transition-all shadow-2xs group cursor-pointer"
+                    className="p-4 bg-white border border-[#e6e9ee] hover:border-[#2f6fed]/40 rounded-xl text-left transition-all group cursor-pointer"
+                    style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}
                   >
-                    <div className="flex items-center justify-between font-medium text-xs text-slate-900 mb-1 group-hover:text-sky-700">
+                    <div className="flex items-center justify-between font-semibold text-[13px] text-[#1c1f26] mb-1.5 group-hover:text-[#2f6fed]">
                       <span>{p.title}</span>
-                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-sky-600 transition-opacity" />
+                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-[#2f6fed] transition-opacity" />
                     </div>
-                    <p className="text-[11px] text-slate-600 line-clamp-2">{p.prompt}</p>
+                    <p className="text-[12px] text-[#8a929d] leading-relaxed line-clamp-2">{p.prompt}</p>
                   </button>
                 ))}
               </div>
@@ -310,11 +311,14 @@ export const ChatArea: React.FC = () => {
                   {/* Message Bubble */}
                   <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                     <div
-                      className={`max-w-2xl w-full sm:w-auto rounded-2xl p-4 text-sm leading-relaxed transition-all shadow-2xs ${
+                      className={`max-w-3xl w-full sm:w-auto leading-[1.68] transition-all ${
                         msg.role === "user"
-                          ? "bg-sky-600 text-white rounded-br-xs font-normal"
-                          : "bg-white text-slate-900 border border-slate-200/80 rounded-bl-xs"
+                          ? "bg-[#2f6fed] text-white rounded-2xl rounded-br-sm px-4 py-3 text-[15px] font-normal sm:w-auto"
+                          : structured
+                          ? "w-full text-[#2c333d]"
+                          : "bg-white border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-4 py-3.5 text-[15px] text-[#2c333d]"
                       }`}
+                      style={msg.role === "assistant" && structured ? {} : msg.role === "assistant" ? { boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" } : {}}
                     >
                       {msg.role === "user" ? (
                         <div className="whitespace-pre-wrap">{userDisplayContent}</div>
@@ -334,8 +338,8 @@ export const ChatArea: React.FC = () => {
 
                           {/* Counsellor gate JSON: shown as a subtle pending indicator; modal handles interaction */}
                           {isCounsellorGate ? (
-                            <div className="flex items-center gap-2 p-3 bg-sky-50 border border-sky-200 rounded-xl text-xs text-sky-700">
-                              <span className="w-2 h-2 rounded-full bg-sky-400 animate-pulse" />
+                            <div className="flex items-center gap-2 p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-700">
+                              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
                               <span>Questions ready — see the popup above to answer them.</span>
                             </div>
                           ) : structured && rawJsonIds.has(msg.id) ? (
@@ -357,7 +361,7 @@ export const ChatArea: React.FC = () => {
                             />
                           ) : (
                             !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
-                              <div className="prose prose-slate prose-sm max-w-none prose-headings:font-semibold prose-headings:text-slate-900 prose-p:text-slate-800 prose-li:text-slate-800">
+                              <div className="prose prose-slate max-w-none prose-p:text-[15px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[15px] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26] prose-headings:font-bold">
                                 <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
                               </div>
                             )
@@ -368,8 +372,8 @@ export const ChatArea: React.FC = () => {
 
                           {/* Streaming Indicator */}
                           {msg.isStreaming && (
-                            <div className="flex items-center gap-2 text-xs text-sky-600 font-medium pt-1">
-                              <span className="w-2 h-2 rounded-full bg-sky-600 animate-pulse" />
+                            <div className="flex items-center gap-2 text-[13px] text-[#2f6fed] font-medium pt-1">
+                              <span className="w-2 h-2 rounded-full bg-[#2f6fed] animate-pulse" />
                               <span>Generating & validating Protocol v1.3 response...</span>
                             </div>
                           )}
@@ -411,10 +415,10 @@ export const ChatArea: React.FC = () => {
                                 {/* Token Indicator Pill */}
                                 <button
                                   onClick={() => inspectTurnTelemetry(msg.telemetry)}
-                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 hover:bg-sky-50 text-slate-700 hover:text-sky-800 border border-slate-200 hover:border-sky-300 rounded-md font-mono text-[11px] transition-colors cursor-pointer"
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 hover:bg-blue-50 text-slate-700 hover:text-[#2f6fed] border border-slate-200 hover:border-[#2f6fed]/30 rounded-md font-mono text-[11px] transition-colors cursor-pointer"
                                   title="Click for full breakdown: User vs Input, Thinking, Cached, and Compaction"
                                 >
-                                  <Activity className="w-3 h-3 text-sky-600" />
+                                  <Activity className="w-3 h-3 text-[#2f6fed]" />
                                   <span>
                                     {msg.telemetry.usage.cachedTokens !== null && msg.telemetry.usage.cachedTokens > 0 ? (
                                       <>
@@ -446,7 +450,7 @@ export const ChatArea: React.FC = () => {
                                       next.has(msg.id) ? next.delete(msg.id) : next.add(msg.id);
                                       return next;
                                     })}
-                                    className={`p-1 rounded hover:bg-slate-100 ${rawJsonIds.has(msg.id) ? 'text-sky-600' : 'text-slate-400 hover:text-slate-700'}`}
+                                    className={`p-1 rounded hover:bg-slate-100 ${rawJsonIds.has(msg.id) ? 'text-[#2f6fed]' : 'text-slate-400 hover:text-slate-700'}`}
                                     title={rawJsonIds.has(msg.id) ? "Show rendered output" : "Show raw JSON"}
                                     aria-label="Toggle raw JSON"
                                   >
@@ -487,8 +491,8 @@ export const ChatArea: React.FC = () => {
       {/* Next steps floating popup — visually attached to the composer, not the messages */}
       {hasSuggestions && (
         <div className="px-3 sm:px-4 pb-2">
-          <div className="bg-white border border-slate-200 rounded-xl shadow-md px-3 py-2.5 flex items-center gap-2 flex-wrap">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest shrink-0">Next steps</span>
+          <div className="bg-white border border-[#e6e9ee] rounded-xl px-3 py-2.5 flex items-center gap-2 flex-wrap" style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}>
+            <span className="text-[10px] font-bold text-[#8a929d] uppercase tracking-widest shrink-0">Next steps</span>
             {suggestedActions.map((act: RecommendedAction) => (
               <button
                 key={act.id}
@@ -500,7 +504,7 @@ export const ChatArea: React.FC = () => {
                   userEvent: { interaction: { question_id: "recommended_action", selected_option_ids: [act.id], self_input: act.message } },
                   timestamp: Date.now(),
                 } as any)}
-                className="px-3 py-1 bg-slate-50 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-slate-700 rounded-lg text-[11px] font-medium transition-colors cursor-pointer"
+                className="px-3 py-1.5 bg-slate-50 hover:bg-[#2f6fed]/5 hover:text-[#2f6fed] border border-[#e6e9ee] hover:border-[#2f6fed]/30 text-[#5b6472] rounded-lg text-[12px] font-medium transition-colors cursor-pointer"
               >
                 {act.label}
               </button>

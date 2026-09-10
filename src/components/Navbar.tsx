@@ -129,7 +129,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
   const hasAssistantMsg = (currentConversation?.messages || []).some(m => m.role === "assistant");
 
   return (
-    <header id="main-header" className="h-14 border-b border-slate-200 bg-white/95 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between sticky top-0 z-30 shadow-xs">
+    <header id="main-header" className="h-14 border-b border-[#e6e9ee] bg-white/95 backdrop-blur-md px-3 sm:px-4 flex items-center justify-between sticky top-0 z-30" style={{ boxShadow: "0 1px 0 #e6e9ee" }}>
       {/* Left: Brand & Mobile Sidebar Toggle */}
       <div className="flex items-center gap-3">
         <button
@@ -268,13 +268,13 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           onClick={() => { setTokenInspectorOpen(!isTokenInspectorOpen); if (!isTokenInspectorOpen) setWhiteboardOpen(false); }}
           className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
             isTokenInspectorOpen
-              ? "bg-sky-50 border-sky-300 text-sky-900 font-semibold shadow-xs"
-              : "bg-slate-50 hover:bg-white border-slate-200 text-slate-700 hover:border-sky-300"
+              ? "bg-[#2f6fed]/5 border-[#2f6fed]/30 text-[#2f6fed] font-semibold"
+              : "bg-[#f7f8fa] hover:bg-white border-[#e6e9ee] text-[#5b6472] hover:border-[#2f6fed]/30"
           }`}
           title="Conversation Telemetry — click to view full turn & context diagnostics"
           aria-label="Conversation Telemetry"
         >
-          <Activity className="w-3.5 h-3.5 text-sky-600" />
+          <Activity className="w-3.5 h-3.5 text-[#2f6fed]" />
           <span className="text-[11px]">
             {cachedTokens > 0 ? <>⚡ <strong>{inputTokens}</strong> new</> : <>In <strong>{inputTokens}</strong></>}
             {" "}· Out <strong>{outputTokens}</strong>

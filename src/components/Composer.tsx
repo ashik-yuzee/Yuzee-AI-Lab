@@ -57,8 +57,8 @@ export const Composer: React.FC = () => {
   const hasContent = text.trim().length > 0;
 
   return (
-    <div id="composer-container" className="p-3 sm:p-4 border-t border-slate-200 bg-white relative">
-      <div className="max-w-4xl mx-auto space-y-2">
+    <div id="composer-container" className="px-4 py-3 border-t border-[#e6e9ee] bg-white relative">
+      <div className="max-w-5xl mx-auto space-y-2">
         {/* Composer Footer Bar */}
         <div className="flex items-center justify-end px-1 text-xs text-slate-500 font-mono">
           <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-400">
@@ -68,7 +68,7 @@ export const Composer: React.FC = () => {
                   ? 'bg-amber-50 border-amber-200 text-amber-700'
                   : currentConversation.model.includes('2.5') || currentConversation.model.includes('2.0')
                   ? 'bg-slate-100 border-slate-200 text-slate-600'
-                  : 'bg-sky-50 border-sky-200 text-sky-700'
+                  : 'bg-blue-50 border-blue-200 text-blue-700'
               }`}>
                 <Cpu className="w-2.5 h-2.5" />
                 {modelShortName(currentConversation.model)}
@@ -79,7 +79,7 @@ export const Composer: React.FC = () => {
         </div>
 
         {/* Input Textarea & Action Button */}
-        <div className={`relative flex items-center bg-white border focus-within:ring-2 focus-within:ring-sky-100 rounded-xl transition-all shadow-xs p-1.5 gap-2 ${listening ? "border-red-400 ring-2 ring-red-100" : "border-slate-300 focus-within:border-sky-500"}`}>
+        <div className={`relative flex items-center bg-white border rounded-xl transition-all p-1.5 gap-2 ${listening ? "border-red-400 ring-2 ring-red-100" : "border-[#e6e9ee] focus-within:border-[#2f6fed] focus-within:ring-2 focus-within:ring-[#2f6fed]/10"}`} style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.045)" }}>
           <textarea
             id="composer-input"
             ref={textareaRef}
@@ -87,8 +87,8 @@ export const Composer: React.FC = () => {
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Oala about career pathways, certification roadmaps, or skill requirements..."
-            className="flex-1 max-h-44 min-h-[38px] px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 bg-transparent resize-none focus:outline-hidden leading-relaxed"
+            placeholder="Ask Oala about career pathways, certification roadmaps, or skill requirements…"
+            className="flex-1 max-h-44 min-h-[38px] px-3 py-2 text-[15px] text-[#1c1f26] placeholder:text-[#8a929d] bg-transparent resize-none focus:outline-none leading-[1.68]"
           />
 
           <button
@@ -116,7 +116,7 @@ export const Composer: React.FC = () => {
               disabled={!hasContent}
               className={`w-9 h-9 shrink-0 rounded-lg flex items-center justify-center transition-all ${
                 hasContent
-                  ? "bg-sky-600 hover:bg-sky-700 text-white shadow-xs cursor-pointer"
+                  ? "bg-[#2f6fed] hover:bg-[#1f5cd6] text-white shadow-xs cursor-pointer"
                   : "bg-slate-100 text-slate-300 cursor-not-allowed"
               }`}
               title="Send Message (Enter)"
