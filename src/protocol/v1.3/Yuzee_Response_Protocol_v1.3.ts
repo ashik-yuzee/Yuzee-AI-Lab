@@ -38,6 +38,9 @@ export interface YuzeeItem {
   text: string;
   value: string;
   status: string;
+  icon?: string;       // emoji or descriptive text for left-side icon
+  side_label?: string; // uppercase label for right-side column
+  side_text?: string;  // body text for right-side column
 }
 
 export interface YuzeeColumn {

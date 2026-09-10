@@ -138,7 +138,7 @@ function buildCurrentSingleText(): string {
   dynamicSections.push(`RECENT_DIALOGUE_TURNS:\n${recentHistoryText}`);
   const dynamicContextStr = dynamicSections.join('\n\n');
 
-  return `${dynamicContextStr}\n\nCURRENT_USER_INPUT:\n${CURRENT_USER_WITH_PREFIX}`;
+  return `${dynamicContextStr}\n\n${CURRENT_USER_WITH_PREFIX}`;
 }
 
 // ── Architecture B: Proposed multi-turn Content[] ─────────────────────────────
@@ -348,7 +348,7 @@ ruler('COMPATIBILITY CHECKS');
   assert.strictEqual(noHistory.length, 1, 'no-history case: single Content object');
   assert.strictEqual(noHistory[0].role, 'user');
   assert.ok(noHistory[0].parts[0].text.includes('YUZEE_STRUCTURED_MEMORY_CAPSULE'));
-  assert.ok(noHistory[0].parts[0].text.includes('CURRENT_USER_INPUT:'));
+  assert.ok(!noHistory[0].parts[0].text.includes('CURRENT_USER_INPUT:'), 'no-history: raw text, no CURRENT_USER_INPUT prefix');
   console.log(indent('No-history case: degrades to single user message (same as current): PASS'));
 }
 

@@ -10,11 +10,12 @@ import {
   Settings,
   User,
   Network,
+  FileJson,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
 
-export const Navbar: React.FC = () => {
+export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRenderer }) => {
   const {
     currentConversation,
     selectedModel,
@@ -209,6 +210,18 @@ export const Navbar: React.FC = () => {
         >
           <Network className="w-3.5 h-3.5 text-violet-600" />
           <span>Pathway</span>
+        </button>
+
+        {/* Protocol Renderer — standalone test page */}
+        <button
+          id="btn-renderer"
+          onClick={onOpenRenderer}
+          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
+          title="Protocol v1.3 Renderer — paste JSON, see the UI output"
+          aria-label="Protocol Renderer"
+        >
+          <FileJson className="w-3.5 h-3.5 text-slate-500" />
+          <span>Renderer</span>
         </button>
       </div>
 

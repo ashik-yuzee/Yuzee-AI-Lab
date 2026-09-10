@@ -143,11 +143,10 @@ export function buildMultiTurnContents(params: {
   const completeTurns = keptTurns.filter(t => t.assistantMessage != null);
 
   if (completeTurns.length === 0) {
-    // No history — emit single user message with preamble + current input (same as today)
-    const parts: string[] = [];
-    if (preamble) parts.push(preamble);
-    parts.push(`CURRENT_USER_INPUT:\n${currentUserInput}`);
-    contents.push({ role: 'user', parts: [{ text: parts.join('\n\n') }] });
+    // No history — send preamble (if any) + raw user text. No CURRENT_USER_INPUT: prefix:
+    // that label shifts the model's interpretation vs AI Studio's plain-text first turn.
+    const text = preamble ? `${preamble}\n\n${currentUserInput}` : currentUserInput;
+    contents.push({ role: 'user', parts: [{ text }] });
     return contents;
   }
 

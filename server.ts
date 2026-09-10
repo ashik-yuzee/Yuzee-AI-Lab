@@ -47,12 +47,22 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 app.use(express.json({ limit: '500kb' }));
 
 // ── Authentication ────────────────────────────────────────────────────────────
-const AUTH_SESSIONS = new Set<string>();
+// Token is a deterministic HMAC derived from credentials + server secret.
+// Survives server restarts — no in-memory session store needed.
+const ADMIN_USER = process.env.ADMIN_USERNAME || 'yuzeeadmin';
+const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'yuzeeadmin@2026';
+const AUTH_SECRET = process.env.AUTH_SECRET || 'yuzee-lab-secret-2026';
+
+function makeStableToken(username: string, password: string): string {
+  return crypto.createHmac('sha256', AUTH_SECRET).update(`${username}:${password}`).digest('hex');
+}
+
+const VALID_TOKEN = makeStableToken(ADMIN_USER, ADMIN_PASS);
 
 function requireAuth(req: express.Request, res: express.Response, next: express.NextFunction) {
   const auth = req.headers.authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (!token || !AUTH_SESSIONS.has(token)) return void res.status(401).json({ error: 'Unauthorized' });
+  if (!token || token !== VALID_TOKEN) return void res.status(401).json({ error: 'Unauthorized' });
   next();
 }
 
@@ -64,26 +74,21 @@ app.use('/api', (req: express.Request, res: express.Response, next: express.Next
 
 app.post('/api/auth/login', (req, res) => {
   const { username, password } = req.body;
-  const ADMIN_USER = process.env.ADMIN_USERNAME || 'yuzeeadmin';
-  const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'yuzeeadmin@2026';
   if (username !== ADMIN_USER || password !== ADMIN_PASS) {
     return void res.status(401).json({ error: 'Invalid credentials' });
   }
-  const token = crypto.randomBytes(32).toString('hex');
-  AUTH_SESSIONS.add(token);
-  res.json({ token });
+  res.json({ token: makeStableToken(username, password) });
 });
 
-app.post('/api/auth/logout', (req, res) => {
-  const auth = req.headers.authorization || '';
-  AUTH_SESSIONS.delete(auth.startsWith('Bearer ') ? auth.slice(7) : '');
+app.post('/api/auth/logout', (_req, res) => {
+  // Token is stateless — logout is a client-side clear only
   res.json({ ok: true });
 });
 
 app.get('/api/auth/check', (req, res) => {
   const auth = req.headers.authorization || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  res.json({ authenticated: AUTH_SESSIONS.has(token) });
+  res.json({ authenticated: token === VALID_TOKEN });
 });
 
 // DB health — no auth required, lets you verify the connection instantly
@@ -201,6 +206,7 @@ interface ConversationItem {
   customSystemPrompt?: string;
   useInteractionsApi?: boolean;
   useFlashLiteUtility?: boolean;
+  useStructuredOutput?: boolean;
   activeInteraction?: any;
   securityBreachCount: number;
   activeSecurityPenalty: SecurityPenalty;
@@ -642,6 +648,11 @@ app.get("/api/system-prompt", (req, res) => {
   });
 });
 
+app.post("/api/system-prompt/reload", requireAuth, (_req, res) => {
+  requestAssembler.reload();
+  res.json({ ok: true, hash: requestAssembler.getPromptHash(), bytes: requestAssembler.getPromptBytes() });
+});
+
 // ── Shared Settings ───────────────────────────────────────────────────────────
 // All users share: system prompt mode + retention defaults.
 // Changes here affect every conversation on this deployment.
@@ -928,6 +939,13 @@ app.put("/api/conversations/:id", (req, res) => {
     careerContext: req.body.careerContext,
     systemPromptMode: req.body.systemPromptMode,
     customSystemPrompt: req.body.customSystemPrompt,
+    useMultiTurn: req.body.useMultiTurn,
+    useStructuredOutput: req.body.useStructuredOutput,
+    temperature: req.body.temperature,
+    topP: req.body.topP,
+    maxOutputTokens: req.body.maxOutputTokens,
+    useInteractionsApi: req.body.useInteractionsApi,
+    useFlashLiteUtility: req.body.useFlashLiteUtility,
   };
   const allowedUpdates = Object.fromEntries(Object.entries(raw).filter(([, v]) => v !== undefined));
   Object.assign(conv, allowedUpdates, { updatedAt: Date.now() });
@@ -1580,6 +1598,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     maxOutputTokens: req.body.maxOutputTokens != null ? Math.round(Number(req.body.maxOutputTokens)) : undefined,
     useMultiTurn: req.body.useMultiTurn !== false,
     keptTurns: mem.keptTurns,
+    useStructuredOutput: req.body.useStructuredOutput === true || conv.useStructuredOutput === true,
   });
   const requestAssemblyMs = Date.now() - requestAssemblyStart;
 

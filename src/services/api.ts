@@ -195,6 +195,16 @@ export async function fetchSystemPrompt(): Promise<{ content: string; hash: stri
   return res.json();
 }
 
+export async function reloadSystemPrompt(): Promise<{ ok: boolean; hash: string; bytes: number }> {
+  const token = localStorage.getItem('yuzee_auth') || '';
+  const res = await fetch(`${API_BASE}/api/system-prompt/reload`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`Failed to reload prompt: ${res.status}`);
+  return res.json();
+}
+
 export interface SharedSettings {
   systemPromptMode: 'default' | 'custom';
   customSystemPrompt: string;
@@ -369,6 +379,7 @@ export function streamChatMessage(
     topP?: number;
     maxOutputTokens?: number;
     useMultiTurn?: boolean;
+    useStructuredOutput?: boolean;
     userContext?: { date?: string; timezone?: string; location?: string };
     userProfileFacts?: string[];
     userQuestionAnswers?: any[];

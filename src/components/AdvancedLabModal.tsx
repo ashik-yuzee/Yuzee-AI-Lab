@@ -59,6 +59,8 @@ export const AdvancedLabModal: React.FC = () => {
   const [benchmarkIsLive, setBenchmarkIsLive] = useState(false);
   const [defaultPromptContent, setDefaultPromptContent] = useState("");
   const [showPromptContent, setShowPromptContent] = useState(false);
+  const [isReloadingPrompt, setIsReloadingPrompt] = useState(false);
+  const [reloadPromptStatus, setReloadPromptStatus] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -85,6 +87,7 @@ export const AdvancedLabModal: React.FC = () => {
     topP: undefined,
     maxOutputTokens: undefined,
     useMultiTurn: true,
+    useStructuredOutput: false,
   };
 
   const handleCareerFieldChange = (field: keyof StructuredMemoryCapsule, value: string) => {
@@ -381,14 +384,44 @@ export const AdvancedLabModal: React.FC = () => {
                         The Yuzee production prompt is shared across all users and sessions. It is versioned and cache-optimised for Gemini.
                       </p>
                     </div>
-                    <button
-                      onClick={() => setShowPromptContent(v => !v)}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap"
-                    >
-                      {showPromptContent ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      <span>{showPromptContent ? "Hide" : "View"} Prompt</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={async () => {
+                          setIsReloadingPrompt(true);
+                          setReloadPromptStatus(null);
+                          try {
+                            const r = await api.reloadSystemPrompt();
+                            setDefaultPromptContent('');
+                            api.fetchSystemPrompt().then(d => setDefaultPromptContent(d.content)).catch(() => {});
+                            setReloadPromptStatus(`Reloaded — ${(r.bytes / 1024).toFixed(1)} KB · ${r.hash.slice(0, 8)}`);
+                          } catch (e: any) {
+                            setReloadPromptStatus(`Error: ${e.message}`);
+                          } finally {
+                            setIsReloadingPrompt(false);
+                          }
+                        }}
+                        disabled={isReloadingPrompt}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap disabled:opacity-50"
+                        title="Hot-reload prompt from disk without restarting the server"
+                      >
+                        <RotateCcw className={`w-3.5 h-3.5 ${isReloadingPrompt ? 'animate-spin' : ''}`} />
+                        <span>{isReloadingPrompt ? 'Reloading…' : 'Reload Prompt'}</span>
+                      </button>
+                      <button
+                        onClick={() => setShowPromptContent(v => !v)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer whitespace-nowrap"
+                      >
+                        {showPromptContent ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                        <span>{showPromptContent ? "Hide" : "View"} Prompt</span>
+                      </button>
+                    </div>
                   </div>
+
+                  {reloadPromptStatus && (
+                    <p className={`text-[11px] font-mono px-2.5 py-1.5 rounded-lg border ${reloadPromptStatus.startsWith('Error') ? 'bg-red-50 border-red-200 text-red-700' : 'bg-emerald-50 border-emerald-200 text-emerald-800'}`}>
+                      {reloadPromptStatus}
+                    </p>
+                  )}
 
                   {showPromptContent && (
                     <div className="space-y-1.5">
@@ -602,6 +635,14 @@ export const AdvancedLabModal: React.FC = () => {
                     description="Send conversation history as a proper Content[] array (alternating user/model roles) instead of a single text blob. This matches how Gemini AI Studio works by default and gives the model native turn-awareness."
                     checked={conv.useMultiTurn ?? true}
                     onChange={(checked) => updateCurrentConversationSettings({ useMultiTurn: checked })}
+                  />
+
+                  {/* Structured output */}
+                  <AppleToggle
+                    label="Structured Output (Schema Enforcement)"
+                    description="Attach the Protocol v1.3 response schema and force JSON MIME type on every request. When off, the model responds in free-form JSON guided only by the system prompt — matching AI Studio's default behaviour. Disable to compare block-type selection quality between structured and unstructured modes."
+                    checked={conv.useStructuredOutput ?? false}
+                    onChange={(checked) => updateCurrentConversationSettings({ useStructuredOutput: checked })}
                   />
 
                   {/* Info footer */}

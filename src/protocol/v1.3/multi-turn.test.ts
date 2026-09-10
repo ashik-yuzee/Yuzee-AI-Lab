@@ -174,7 +174,7 @@ const CURRENT = 'USER_EVENT:\n{"ui":{},"user_text":"What certifications should I
     currentUserInput: CURRENT,
   });
   // Multi-turn: 3 parts; single-text: single string
-  const singleText = CAPSULE + '\n\nPREVIOUS_CONVERSATION_SUMMARY:\n' + SUMMARY + '\n\nCURRENT_USER_INPUT:\n' + CURRENT;
+  const singleText = CAPSULE + '\n\nPREVIOUS_CONVERSATION_SUMMARY:\n' + SUMMARY + '\n\n' + CURRENT;
   assert.equal(multiTurnContents.length, 3, 'multi-turn: 3 Contents');
   assert.equal(typeof singleText, 'string', 'single-text: string');
   assert.notEqual(multiTurnContents.length, 1, 'multi-turn differs from single-text');

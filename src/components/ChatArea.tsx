@@ -258,7 +258,7 @@ export const ChatArea: React.FC = () => {
 
       {/* Messages Scroll Area */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6">
-        <div className="max-w-3xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6">
           {messages.length === 0 ? (
             /* Empty State */
             <div id="empty-state-card" className="py-8 text-center space-y-6">

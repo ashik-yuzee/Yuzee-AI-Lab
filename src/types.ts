@@ -264,6 +264,7 @@ export interface Conversation {
   topP?: number;
   maxOutputTokens?: number;
   useMultiTurn?: boolean;
+  useStructuredOutput?: boolean;
   messages: ChatMessage[];
   compactionHistory: CompactionMetrics[];
 }

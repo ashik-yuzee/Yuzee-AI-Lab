@@ -58,7 +58,7 @@ export const Composer: React.FC = () => {
 
   return (
     <div id="composer-container" className="p-3 sm:p-4 border-t border-slate-200 bg-white relative">
-      <div className="max-w-3xl mx-auto space-y-2">
+      <div className="max-w-4xl mx-auto space-y-2">
         {/* Composer Footer Bar */}
         <div className="flex items-center justify-end px-1 text-xs text-slate-500 font-mono">
           <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-400">

@@ -16,6 +16,7 @@ import { UserProfileModal } from "./components/UserProfileModal";
 import { ClarificationQuestionsModal } from "./components/ClarificationQuestionsModal";
 import { LocationPromptModal } from "./components/LocationPromptModal";
 import { PathwayWhiteboard } from "./components/PathwayWhiteboard";
+import { ProtocolRendererPage } from "./components/ProtocolRendererPage";
 
 function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [u, setU] = useState('');
@@ -85,6 +86,7 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
 
 export default function App() {
   const [authed, setAuthed] = useState<boolean | null>(null);
+  const [page, setPage] = useState<'chat' | 'renderer'>('chat');
 
   useEffect(() => {
     const token = localStorage.getItem('yuzee_auth') || '';
@@ -102,11 +104,19 @@ export default function App() {
     return <LoginPage onLogin={() => setAuthed(true)} />;
   }
 
+  if (page === 'renderer') {
+    return (
+      <div id="yuzee-token-lab-root" className="flex flex-col h-screen w-screen bg-[#F9FAFB] text-slate-900 font-sans overflow-hidden antialiased">
+        <ProtocolRendererPage onBack={() => setPage('chat')} />
+      </div>
+    );
+  }
+
   return (
     <TokenLabProvider>
       <div id="yuzee-token-lab-root" className="flex flex-col h-screen w-screen bg-[#F9FAFB] text-slate-900 font-sans overflow-hidden antialiased selection:bg-sky-100 selection:text-sky-900">
         {/* Top App Header & Model/Preset Toolbar */}
-        <Navbar />
+        <Navbar onOpenRenderer={() => setPage('renderer')} />
 
         {/* Main Application Body */}
         <div className="flex-1 flex overflow-hidden relative">

@@ -604,6 +604,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         topP: activeConv.topP,
         maxOutputTokens: activeConv.maxOutputTokens,
         useMultiTurn: activeConv.useMultiTurn ?? true,
+        useStructuredOutput: activeConv.useStructuredOutput ?? false,
         userContext: { date: todayStr, timezone: tz, location: userLocation || undefined },
         userProfileFacts: relevantFacts,
         userQuestionAnswers: userQuestionAnswers,

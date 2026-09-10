@@ -318,84 +318,53 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
 
         if (isWorkflow) {
+          const rowStyle: Record<string, { bg: string; numBg: string; border: string; shadow?: string }> = {
+            current:  { bg: "bg-gradient-to-r from-amber-50 to-orange-50/60",  numBg: "bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-sm",  border: "border-amber-200", shadow: "shadow-[0_0_0_3px_rgba(251,146,60,0.14)] shadow-sm" },
+            next:     { bg: "bg-gradient-to-r from-sky-50/60 to-indigo-50/40", numBg: "bg-gradient-to-br from-sky-400 to-indigo-500 text-white shadow-sm",    border: "border-slate-200/80" },
+            complete: { bg: "bg-gradient-to-r from-emerald-50 to-teal-50/60",  numBg: "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-sm",  border: "border-emerald-200" },
+            blocked:  { bg: "bg-gradient-to-r from-rose-50 to-pink-50/60",     numBg: "bg-gradient-to-br from-rose-500 to-pink-600 text-white shadow-sm",     border: "border-rose-200" },
+            warning:  { bg: "bg-gradient-to-r from-amber-50/40 to-slate-50",   numBg: "bg-slate-200 text-slate-600",                                          border: "border-slate-200" },
+          };
+          const pillStyle: Record<string, string> = {
+            current:  "bg-amber-100 text-amber-800",
+            next:     "bg-sky-100 text-sky-700",
+            complete: "bg-emerald-100 text-emerald-800",
+            blocked:  "bg-rose-100 text-rose-700",
+            warning:  "bg-slate-100 text-slate-600",
+          };
           return (
-            <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">{block.title}</h4>}
+            <div key={block.id || index} className="space-y-3">
+              {(block.title || block.text) && (
+                <div>
+                  {block.title && <h4 className="text-sm font-bold text-slate-900 tracking-tight">{block.title}</h4>}
+                  {block.text && <p className="text-xs text-slate-500 mt-0.5">{block.text}</p>}
+                </div>
+              )}
               <div className="space-y-2">
-                {block.items?.map((item: YuzeeItem) => {
+                {block.items?.map((item: YuzeeItem, iIdx: number) => {
                   const s = item.status || "";
-                  if (s === "current") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-amber-200 bg-amber-50/50 p-4">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-amber-400 rounded-r" />
-                      <div className="pl-3">
-                        <div className="flex items-center gap-1.5 mb-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse motion-reduce:animate-none" />
-                          <span className="text-[10px] font-semibold uppercase tracking-widest text-amber-700">Currently Here</span>
-                        </div>
-                        <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
-                        {(item.text || item.value) && <p className="text-xs text-slate-600 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
-                      </div>
-                    </div>
-                  );
-                  if (s === "next") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-indigo-200 bg-white p-4 shadow-xs">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-indigo-500 rounded-r" />
-                      <div className="pl-4 flex items-start gap-3">
-                        <div className="shrink-0 w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-                          <ArrowRight className="w-4 h-4 text-indigo-600" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-start justify-between gap-2 mb-1">
-                            <span className="text-[10px] font-semibold uppercase tracking-widest text-indigo-500">Recommended First Step</span>
-                            <span className="shrink-0 text-[9px] font-semibold text-indigo-600 bg-indigo-50 border border-indigo-200 px-2 py-0.5 rounded-full">Next</span>
-                          </div>
-                          <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
-                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                  if (s === "complete") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50/50 p-4 opacity-70">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-emerald-400 rounded-r" />
-                      <div className="pl-3 flex items-start gap-3">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
-                        <div>
-                          <p className="text-sm font-medium text-slate-500 line-through decoration-slate-300">{item.title}</p>
-                          {(item.text || item.value) && <p className="text-xs text-slate-400 mt-1">{item.text || item.value}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                  if (s === "blocked") return (
-                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-rose-200 bg-rose-50/40 p-4">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-rose-400 rounded-r" />
-                      <div className="pl-3 flex items-start gap-3">
-                        <AlertCircle className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-0.5">
-                            <p className="text-sm font-semibold text-slate-900">{item.title}</p>
-                            <span className="text-[9px] font-semibold uppercase tracking-wide text-rose-600 bg-rose-100 px-1.5 py-0.5 rounded-full">Blocked</span>
-                          </div>
-                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{item.text || item.value}</p>}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                  // warning / default fallback — "also consider" alternative path
+                  const r = rowStyle[s] || { bg: "bg-white", numBg: "bg-slate-100 text-slate-700", border: "border-slate-200" };
+                  const pillCls = pillStyle[s];
+                  const pillLabel = s ? s.charAt(0).toUpperCase() + s.slice(1) : null;
                   return (
-                    <div key={item.id} className="relative overflow-hidden rounded-xl border border-slate-200 bg-white p-4">
-                      <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-slate-300 rounded-r" />
-                      <div className="pl-4 flex items-start gap-3">
-                        <div className="shrink-0 w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
-                          <Layers className="w-3.5 h-3.5 text-slate-500" />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="text-[10px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Also Consider</div>
-                          <p className="text-sm font-semibold text-slate-900 leading-snug">{item.title}</p>
-                          {(item.text || item.value) && <p className="text-xs text-slate-500 mt-1.5 leading-relaxed">{item.text || item.value}</p>}
-                        </div>
+                    <div
+                      key={item.id || iIdx}
+                      className={`flex items-start gap-3 border rounded-2xl p-4 ${r.bg} ${r.border} ${r.shadow ?? ""}`}
+                    >
+                      <div className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center font-extrabold text-xs ${r.numBg}`}>
+                        {s === "complete" ? "✓" : iIdx + 1}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-900 leading-snug mb-1">{item.title}</p>
+                        {(item.text || item.value) && (
+                          <p className="text-xs text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        )}
+                      </div>
+                      {pillLabel && pillCls && (
+                        <span className={`shrink-0 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${pillCls}`}>
+                          {pillLabel}
+                        </span>
+                      )}
                     </div>
                   );
                 })}
@@ -404,45 +373,148 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           );
         }
 
-        return (
-          <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            {useGrid ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+        // Icon + side-panel layout when items carry side_label / icon fields
+        const hasSidePanel = block.items?.some((i: YuzeeItem) => i.side_label || i.side_text || (i as any).icon);
+        if (hasSidePanel) {
+          const iconBgs = ["bg-indigo-100", "bg-emerald-100", "bg-amber-100", "bg-rose-100", "bg-violet-100", "bg-sky-100"];
+          const iconTexts = ["text-indigo-700", "text-emerald-700", "text-amber-700", "text-rose-600", "text-violet-700", "text-sky-700"];
+          return (
+            <div key={block.id || index} className="space-y-2">
+              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+              <div className="space-y-2">
                 {block.items?.map((item: YuzeeItem, iIdx: number) => {
-                  const isNegative = item.status === "negative";
-                  const isPositive = item.status === "positive";
+                  const icon = (item as any).icon as string | undefined;
+                  const sideLabel = item.side_label || (item as any).side_label;
+                  const sideText = item.side_text || (item as any).side_text;
+                  const ibg = iconBgs[iIdx % iconBgs.length];
+                  const itxt = iconTexts[iIdx % iconTexts.length];
                   return (
-                    <div key={item.id} className={`flex items-start gap-2 p-2 rounded-lg border text-xs ${isNegative ? "bg-rose-50/50 border-rose-200" : isPositive ? "bg-emerald-50/50 border-emerald-200" : "bg-white border-slate-200"}`}>
-                      <span className={`shrink-0 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-bold mt-0.5 ${isNegative ? "bg-rose-100 text-rose-600" : isPositive ? "bg-emerald-100 text-emerald-700" : "bg-sky-100 text-sky-700"}`}>
-                        {iIdx + 1}
-                      </span>
-                      <div className="min-w-0">
-                        <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
-                        {(item.text || item.value) && <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>}
+                    <div key={item.id || iIdx} className="flex items-start gap-3 p-4 rounded-xl border border-slate-200 bg-white">
+                      {/* Icon */}
+                      <div className={`shrink-0 w-9 h-9 rounded-xl ${ibg} flex items-center justify-center text-base`} aria-hidden="true">
+                        {icon ? (
+                          <span>{icon}</span>
+                        ) : (
+                          <span className={`font-bold text-xs ${itxt}`}>{String(iIdx + 1).padStart(2, "0")}</span>
+                        )}
                       </div>
+                      {/* Main content */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                        {item.text && <p className="text-xs text-slate-600 mt-1 leading-relaxed">{item.text}</p>}
+                      </div>
+                      {/* Right panel */}
+                      {(sideLabel || sideText) && (
+                        <div className="shrink-0 w-36 sm:w-44 text-right">
+                          {sideLabel && (
+                            <p className="text-[9px] font-bold uppercase tracking-widest text-slate-400 leading-tight mb-1">{sideLabel}</p>
+                          )}
+                          {sideText && (
+                            <p className="text-[11px] text-slate-600 leading-relaxed">{sideText}</p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
               </div>
-            ) : (
-              <div className="space-y-1.5">
-                {block.items?.map((item: YuzeeItem) => (
-                  <div key={item.id} className="flex items-start gap-2.5 p-2.5 rounded-lg border border-slate-200 bg-slate-50 text-xs">
-                    <CheckCircle2 className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
-                    <div className="min-w-0 flex-1">
-                      <span className="font-semibold text-slate-900">{item.title}</span>
-                      {(item.text || item.value) && <p className="text-slate-600 mt-0.5 leading-normal">{item.text || item.value}</p>}
-                    </div>
-                  </div>
-                ))}
+            </div>
+          );
+        }
+
+        // Default: numbered card grid
+        const LIST_PALETTE = [
+          { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",    chip: "bg-indigo-100 text-indigo-600" },
+          { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",   chip: "bg-emerald-100 text-emerald-700" },
+          { grad: "bg-gradient-to-br from-amber-50 to-orange-100",   chip: "bg-amber-100 text-amber-700" },
+          { grad: "bg-gradient-to-br from-violet-50 to-purple-100",  chip: "bg-violet-100 text-violet-700" },
+          { grad: "bg-gradient-to-br from-rose-50 to-pink-100",      chip: "bg-rose-100 text-rose-600" },
+          { grad: "bg-gradient-to-br from-sky-50 to-cyan-100",       chip: "bg-sky-100 text-sky-700" },
+        ];
+        const items = block.items || [];
+        const colCls =
+          items.length <= 1 ? "grid-cols-1" :
+          items.length === 2 ? "grid-cols-1 sm:grid-cols-2" :
+          items.length === 3 ? "grid-cols-1 sm:grid-cols-3" :
+          "grid-cols-1 sm:grid-cols-2";
+        return (
+          <div key={block.id || index} className="space-y-3">
+            {(block.title || block.text) && (
+              <div>
+                {block.title && <h4 className="text-sm font-bold text-slate-900 tracking-tight">{block.title}</h4>}
+                {block.text && <p className="text-xs text-slate-500 mt-0.5">{block.text}</p>}
               </div>
             )}
+            <div className={`grid gap-3 ${colCls}`}>
+              {items.map((item: YuzeeItem, iIdx: number) => {
+                const isNegative = item.status === "negative";
+                const isPositive = item.status === "positive";
+                const c = isNegative
+                  ? { grad: "bg-gradient-to-br from-rose-50 to-pink-100", chip: "bg-rose-100 text-rose-600" }
+                  : isPositive
+                  ? { grad: "bg-gradient-to-br from-emerald-50 to-teal-100", chip: "bg-emerald-100 text-emerald-700" }
+                  : LIST_PALETTE[iIdx % LIST_PALETTE.length];
+                const emoji = (item as any).icon as string | undefined;
+                return (
+                  <div key={item.id || iIdx} className={`${c.grad} rounded-2xl p-5 flex flex-col gap-3 min-h-[140px] shadow-sm border border-white/80`}>
+                    <div className={`self-start px-2 py-0.5 rounded-lg text-[11px] font-bold tracking-wide ${c.chip}`}>
+                      {emoji ? <span className="text-sm">{emoji}</span> : String(iIdx + 1).padStart(2, "0")}
+                    </div>
+                    <div className="flex-1 space-y-1.5">
+                      <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                      {(item.text || item.value) && (
+                        <p className="text-xs text-slate-600 leading-relaxed">{item.text || item.value}</p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         );
       }
 
       case "steps": {
+        const WORKFLOW_STEP_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
+        const hasStepStatuses = block.items?.some((i: YuzeeItem) => WORKFLOW_STEP_STATUSES.has(i.status || ""));
+
+        // Numbered card grid — when no workflow statuses are present
+        if (!hasStepStatuses) {
+          const cardPalette = [
+            { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   chip: "bg-indigo-100 text-indigo-600" },
+            { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",  chip: "bg-emerald-100 text-emerald-700" },
+            { grad: "bg-gradient-to-br from-amber-50 to-orange-100",  chip: "bg-amber-100 text-amber-700" },
+            { grad: "bg-gradient-to-br from-rose-50 to-pink-100",     chip: "bg-rose-100 text-rose-600" },
+            { grad: "bg-gradient-to-br from-violet-50 to-purple-100", chip: "bg-violet-100 text-violet-700" },
+            { grad: "bg-gradient-to-br from-sky-50 to-cyan-100",      chip: "bg-sky-100 text-sky-700" },
+          ];
+          const stepItems = block.items || [];
+          const stepCols =
+            stepItems.length <= 2 ? "sm:grid-cols-2" :
+            stepItems.length === 3 ? "sm:grid-cols-3" :
+            "sm:grid-cols-2";
+          return (
+            <div key={block.id || index} className="space-y-3">
+              {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+              <div className={`grid grid-cols-1 ${stepCols} gap-3`}>
+                {block.items?.map((item: YuzeeItem, sIdx: number) => {
+                  const { grad, chip } = cardPalette[sIdx % cardPalette.length];
+                  return (
+                    <div key={item.id || sIdx} className={`${grad} rounded-2xl p-5 flex flex-col gap-3 shadow-sm border border-white/80`}>
+                      <div className={`self-start px-2 py-0.5 rounded-lg text-[11px] font-bold tracking-wide ${chip}`}>{String(sIdx + 1).padStart(2, "0")}</div>
+                      <p className="text-sm font-bold text-slate-900 leading-snug">{item.title}</p>
+                      {(item.text || item.value) && (
+                        <p className="text-xs text-slate-600 leading-relaxed">{item.text || item.value}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        }
+
+        // Status-driven compact rows
         const stepStyle = (status: string, sIdx: number): { row: string; badge: React.ReactNode; chip: { cls: string; label: string } | null } => {
           switch (status) {
             case "complete":
@@ -625,24 +697,29 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       }
 
       case "callout": {
-        // Left-border accent style matching the Yuzee HTML design spec
-        const variantStyles: Record<string, { border: string; bg: string; text: string }> = {
-          info:    { border: "border-l-sky-500",     bg: "bg-sky-50",     text: "text-sky-950" },
-          success: { border: "border-l-emerald-500", bg: "bg-emerald-50", text: "text-emerald-950" },
-          warning: { border: "border-l-amber-500",   bg: "bg-amber-50",   text: "text-amber-950" },
-          danger:  { border: "border-l-rose-500",    bg: "bg-rose-50",    text: "text-rose-950" },
-          muted:   { border: "border-l-slate-400",   bg: "bg-slate-50",   text: "text-slate-700" },
-          default: { border: "border-l-blue-500",    bg: "bg-blue-50",    text: "text-slate-900" },
+        const calloutVariants: Record<string, { grad: string; iconBg: string; iconText: string; text: string; symbol: string }> = {
+          info:    { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   iconBg: "bg-indigo-100",  iconText: "text-indigo-600",  text: "text-slate-800",  symbol: "→" },
+          success: { grad: "bg-gradient-to-br from-emerald-50 to-teal-100",  iconBg: "bg-emerald-100", iconText: "text-emerald-700", text: "text-slate-800",  symbol: "✓" },
+          warning: { grad: "bg-gradient-to-br from-amber-50 to-orange-100",  iconBg: "bg-amber-100",   iconText: "text-amber-700",   text: "text-slate-800",  symbol: "!" },
+          danger:  { grad: "bg-gradient-to-br from-rose-50 to-pink-100",     iconBg: "bg-rose-100",    iconText: "text-rose-700",    text: "text-slate-800",  symbol: "✕" },
+          muted:   { grad: "bg-gradient-to-br from-slate-50 to-slate-100",   iconBg: "bg-slate-200",   iconText: "text-slate-600",   text: "text-slate-700",  symbol: "·" },
+          default: { grad: "bg-gradient-to-br from-indigo-50 to-blue-100",   iconBg: "bg-indigo-100",  iconText: "text-indigo-600",  text: "text-slate-800",  symbol: "→" },
         };
-        const vs = variantStyles[block.variant || "default"] || variantStyles.default;
+        const cv = calloutVariants[block.variant || "default"] || calloutVariants.default;
+        const customIcon = (block as any).icon as string | undefined;
         return (
           <div
             key={block.id || index}
-            className={`border-l-4 ${vs.border} ${vs.bg} ${vs.text} px-3.5 py-2.5 rounded-r-xl text-xs leading-relaxed space-y-1`}
-            role={block.variant === 'danger' || block.variant === 'warning' ? 'alert' : undefined}
+            className={`${cv.grad} rounded-2xl p-4 flex gap-3 shadow-sm border border-white/80`}
+            role={block.variant === "danger" || block.variant === "warning" ? "alert" : undefined}
           >
-            {block.title && <h4 className="font-semibold text-xs tracking-tight">{block.title}</h4>}
-            <p className="whitespace-pre-wrap">{block.text}</p>
+            <div className={`shrink-0 w-8 h-8 rounded-full ${cv.iconBg} flex items-center justify-center font-bold text-sm ${cv.iconText}`} aria-hidden="true">
+              {customIcon || cv.symbol}
+            </div>
+            <div className={`flex-1 min-w-0 text-xs leading-relaxed ${cv.text}`}>
+              {block.title && <p className="font-bold text-sm text-slate-900 mb-1 leading-snug">{block.title}</p>}
+              <p className="leading-relaxed">{block.text}</p>
+            </div>
           </div>
         );
       }

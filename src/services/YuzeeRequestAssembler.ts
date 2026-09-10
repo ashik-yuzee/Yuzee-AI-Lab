@@ -93,6 +93,10 @@ export class YuzeeRequestAssembler {
     }
   }
 
+  public reload(): void {
+    this.loadAuthoritativeAssets();
+  }
+
   public getPromptContent(): string {
     return this.promptContent;
   }
@@ -268,9 +272,19 @@ export class YuzeeRequestAssembler {
     };
     const numericBudget = numericBudgetMap[appliedLevel];
 
+    // Gemini 3.x models use thinkingLevel string; legacy 2.5 models use thinkingBudget integer
+    const mechanism = modelInfo?.thinkingMechanism ?? 'budget';
+    let thinkingConfig: Record<string, any> | undefined;
+    if (numericBudget === 0) {
+      thinkingConfig = undefined; // omit entirely — sending thinkingBudget:0 causes INVALID_ARGUMENT
+    } else if (mechanism === 'level') {
+      thinkingConfig = { thinkingLevel: appliedLevel }; // e.g. "low" | "medium" | "high"
+    } else {
+      thinkingConfig = { thinkingBudget: numericBudget };
+    }
+
     return {
-      // omit thinkingConfig entirely when budget=0; sending {thinkingBudget:0} causes INVALID_ARGUMENT
-      thinkingConfig: numericBudget > 0 ? { thinkingBudget: numericBudget } : undefined,
+      thinkingConfig,
       appliedThinkingLevel: appliedLevel,
       numericBudget,
     };
@@ -385,13 +399,26 @@ export class YuzeeRequestAssembler {
    * Format structured userEvent or raw text into model-facing input
    */
   public formatUserEvent(messageText: string, userEvent?: UserEvent, selectedMode: string = 'Standard'): string {
-    // Only treat as explicit user selection when the userEvent carries a ui.selected_mode
-    // (i.e. the user actively chose a mode). Passing selectedMode from the default param value
-    // alone does NOT count as explicit — that would cause mode_source="tag" on every turn.
+    // Detect structured interaction data (option selections, form submissions, ranked choices)
+    const hasInteraction =
+      userEvent?.interaction ||
+      userEvent?.userEvent?.interaction ||
+      userEvent?.type;
+
     const explicitMode =
       userEvent?.ui?.selected_mode ||
       userEvent?.userEvent?.ui?.selected_mode;
 
+    // Plain text message with no structured interaction → send raw text to match AI Studio behaviour.
+    // The v1.6 prompt expects USER_MESSAGE semantics; wrapping plain text in USER_EVENT JSON
+    // causes the model to treat the turn as a UI-context continuation, which shifts response_intent
+    // and suppresses initial overview/discovery content blocks.
+    if (!hasInteraction && !explicitMode) {
+      return messageText.trim();
+    }
+
+    // Structured interaction: keep USER_EVENT format so the model can process option selections,
+    // field submissions, ranked choices, and explicit mode overrides correctly.
     const eventPayload: any = { ui: {} };
 
     if (userEvent?.ui) {
@@ -409,7 +436,6 @@ export class YuzeeRequestAssembler {
     } else if (userEvent?.userEvent?.interaction) {
       eventPayload.interaction = userEvent.userEvent.interaction;
     } else if (userEvent?.type) {
-      // Normalize legacy convenience payload
       eventPayload.interaction = {
         question_id: userEvent.interaction_id || 'active_question',
         selected_option_ids: userEvent.option_id ? [userEvent.option_id] : (userEvent.selected_option_ids || undefined),
@@ -423,7 +449,6 @@ export class YuzeeRequestAssembler {
     if (messageText && messageText.trim().length > 0 && !eventPayload.interaction) {
       eventPayload.user_text = messageText.trim();
     } else if (messageText && messageText.trim().length > 0 && eventPayload.interaction) {
-      // If user typed supplementary text alongside a structured interaction
       eventPayload.supplementary_text = messageText.trim();
     }
 
@@ -511,6 +536,8 @@ export class YuzeeRequestAssembler {
     useMultiTurn?: boolean;
     /** Kept dialogue turns from TokenBudgetMemoryManager. Required when useMultiTurn is true. */
     keptTurns?: DialogueTurn[];
+    /** When true, attach response schema + JSON MIME type for structured output. Default: false. */
+    useStructuredOutput?: boolean;
   }): AssembledGeminiRequest {
     const requestReceivedAt = Date.now();
     const aiRequestId = `req-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -555,9 +582,11 @@ export class YuzeeRequestAssembler {
         richHistory: true,
       });
     } else {
+      // No CURRENT_USER_INPUT: label — matches AI Studio's plain-text turn format.
+      // When there IS context, concatenate naturally; when there isn't, send raw text.
       contents = dynamicContextStr
-        ? `${dynamicContextStr}\n\nCURRENT_USER_INPUT:\n${currentUserStr}`
-        : `CURRENT_USER_INPUT:\n${currentUserStr}`;
+        ? `${dynamicContextStr}\n\n${currentUserStr}`
+        : currentUserStr;
     }
 
     // 5. Config resolution
@@ -570,10 +599,11 @@ export class YuzeeRequestAssembler {
       params.messageText
     );
 
+    const structuredOutput = params.useStructuredOutput === true;
     const geminiConfig: GenerateContentConfig = {
       systemInstruction,
-      responseMimeType: 'application/json',
-      responseSchema: this.responseSchemaJson ? this.sanitizeSchemaForGemini(this.responseSchemaJson) : undefined,
+      ...(structuredOutput ? { responseMimeType: 'application/json' } : {}),
+      ...(structuredOutput && this.responseSchemaJson ? { responseSchema: this.sanitizeSchemaForGemini(this.responseSchemaJson) } : {}),
       maxOutputTokens,
       ...(params.temperature != null ? { temperature: params.temperature } : {}),
       ...(params.topP != null ? { topP: params.topP } : {}),
