@@ -311,14 +311,12 @@ export const ChatArea: React.FC = () => {
                   {/* Message Bubble */}
                   <div className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                     <div
-                      className={`max-w-3xl w-full sm:w-auto leading-[1.68] transition-all ${
+                      className={
                         msg.role === "user"
-                          ? "bg-[#2f6fed] text-white rounded-2xl rounded-br-sm px-4 py-3 text-[15px] font-normal sm:w-auto"
-                          : structured
-                          ? "w-full text-[#2c333d]"
-                          : "bg-white border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-4 py-3.5 text-[15px] text-[#2c333d]"
-                      }`}
-                      style={msg.role === "assistant" && structured ? {} : msg.role === "assistant" ? { boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" } : {}}
+                          ? "max-w-2xl ml-auto bg-[#2f6fed] text-white border border-[#2f6fed] rounded-2xl rounded-br-sm px-4 py-3 text-[15px] font-normal leading-[1.68]"
+                          : "w-full bg-white text-[#2c333d] border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-5 py-4 text-[15px] leading-[1.68]"
+                      }
+                      style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}
                     >
                       {msg.role === "user" ? (
                         <div className="whitespace-pre-wrap">{userDisplayContent}</div>
