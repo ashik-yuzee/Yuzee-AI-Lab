@@ -12,7 +12,6 @@ import {
   Activity,
   Copy,
   Check,
-  ArrowRight,
   TrendingDown,
   Info,
   AlertTriangle,
@@ -285,9 +284,8 @@ export const ChatArea: React.FC = () => {
                     className="p-4 bg-white border border-[#e6e9ee] hover:border-[#2f6fed]/40 rounded-xl text-left transition-all group cursor-pointer"
                     style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}
                   >
-                    <div className="flex items-center justify-between font-semibold text-[13px] text-[#1c1f26] mb-1.5 group-hover:text-[#2f6fed]">
-                      <span>{p.title}</span>
-                      <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 text-[#2f6fed] transition-opacity" />
+                    <div className="font-semibold text-[13px] text-[#1c1f26] mb-1.5 group-hover:text-[#2f6fed]">
+                      {p.title}
                     </div>
                     <p className="text-[12px] text-[#8a929d] leading-relaxed line-clamp-2">{p.prompt}</p>
                   </button>

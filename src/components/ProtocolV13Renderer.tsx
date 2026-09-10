@@ -10,7 +10,6 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
-  ChevronRight,
   FileCheck,
   ShieldCheck,
   Check,
@@ -481,8 +480,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           warning:  "text-amber-600",
         };
         const stepStatusIcon: Record<string, React.ReactNode> = {
-          current:  <ArrowRight className="w-3 h-3" />,
-          next:     <ChevronRight className="w-3 h-3" />,
+          current:  null,
+          next:     null,
           complete: <Check className="w-3 h-3" />,
           blocked:  <XCircle className="w-3 h-3" />,
           warning:  <AlertTriangle className="w-3 h-3" />,
@@ -1050,15 +1049,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
     <div className="space-y-4">
 
       {/* Oala header */}
-      <div className="flex items-center gap-2.5 mb-1">
+      <div className="flex items-center gap-2.5 mb-4">
         <div className="relative shrink-0">
           <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm select-none">O</div>
           <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-400 border-[1.5px] border-white rounded-full" />
         </div>
-        <div>
-          <div className="text-xs font-bold text-slate-900 leading-none">Oala</div>
-          <div className="text-[10px] text-slate-400 leading-none mt-0.5">AI counsellor</div>
-        </div>
+        <div className="text-xs font-bold text-slate-900 leading-none">Oala</div>
       </div>
 
       {/* Care text — warm opening sentence reflecting user's situation */}
