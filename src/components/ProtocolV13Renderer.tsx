@@ -288,15 +288,17 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
     switch (block.type) {
       case "heading": {
         const isH2 = block.level === "h2";
+        const eyebrow = block.text && block.title ? block.text : null;
+        const headingText = block.title || block.text || "";
         return (
-          <div key={block.id || index} className="pt-2 pb-1">
-            {isH2 ? (
-              <h2 className="text-base font-bold text-slate-900 tracking-tight">{block.title || block.text}</h2>
-            ) : (
-              <h3 className="text-sm font-semibold text-slate-900 tracking-tight">{block.title || block.text}</h3>
+          <div key={block.id || index} className="space-y-1.5 pt-1">
+            {eyebrow && (
+              <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 leading-none">{eyebrow}</span>
             )}
-            {block.text && block.title && (
-              <p className="text-xs text-slate-600 mt-1">{block.text}</p>
+            {isH2 ? (
+              <h2 className="text-[19px] font-bold text-slate-900 leading-[1.4] tracking-[-0.01em]">{headingText}</h2>
+            ) : (
+              <h3 className="text-[15px] font-semibold text-slate-900 leading-snug">{headingText}</h3>
             )}
           </div>
         );
@@ -304,9 +306,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
       case "text":
         return (
-          <div key={block.id || index} className="text-sm leading-relaxed text-slate-800 space-y-1">
-            {block.title && <h4 className="font-semibold text-slate-900 mb-1">{block.title}</h4>}
-            <div className="prose prose-slate prose-sm max-w-none prose-p:my-0.5 prose-li:my-0 prose-headings:text-slate-900">
+          <div key={block.id || index} className="space-y-1.5">
+            {block.title && <p className="text-[16px] font-semibold text-slate-900 leading-snug">{block.title}</p>}
+            <div className="prose prose-slate max-w-none prose-p:text-[15px] prose-p:leading-[1.7] prose-p:text-slate-800 prose-p:my-2 prose-li:text-[15px] prose-li:leading-[1.7] prose-li:text-slate-800 prose-strong:text-slate-900 prose-headings:text-slate-900">
               <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).content || (block as any).body || ""}</Markdown>
             </div>
           </div>
@@ -315,7 +317,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       case "list": {
         const WORKFLOW_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
         const isWorkflow = block.items?.some((i: YuzeeItem) => WORKFLOW_STATUSES.has(i.status || ""));
-        const useGrid = !isWorkflow && (block.items?.length ?? 0) >= 3;
 
         if (isWorkflow) {
           const statusColor: Record<string, string> = {
@@ -330,7 +331,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {(block.title || block.text) && (
                 <div className="mb-1">
                   {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                  {block.text && <p className="text-sm text-slate-500 mt-0.5">{block.text}</p>}
+                  {block.text && <p className="text-[15px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
                 </div>
               )}
               <ul className="border-t border-slate-100">
@@ -338,13 +339,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   const s = item.status || "";
                   const scls = statusColor[s] || "text-slate-400";
                   return (
-                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100">
+                    <li key={item.id || iIdx} className="py-6 border-b border-slate-100">
                       <div className="flex items-baseline justify-between gap-4 mb-1">
-                        <p className="text-[15px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                        <p className="text-[17px] font-semibold text-slate-900 leading-snug">{item.title}</p>
                         {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </li>
                   );
@@ -354,9 +355,17 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           );
         }
 
-        // Icon + side-panel layout when items carry side_label / icon fields
+        // Evidence row layout: items with side_label on LEFT in fixed 72px col (HAVE/NEED/GAP/PROOF pattern)
         const hasSidePanel = block.items?.some((i: YuzeeItem) => i.side_label || i.side_text || (i as any).icon);
         if (hasSidePanel) {
+          const sideLabelColor = (status: string | undefined, label: string | undefined): string => {
+            const s = (status || label || "").toLowerCase();
+            if (s === "have" || s === "positive" || s === "complete" || s === "completed") return "text-emerald-700";
+            if (s === "need" || s === "warning" || s === "gap") return "text-amber-700";
+            if (s === "neutral" || s === "muted") return "text-slate-500";
+            if (s === "current" || s === "next" || s === "proof") return "text-blue-600";
+            return "text-slate-400";
+          };
           return (
             <div key={block.id || index} className="space-y-2">
               {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
@@ -365,19 +374,19 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   const icon = (item as any).icon as string | undefined;
                   const sideLabel = item.side_label || (item as any).side_label;
                   const sideText = item.side_text || (item as any).side_text;
+                  const labelColor = sideLabelColor(item.status, sideLabel);
                   return (
-                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100 flex items-start gap-4">
-                      {icon && <span className="shrink-0 text-lg leading-none mt-0.5">{icon}</span>}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
-                        {item.text && <p className="text-sm text-slate-500 leading-relaxed">{item.text}</p>}
+                    <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
+                      <div className="shrink-0 pt-0.5">
+                        {sideLabel && <p className={`text-[11px] font-bold tracking-[0.12em] uppercase leading-none ${labelColor}`}>{sideLabel}</p>}
+                        {icon && <span className="text-lg leading-none">{icon}</span>}
+                        {sideText && !sideLabel && <p className="text-[12px] text-slate-500 leading-snug">{sideText}</p>}
                       </div>
-                      {(sideLabel || sideText) && (
-                        <div className="shrink-0 w-36 text-right">
-                          {sideLabel && <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-0.5">{sideLabel}</p>}
-                          {sideText && <p className="text-xs text-slate-500 leading-relaxed">{sideText}</p>}
-                        </div>
-                      )}
+                      <div className="min-w-0">
+                        <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                        {item.text && <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text}</p>}
+                        {sideText && sideLabel && <p className="text-[13px] text-slate-400 mt-1">{sideText}</p>}
+                      </div>
                     </li>
                   );
                 })}
@@ -393,7 +402,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             {(block.title || block.text) && (
               <div className="mb-1">
                 {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                {block.text && <p className="text-sm text-slate-500 mt-0.5">{block.text}</p>}
+                {block.text && <p className="text-[15px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
               </div>
             )}
             <ul className="border-t border-slate-100">
@@ -402,12 +411,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 const tag = emoji || String(iIdx + 1).padStart(2, "0");
                 const tagCls = item.status === "negative" ? "text-rose-500" : item.status === "positive" ? "text-emerald-600" : "text-slate-400";
                 return (
-                  <li key={item.id || iIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                  <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                     <span className={`text-[11px] font-bold tracking-[0.13em] uppercase pt-0.5 ${tagCls}`}>{tag}</span>
                     <div>
-                      <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                      <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -430,12 +439,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
               <ul className="border-t border-slate-100">
                 {stepItems.map((item: YuzeeItem, sIdx: number) => (
-                  <li key={item.id || sIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                  <li key={item.id || sIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                     <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 pt-0.5">{String(sIdx + 1).padStart(2, "0")}</span>
                     <div>
-                      <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                      <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -445,7 +454,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           );
         }
 
-        // Status-driven ruled rows
+        // Status-driven ruled rows (route/pathway style — title left, status badge right)
         const stepStatusColor: Record<string, string> = {
           current:  "text-blue-600",
           next:     "text-purple-600",
@@ -461,13 +470,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 const s = item.status || "";
                 const scls = stepStatusColor[s] || "text-slate-400";
                 return (
-                  <li key={item.id || sIdx} className="py-4 border-b border-slate-100">
+                  <li key={item.id || sIdx} className="py-6 border-b border-slate-100">
                     <div className="flex items-baseline justify-between gap-4 mb-1">
-                      <p className="text-[15px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                      <p className="text-[17px] font-semibold text-slate-900 leading-snug">{item.title}</p>
                       {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                     </div>
                     {(item.text || item.value) && (
-                      <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                      <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                     )}
                   </li>
                 );
@@ -482,28 +491,29 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const rows = block.rows || [];
 
         return (
-          <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            
+          <div key={block.id || index} className="space-y-3">
+            {block.title && (
+              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>
+            )}
             {/* Desktop Table */}
-            <div className="hidden sm:block rounded-xl border border-slate-200 overflow-hidden bg-white">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
+            <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
+              <table className="w-full text-left border-collapse" style={{ fontSize: "0.95rem", lineHeight: "1.55" }}>
+                <thead>
+                  <tr style={{ background: "#f2f4f7", borderBottom: "1px solid #e6e9ee" }}>
                     {columns.map((col) => (
-                      <th key={col.key} scope="col" className="px-3 py-2.5 font-semibold text-slate-700">
+                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472" }}>
                         {col.label}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
-                  {rows.map((row) => (
-                    <tr key={row.id} className="hover:bg-slate-50/50">
-                      {columns.map((col) => {
+                <tbody>
+                  {rows.map((row, rIdx) => (
+                    <tr key={row.id || rIdx} style={{ borderBottom: "1px solid #eef1f5" }}>
+                      {columns.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
                         return (
-                          <td key={col.key} className="px-3 py-2.5 text-slate-800">
+                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: cIdx === 0 ? "#1c1f26" : "#2c333d", fontWeight: cIdx === 0 ? 600 : 400, background: cIdx === 0 ? "#fafbfc" : cIdx === 1 ? "#ffffff" : "#fcfcfd" }}>
                             {cell?.value || "—"}
                           </td>
                         );
@@ -513,17 +523,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 </tbody>
               </table>
             </div>
-
-            {/* Mobile Cards (Prevents Horizontal Scroll) */}
+            {/* Mobile Cards */}
             <div className="sm:hidden space-y-2">
               {rows.map((row, rIdx) => (
-                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5 text-xs shadow-2xs">
+                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-1.5">
                   {columns.map((col) => {
                     const cell = row.cells?.find((c) => c.key === col.key);
                     return (
                       <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-slate-500 text-[11px] font-medium">{col.label}:</span>
-                        <span className="font-semibold text-slate-900 text-right">{cell?.value || "—"}</span>
+                        <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
+                        <span className="font-semibold text-slate-900 text-right text-[14px]">{cell?.value || "—"}</span>
                       </div>
                     );
                   })}
@@ -537,46 +546,61 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       case "comparison": {
         const cmpCols: Array<{ key: string; label: string }> = block.columns || [];
         const cmpRows: Array<{ id?: string; criteria?: string; cells?: Array<{ key: string; value: string }> }> = block.rows || [];
+        const hasCriteria = cmpRows.some((r) => r.criteria);
         return (
-          <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-
+          <div key={block.id || index} className="space-y-3">
+            {block.title && (
+              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>
+            )}
             {/* Desktop: side-by-side table */}
-            <div className="hidden sm:block rounded-xl border border-slate-200 overflow-hidden bg-white">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead className="bg-slate-50 border-b border-slate-200">
-                  <tr>
-                    {cmpRows.some((r) => r.criteria) && <th scope="col" className="px-3 py-2.5 font-semibold text-slate-500 w-28">Criteria</th>}
+            <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
+              <table className="w-full text-left border-collapse" style={{ fontSize: "0.95rem", lineHeight: "1.55" }}>
+                <thead>
+                  <tr style={{ background: "#f2f4f7", borderBottom: "1px solid #e6e9ee" }}>
+                    {hasCriteria && (
+                      <th scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472", width: "28%" }}>
+                        Factor
+                      </th>
+                    )}
                     {cmpCols.map((col) => (
-                      <th key={col.key} scope="col" className="px-3 py-2.5 font-bold text-slate-900">{col.label}</th>
+                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472" }}>
+                        {col.label}
+                      </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {cmpRows.map((row, rIdx) => (
-                    <tr key={row.id || rIdx} className="hover:bg-slate-50/50">
-                      {cmpRows.some((r) => r.criteria) && <td className="px-3 py-2.5 font-medium text-slate-600">{row.criteria || row.id}</td>}
-                      {cmpCols.map((col) => {
+                    <tr key={row.id || rIdx} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #eef1f5" : "none" }}>
+                      {hasCriteria && (
+                        <td style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#1c1f26", background: "#fafbfc" }}>{row.criteria || row.id}</td>
+                      )}
+                      {cmpCols.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
-                        return <td key={col.key} className="px-3 py-2.5 text-slate-800">{cell?.value || "—"}</td>;
+                        return (
+                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: "#2c333d", background: cIdx === 0 ? "#ffffff" : "#fcfcfd" }}>
+                            {cell?.value || "—"}
+                          </td>
+                        );
                       })}
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-
-            {/* Mobile: per-criterion cards — all options labeled, nothing dropped */}
+            {/* Mobile: per-criterion cards */}
             <div className="sm:hidden space-y-2">
               {cmpRows.map((row, rIdx) => (
-                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-xl space-y-1.5 text-xs shadow-2xs">
-                  {(row.criteria || row.id) && <div className="font-semibold text-slate-700 text-[11px] uppercase tracking-wider">{row.criteria || row.id}</div>}
+                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-1.5">
+                  {(row.criteria || row.id) && (
+                    <div className="font-bold text-slate-900 text-[13px]">{row.criteria || row.id}</div>
+                  )}
                   {cmpCols.map((col) => {
                     const cell = row.cells?.find((c) => c.key === col.key);
                     return (
                       <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-slate-500 text-[11px] font-medium">{col.label}:</span>
-                        <span className="font-semibold text-slate-900 text-right">{cell?.value || "—"}</span>
+                        <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
+                        <span className="text-slate-800 text-right text-[14px]">{cell?.value || "—"}</span>
                       </div>
                     );
                   })}
@@ -610,13 +634,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div
             key={block.id || index}
-            className={`pl-5 border-l-[3px] ${bc} py-0.5`}
+            className={`pl-[22px] border-l-[3px] ${bc}`}
+            style={{ padding: "20px 0 20px 22px" }}
             role={v === "danger" || v === "warning" ? "alert" : undefined}
           >
             {block.title && (
-              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-1.5 ${lc}`}>{block.title}</span>
+              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-2 ${lc}`}>{block.title}</span>
             )}
-            <p className="text-[15px] leading-[1.7] text-slate-700">{block.text}</p>
+            <p className="text-[16px] leading-[1.7] text-slate-700">{block.text}</p>
           </div>
         );
       }

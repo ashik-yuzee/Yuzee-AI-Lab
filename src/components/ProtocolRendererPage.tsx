@@ -43,9 +43,9 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
         return (
           <div key={block.id || idx} className="space-y-1.5">
             {block.title && (
-              <h3 className="text-base font-bold text-slate-900">{block.title}</h3>
+              <p className="text-[16px] font-semibold text-slate-900 leading-snug">{block.title}</p>
             )}
-            <p className="text-sm text-slate-500 leading-relaxed">
+            <p className="text-[15px] text-slate-800 leading-[1.7]">
               {block.text || (block as any).body || (block as any).content || ""}
             </p>
           </div>
@@ -59,9 +59,9 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
         const sectionHeader = (block.title || block.text) && (
           <div className="mb-1">
             {block.title && (
-              <h2 className="text-[17px] font-bold text-slate-900 tracking-tight">{block.title}</h2>
+              <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 mb-1.5">{block.title}</span>
             )}
-            {block.text && <p className="text-sm text-slate-500 mt-1">{block.text}</p>}
+            {block.text && <p className="text-[15px] text-slate-500 leading-[1.7]">{block.text}</p>}
           </div>
         );
 
@@ -82,13 +82,13 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
                   const s = item.status || "";
                   const scls = workflowStatusColor[s] || "text-slate-400";
                   return (
-                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100">
+                    <li key={item.id || iIdx} className="py-6 border-b border-slate-100">
                       <div className="flex items-baseline justify-between gap-4 mb-1">
-                        <p className="text-[15px] font-semibold text-slate-900">{item.title}</p>
+                        <p className="text-[17px] font-semibold text-slate-900">{item.title}</p>
                         {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </li>
                   );
@@ -99,6 +99,14 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
         }
 
         if (hasSidePanel) {
+          const sideLabelColor = (status: string | undefined, label: string | undefined): string => {
+            const s = (status || label || "").toLowerCase();
+            if (s === "have" || s === "positive" || s === "complete" || s === "completed") return "text-emerald-700";
+            if (s === "need" || s === "warning" || s === "gap") return "text-amber-700";
+            if (s === "neutral" || s === "muted") return "text-slate-500";
+            if (s === "current" || s === "next" || s === "proof") return "text-blue-600";
+            return "text-slate-400";
+          };
           return (
             <section key={block.id || idx} className="space-y-1">
               {sectionHeader}
@@ -107,25 +115,19 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
                   const emoji = (item as any).icon as string | undefined;
                   const sideLabel = item.side_label;
                   const sideText = item.side_text;
+                  const labelColor = sideLabelColor(item.status, sideLabel);
                   return (
-                    <li key={item.id || iIdx} className="py-4 border-b border-slate-100 flex items-start gap-4">
-                      {emoji && (
-                        <span className="shrink-0 text-xl leading-none mt-0.5">{emoji}</span>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
-                        {item.text && <p className="text-sm text-slate-500 leading-relaxed">{item.text}</p>}
+                    <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
+                      <div className="shrink-0 pt-0.5">
+                        {sideLabel && <p className={`text-[11px] font-bold tracking-[0.12em] uppercase leading-none ${labelColor}`}>{sideLabel}</p>}
+                        {emoji && <span className="text-lg leading-none">{emoji}</span>}
+                        {sideText && !sideLabel && <p className="text-[12px] text-slate-500 leading-snug">{sideText}</p>}
                       </div>
-                      {(sideLabel || sideText) && (
-                        <div className="shrink-0 text-right">
-                          {sideLabel && (
-                            <p className="text-[10px] font-bold uppercase tracking-[0.13em] text-slate-400 mb-0.5">{sideLabel}</p>
-                          )}
-                          {sideText && (
-                            <p className="text-xs text-slate-500">{sideText}</p>
-                          )}
-                        </div>
-                      )}
+                      <div className="min-w-0">
+                        <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                        {item.text && <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text}</p>}
+                        {sideText && sideLabel && <p className="text-[13px] text-slate-400 mt-1">{sideText}</p>}
+                      </div>
                     </li>
                   );
                 })}
@@ -135,20 +137,19 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
         }
 
         // Default: numbered ruled rows
-        const tags = ["01","02","03","04","05","06","07","08","09","10"];
         return (
           <section key={block.id || idx} className="space-y-1">
             {sectionHeader}
             <ul className="border-t border-slate-100">
               {items.map((item, iIdx) => (
-                <li key={item.id || iIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                   <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 pt-0.5">
-                    {tags[iIdx] || String(iIdx + 1).padStart(2, "0")}
+                    {String(iIdx + 1).padStart(2, "0")}
                   </span>
                   <div>
-                    <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                    <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                     {(item.text || item.value) && (
-                      <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                      <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                     )}
                   </div>
                 </li>
@@ -173,9 +174,9 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
             {(block.title || block.text) && (
               <div className="mb-1">
                 {block.title && (
-                  <h2 className="text-[17px] font-bold text-slate-900 tracking-tight">{block.title}</h2>
+                  <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 mb-1.5">{block.title}</span>
                 )}
-                {block.text && <p className="text-sm text-slate-500 mt-1">{block.text}</p>}
+                {block.text && <p className="text-[15px] text-slate-500 leading-[1.7]">{block.text}</p>}
               </div>
             )}
             <ul className="border-t border-slate-100">
@@ -184,25 +185,25 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
                 if (hasStatus) {
                   const scls = stepStatusColor[s] || "text-slate-400";
                   return (
-                    <li key={item.id || sIdx} className="py-4 border-b border-slate-100">
+                    <li key={item.id || sIdx} className="py-6 border-b border-slate-100">
                       <div className="flex items-baseline justify-between gap-4 mb-1">
-                        <p className="text-[15px] font-semibold text-slate-900">{item.title}</p>
+                        <p className="text-[17px] font-semibold text-slate-900">{item.title}</p>
                         {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </li>
                   );
                 }
                 const tag = String(sIdx + 1).padStart(2, "0");
                 return (
-                  <li key={item.id || sIdx} className="py-4 border-b border-slate-100 grid grid-cols-[44px_1fr] gap-4">
+                  <li key={item.id || sIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                     <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 pt-0.5">{tag}</span>
                     <div>
-                      <p className="text-[15px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                      <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-sm text-slate-500 leading-relaxed">{item.text || item.value}</p>
+                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -236,31 +237,35 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
         return (
           <div
             key={block.id || idx}
-            className={`pl-5 border-l-[3px] ${bc} py-0.5`}
+            className={`border-l-[3px] ${bc}`}
+            style={{ padding: "20px 0 20px 22px" }}
             role={v === "danger" || v === "warning" ? "alert" : undefined}
           >
             {block.title && (
-              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-1.5 ${lc}`}>{block.title}</span>
+              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-2 ${lc}`}>{block.title}</span>
             )}
-            <p className="text-[15px] leading-[1.7] text-slate-700">{block.text}</p>
+            <p className="text-[16px] leading-[1.7] text-slate-700">{block.text}</p>
           </div>
         );
       }
 
-      case "heading":
+      case "heading": {
+        const isH2 = block.level === "h2";
+        const eyebrow = block.text && block.title ? block.text : null;
+        const headingText = block.title || block.text || "";
         return (
-          <div key={block.id || idx} className="pt-2">
-            {block.level === "h2" ? (
-              <h2 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                {block.title || block.text}
-              </h2>
+          <div key={block.id || idx} className="space-y-1.5 pt-1">
+            {eyebrow && (
+              <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 leading-none">{eyebrow}</span>
+            )}
+            {isH2 ? (
+              <h2 className="text-[19px] font-bold text-slate-900 leading-[1.4] tracking-[-0.01em]">{headingText}</h2>
             ) : (
-              <h3 className="text-base font-bold text-slate-900">
-                {block.title || block.text}
-              </h3>
+              <h3 className="text-[15px] font-semibold text-slate-900 leading-snug">{headingText}</h3>
             )}
           </div>
         );
+      }
 
       default:
         return null;
@@ -291,46 +296,48 @@ const StandaloneRenderer: React.FC<{ data: YuzeeResponseV13 }> = ({ data }) => {
           <div className="px-8 sm:px-10 py-8 space-y-10">
             {bodyBlocks.map((block, idx) => renderBlock(block, idx))}
 
-            {/* Interaction — dark box */}
+            {/* Interaction — white card matching reference HTML */}
             {hasInteraction && (
-              <section className="bg-[#17181c] text-white rounded-[22px] p-7 space-y-5">
-                <p className="text-[11px] font-extrabold uppercase tracking-widest text-slate-400">
-                  {interaction!.kind === "question"
-                    ? "Clarifying Question"
-                    : "Tailor your pathway"}
-                </p>
-                <h2 className="text-lg font-bold leading-snug text-white max-w-xl">
+              <section className="bg-white border border-slate-200 rounded-xl p-7 space-y-5" style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.045)" }}>
+                <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-blue-500">
+                  {interaction!.kind === "question" ? "Your turn" : "Tailor your pathway"}
+                </span>
+                <p className="text-[17px] font-medium leading-[1.6] text-slate-900">
                   {interaction!.question}
-                </h2>
+                </p>
 
                 {interaction!.options && interaction!.options.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="flex flex-col gap-2.5">
                     {interaction!.options.map((opt: YuzeeOption) => (
-                      <button
+                      <label
                         key={opt.id || opt.value}
-                        className="text-left px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-sm text-white font-medium transition-colors cursor-pointer border border-white/10"
+                        className="flex items-start gap-3 px-4 py-3.5 rounded-lg border border-slate-200 bg-slate-50 hover:border-blue-400 hover:bg-white transition-colors cursor-pointer"
                       >
-                        {opt.label}
-                        {opt.description && (
-                          <span className="block text-xs text-slate-400 mt-0.5 font-normal">
-                            {opt.description}
-                          </span>
-                        )}
-                      </button>
+                        <input type="radio" name="interaction_opt" value={opt.value || opt.id} className="mt-1 shrink-0 accent-blue-600" />
+                        <div>
+                          <p className="text-[15px] font-semibold text-slate-900">{opt.label}</p>
+                          {opt.description && (
+                            <p className="text-[13px] text-slate-500 mt-0.5 leading-relaxed">{opt.description}</p>
+                          )}
+                        </div>
+                      </label>
                     ))}
                   </div>
                 ) : (
-                  <div className="flex gap-2.5">
+                  <div className="flex flex-col gap-3">
                     <input
                       type="text"
                       value={answer}
                       onChange={e => setAnswer(e.target.value)}
-                      placeholder="Type your response..."
-                      className="flex-1 bg-white/10 border border-white/20 text-white rounded-[14px] px-4 py-3.5 text-sm outline-none placeholder:text-slate-500 focus:border-indigo-400 focus:bg-white/15"
+                      placeholder="Type your response…"
+                      className="w-full border border-slate-200 rounded-lg px-4 py-3.5 text-[15px] text-slate-900 bg-slate-50 outline-none placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-3 focus:ring-blue-500/10"
                     />
-                    <button className="px-5 py-3.5 bg-white text-slate-900 rounded-[14px] text-sm font-bold hover:bg-slate-100 transition-colors cursor-pointer whitespace-nowrap">
-                      Continue
-                    </button>
+                    <div className="flex justify-between items-center">
+                      <span className="text-[13px] text-slate-400">Take your time — this helps narrow down your pathway.</span>
+                      <button className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-[15px] font-semibold transition-colors cursor-pointer whitespace-nowrap">
+                        Send
+                      </button>
+                    </div>
                   </div>
                 )}
               </section>
