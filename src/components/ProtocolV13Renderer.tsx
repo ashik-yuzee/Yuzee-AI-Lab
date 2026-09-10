@@ -297,12 +297,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="space-y-1.5 pt-1">
             {eyebrow && (
-              <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 leading-none">{eyebrow}</span>
+              <span className="block text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d] leading-none">{eyebrow}</span>
             )}
             {isH2 ? (
-              <h2 className="text-[19px] font-bold text-slate-900 leading-[1.4] tracking-[-0.01em]">{headingText}</h2>
+              <h2 className="text-[19px] font-bold text-[#1c1f26] leading-[1.4] tracking-[-0.01em]">{headingText}</h2>
             ) : (
-              <h3 className="text-[16px] font-semibold text-slate-900 leading-snug">{headingText}</h3>
+              <h3 className="text-[16px] font-semibold text-[#1c1f26] leading-snug">{headingText}</h3>
             )}
           </div>
         );
@@ -311,8 +311,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       case "text":
         return (
           <div key={block.id || index} className="space-y-1.5">
-            {block.title && <p className="text-[16px] font-semibold text-slate-900 leading-snug">{block.title}</p>}
-            <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-slate-800 prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-slate-800 prose-strong:text-slate-900 prose-headings:text-slate-900">
+            {block.title && <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug">{block.title}</p>}
+            <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26]">
               <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).content || (block as any).body || ""}</Markdown>
             </div>
           </div>
@@ -334,22 +334,22 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             <div key={block.id || index} className="space-y-2">
               {(block.title || block.text) && (
                 <div className="mb-1">
-                  {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                  {block.text && <p className="text-[16px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
+                  {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
+                  {block.text && <p className="text-[16px] text-[#5b6472] mt-0.5 leading-[1.7]">{block.text}</p>}
                 </div>
               )}
               <ul className="border-t border-slate-100">
                 {block.items?.map((item: YuzeeItem, iIdx: number) => {
                   const s = item.status || "";
-                  const scls = statusColor[s] || "text-slate-400";
+                  const scls = statusColor[s] || "text-[#8a929d]";
                   return (
                     <li key={item.id || iIdx} className="py-6 border-b border-slate-100">
                       <div className="flex items-baseline justify-between gap-4 mb-1">
-                        <p className="text-[17px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                        <p className="text-[17px] font-semibold text-[#1c1f26] leading-snug">{item.title}</p>
                         {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
                       {(item.text || item.value) && (
-                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </li>
                   );
@@ -366,7 +366,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             const s = (status || label || "").toLowerCase();
             if (s === "have" || s === "positive" || s === "complete" || s === "completed") return "text-emerald-700";
             if (s === "need" || s === "warning" || s === "gap") return "text-amber-700";
-            if (s === "neutral" || s === "muted") return "text-slate-500";
+            if (s === "neutral" || s === "muted") return "text-[#5b6472]";
             if (s === "current" || s === "next" || s === "proof") return "text-blue-600";
           };
           const sideLabelIcon = (status: string | undefined, label: string | undefined): React.ReactNode => {
@@ -379,7 +379,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           };
           return (
             <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
               <ul className="border-t border-slate-100">
                 {block.items?.map((item: YuzeeItem, iIdx: number) => {
                   const icon = (item as any).icon as string | undefined;
@@ -397,12 +397,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                           </div>
                         )}
                         {icon && <span className="text-lg leading-none">{icon}</span>}
-                        {sideText && !sideLabel && <p className="text-[12px] text-slate-500 leading-snug">{sideText}</p>}
+                        {sideText && !sideLabel && <p className="text-[12px] text-[#5b6472] leading-snug">{sideText}</p>}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
-                        {item.text && <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text}</p>}
-                        {sideText && sideLabel && <p className="text-[13px] text-slate-400 mt-1">{sideText}</p>}
+                        <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
+                        {item.text && <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text}</p>}
+                        {sideText && sideLabel && <p className="text-[13px] text-[#8a929d] mt-1">{sideText}</p>}
                       </div>
                     </li>
                   );
@@ -418,22 +418,22 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           <div key={block.id || index} className="space-y-2">
             {(block.title || block.text) && (
               <div className="mb-1">
-                {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                {block.text && <p className="text-[16px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
+                {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
+                {block.text && <p className="text-[16px] text-[#5b6472] mt-0.5 leading-[1.7]">{block.text}</p>}
               </div>
             )}
             <ul className="border-t border-slate-100">
               {items.map((item: YuzeeItem, iIdx: number) => {
                 const emoji = (item as any).icon as string | undefined;
                 const tag = emoji || String(iIdx + 1).padStart(2, "0");
-                const tagCls = item.status === "negative" ? "text-rose-500" : item.status === "positive" ? "text-emerald-600" : "text-slate-400";
+                const tagCls = item.status === "negative" ? "text-rose-500" : item.status === "positive" ? "text-emerald-600" : "text-[#8a929d]";
                 return (
                   <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                     <span className={`text-[11px] font-bold tracking-[0.13em] uppercase pt-0.5 ${tagCls}`}>{tag}</span>
                     <div>
-                      <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                      <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -453,15 +453,15 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           const stepItems = block.items || [];
           return (
             <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
               <ul className="border-t border-slate-100">
                 {stepItems.map((item: YuzeeItem, sIdx: number) => (
                   <li key={item.id || sIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
-                    <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400 pt-0.5">{String(sIdx + 1).padStart(2, "0")}</span>
+                    <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d] pt-0.5">{String(sIdx + 1).padStart(2, "0")}</span>
                     <div>
-                      <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
+                      <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -488,16 +488,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
+            {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
             <ul className="border-t border-slate-100">
               {block.items?.map((item: YuzeeItem, sIdx: number) => {
                 const s = item.status || "";
-                const scls = stepStatusColor[s] || "text-slate-400";
+                const scls = stepStatusColor[s] || "text-[#8a929d]";
                 const sIcon = stepStatusIcon[s];
                 return (
                   <li key={item.id || sIdx} className="py-6 border-b border-slate-100">
                     <div className="flex items-baseline justify-between gap-4 mb-1">
-                      <p className="text-[17px] font-semibold text-slate-900 leading-snug">{item.title}</p>
+                      <p className="text-[17px] font-semibold text-[#1c1f26] leading-snug">{item.title}</p>
                       {s && (
                         <span className={`shrink-0 flex items-center gap-1 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>
                           {sIcon}
@@ -506,7 +506,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       )}
                     </div>
                     {(item.text || item.value) && (
-                      <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                      <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
                     )}
                   </li>
                 );
@@ -523,7 +523,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="space-y-3">
             {block.title && (
-              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>
+              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>
             )}
             {/* Desktop Table */}
             <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
@@ -561,8 +561,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     const cell = row.cells?.find((c) => c.key === col.key);
                     return (
                       <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
-                        <span className="font-semibold text-slate-900 text-right text-[14px]">{cell?.value || "—"}</span>
+                        <span className="text-[#5b6472] text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
+                        <span className="font-semibold text-[#1c1f26] text-right text-[14px]">{cell?.value || "—"}</span>
                       </div>
                     );
                   })}
@@ -580,7 +580,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="space-y-3">
             {block.title && (
-              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>
+              <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>
             )}
             {/* Desktop: side-by-side table */}
             <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
@@ -623,14 +623,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {cmpRows.map((row, rIdx) => (
                 <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-1.5">
                   {(row.criteria || row.id) && (
-                    <div className="font-bold text-slate-900 text-[13px]">{row.criteria || row.id}</div>
+                    <div className="font-bold text-[#1c1f26] text-[13px]">{row.criteria || row.id}</div>
                   )}
                   {cmpCols.map((col) => {
                     const cell = row.cells?.find((c) => c.key === col.key);
                     return (
                       <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-slate-500 text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
-                        <span className="text-slate-800 text-right text-[14px]">{cell?.value || "—"}</span>
+                        <span className="text-[#5b6472] text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
+                        <span className="text-[#2c333d] text-right text-[14px]">{cell?.value || "—"}</span>
                       </div>
                     );
                   })}
@@ -656,7 +656,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           success: "text-emerald-600",
           warning: "text-amber-600",
           danger:  "text-rose-600",
-          muted:   "text-slate-500",
+          muted:   "text-[#5b6472]",
         };
         const calloutIcon: Record<string, React.ReactNode> = {
           info:    <Info className="w-3.5 h-3.5 shrink-0" />,
@@ -683,7 +683,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 <span className="text-[11px] font-bold tracking-[0.13em] uppercase">{block.title}</span>
               </div>
             )}
-            <p className="text-[16px] leading-[1.7] text-slate-700">{block.text}</p>
+            <p className="text-[16px] leading-[1.7] text-[#2c333d]">{block.text}</p>
           </div>
         );
       }
@@ -691,12 +691,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       case "key_value":
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {block.items?.map((item: YuzeeItem) => (
                 <div key={item.id} className="p-2.5 bg-slate-50 rounded-lg border border-slate-200 text-xs flex justify-between items-center">
-                  <span className="text-slate-500 font-medium">{item.title}</span>
-                  <span className="font-semibold text-slate-900">{item.value || item.text}</span>
+                  <span className="text-[#5b6472] font-medium">{item.title}</span>
+                  <span className="font-semibold text-[#1c1f26]">{item.value || item.text}</span>
                 </div>
               ))}
             </div>
@@ -718,27 +718,27 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
+            {block.text && <p className="text-xs text-[#5b6472]">{block.text}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {cards.map((card: any, cIdx: number) => (
                 <div key={card.id || cIdx} className={`p-3.5 rounded-xl border shadow-2xs space-y-1.5 ${statusColors[card.status] || statusColors.neutral}`}>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="font-bold text-xs text-slate-900">{card.title}</div>
-                      {card.subtitle && <div className="text-[11px] text-slate-500">{card.subtitle}</div>}
+                      <div className="font-bold text-xs text-[#1c1f26]">{card.title}</div>
+                      {card.subtitle && <div className="text-[11px] text-[#5b6472]">{card.subtitle}</div>}
                     </div>
                     {card.badge && (
-                      <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-slate-700">{card.badge}</span>
+                      <span className="shrink-0 text-[10px] font-semibold px-1.5 py-0.5 rounded bg-slate-100 border border-slate-200 text-[#2c333d]">{card.badge}</span>
                     )}
                   </div>
-                  {card.description && <p className="text-xs text-slate-600 leading-relaxed">{card.description}</p>}
+                  {card.description && <p className="text-xs text-[#5b6472] leading-relaxed">{card.description}</p>}
                   {card.facts?.length > 0 && (
                     <div className="pt-1 border-t border-slate-200/80 grid grid-cols-2 gap-x-3 gap-y-1">
                       {card.facts.map((f: any, fIdx: number) => (
                         <div key={fIdx} className="flex flex-col">
-                          <span className="text-[10px] text-slate-400 font-medium uppercase tracking-wide">{f.label}</span>
-                          <span className="text-[11px] font-semibold text-slate-800">{f.value}</span>
+                          <span className="text-[10px] text-[#8a929d] font-medium uppercase tracking-wide">{f.label}</span>
+                          <span className="text-[11px] font-semibold text-[#2c333d]">{f.value}</span>
                         </div>
                       ))}
                     </div>
@@ -756,14 +756,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const msStatus: Record<string, { dot: string; label: string }> = {
           completed: { dot: "bg-emerald-500", label: "bg-emerald-100 text-emerald-800" },
           current:   { dot: "bg-amber-500 animate-pulse motion-reduce:animate-none", label: "bg-amber-100 text-amber-900" },
-          upcoming:  { dot: "bg-slate-300", label: "bg-slate-100 text-slate-600" },
+          upcoming:  { dot: "bg-slate-300", label: "bg-slate-100 text-[#5b6472]" },
           blocked:   { dot: "bg-rose-400", label: "bg-rose-100 text-rose-800" },
           paused:    { dot: "bg-violet-400", label: "bg-violet-100 text-violet-800" },
-          unknown:   { dot: "bg-slate-200", label: "bg-slate-100 text-slate-500" },
+          unknown:   { dot: "bg-slate-200", label: "bg-slate-100 text-[#5b6472]" },
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
             <div className="relative pl-5 space-y-3">
               <div className="absolute left-[7px] top-1 bottom-1 w-px bg-slate-200" />
               {milestones.map((m: any, mIdx: number) => {
@@ -773,12 +773,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     <div className={`absolute -left-5 mt-0.5 w-3.5 h-3.5 rounded-full border-2 border-white shadow-sm ${s.dot}`} />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-semibold text-slate-900">{m.label}</span>
-                        {m.time_label && <span className="text-[10px] text-slate-400 font-medium">{m.time_label}</span>}
-                        {m.optional && <span className="text-[9px] text-slate-400 italic">optional</span>}
+                        <span className="text-xs font-semibold text-[#1c1f26]">{m.label}</span>
+                        {m.time_label && <span className="text-[10px] text-[#8a929d] font-medium">{m.time_label}</span>}
+                        {m.optional && <span className="text-[9px] text-[#8a929d] italic">optional</span>}
                         <span className={`text-[9px] font-semibold uppercase px-1 py-0.5 rounded tracking-wide ${s.label}`}>{m.status}</span>
                       </div>
-                      {m.description && <p className="text-[11px] text-slate-600 mt-0.5 leading-relaxed">{m.description}</p>}
+                      {m.description && <p className="text-[11px] text-[#5b6472] mt-0.5 leading-relaxed">{m.description}</p>}
                     </div>
                   </div>
                 );
@@ -802,28 +802,28 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
+            {block.text && <p className="text-xs text-[#5b6472]">{block.text}</p>}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
               {nodes.map((node: any, nIdx: number) => (
                 <div key={node.id || nIdx} className={`p-3 rounded-xl border text-xs shadow-2xs ${nodeStatus[node.status] || nodeStatus.neutral}`}>
                   <div className="flex items-start justify-between gap-1 mb-1">
-                    <span className="font-bold text-slate-900">{node.label}</span>
-                    <span className="shrink-0 text-[9px] font-semibold text-slate-400 uppercase tracking-wider">{node.node_type}</span>
+                    <span className="font-bold text-[#1c1f26]">{node.label}</span>
+                    <span className="shrink-0 text-[9px] font-semibold text-[#8a929d] uppercase tracking-wider">{node.node_type}</span>
                   </div>
-                  {node.description && <p className="text-[11px] text-slate-600 leading-relaxed">{node.description}</p>}
+                  {node.description && <p className="text-[11px] text-[#5b6472] leading-relaxed">{node.description}</p>}
                 </div>
               ))}
             </div>
             {edges.length > 0 && (
-              <div className="text-[10px] text-slate-400 space-y-0.5 pt-1">
+              <div className="text-[10px] text-[#8a929d] space-y-0.5 pt-1">
                 {edges.map((e: any, eIdx: number) => (
                   <div key={eIdx} className="flex items-center gap-1">
-                    <span className="font-medium text-slate-500">{e.from}</span>
+                    <span className="font-medium text-[#5b6472]">{e.from}</span>
                     <ArrowRight className="w-3 h-3 shrink-0" />
-                    <span className="font-medium text-slate-500">{e.to}</span>
-                    {e.label && <span className="text-slate-400">· {e.label}</span>}
-                    {e.condition && <span className="italic text-slate-400">({e.condition})</span>}
+                    <span className="font-medium text-[#5b6472]">{e.to}</span>
+                    {e.label && <span className="text-[#8a929d]">· {e.label}</span>}
+                    {e.condition && <span className="italic text-[#8a929d]">({e.condition})</span>}
                   </div>
                 ))}
               </div>
@@ -838,20 +838,20 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const laneStatus: Record<string, string> = {
           completed: "bg-emerald-100 text-emerald-800",
           current:   "bg-amber-100 text-amber-900",
-          upcoming:  "bg-slate-100 text-slate-600",
+          upcoming:  "bg-slate-100 text-[#5b6472]",
           blocked:   "bg-rose-100 text-rose-800",
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            {d.goal && <p className="text-xs text-slate-600 font-medium">Goal: {d.goal}</p>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
+            {d.goal && <p className="text-xs text-[#5b6472] font-medium">Goal: {d.goal}</p>}
             <div className="grid grid-cols-1 gap-2.5">
               {lanes.map((lane: any, lIdx: number) => (
                 <div key={lane.id || lIdx} className={`p-3.5 rounded-xl border shadow-2xs ${lane.recommended ? "border-sky-400 bg-sky-50/40" : "border-slate-200 bg-white"}`}>
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <div>
-                      <div className="font-bold text-xs text-slate-900">{lane.title}</div>
-                      {lane.summary && <p className="text-[11px] text-slate-500 mt-0.5">{lane.summary}</p>}
+                      <div className="font-bold text-xs text-[#1c1f26]">{lane.title}</div>
+                      {lane.summary && <p className="text-[11px] text-[#5b6472] mt-0.5">{lane.summary}</p>}
                     </div>
                     {lane.recommended && (
                       <span className="shrink-0 text-[9px] font-bold text-sky-700 bg-sky-100 border border-sky-200 px-1.5 py-0.5 rounded uppercase tracking-wider">Recommended</span>
@@ -860,12 +860,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   <div className="space-y-1.5">
                     {(lane.steps || []).map((step: any, sIdx: number) => (
                       <div key={step.id || sIdx} className="flex items-start gap-2 text-xs">
-                        <div className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[9px] font-bold text-slate-600">{sIdx + 1}</div>
+                        <div className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center text-[9px] font-bold text-[#5b6472]">{sIdx + 1}</div>
                         <div className="flex-1 min-w-0">
-                          <span className="font-semibold text-slate-800">{step.label}</span>
-                          {step.description && <span className="text-slate-500 ml-1">— {step.description}</span>}
+                          <span className="font-semibold text-[#2c333d]">{step.label}</span>
+                          {step.description && <span className="text-[#5b6472] ml-1">— {step.description}</span>}
                           {step.status && step.status !== "upcoming" && (
-                            <span className={`ml-1.5 text-[9px] px-1 py-0.5 rounded font-semibold ${laneStatus[step.status] || "bg-slate-100 text-slate-600"}`}>{step.status}</span>
+                            <span className={`ml-1.5 text-[9px] px-1 py-0.5 rounded font-semibold ${laneStatus[step.status] || "bg-slate-100 text-[#5b6472]"}`}>{step.status}</span>
                           )}
                         </div>
                       </div>
@@ -891,20 +891,20 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           good:      "text-sky-700",
           warning:   "text-amber-700",
           critical:  "text-rose-700",
-          neutral:   "text-slate-700",
+          neutral:   "text-[#2c333d]",
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {metrics.map((m: any, mIdx: number) => (
                 <div key={m.id || mIdx} className="p-3 rounded-xl border border-slate-200 bg-white shadow-2xs space-y-1">
-                  <div className="text-[10px] text-slate-400 font-semibold uppercase tracking-wide">{m.label}</div>
+                  <div className="text-[10px] text-[#8a929d] font-semibold uppercase tracking-wide">{m.label}</div>
                   <div className={`flex items-center gap-1 font-bold text-lg tabular-nums ${metricStatus[m.status] || metricStatus.neutral}`}>
                     <span>{m.value_type === "percentage" ? `${m.value}%` : m.value_type === "rating" ? `${m.value}/${m.max ?? 10}` : `${m.value}${m.unit ? ` ${m.unit}` : ""}`}</span>
                     {trendIcon(m.trend)}
                   </div>
-                  {m.description && <p className="text-[10px] text-slate-500 leading-relaxed">{m.description}</p>}
+                  {m.description && <p className="text-[10px] text-[#5b6472] leading-relaxed">{m.description}</p>}
                 </div>
               ))}
             </div>
@@ -920,11 +920,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const maxVal = Math.max(...series.flatMap((s: any) => s.values || [0]), 1);
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
-            {block.text && <p className="text-xs text-slate-600">{block.text}</p>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
+            {block.text && <p className="text-xs text-[#5b6472]">{block.text}</p>}
             <div className={`p-3.5 rounded-xl border border-slate-200 bg-white shadow-2xs text-xs ${d.source_status === "estimated" || d.source_status === "to_verify" ? "opacity-90" : ""}`}>
               <div className="flex items-center justify-between mb-2.5">
-                <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{chartType} chart</span>
+                <span className="text-[10px] font-semibold text-[#8a929d] uppercase tracking-wider">{chartType} chart</span>
                 {d.source_status && d.source_status !== "verified" && (
                   <span className="text-[9px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded font-semibold">{d.source_status}</span>
                 )}
@@ -932,8 +932,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {(chartType === "bar" || chartType === "funnel") && categories.map((cat: string, cIdx: number) => (
                 <div key={cIdx} className="mb-1.5">
                   <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-[11px] text-slate-600 font-medium">{cat}</span>
-                    <span className="text-[11px] font-semibold text-slate-800 tabular-nums">{series[0]?.values?.[cIdx] ?? "—"}{series[0]?.unit ? ` ${series[0].unit}` : ""}</span>
+                    <span className="text-[11px] text-[#5b6472] font-medium">{cat}</span>
+                    <span className="text-[11px] font-semibold text-[#2c333d] tabular-nums">{series[0]?.values?.[cIdx] ?? "—"}{series[0]?.unit ? ` ${series[0].unit}` : ""}</span>
                   </div>
                   <div className="h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div className="h-full bg-sky-500 rounded-full" style={{ width: `${Math.round(((series[0]?.values?.[cIdx] ?? 0) / maxVal) * 100)}%` }} />
@@ -944,11 +944,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 <div className="space-y-1">
                   {series.map((s: any, sIdx: number) => (
                     <div key={sIdx} className="flex items-center gap-2">
-                      <span className="text-[11px] font-medium text-slate-600">{s.label}:</span>
-                      <span className="text-[11px] font-semibold text-slate-800 tabular-nums">{s.values?.join(", ")}{s.unit ? ` ${s.unit}` : ""}</span>
+                      <span className="text-[11px] font-medium text-[#5b6472]">{s.label}:</span>
+                      <span className="text-[11px] font-semibold text-[#2c333d] tabular-nums">{s.values?.join(", ")}{s.unit ? ` ${s.unit}` : ""}</span>
                     </div>
                   ))}
-                  <div className="text-[10px] text-slate-400 mt-1">Categories: {categories.join(" · ")}</div>
+                  <div className="text-[10px] text-[#8a929d] mt-1">Categories: {categories.join(" · ")}</div>
                 </div>
               )}
             </div>
@@ -962,15 +962,15 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const stageStatus: Record<string, { ring: string; label: string }> = {
           completed: { ring: "border-emerald-500 bg-emerald-500 text-white",  label: "text-emerald-700" },
           current:   { ring: "border-amber-500 bg-amber-500 text-white animate-pulse motion-reduce:animate-none", label: "text-amber-800 font-bold" },
-          upcoming:  { ring: "border-slate-300 bg-white text-slate-400",       label: "text-slate-500" },
+          upcoming:  { ring: "border-slate-300 bg-white text-[#8a929d]",       label: "text-[#5b6472]" },
           blocked:   { ring: "border-rose-400 bg-rose-400 text-white",          label: "text-rose-700" },
           paused:    { ring: "border-violet-400 bg-violet-400 text-white",      label: "text-violet-700" },
           failed:    { ring: "border-rose-600 bg-rose-600 text-white",          label: "text-rose-800" },
-          unknown:   { ring: "border-slate-200 bg-slate-100 text-slate-400",   label: "text-slate-400" },
+          unknown:   { ring: "border-slate-200 bg-slate-100 text-[#8a929d]",   label: "text-[#8a929d]" },
         };
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
             <div className="flex items-start gap-0 overflow-x-auto pb-1">
               {stages.map((stage: any, sIdx: number) => {
                 const s = stageStatus[stage.status] || stageStatus.unknown;
@@ -981,7 +981,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                         {stage.status === "completed" ? "✓" : sIdx + 1}
                       </div>
                       <div className={`mt-1.5 text-center text-[10px] font-semibold px-1 leading-tight ${s.label}`}>{stage.label}</div>
-                      {stage.description && <div className="text-[9px] text-slate-400 text-center mt-0.5 leading-tight">{stage.description}</div>}
+                      {stage.description && <div className="text-[9px] text-[#8a929d] text-center mt-0.5 leading-tight">{stage.description}</div>}
                     </div>
                     {sIdx < stages.length - 1 && (
                       <div className="flex-1 mt-4 h-px min-w-[12px] bg-slate-200" />
@@ -997,7 +997,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       case "checklist":
         return (
           <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">{block.title}</h4>}
+            {block.title && <h4 className="text-xs font-bold uppercase tracking-wider text-[#5b6472]">{block.title}</h4>}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
               {block.items?.map((item: YuzeeItem, iIdx: number) => (
                 <div key={item.id || iIdx} className="flex items-start gap-2 p-2 rounded-lg border text-xs bg-white border-slate-200">
@@ -1007,9 +1007,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     </svg>
                   </span>
                   <div className="min-w-0">
-                    <p className="font-semibold text-slate-900 leading-snug">{item.title}</p>
+                    <p className="font-semibold text-[#1c1f26] leading-snug">{item.title}</p>
                     {(item.text || item.value) && (
-                      <p className="text-[11px] text-slate-500 leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>
+                      <p className="text-[11px] text-[#5b6472] leading-snug mt-0.5 line-clamp-2">{item.text || item.value}</p>
                     )}
                   </div>
                 </div>
@@ -1020,8 +1020,8 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
       default:
         return (
-          <div key={block.id || index} className="text-xs text-slate-700">
-            {block.title && <div className="font-semibold text-slate-900 mb-1">{block.title}</div>}
+          <div key={block.id || index} className="text-xs text-[#2c333d]">
+            {block.title && <div className="font-semibold text-[#1c1f26] mb-1">{block.title}</div>}
             <p>{block.text}</p>
           </div>
         );
@@ -1054,12 +1054,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm select-none">O</div>
           <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-400 border-[1.5px] border-white rounded-full" />
         </div>
-        <div className="text-xs font-bold text-slate-900 leading-none">Oala</div>
+        <div className="text-xs font-bold text-[#1c1f26] leading-none">Oala</div>
       </div>
 
       {/* Care text — warm opening sentence reflecting user's situation */}
       {careText && careText !== "none" && (
-        <p className="text-[16px] text-slate-700 leading-[1.68] font-normal">{careText}</p>
+        <p className="text-[16px] text-[#2c333d] leading-[1.68] font-normal">{careText}</p>
       )}
 
       {/* Content Blocks */}
@@ -1090,7 +1090,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               <Sparkles className="w-3.5 h-3.5" />
               <span>Next Step</span>
             </span>
-            <p className="text-sm font-semibold text-slate-900">
+            <p className="text-sm font-semibold text-[#1c1f26]">
               {interaction.question || (interaction as any).prompt || "Select an option to proceed:"}
             </p>
           </div>
@@ -1109,15 +1109,15 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                         isSelected
                           ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"
-                          : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50/30 text-slate-800"
+                          : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50/30 text-[#2c333d]"
                       } ${submitted && !isSelected ? "opacity-50" : ""}`}
                     >
-                      <div className="font-semibold text-slate-900 flex items-center justify-between">
+                      <div className="font-semibold text-[#1c1f26] flex items-center justify-between">
                         <span>{opt.label}</span>
                         {isSelected && <Check className="w-3.5 h-3.5 text-sky-600" />}
                       </div>
                       {opt.description && (
-                        <p className="text-slate-500 text-[11px] mt-0.5 leading-normal">{opt.description}</p>
+                        <p className="text-[#5b6472] text-[11px] mt-0.5 leading-normal">{opt.description}</p>
                       )}
                     </button>
                   );
@@ -1181,10 +1181,10 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
                         isChecked
                           ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"
-                          : "bg-white border-slate-200 hover:border-sky-300 text-slate-800"
+                          : "bg-white border-slate-200 hover:border-sky-300 text-[#2c333d]"
                       } ${submitted ? "pointer-events-none opacity-80" : ""}`}
                     >
-                      <div className="flex items-center gap-2 font-semibold text-slate-900">
+                      <div className="flex items-center gap-2 font-semibold text-[#1c1f26]">
                         <div
                           className={`w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
                             isChecked ? "bg-sky-600 border-sky-600 text-white" : "border-slate-300 bg-white"
@@ -1195,7 +1195,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                         <span>{opt.label}</span>
                       </div>
                       {opt.description && (
-                        <p className="text-slate-500 text-[11px] mt-1 pl-6 leading-normal">{opt.description}</p>
+                        <p className="text-[#5b6472] text-[11px] mt-1 pl-6 leading-normal">{opt.description}</p>
                       )}
                     </div>
                   );
@@ -1220,7 +1220,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           {/* 3. RANKED SELECT */}
           {interaction.input_type === "ranked_select" && (
             <div className="space-y-2">
-              <p className="text-[11px] text-slate-500">Arrange options in priority order from highest to lowest:</p>
+              <p className="text-[11px] text-[#5b6472]">Arrange options in priority order from highest to lowest:</p>
               <div className="space-y-1.5">
                 {rankedItems.map((item, idx) => (
                   <div
@@ -1228,10 +1228,10 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     className="flex items-center justify-between p-2.5 bg-white border border-slate-200 rounded-xl text-xs shadow-2xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-5 h-5 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-[10px]">
+                      <div className="w-5 h-5 rounded-full bg-slate-100 text-[#2c333d] flex items-center justify-center font-bold text-[10px]">
                         {idx + 1}
                       </div>
-                      <span className="font-semibold text-slate-900">{item.label}</span>
+                      <span className="font-semibold text-[#1c1f26]">{item.label}</span>
                     </div>
 
                     {!submitted && (
@@ -1240,7 +1240,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                           type="button"
                           disabled={idx === 0}
                           onClick={() => handleRankMove(idx, "up")}
-                          className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-30 rounded hover:bg-slate-100 cursor-pointer"
+                          className="p-1 text-[#8a929d] hover:text-[#2c333d] disabled:opacity-30 rounded hover:bg-slate-100 cursor-pointer"
                           title="Move up"
                         >
                           <ChevronUp className="w-4 h-4" />
@@ -1249,7 +1249,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                           type="button"
                           disabled={idx === rankedItems.length - 1}
                           onClick={() => handleRankMove(idx, "down")}
-                          className="p-1 text-slate-400 hover:text-slate-700 disabled:opacity-30 rounded hover:bg-slate-100 cursor-pointer"
+                          className="p-1 text-[#8a929d] hover:text-[#2c333d] disabled:opacity-30 rounded hover:bg-slate-100 cursor-pointer"
                           title="Move down"
                         >
                           <ChevronDown className="w-4 h-4" />
@@ -1304,7 +1304,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {interaction.fields.map((fld: YuzeeField) => (
                   <div key={fld.id} className="space-y-1">
-                    <label htmlFor={`field-${fld.id}`} className="text-[11px] font-semibold text-slate-700 block">
+                    <label htmlFor={`field-${fld.id}`} className="text-[11px] font-semibold text-[#2c333d] block">
                       {fld.label} {fld.required && <span className="text-rose-500" aria-hidden="true">*</span>}
                     </label>
 
@@ -1363,7 +1363,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               key={act.id}
               type="button"
               onClick={() => handleActionClick(act.id, act.label)}
-              className="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-slate-700 rounded-lg text-xs transition-colors cursor-pointer"
+              className="px-2.5 py-1 bg-slate-100 hover:bg-sky-50 hover:text-sky-800 border border-slate-200 hover:border-sky-300 text-[#2c333d] rounded-lg text-xs transition-colors cursor-pointer"
             >
               {act.label}
             </button>
@@ -1397,7 +1397,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   key={actId}
                   className="p-3 bg-white border border-indigo-200 rounded-xl space-y-1.5 shadow-2xs"
                 >
-                  <div className="flex items-center justify-between font-semibold text-xs text-slate-900">
+                  <div className="flex items-center justify-between font-semibold text-xs text-[#1c1f26]">
                     <span>{act.title || trusted?.title || "Service Action"}</span>
                     {act.requires_confirmation && (
                       <span className="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
@@ -1405,7 +1405,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-slate-600 leading-normal">
+                  <p className="text-[11px] text-[#5b6472] leading-normal">
                     {act.description || trusted?.description || "Connect with authorized pathway providers."}
                   </p>
 
@@ -1417,7 +1417,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       isExecuted
                         ? "bg-emerald-50 text-emerald-800 border border-emerald-300"
                         : hasAttempted
-                        ? "bg-slate-100 text-slate-700 border border-slate-300"
+                        ? "bg-slate-100 text-[#2c333d] border border-slate-300"
                         : "bg-indigo-600 hover:bg-indigo-700 text-white shadow-xs"
                     }`}
                   >
