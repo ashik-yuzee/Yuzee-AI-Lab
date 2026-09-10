@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3 } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy } from "lucide-react";
 import { fetchLifetimeStats } from "../services/api";
 import { formatCost } from "../data/models";
 
@@ -18,10 +18,24 @@ export const SettingsModal: React.FC = () => {
   const [clearConfirm, setClearConfirm] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number; whiteboard?: { calls: number; inputTokens: number; outputTokens: number; costUsd: number } } | null>(null);
+  const [promptData, setPromptData] = useState<{ content: string; hash: string; bytes: number; filename: string; filepath: string } | null>(null);
+  const [promptOpen, setPromptOpen] = useState(false);
+  const [promptCopied, setPromptCopied] = useState(false);
 
   useEffect(() => {
-    if (isSettingsOpen) fetchLifetimeStats().then(setLifetime).catch(() => {});
+    if (isSettingsOpen) {
+      fetchLifetimeStats().then(setLifetime).catch(() => {});
+      fetch("/api/system-prompt").then(r => r.json()).then(setPromptData).catch(() => {});
+    }
   }, [isSettingsOpen]);
+
+  const copyPrompt = () => {
+    if (!promptData) return;
+    navigator.clipboard.writeText(promptData.content).then(() => {
+      setPromptCopied(true);
+      setTimeout(() => setPromptCopied(false), 2000);
+    });
+  };
 
   if (!isSettingsOpen) return null;
 
@@ -240,6 +254,59 @@ export const SettingsModal: React.FC = () => {
                     <span className="font-mono font-bold text-violet-900">{formatCost(lifetime.costUsd + (lifetime.whiteboard?.costUsd ?? 0))}</span>
                   </div>
                 </>
+              )}
+            </div>
+          </div>
+
+          {/* Master Prompt Viewer */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <FileText className="w-3.5 h-3.5 text-slate-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Master Prompt</span>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden">
+              {/* Header row — always visible */}
+              <div className="flex items-center justify-between p-3">
+                <div className="space-y-0.5 min-w-0">
+                  <div className="font-mono text-[11px] text-slate-800 font-semibold truncate">
+                    {promptData?.filename ?? "loading…"}
+                  </div>
+                  <div className="text-[10px] text-slate-400 font-mono truncate">
+                    {promptData?.filepath ?? ""}
+                  </div>
+                  {promptData && (
+                    <div className="text-[10px] text-slate-400">
+                      {(promptData.bytes / 1024).toFixed(1)} KB · SHA256:{" "}
+                      <span className="font-mono">{promptData.hash.slice(0, 12)}…</span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-1.5 shrink-0 ml-2">
+                  <button
+                    onClick={copyPrompt}
+                    disabled={!promptData}
+                    className="flex items-center gap-1 px-2 py-1 border border-slate-300 text-slate-600 text-[11px] font-semibold rounded-lg hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
+                  >
+                    {promptCopied ? <Check className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
+                    {promptCopied ? "Copied" : "Copy"}
+                  </button>
+                  <button
+                    onClick={() => setPromptOpen(o => !o)}
+                    disabled={!promptData}
+                    className="flex items-center gap-1 px-2 py-1 border border-slate-300 text-slate-600 text-[11px] font-semibold rounded-lg hover:bg-slate-100 disabled:opacity-40 cursor-pointer"
+                  >
+                    {promptOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                    {promptOpen ? "Hide" : "View"}
+                  </button>
+                </div>
+              </div>
+              {/* Collapsible content */}
+              {promptOpen && promptData && (
+                <div className="border-t border-slate-200">
+                  <pre className="p-3 text-[11px] font-mono text-slate-700 leading-relaxed whitespace-pre-wrap break-words max-h-72 overflow-y-auto bg-white">
+                    {promptData.content}
+                  </pre>
+                </div>
               )}
             </div>
           </div>

@@ -645,6 +645,8 @@ app.get("/api/system-prompt", (req, res) => {
     content: requestAssembler.getPromptContent(),
     hash: requestAssembler.getPromptHash(),
     bytes: requestAssembler.getPromptBytes(),
+    filename: "Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md",
+    filepath: "src/protocol/v1.3/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md",
   });
 });
 
