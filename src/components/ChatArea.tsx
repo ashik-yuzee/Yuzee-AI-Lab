@@ -314,7 +314,7 @@ export const ChatArea: React.FC = () => {
                       className={
                         msg.role === "user"
                           ? "max-w-2xl ml-auto bg-[#2f6fed] text-white border border-[#2f6fed] rounded-2xl rounded-br-sm px-4 py-3 text-[15px] font-normal leading-[1.68]"
-                          : "w-full bg-white text-[#2c333d] border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-5 py-4 text-[15px] leading-[1.68]"
+                          : "max-w-3xl bg-white text-[#2c333d] border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-5 py-4 text-[15px] leading-[1.68]"
                       }
                       style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}
                     >
