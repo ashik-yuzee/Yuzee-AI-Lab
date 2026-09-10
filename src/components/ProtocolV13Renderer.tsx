@@ -10,6 +10,7 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronUp,
+  ChevronRight,
   FileCheck,
   ShieldCheck,
   Check,
@@ -21,6 +22,10 @@ import {
   Clock,
   Briefcase,
   GraduationCap,
+  Info,
+  AlertTriangle,
+  XCircle,
+  Minus,
 } from "lucide-react";
 import {
   YuzeeResponseV13,
@@ -364,7 +369,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             if (s === "need" || s === "warning" || s === "gap") return "text-amber-700";
             if (s === "neutral" || s === "muted") return "text-slate-500";
             if (s === "current" || s === "next" || s === "proof") return "text-blue-600";
-            return "text-slate-400";
+          };
+          const sideLabelIcon = (status: string | undefined, label: string | undefined): React.ReactNode => {
+            const s = (status || label || "").toLowerCase();
+            if (s === "have" || s === "positive" || s === "complete" || s === "completed") return <Check className="w-3 h-3" />;
+            if (s === "need" || s === "warning") return <AlertCircle className="w-3 h-3" />;
+            if (s === "gap") return <Minus className="w-3 h-3" />;
+            if (s === "proof") return <FileCheck className="w-3 h-3" />;
+            return null;
           };
           return (
             <div key={block.id || index} className="space-y-2">
@@ -375,10 +387,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   const sideLabel = item.side_label || (item as any).side_label;
                   const sideText = item.side_text || (item as any).side_text;
                   const labelColor = sideLabelColor(item.status, sideLabel);
+                  const labelIcon = sideLabelIcon(item.status, sideLabel);
                   return (
                     <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
                       <div className="shrink-0 pt-0.5">
-                        {sideLabel && <p className={`text-[11px] font-bold tracking-[0.12em] uppercase leading-none ${labelColor}`}>{sideLabel}</p>}
+                        {sideLabel && (
+                          <div className={`flex items-center gap-1 ${labelColor}`}>
+                            {labelIcon}
+                            <p className="text-[11px] font-bold tracking-[0.12em] uppercase leading-none">{sideLabel}</p>
+                          </div>
+                        )}
                         {icon && <span className="text-lg leading-none">{icon}</span>}
                         {sideText && !sideLabel && <p className="text-[12px] text-slate-500 leading-snug">{sideText}</p>}
                       </div>
@@ -462,6 +480,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           blocked:  "text-rose-600",
           warning:  "text-amber-600",
         };
+        const stepStatusIcon: Record<string, React.ReactNode> = {
+          current:  <ArrowRight className="w-3 h-3" />,
+          next:     <ChevronRight className="w-3 h-3" />,
+          complete: <Check className="w-3 h-3" />,
+          blocked:  <XCircle className="w-3 h-3" />,
+          warning:  <AlertTriangle className="w-3 h-3" />,
+        };
         return (
           <div key={block.id || index} className="space-y-2">
             {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
@@ -469,11 +494,17 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {block.items?.map((item: YuzeeItem, sIdx: number) => {
                 const s = item.status || "";
                 const scls = stepStatusColor[s] || "text-slate-400";
+                const sIcon = stepStatusIcon[s];
                 return (
                   <li key={item.id || sIdx} className="py-6 border-b border-slate-100">
                     <div className="flex items-baseline justify-between gap-4 mb-1">
                       <p className="text-[17px] font-semibold text-slate-900 leading-snug">{item.title}</p>
-                      {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
+                      {s && (
+                        <span className={`shrink-0 flex items-center gap-1 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>
+                          {sIcon}
+                          {s}
+                        </span>
+                      )}
                     </div>
                     {(item.text || item.value) && (
                       <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
@@ -628,18 +659,30 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           danger:  "text-rose-600",
           muted:   "text-slate-500",
         };
+        const calloutIcon: Record<string, React.ReactNode> = {
+          info:    <Info className="w-3.5 h-3.5 shrink-0" />,
+          default: <Info className="w-3.5 h-3.5 shrink-0" />,
+          success: <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />,
+          warning: <AlertTriangle className="w-3.5 h-3.5 shrink-0" />,
+          danger:  <XCircle className="w-3.5 h-3.5 shrink-0" />,
+          muted:   <AlertCircle className="w-3.5 h-3.5 shrink-0" />,
+        };
         const v = block.variant || "default";
         const bc = calloutBorder[v] || calloutBorder.default;
         const lc = calloutLabel[v] || calloutLabel.default;
+        const icon = calloutIcon[v] || calloutIcon.default;
         return (
           <div
             key={block.id || index}
-            className={`pl-[22px] border-l-[3px] ${bc}`}
+            className={`border-l-[3px] ${bc}`}
             style={{ padding: "20px 0 20px 22px" }}
             role={v === "danger" || v === "warning" ? "alert" : undefined}
           >
             {block.title && (
-              <span className={`block text-[11px] font-bold tracking-[0.13em] uppercase mb-2 ${lc}`}>{block.title}</span>
+              <div className={`flex items-center gap-1.5 mb-2 ${lc}`}>
+                {icon}
+                <span className="text-[11px] font-bold tracking-[0.13em] uppercase">{block.title}</span>
+              </div>
             )}
             <p className="text-[16px] leading-[1.7] text-slate-700">{block.text}</p>
           </div>
