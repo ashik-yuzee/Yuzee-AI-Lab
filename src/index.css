@@ -2,12 +2,14 @@
 
 @layer base {
   :root {
-    --apple-font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+    --apple-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --apple-font-mono: "SF Mono", "Monaco", "Inconsolata", "Fira Mono", "Droid Sans Mono", monospace;
   }
 
   body {
     font-family: var(--apple-font-sans);
+    font-size: 16.5px;
+    line-height: 1.68;
     background-color: #fbfbfd;
     color: #1d1d1f;
     -webkit-font-smoothing: antialiased;

@@ -302,7 +302,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             {isH2 ? (
               <h2 className="text-[19px] font-bold text-slate-900 leading-[1.4] tracking-[-0.01em]">{headingText}</h2>
             ) : (
-              <h3 className="text-[15px] font-semibold text-slate-900 leading-snug">{headingText}</h3>
+              <h3 className="text-[16px] font-semibold text-slate-900 leading-snug">{headingText}</h3>
             )}
           </div>
         );
@@ -312,7 +312,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="space-y-1.5">
             {block.title && <p className="text-[16px] font-semibold text-slate-900 leading-snug">{block.title}</p>}
-            <div className="prose prose-slate max-w-none prose-p:text-[15px] prose-p:leading-[1.7] prose-p:text-slate-800 prose-p:my-2 prose-li:text-[15px] prose-li:leading-[1.7] prose-li:text-slate-800 prose-strong:text-slate-900 prose-headings:text-slate-900">
+            <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-slate-800 prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-slate-800 prose-strong:text-slate-900 prose-headings:text-slate-900">
               <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).content || (block as any).body || ""}</Markdown>
             </div>
           </div>
@@ -335,7 +335,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
               {(block.title || block.text) && (
                 <div className="mb-1">
                   {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                  {block.text && <p className="text-[15px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
+                  {block.text && <p className="text-[16px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
                 </div>
               )}
               <ul className="border-t border-slate-100">
@@ -349,7 +349,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                         {s && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{s}</span>}
                       </div>
                       {(item.text || item.value) && (
-                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </li>
                   );
@@ -401,7 +401,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       </div>
                       <div className="min-w-0">
                         <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
-                        {item.text && <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text}</p>}
+                        {item.text && <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text}</p>}
                         {sideText && sideLabel && <p className="text-[13px] text-slate-400 mt-1">{sideText}</p>}
                       </div>
                     </li>
@@ -419,7 +419,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             {(block.title || block.text) && (
               <div className="mb-1">
                 {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-slate-400">{block.title}</h4>}
-                {block.text && <p className="text-[15px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
+                {block.text && <p className="text-[16px] text-slate-500 mt-0.5 leading-[1.7]">{block.text}</p>}
               </div>
             )}
             <ul className="border-t border-slate-100">
@@ -433,7 +433,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     <div>
                       <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -461,7 +461,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     <div>
                       <p className="text-[16px] font-semibold text-slate-900 leading-snug mb-0.5">{item.title}</p>
                       {(item.text || item.value) && (
-                        <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                        <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                       )}
                     </div>
                   </li>
@@ -506,7 +506,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       )}
                     </div>
                     {(item.text || item.value) && (
-                      <p className="text-[15px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
+                      <p className="text-[16px] text-slate-500 leading-[1.7]">{item.text || item.value}</p>
                     )}
                   </li>
                 );
@@ -1059,7 +1059,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
       {/* Care text — warm opening sentence reflecting user's situation */}
       {careText && careText !== "none" && (
-        <p className="text-sm text-slate-700 leading-relaxed font-normal">{careText}</p>
+        <p className="text-[16px] text-slate-700 leading-[1.68] font-normal">{careText}</p>
       )}
 
       {/* Content Blocks */}

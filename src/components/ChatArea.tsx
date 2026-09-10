@@ -269,7 +269,7 @@ export const ChatArea: React.FC = () => {
                 <h1 className="text-[22px] font-bold text-[#1c1f26] tracking-tight">
                   What are you planning next?
                 </h1>
-                <p className="text-[15px] text-[#5b6472] max-w-lg mx-auto leading-[1.65]">
+                <p className="text-[16px] text-[#5b6472] max-w-lg mx-auto leading-[1.65]">
                   Test Oala career guidance with Protocol v1.3 JSON validation and context token optimization.
                 </p>
               </div>
@@ -311,8 +311,8 @@ export const ChatArea: React.FC = () => {
                     <div
                       className={
                         msg.role === "user"
-                          ? "max-w-2xl ml-auto bg-[#2f6fed] text-white border border-[#2f6fed] rounded-2xl rounded-br-sm px-4 py-3 text-[15px] font-normal leading-[1.68]"
-                          : "max-w-3xl bg-white text-[#2c333d] border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-5 py-4 text-[15px] leading-[1.68]"
+                          ? "max-w-2xl ml-auto bg-[#2f6fed] text-white border border-[#2f6fed] rounded-2xl rounded-br-sm px-4 py-3 text-[16px] font-normal leading-[1.68]"
+                          : "max-w-3xl bg-white text-[#2c333d] border border-[#e6e9ee] rounded-2xl rounded-bl-sm px-5 py-4 text-[16px] leading-[1.68]"
                       }
                       style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.04)" }}
                     >
@@ -357,7 +357,7 @@ export const ChatArea: React.FC = () => {
                             />
                           ) : (
                             !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
-                              <div className="prose prose-slate max-w-none prose-p:text-[15px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[15px] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26] prose-headings:font-bold">
+                              <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[16px] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26] prose-headings:font-bold">
                                 <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
                               </div>
                             )
