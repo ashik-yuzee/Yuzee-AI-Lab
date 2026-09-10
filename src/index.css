@@ -43,6 +43,11 @@
   }
 }
 
+/* Font override */
+html.font-open-sans body {
+  font-family: "Open Sans", sans-serif;
+}
+
 /* Clean Apple-style Solid Elevated Surfaces */
 .apple-glass {
   background-color: #ffffff;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type } from "lucide-react";
 import { fetchLifetimeStats } from "../services/api";
 import { formatCost } from "../data/models";
 
@@ -15,6 +15,21 @@ export const SettingsModal: React.FC = () => {
     localStorageStats,
     clearLocalData,
   } = useTokenLab();
+  const [fontPref, setFontPref] = useState<'system' | 'open-sans'>(() =>
+    (localStorage.getItem('oala-font') as 'open-sans' | null) === 'open-sans' ? 'open-sans' : 'system'
+  );
+  const toggleFont = () => {
+    const next = fontPref === 'system' ? 'open-sans' : 'system';
+    setFontPref(next);
+    if (next === 'open-sans') {
+      localStorage.setItem('oala-font', 'open-sans');
+      document.documentElement.classList.add('font-open-sans');
+    } else {
+      localStorage.removeItem('oala-font');
+      document.documentElement.classList.remove('font-open-sans');
+    }
+  };
+
   const [clearConfirm, setClearConfirm] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number; whiteboard?: { calls: number; inputTokens: number; outputTokens: number; costUsd: number } } | null>(null);
@@ -115,6 +130,34 @@ export const SettingsModal: React.FC = () => {
                   Set <code className="font-mono">GEMINI_API_KEY</code> in your <code>.env</code> file and restart the server to enable live Gemini calls.
                 </p>
               )}
+            </div>
+          </div>
+
+          {/* Appearance */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Type className="w-3.5 h-3.5 text-slate-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Appearance</span>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between">
+              <div>
+                <p className="font-medium text-slate-700">Font</p>
+                <p className="text-slate-500 mt-0.5">System font or Open Sans</p>
+              </div>
+              <div className="flex items-center gap-1 bg-slate-200 rounded-lg p-0.5">
+                <button
+                  onClick={() => fontPref !== 'system' && toggleFont()}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${fontPref === 'system' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  System
+                </button>
+                <button
+                  onClick={() => fontPref !== 'open-sans' && toggleFont()}
+                  className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${fontPref === 'open-sans' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-500 hover:text-slate-700'}`}
+                >
+                  Open Sans
+                </button>
+              </div>
             </div>
           </div>
 
