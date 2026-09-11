@@ -20,6 +20,7 @@ public class ChatRequest {
     private Boolean useFlashLiteUtility;
     private String protocolVersion;
     private UserEvent userEvent;
+    private java.util.List<AttachmentDto> attachments;
 
     public ChatRequest() {}
 
@@ -70,4 +71,7 @@ public class ChatRequest {
 
     public UserEvent getUserEvent() { return userEvent; }
     public void setUserEvent(UserEvent userEvent) { this.userEvent = userEvent; }
+
+    public java.util.List<AttachmentDto> getAttachments() { return attachments; }
+    public void setAttachments(java.util.List<AttachmentDto> attachments) { this.attachments = attachments; }
 }

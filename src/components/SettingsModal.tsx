@@ -30,6 +30,21 @@ export const SettingsModal: React.FC = () => {
     }
   };
 
+  const ACCENT_PRESETS = [
+    { name: "Violet", value: "#8952ee" },
+    { name: "Blue", value: "#2f6fed" },
+    { name: "Teal", value: "#0d9488" },
+    { name: "Rose", value: "#e11d48" },
+    { name: "Orange", value: "#f97316" },
+    { name: "Slate", value: "#475569" },
+  ];
+  const [accent, setAccent] = useState(() => localStorage.getItem('oala-accent') || '#8952ee');
+  const applyAccent = (hex: string) => {
+    setAccent(hex);
+    document.documentElement.style.setProperty('--accent', hex);
+    localStorage.setItem('oala-accent', hex);
+  };
+
   const [clearConfirm, setClearConfirm] = useState(false);
   const [cleared, setCleared] = useState(false);
   const [lifetime, setLifetime] = useState<{ calls: number; inputTokens: number; outputTokens: number; cachedTokens: number; thinkingTokens: number; costUsd: number; whiteboard?: { calls: number; inputTokens: number; outputTokens: number; costUsd: number } } | null>(null);
@@ -157,6 +172,41 @@ export const SettingsModal: React.FC = () => {
                 >
                   Open Sans
                 </button>
+              </div>
+            </div>
+
+            {/* Accent color */}
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="font-medium text-slate-700">Accent color</p>
+                  <p className="text-slate-500 mt-0.5">Used for buttons, links, and highlights</p>
+                </div>
+                <span className="w-5 h-5 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: accent }} />
+              </div>
+              <div className="flex items-center gap-2 flex-wrap">
+                {ACCENT_PRESETS.map(p => (
+                  <button
+                    key={p.value}
+                    onClick={() => applyAccent(p.value)}
+                    title={p.name}
+                    className="w-7 h-7 rounded-full border-2 transition-all cursor-pointer hover:scale-110"
+                    style={{
+                      backgroundColor: p.value,
+                      borderColor: accent === p.value ? '#0d0d0d' : 'transparent',
+                      boxShadow: accent === p.value ? '0 0 0 1px #0d0d0d' : 'none',
+                    }}
+                  />
+                ))}
+                {/* Custom hex input */}
+                <input
+                  type="color"
+                  value={accent}
+                  onChange={e => applyAccent(e.target.value)}
+                  className="w-7 h-7 rounded-full border-2 border-slate-200 cursor-pointer p-0 overflow-hidden"
+                  title="Custom color"
+                  style={{ padding: 0 }}
+                />
               </div>
             </div>
           </div>

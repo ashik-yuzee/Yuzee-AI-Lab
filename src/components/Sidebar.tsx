@@ -84,7 +84,7 @@ export const Sidebar: React.FC = () => {
                 startNewConversation();
                 setSidebarOpen(false);
               }}
-              className="flex-1 flex items-center justify-center gap-2 bg-[#2f6fed] hover:bg-[#1f5cd6] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>New Conversation</span>
@@ -106,10 +106,10 @@ export const Sidebar: React.FC = () => {
               loadDemoConversation();
               setSidebarOpen(false);
             }}
-            className="w-full flex items-center justify-center gap-1.5 bg-[#f7f8fa] hover:bg-[#2f6fed]/5 text-[#5b6472] hover:text-[#2f6fed] border border-[#e6e9ee] hover:border-[#2f6fed]/30 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+            className="w-full flex items-center justify-center gap-1.5 bg-[#f7f8fa] hover:bg-[var(--accent)]/5 text-[#5b6472] hover:text-[var(--accent)] border border-[#e6e9ee] hover:border-[var(--accent)]/30 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer"
             title="Load sample Cybersecurity Analyst pathway with prefilled structured memory"
           >
-            <PlayCircle className="w-3.5 h-3.5 text-[#2f6fed]" />
+            <PlayCircle className="w-3.5 h-3.5 text-[var(--accent)]" />
             <span>Load Demo Pathway</span>
           </button>
         </div>
@@ -146,11 +146,11 @@ export const Sidebar: React.FC = () => {
                   }`}
                 >
                   <div className="flex items-center gap-2 min-w-0 pr-14">
-                    <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-[#2f6fed]" : "text-[#8a929d]"}`} />
+                    <MessageSquare className={`w-3.5 h-3.5 shrink-0 ${isSelected ? "text-[var(--accent)]" : "text-[#8a929d]"}`} />
                     <div className="truncate min-w-0 flex-1">
                       {editingId === conv.id ? (
                         <input
-                          className="w-full text-xs font-medium bg-white border border-[#2f6fed] rounded px-1 py-0.5 outline-none"
+                          className="w-full text-xs font-medium bg-white border border-[var(--accent)] rounded px-1 py-0.5 outline-none"
                           value={editingTitle}
                           autoFocus
                           onClick={(e) => e.stopPropagation()}
@@ -194,7 +194,7 @@ export const Sidebar: React.FC = () => {
                         setEditingId(conv.id);
                         setEditingTitle(conv.title || "Career Exploration");
                       }}
-                      className="p-1.5 text-[#8a929d] hover:text-[#2f6fed] hover:bg-[#2f6fed]/5 rounded-md transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
+                      className="p-1.5 text-[#8a929d] hover:text-[var(--accent)] hover:bg-[var(--accent)]/5 rounded-md transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                       title="Rename Conversation"
                       aria-label="Rename Conversation"
                     >

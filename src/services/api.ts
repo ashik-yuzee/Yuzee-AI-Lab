@@ -384,6 +384,7 @@ export function streamChatMessage(
     userProfileFacts?: string[];
     userQuestionAnswers?: any[];
     isOptionSelection?: boolean;
+    attachments?: Array<{ mimeType: string; data: string }>;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal

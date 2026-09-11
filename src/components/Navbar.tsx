@@ -4,13 +4,13 @@ import { OptimizationMode } from "../types";
 import {
   Sparkles,
   Cpu,
-  FlaskConical,
   Menu,
   Activity,
   Settings,
   User,
   Network,
   FileJson,
+  Wrench,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -22,8 +22,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     capabilities,
     updateCurrentConversationSettings,
     applyOptimizationMode,
-    isAdvancedLabOpen,
-    setAdvancedLabOpen,
     isSidebarOpen,
     setSidebarOpen,
     isTokenInspectorOpen,
@@ -35,7 +33,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     userProfile,
     userContradictions,
     activeTurnTelemetry,
-    sessionStats,
+    setAdvancedLabOpen,
+    setActiveLabTab,
   } = useTokenLab();
 
   const currentMode: OptimizationMode = (currentConversation?.mode as OptimizationMode) || "AUTO";
@@ -142,19 +141,10 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           <Menu className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-2.5">
-          <img src="/favicon.svg" alt="Oala" className="w-7 h-7 rounded-lg shadow-xs" />
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-semibold text-slate-900 tracking-tight text-sm">Oala AI Lab</span>
-            </div>
-          </div>
-        </div>
       </div>
 
-      {/* Middle: Clean Selectors (Model + Optimization Mode + Lab Button) */}
-      <div className="flex items-center gap-2 sm:gap-3">
-        {/* Apple Model Selector Dropdown */}
+      {/* Middle: Selectors + actions — hidden entirely on mobile, visible md+ */}
+      <div className="hidden md:flex items-center gap-2">
         <AppleSelect
           id="select-model"
           value={currentConversation?.model || selectedModel}
@@ -166,63 +156,64 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           showSearchThreshold={5}
         />
 
-        {/* 3 Simple Optimization Modes */}
-        <div className="hidden sm:block">
-          <AppleSelect
-            id="select-optimization-mode"
-            value={displayMode}
-            options={modeOptions}
-            onChange={(newMode) => { setLocalMode(newMode as OptimizationMode); applyOptimizationMode(newMode as OptimizationMode); }}
-            leadingIcon={Sparkles}
-            compact
-            popoverWidth="w-72 sm:w-84"
-            showSearchThreshold={10}
-          />
-        </div>
+        <AppleSelect
+          id="select-optimization-mode"
+          value={displayMode}
+          options={modeOptions}
+          onChange={(newMode) => { setLocalMode(newMode as OptimizationMode); applyOptimizationMode(newMode as OptimizationMode); }}
+          leadingIcon={Sparkles}
+          compact
+          popoverWidth="w-72 sm:w-84"
+          showSearchThreshold={10}
+        />
 
-        {/* Lab Trigger Button */}
-        <button
-          id="btn-open-lab"
-          onClick={() => setAdvancedLabOpen(true)}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
-            isAdvancedLabOpen
-              ? "bg-indigo-50 border-indigo-300 text-indigo-800 font-semibold"
-              : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300"
-          }`}
-          title="Open Lab (Context, Thinking, Memory Capsule, Benchmark, Traces)"
-          aria-label="Open Lab"
-        >
-          <FlaskConical className="w-3.5 h-3.5 text-indigo-600" />
-          <span>Lab</span>
-        </button>
-
-        {/* Pathway Button — toggles whiteboard panel */}
         <button
           id="btn-pathway"
           onClick={() => { setWhiteboardOpen(!isWhiteboardOpen); if (!isWhiteboardOpen) setTokenInspectorOpen(false); }}
-          className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
             isWhiteboardOpen
               ? "bg-violet-50 border-violet-300 text-violet-800 font-semibold"
               : "bg-white border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300"
           }`}
           title={isWhiteboardOpen ? "Close pathway" : "Open pathway"}
-          aria-label="Pathway"
         >
           <Network className="w-3.5 h-3.5 text-violet-600" />
           <span>Pathway</span>
         </button>
 
-        {/* Protocol Renderer — standalone test page */}
         <button
           id="btn-renderer"
           onClick={onOpenRenderer}
-          className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-          title="Protocol v1.3 Renderer — paste JSON, see the UI output"
-          aria-label="Protocol Renderer"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
+          title="Protocol v1.3 Renderer"
         >
           <FileJson className="w-3.5 h-3.5 text-slate-500" />
           <span>Renderer</span>
         </button>
+
+        <button
+          id="btn-lab"
+          onClick={() => { setAdvancedLabOpen(true); setActiveLabTab("context"); }}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
+          title="Lab Tools"
+        >
+          <Wrench className="w-3.5 h-3.5 text-slate-500" />
+          <span>Lab</span>
+        </button>
+      </div>
+
+      {/* Mobile-only: model selector */}
+      <div className="md:hidden">
+        <AppleSelect
+          id="select-model-mobile"
+          value={currentConversation?.model || selectedModel}
+          options={modelOptions}
+          onChange={(newModel) => updateCurrentConversationSettings({ model: newModel })}
+          leadingIcon={Cpu}
+          compact
+          popoverWidth="w-72"
+          showSearchThreshold={5}
+        />
       </div>
 
       {/* Right: Settings + Conv Cost + Telemetry Pill */}
@@ -266,16 +257,16 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
         <button
           id="btn-header-telemetry-pill"
           onClick={() => { setTokenInspectorOpen(!isTokenInspectorOpen); if (!isTokenInspectorOpen) setWhiteboardOpen(false); }}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
+          className={`w-9 h-9 sm:w-auto sm:h-auto flex items-center justify-center sm:justify-start sm:gap-1.5 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-mono border transition-all cursor-pointer ${
             isTokenInspectorOpen
-              ? "bg-[#2f6fed]/5 border-[#2f6fed]/30 text-[#2f6fed] font-semibold"
-              : "bg-[#f7f8fa] hover:bg-white border-[#e6e9ee] text-[#5b6472] hover:border-[#2f6fed]/30"
+              ? "bg-[var(--accent)]/5 border-[var(--accent)]/30 text-[var(--accent)] font-semibold"
+              : "bg-[#f7f8fa] hover:bg-white border-[#e6e9ee] text-[#5b6472] hover:border-[var(--accent)]/30"
           }`}
           title="Conversation Telemetry — click to view full turn & context diagnostics"
           aria-label="Conversation Telemetry"
         >
-          <Activity className="w-3.5 h-3.5 text-[#2f6fed]" />
-          <span className="text-[11px]">
+          <Activity className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-[var(--accent)]" />
+          <span className="hidden sm:inline text-[11px]">
             {cachedTokens > 0 ? <>⚡ <strong>{inputTokens}</strong> new</> : <>In <strong>{inputTokens}</strong></>}
             {" "}· Out <strong>{outputTokens}</strong>
           </span>

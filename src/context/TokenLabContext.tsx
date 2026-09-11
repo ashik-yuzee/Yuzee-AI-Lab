@@ -105,7 +105,7 @@ interface TokenLabContextType {
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
-  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }) => Promise<void>;
+  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<void>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
   resetMemory: () => Promise<void>;
@@ -119,6 +119,7 @@ interface TokenLabContextType {
 const TokenLabContext = createContext<TokenLabContextType | null>(null);
 
 const LS_KEY = "yuzee-token-lab-v1";
+const LS_ACTIVE_CONVERSATION_KEY = "yuzee-token-lab-active-conversation-v1";
 
 function lsLoad(): Conversation[] {
   try {
@@ -137,6 +138,26 @@ function lsSave(convs: Conversation[]): void {
       const trimmed = convs.slice(0, Math.max(1, convs.length - 1));
       try { localStorage.setItem(LS_KEY, JSON.stringify(trimmed)); } catch { /* ignore */ }
     }
+  }
+}
+
+function lsLoadActiveConversationId(): string | null {
+  try {
+    return localStorage.getItem(LS_ACTIVE_CONVERSATION_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function lsSaveActiveConversationId(id: string | null): void {
+  try {
+    if (id) {
+      localStorage.setItem(LS_ACTIVE_CONVERSATION_KEY, id);
+    } else {
+      localStorage.removeItem(LS_ACTIVE_CONVERSATION_KEY);
+    }
+  } catch {
+    // Local storage is optional; the latest conversation remains the fallback.
   }
 }
 
@@ -171,7 +192,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isAnalyticsOpen, setAnalyticsOpen] = useState<boolean>(false);
   const [isSettingsOpen, setSettingsOpen] = useState<boolean>(false);
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
-  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(true);
+  const [isSidebarOpen, setSidebarOpen] = useState<boolean>(() => window.innerWidth >= 1024);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<{ id: string; text: string; category?: string; addedAt: number }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }
@@ -219,19 +240,23 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       loadDone.current = true;
 
       if (convs && convs.length > 0) {
+        const activeConversation = convs.find((conversation) => conversation.id === lsLoadActiveConversationId()) || convs[0];
         setConversations(convs);
         lsSave(convs);
-        setCurrentConversation(convs[0]);
-        const lastWithTelemetry = [...(convs[0].messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+        setCurrentConversation(activeConversation);
+        if (activeConversation.model) { setSelectedModel(activeConversation.model); pendingModel.current = activeConversation.model; }
+        const lastWithTelemetry = [...(activeConversation.messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
         if (lastWithTelemetry?.telemetry) setActiveTurnTelemetry(lastWithTelemetry.telemetry);
       } else {
         // Server is empty — restore from localStorage (covers server restarts)
         const saved = lsLoad();
         if (saved.length > 0) {
+          const activeConversation = saved.find((conversation) => conversation.id === lsLoadActiveConversationId()) || saved[0];
           // Show conversations immediately; restore to server in the background
           setConversations(saved);
-          setCurrentConversation(saved[0]);
-          const lastWithTelemetry = [...(saved[0].messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
+          setCurrentConversation(activeConversation);
+          if (activeConversation.model) { setSelectedModel(activeConversation.model); pendingModel.current = activeConversation.model; }
+          const lastWithTelemetry = [...(activeConversation.messages || [])].reverse().find((m) => m.role === "assistant" && m.telemetry);
           if (lastWithTelemetry?.telemetry) setActiveTurnTelemetry(lastWithTelemetry.telemetry);
           // Fire-and-forget — failures are non-fatal; server will get them on next user action
           Promise.allSettled(saved.map((c) => api.restoreConversation(c).catch(() => {})));
@@ -260,6 +285,12 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     lsSave(conversations);
   }, [conversations]);
 
+  // Keep the reader's currently selected chat across browser refreshes.
+  useEffect(() => {
+    if (!loadDone.current) return;
+    lsSaveActiveConversationId(currentConversation?.id || null);
+  }, [currentConversation?.id]);
+
   // Sync currentConversation (which has live telemetry) back to conversations when streaming ends.
   // Without this, the most-recent turn's telemetry never reaches localStorage/export/navigation.
   useEffect(() => {
@@ -280,7 +311,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [conversations]); // recompute when conversations change
 
   const clearLocalData = useCallback(() => {
-    try { localStorage.removeItem(LS_KEY); } catch { /* ignore */ }
+    try {
+      localStorage.removeItem(LS_KEY);
+      localStorage.removeItem(LS_ACTIVE_CONVERSATION_KEY);
+    } catch { /* ignore */ }
   }, []);
 
   const refreshStats = useCallback(async () => {
@@ -471,7 +505,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateCurrentConversationSettings(updates);
   };
 
-  const sendMessage = async (input: string | any) => {
+  const sendMessage = async (input: string | any, attachments?: Array<{ mimeType: string; data: string }>) => {
     if (isStreaming) return;
 
     let textMessage = "";
@@ -480,7 +514,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
     if (typeof input === "string") {
       textMessage = input.trim();
-      if (!textMessage) return;
+      if (!textMessage && (!attachments || attachments.length === 0)) return;
     } else if (input && typeof input === "object") {
       // Clarification answers payload: { message, userQuestionAnswers }
       if (input.message !== undefined && input.userQuestionAnswers !== undefined) {
@@ -609,6 +643,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userProfileFacts: relevantFacts,
         userQuestionAnswers: userQuestionAnswers,
         isOptionSelection: !!userEventPayload,
+        attachments: attachments && attachments.length > 0 ? attachments : undefined,
       },
       {
         onStart: (data) => {

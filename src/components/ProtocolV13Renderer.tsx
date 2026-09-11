@@ -25,6 +25,16 @@ import {
   AlertTriangle,
   XCircle,
   Minus,
+  Pencil,
+  ChevronRight,
+  Code2,
+  FileText,
+  Share2,
+  Zap,
+  Globe,
+  Database,
+  LayoutGrid,
+  Target,
 } from "lucide-react";
 import {
   YuzeeResponseV13,
@@ -313,7 +323,35 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           <div key={block.id || index} className="space-y-1.5">
             {block.title && <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug">{block.title}</p>}
             <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26]">
-              <Markdown remarkPlugins={[remarkGfm]}>{block.text || (block as any).content || (block as any).body || ""}</Markdown>
+              <Markdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  table: ({ children }) => (
+                    <div className="response-table-scroll my-4 rounded-xl" style={{ border: '1px solid #e5ddd5' }}>
+                      <table className="w-full border-collapse text-[13.5px]">{children}</table>
+                    </div>
+                  ),
+                  thead: ({ children }) => (
+                    <thead style={{ background: '#faf8f5' }}>{children}</thead>
+                  ),
+                  tbody: ({ children }) => (
+                    <tbody>{children}</tbody>
+                  ),
+                  tr: ({ children }) => (
+                    <tr
+                      style={{ borderBottom: '1px solid #e5ddd5' }}
+                      onMouseEnter={e => { (e.currentTarget as HTMLTableRowElement).style.background = '#f5f0eb'; }}
+                      onMouseLeave={e => { (e.currentTarget as HTMLTableRowElement).style.background = ''; }}
+                    >{children}</tr>
+                  ),
+                  th: ({ children }) => (
+                    <th className="text-left font-semibold px-4 py-2.5 whitespace-nowrap" style={{ color: '#000000', borderRight: '1px solid #e5ddd5' }}>{children}</th>
+                  ),
+                  td: ({ children }) => (
+                    <td className="px-4 py-2.5 align-top" style={{ color: '#000000', borderRight: '1px solid #e5ddd5' }}>{children}</td>
+                  ),
+                }}
+              >{block.text || (block as any).content || (block as any).body || ""}</Markdown>
             </div>
           </div>
         );
@@ -525,13 +563,12 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             {block.title && (
               <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>
             )}
-            {/* Desktop Table */}
-            <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
-              <table className="w-full text-left border-collapse" style={{ fontSize: "0.95rem", lineHeight: "1.55" }}>
+            <div className="response-table-scroll rounded-lg" style={{ border: "1px solid #e5ddd5", background: "#faf8f5" }}>
+              <table className="w-full text-left border-collapse" style={{ minWidth: "680px", fontSize: "0.95rem", lineHeight: "1.55", color: "#000000" }}>
                 <thead>
-                  <tr style={{ background: "#f2f4f7", borderBottom: "1px solid #e6e9ee" }}>
+                  <tr style={{ background: "#faf8f5", borderBottom: "1px solid #e5ddd5" }}>
                     {columns.map((col) => (
-                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472" }}>
+                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#000000" }}>
                         {col.label}
                       </th>
                     ))}
@@ -539,11 +576,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 </thead>
                 <tbody>
                   {rows.map((row, rIdx) => (
-                    <tr key={row.id || rIdx} style={{ borderBottom: "1px solid #eef1f5" }}>
+                    <tr key={row.id || rIdx} style={{ borderBottom: "1px solid #e5ddd5" }}>
                       {columns.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
                         return (
-                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: cIdx === 0 ? "#1c1f26" : "#2c333d", fontWeight: cIdx === 0 ? 600 : 400, background: cIdx === 0 ? "#fafbfc" : cIdx === 1 ? "#ffffff" : "#fcfcfd" }}>
+                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", fontWeight: cIdx === 0 ? 600 : 400, background: "#fffdfb" }}>
                             {cell?.value || "—"}
                           </td>
                         );
@@ -552,22 +589,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   ))}
                 </tbody>
               </table>
-            </div>
-            {/* Mobile Cards */}
-            <div className="sm:hidden space-y-2">
-              {rows.map((row, rIdx) => (
-                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-1.5">
-                  {columns.map((col) => {
-                    const cell = row.cells?.find((c) => c.key === col.key);
-                    return (
-                      <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-[#5b6472] text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
-                        <span className="font-semibold text-[#1c1f26] text-right text-[14px]">{cell?.value || "—"}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
             </div>
           </div>
         );
@@ -582,18 +603,17 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
             {block.title && (
               <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>
             )}
-            {/* Desktop: side-by-side table */}
-            <div className="hidden sm:block border border-slate-200 rounded-lg overflow-hidden">
-              <table className="w-full text-left border-collapse" style={{ fontSize: "0.95rem", lineHeight: "1.55" }}>
+            <div className="response-table-scroll rounded-lg" style={{ border: "1px solid #e5ddd5", background: "#faf8f5" }}>
+              <table className="w-full text-left border-collapse" style={{ minWidth: "760px", fontSize: "0.95rem", lineHeight: "1.55", color: "#000000" }}>
                 <thead>
-                  <tr style={{ background: "#f2f4f7", borderBottom: "1px solid #e6e9ee" }}>
-                    {hasCriteria && (
-                      <th scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472", width: "28%" }}>
+                  <tr style={{ background: "#faf8f5", borderBottom: "1px solid #e5ddd5" }}>
+                  {hasCriteria && (
+                      <th scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#000000", width: "28%" }}>
                         Factor
                       </th>
                     )}
                     {cmpCols.map((col) => (
-                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#5b6472" }}>
+                      <th key={col.key} scope="col" style={{ padding: "12px 16px", fontWeight: 650, fontSize: "0.8125rem", letterSpacing: "0.04em", textTransform: "uppercase", color: "#000000" }}>
                         {col.label}
                       </th>
                     ))}
@@ -601,14 +621,14 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 </thead>
                 <tbody>
                   {cmpRows.map((row, rIdx) => (
-                    <tr key={row.id || rIdx} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #eef1f5" : "none" }}>
+                    <tr key={row.id || rIdx} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #e5ddd5" : "none" }}>
                       {hasCriteria && (
-                        <td style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#1c1f26", background: "#fafbfc" }}>{row.criteria || row.id}</td>
+                        <td style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#000000", background: "#fffdfb" }}>{row.criteria || row.id}</td>
                       )}
                       {cmpCols.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
                         return (
-                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: "#2c333d", background: cIdx === 0 ? "#ffffff" : "#fcfcfd" }}>
+                          <td key={col.key} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", background: "#fffdfb" }}>
                             {cell?.value || "—"}
                           </td>
                         );
@@ -617,25 +637,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   ))}
                 </tbody>
               </table>
-            </div>
-            {/* Mobile: per-criterion cards */}
-            <div className="sm:hidden space-y-2">
-              {cmpRows.map((row, rIdx) => (
-                <div key={row.id || rIdx} className="p-3 bg-white border border-slate-200 rounded-lg space-y-1.5">
-                  {(row.criteria || row.id) && (
-                    <div className="font-bold text-[#1c1f26] text-[13px]">{row.criteria || row.id}</div>
-                  )}
-                  {cmpCols.map((col) => {
-                    const cell = row.cells?.find((c) => c.key === col.key);
-                    return (
-                      <div key={col.key} className="flex justify-between items-baseline gap-2">
-                        <span className="text-[#5b6472] text-[11px] font-bold uppercase tracking-wider">{col.label}:</span>
-                        <span className="text-[#2c333d] text-right text-[14px]">{cell?.value || "—"}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
             </div>
           </div>
         );
@@ -1018,13 +1019,52 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           </div>
         );
 
-      default:
+      default: {
+        // AI sometimes uses the type string as title (e.g. "row_primary_stack") — strip it
+        const isTypeAsTitle = block.title === block.type || /^row_/.test(block.title || "");
+        const rows: any[] = block.rows || [];
+        // If rows exist, use the first row's value as the card heading (e.g. "Primary Tech Stack")
+        const cardHeading = isTypeAsTitle ? (rows[0]?.value || rows[0]?.text || "") : (block.title || "");
+        const bodyRows = isTypeAsTitle && rows.length > 0 ? rows.slice(1) : rows;
         return (
-          <div key={block.id || index} className="text-xs text-[#2c333d]">
-            {block.title && <div className="font-semibold text-[#1c1f26] mb-1">{block.title}</div>}
-            <p>{block.text}</p>
+          <div key={block.id || index} className="rounded-xl overflow-hidden text-sm" style={{ border: "1px solid #e5ddd5" }}>
+            {cardHeading && (
+              <div className="px-4 py-2.5 font-semibold text-[14px]" style={{ background: "#f5f0ea", color: "#3d2f26", borderBottom: "1px solid #e5ddd5" }}>
+                {cardHeading}
+              </div>
+            )}
+            {block.text && <p className="px-4 py-3 text-[#5b6472] leading-relaxed border-b border-[#e5ddd5]">{block.text}</p>}
+            {block.items?.length > 0 && (
+              <ul className="px-4 py-3 space-y-1.5">
+                {block.items.map((item: any, i: number) => (
+                  <li key={item.id || i} className="flex items-start gap-2 text-[13px]">
+                    <span className="mt-[5px] w-1.5 h-1.5 rounded-full bg-[var(--accent)] shrink-0" />
+                    <div className="min-w-0">
+                      {item.title && <span className="font-medium text-[#1c1f26]">{item.title}</span>}
+                      {item.text && <span className="text-[#5b6472]">{item.title ? ` — ${item.text}` : item.text}</span>}
+                      {!item.title && !item.text && item.value && <span>{item.value}</span>}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {bodyRows.length > 0 && (
+              <div>
+                {bodyRows.map((row: any, i: number) => {
+                  const label = row.label || row.key || row.criteria || "";
+                  const value = row.value || row.text || "";
+                  return (
+                    <div key={row.id || i} className="px-4 py-3 border-t border-[#e5ddd5]">
+                      {label && <div className="text-[10px] font-bold uppercase tracking-widest text-[#a89080] mb-1">{label}</div>}
+                      <div className="text-[13px] text-[#4a3828] leading-relaxed">{value}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         );
+      }
     }
   };
 
@@ -1048,18 +1088,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   return (
     <div className="space-y-4">
 
-      {/* Oala header */}
-      <div className="flex items-center gap-2.5 mb-4">
-        <div className="relative shrink-0">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold text-sm select-none">O</div>
-          <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-400 border-[1.5px] border-white rounded-full" />
-        </div>
-        <div className="text-xs font-bold text-[#1c1f26] leading-none">Oala</div>
-      </div>
-
       {/* Care text — warm opening sentence reflecting user's situation */}
       {careText && careText !== "none" && (
-        <p className="text-[16px] text-[#2c333d] leading-[1.68] font-normal">{careText}</p>
+        <p className="text-[15px] text-[#0d0d0d] leading-[1.65] font-normal">{careText}</p>
       )}
 
       {/* Content Blocks */}
@@ -1083,91 +1114,155 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
       {/* Structured Interaction Section — only when there's an actual input type */}
       {interaction && interaction.kind !== "none" && interaction.input_type !== "none" && (
-        <div className="mt-4 pt-4 border-t border-slate-200/80 space-y-3">
-          {/* Interaction Header */}
-          <div className="space-y-1">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Next Step</span>
-            </span>
-            <p className="text-sm font-semibold text-[#1c1f26]">
-              {interaction.question || (interaction as any).prompt || "Select an option to proceed:"}
-            </p>
-          </div>
+        <div
+          className="mt-4 rounded-2xl p-4 sm:p-5"
+          style={{
+            background: '#faf8f5',
+            border: '1px solid #e5ddd5',
+          }}
+        >
+          {/* Eyebrow */}
+          <p className="text-[10px] font-bold uppercase tracking-[0.12em] mb-2" style={{ color: '#000000' }}>
+            {interaction.input_type === "multi_select" ? "Choose all that apply" : "Choose one"}
+          </p>
+
+          {/* Question */}
+          <p className="text-[18px] sm:text-[17px] font-bold leading-snug mb-1" style={{ color: '#000000' }}>
+            {interaction.question || (interaction as any).prompt || "Select an option to proceed:"}
+          </p>
+
+          {/* Subtitle */}
+          {(interaction as any).description && (
+            <p className="text-[13px] mb-4" style={{ color: '#4a4a4a' }}>{(interaction as any).description}</p>
+          )}
 
           {/* 1. SINGLE SELECT */}
-          {interaction.input_type === "single_select" && interaction.options && (
-            <div className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {interaction.options.map((opt) => {
-                  const isSelected = selectedOption === optId(opt);
-                  return (
-                    <button
-                      key={optId(opt)}
-                      disabled={submitted || readOnly}
-                      onClick={() => handleOptionSelect(opt)}
-                      className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        isSelected
-                          ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"
-                          : "bg-white border-slate-200 hover:border-sky-300 hover:bg-sky-50/30 text-[#2c333d]"
-                      } ${submitted && !isSelected ? "opacity-50" : ""}`}
+          {interaction.input_type === "single_select" && interaction.options && (() => {
+            const ICON_POOL = [Code2, FileText, Share2, Sparkles, Zap, Globe, Database, LayoutGrid, Target, Layers, Briefcase, HelpCircle];
+            return (
+            <div className="mt-4 space-y-2.5">
+              {interaction.options.map((opt, idx) => {
+                const isSelected = selectedOption === optId(opt);
+                const OptionIcon = ICON_POOL[idx % ICON_POOL.length];
+                return (
+                  <button
+                    key={optId(opt)}
+                    disabled={submitted || readOnly}
+                    onClick={() => handleOptionSelect(opt)}
+                    className={`w-full text-left cursor-pointer flex items-center gap-3.5 ${submitted && !isSelected ? "opacity-40 pointer-events-none" : ""}`}
+                    style={{
+                      padding: '14px 16px',
+                      borderRadius: '14px',
+                      background: '#ffffff',
+                      border: `1.5px solid ${isSelected ? 'var(--accent)' : '#e5ddd5'}`,
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+                      transition: 'border-color 120ms ease',
+                    }}
+                    onMouseEnter={e => {
+                      if (!isSelected && !submitted && !readOnly) {
+                        e.currentTarget.style.borderColor = '#c8b8a8';
+                      }
+                    }}
+                    onMouseLeave={e => {
+                      if (!isSelected) e.currentTarget.style.borderColor = '#e5ddd5';
+                    }}
+                  >
+                    {/* Radio button */}
+                    <div
+                      className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center"
+                      style={{
+                        border: `2px solid ${isSelected ? 'var(--accent)' : '#c8b8a8'}`,
+                        background: isSelected ? 'var(--accent)' : 'transparent',
+                        transition: 'all 120ms ease',
+                      }}
                     >
-                      <div className="font-semibold text-[#1c1f26] flex items-center justify-between">
-                        <span>{opt.label}</span>
-                        {isSelected && <Check className="w-3.5 h-3.5 text-sky-600" />}
-                      </div>
+                      {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                    </div>
+                    {/* Icon square */}
+                    <div
+                      className="shrink-0 w-9 h-9 rounded-[10px] flex items-center justify-center"
+                      style={{ background: '#ede8e3' }}
+                    >
+                      <OptionIcon className="w-4 h-4" style={{ color: '#9e8b7e' }} />
+                    </div>
+                    {/* Text */}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-semibold text-[15px] sm:text-[13.5px] leading-snug" style={{ color: '#000000' }}>{opt.label}</div>
                       {opt.description && (
-                        <p className="text-[#5b6472] text-[11px] mt-0.5 leading-normal">{opt.description}</p>
+                        <p className="text-[13px] sm:text-[12px] leading-snug mt-0.5" style={{ color: '#4a4a4a' }}>{opt.description}</p>
                       )}
-                    </button>
-                  );
-                })}
-              </div>
+                    </div>
+                    {/* Chevron */}
+                    <ChevronRight className="shrink-0 w-4 h-4" style={{ color: isSelected ? 'var(--accent)' : '#c8b8a8' }} />
+                  </button>
+                );
+              })}
 
               {/* Allow Other Input */}
               {interaction.allow_other_input && !submitted && (
-                <div className="pt-1">
-                  <div className="flex gap-2">
+                <div className="flex gap-2 pt-1">
+                  <div
+                    className="flex-1 flex items-center gap-2.5 px-3.5 bg-white rounded-xl"
+                    style={{ border: '1.5px solid #e5ddd5', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}
+                  >
+                    <Pencil className="w-3.5 h-3.5 shrink-0" style={{ color: '#c8b8a8' }} />
                     <input
                       type="text"
-                      placeholder={interaction.other_input_label || "Other custom response..."}
+                      placeholder={interaction.other_input_label || "Describe your specific idea…"}
                       value={otherText}
                       onChange={(e) => setOtherText(e.target.value)}
-                      className="flex-1 px-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-hidden focus:border-sky-500"
+                      className="single-select-other-input flex-1 py-3 text-[13px] bg-transparent focus:outline-none"
+                      style={{ color: '#000000' }}
                     />
-                    <button
-                      type="button"
-                      disabled={!otherText.trim()}
-                      onClick={() => {
-                        if (!otherText.trim() || !onInteract) return;
-                        onInteract({
-                          type: "option_selected",
-                          interaction_id: interaction.question_id || "question",
-                          value: otherText.trim(),
-                          userEvent: {
-                            interaction: {
-                              question_id: interaction.question_id || "question",
-                              self_input: otherText.trim(),
-                            },
-                          },
-                          timestamp: Date.now(),
-                        });
-                        setSubmitted(true);
-                      }}
-                      className="px-3 py-1.5 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold cursor-pointer"
-                    >
-                      Submit
-                    </button>
                   </div>
+                  <button
+                    type="button"
+                    disabled={!otherText.trim()}
+                    onClick={() => {
+                      if (!otherText.trim() || !onInteract) return;
+                      onInteract({
+                        type: "option_selected",
+                        interaction_id: interaction.question_id || "question",
+                        value: otherText.trim(),
+                        userEvent: { interaction: { question_id: interaction.question_id || "question", self_input: otherText.trim() } },
+                        timestamp: Date.now(),
+                      });
+                      setSubmitted(true);
+                    }}
+                    className="flex items-center justify-center gap-2 px-5 text-[13px] font-semibold text-white rounded-xl disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer shrink-0"
+                    style={{ backgroundColor: '#6e584b', minWidth: '110px' }}
+                    onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#5a4038'; }}
+                    onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#6e584b'; }}
+                  >
+                    Submit <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Footer — "Not sure" link only */}
+              {!submitted && (
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    className="text-[13px] font-medium cursor-pointer inline-flex items-center gap-1"
+                    style={{ color: '#000000' }}
+                    onClick={() => {
+                      const el = document.querySelector<HTMLInputElement>('.single-select-other-input');
+                      if (el) { el.focus(); el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+                    }}
+                  >
+                    Not sure which one fits me? <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               )}
             </div>
-          )}
+            );
+          })()}
 
           {/* 2. MULTI SELECT */}
           {interaction.input_type === "multi_select" && interaction.options && (
             <div className="space-y-2">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid gap-2.5" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
                 {interaction.options.map((opt) => {
                   const isChecked = selectedMultiOptions.includes(optId(opt));
                   return (
@@ -1178,25 +1273,51 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                       tabIndex={submitted ? -1 : 0}
                       onClick={() => !submitted && toggleMultiOption(optId(opt))}
                       onKeyDown={(e) => { if ((e.key === " " || e.key === "Enter") && !submitted) { e.preventDefault(); toggleMultiOption(optId(opt)); } }}
-                      className={`p-3 rounded-xl border text-left text-xs transition-all cursor-pointer ${
-                        isChecked
-                          ? "bg-sky-50 border-sky-500 text-sky-950 font-medium shadow-xs"
-                          : "bg-white border-slate-200 hover:border-sky-300 text-[#2c333d]"
-                      } ${submitted ? "pointer-events-none opacity-80" : ""}`}
+                      className={`text-left cursor-pointer flex items-start justify-between gap-2.5 ${submitted ? "pointer-events-none opacity-60" : ""}`}
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        background: isChecked ? 'var(--accent)' : '#ffffff',
+                        border: `1.5px solid ${isChecked ? 'var(--accent-hover)' : '#cfc0ea'}`,
+                        boxShadow: isChecked
+                          ? '0 4px 14px rgba(137,82,238,0.4)'
+                          : '0 2px 6px rgba(137,82,238,0.1), 0 1px 0 rgba(255,255,255,1) inset',
+                        color: isChecked ? '#fff' : '#1a0f3a',
+                        transition: 'all 100ms ease',
+                      }}
+                      onMouseEnter={e => {
+                        if (!isChecked && !submitted) {
+                          (e.currentTarget as HTMLElement).style.borderColor = 'var(--accent)';
+                          (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 12px rgba(137,82,238,0.18), 0 1px 0 rgba(255,255,255,1) inset';
+                          (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                        }
+                      }}
+                      onMouseLeave={e => {
+                        if (!isChecked) {
+                          (e.currentTarget as HTMLElement).style.borderColor = '#cfc0ea';
+                          (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 6px rgba(137,82,238,0.1), 0 1px 0 rgba(255,255,255,1) inset';
+                          (e.currentTarget as HTMLElement).style.transform = '';
+                        }
+                      }}
                     >
-                      <div className="flex items-center gap-2 font-semibold text-[#1c1f26]">
-                        <div
-                          className={`w-4 h-4 rounded border flex items-center justify-center text-[10px] ${
-                            isChecked ? "bg-sky-600 border-sky-600 text-white" : "border-slate-300 bg-white"
-                          }`}
-                        >
-                          {isChecked && "✓"}
-                        </div>
-                        <span>{opt.label}</span>
+                      <div className="min-w-0">
+                        <div className="font-semibold text-[13px] leading-snug">{opt.label}</div>
+                        {opt.description && (
+                          <p className="text-[11.5px] mt-1 leading-relaxed" style={{ color: isChecked ? 'rgba(255,255,255,0.78)' : '#6b5b8a' }}>
+                            {opt.description}
+                          </p>
+                        )}
                       </div>
-                      {opt.description && (
-                        <p className="text-[#5b6472] text-[11px] mt-1 pl-6 leading-normal">{opt.description}</p>
-                      )}
+                      <div
+                        className="shrink-0 w-4 h-4 rounded mt-0.5 flex items-center justify-center text-[10px] font-bold"
+                        style={{
+                          background: isChecked ? 'rgba(255,255,255,0.25)' : 'transparent',
+                          border: `1.5px solid ${isChecked ? 'rgba(255,255,255,0.5)' : '#c0aee0'}`,
+                          color: isChecked ? '#fff' : '#a990d8',
+                        }}
+                      >
+                        {isChecked && "✓"}
+                      </div>
                     </div>
                   );
                 })}
@@ -1208,7 +1329,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     type="button"
                     onClick={handleMultiSubmit}
                     disabled={selectedMultiOptions.length === 0}
-                    className="px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer"
+                    className="px-4 py-2 disabled:opacity-50 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer" style={{ backgroundColor: 'var(--accent)' }} onMouseEnter={e=>(e.currentTarget.style.backgroundColor='var(--accent-hover)')} onMouseLeave={e=>(e.currentTarget.style.backgroundColor='var(--accent)')}
                   >
                     Confirm Selection ({selectedMultiOptions.length})
                   </button>
@@ -1265,7 +1386,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   <button
                     type="button"
                     onClick={handleRankSubmit}
-                    className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer"
+                    className="px-4 py-2 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer" style={{ backgroundColor: 'var(--accent)' }} onMouseEnter={e=>(e.currentTarget.style.backgroundColor='var(--accent-hover)')} onMouseLeave={e=>(e.currentTarget.style.backgroundColor='var(--accent)')}
                   >
                     Confirm Priority Ranking
                   </button>
@@ -1276,7 +1397,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
 
           {/* 4. FREE TEXT QUESTION */}
           {interaction.input_type === "text" && (
-            <form onSubmit={handleFreeTextSubmit} className="space-y-2">
+            <form onSubmit={handleFreeTextSubmit} className="mt-4 space-y-2">
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -1284,12 +1405,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   value={freeTextAnswer}
                   disabled={submitted}
                   onChange={(e) => setFreeTextAnswer(e.target.value)}
-                  className="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-sky-500 shadow-2xs"
+                  className="flex-1 px-3.5 py-2.5 text-[13px] bg-white border border-[#e5ddd5] rounded-xl focus:outline-none focus:border-[#c8b8a8] shadow-xs"
+                  style={{ color: '#000000' }}
                 />
                 <button
                   type="submit"
                   disabled={!freeTextAnswer.trim() || submitted}
-                  className="px-4 py-2 bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-xs flex items-center gap-1.5"
+                  className="px-4 py-2 disabled:opacity-50 text-white rounded-xl text-xs font-semibold cursor-pointer shadow-xs flex items-center gap-1.5"
+                  style={{ backgroundColor: '#6e584b' }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#5a4038')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = '#6e584b')}
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Send</span>
@@ -1332,7 +1457,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                         required={fld.required}
                         aria-required={fld.required}
                         onChange={(e) => setFieldValues({ ...fieldValues, [fld.id]: e.target.value })}
-                        className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:border-sky-500"
+                        className="w-full px-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-hidden focus:border-[var(--accent)]"
                       />
                     )}
                   </div>
@@ -1343,7 +1468,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer"
+                    className="px-4 py-2 text-white rounded-lg text-xs font-semibold shadow-xs cursor-pointer" style={{ backgroundColor: 'var(--accent)' }} onMouseEnter={e=>(e.currentTarget.style.backgroundColor='var(--accent-hover)')} onMouseLeave={e=>(e.currentTarget.style.backgroundColor='var(--accent)')}
                   >
                     Submit Intake Details
                   </button>

@@ -5,19 +5,24 @@ import com.yuzee.tokenlab.dto.ChatRequest;
 import com.yuzee.tokenlab.dto.StreamEvent;
 import com.yuzee.tokenlab.model.*;
 import com.yuzee.tokenlab.protocol.v13.YuzeeResponseV13;
+import com.yuzee.tokenlab.dto.AttachmentDto;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.model.Generation;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.model.Media;
 import org.springframework.ai.google.genai.GoogleGenAiChatModel;
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MimeType;
 import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -185,7 +190,21 @@ public class GeminiChatService {
 
                     List<org.springframework.ai.chat.messages.Message> messages = new ArrayList<>();
                     messages.add(new SystemMessage(sysPrompt));
-                    messages.add(new UserMessage(userContent));
+
+                    List<AttachmentDto> attachments = request.getAttachments();
+                    if (attachments != null && !attachments.isEmpty()) {
+                        List<Media> mediaList = new ArrayList<>();
+                        for (AttachmentDto att : attachments) {
+                            try {
+                                byte[] bytes = Base64.getDecoder().decode(att.getData());
+                                MimeType mt = MimeType.valueOf(att.getMimeType());
+                                mediaList.add(new Media(mt, new ByteArrayResource(bytes)));
+                            } catch (Exception ignored) {}
+                        }
+                        messages.add(new UserMessage(userContent, mediaList));
+                    } else {
+                        messages.add(new UserMessage(userContent));
+                    }
 
                     GoogleGenAiChatOptions options = GoogleGenAiChatOptions.builder()
                             .model(targetModel)

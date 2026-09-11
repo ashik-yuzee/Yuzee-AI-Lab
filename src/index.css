@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+/* Accent color — updated at runtime via Settings */
+:root {
+  --accent:        #7244c6;
+  --accent-hover:  color-mix(in srgb, var(--accent) 83%, black);
+  --accent-5:      color-mix(in srgb, var(--accent)  5%, white);
+  --accent-8:      color-mix(in srgb, var(--accent)  8%, white);
+  --accent-light:  color-mix(in srgb, var(--accent) 12%, white);
+  --accent-30:     color-mix(in srgb, var(--accent) 30%, transparent);
+  --accent-40:     color-mix(in srgb, var(--accent) 40%, transparent);
+  --accent-70:     color-mix(in srgb, var(--accent) 70%, transparent);
+  --accent-border: color-mix(in srgb, var(--accent) 35%, white);
+  --bubble-bg:     #ede5fc;
+  --bubble-text:   color-mix(in srgb, var(--accent) 65%, #000);
+}
+
 @layer base {
   :root {
     --apple-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -8,8 +23,8 @@
 
   body {
     font-family: var(--apple-font-sans);
-    font-size: 16.5px;
-    line-height: 1.68;
+    font-size: 15px;
+    line-height: 1.6;
     background-color: #fbfbfd;
     color: #2c333d;
     -webkit-font-smoothing: antialiased;
@@ -65,4 +80,33 @@ html.font-open-sans body {
 
 .apple-dialog-shadow {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Response tables stay horizontally scrollable on small screens. */
+.response-table-scroll {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  scrollbar-gutter: stable;
+  scrollbar-width: auto;
+  scrollbar-color: #6e584b #ede8e3;
+  -webkit-overflow-scrolling: touch;
+}
+
+.response-table-scroll::-webkit-scrollbar {
+  height: 10px;
+}
+
+.response-table-scroll::-webkit-scrollbar-track {
+  background: #ede8e3;
+  border-radius: 9999px;
+}
+
+.response-table-scroll::-webkit-scrollbar-thumb {
+  background: #6e584b;
+  border: 2px solid #ede8e3;
+  border-radius: 9999px;
+}
+
+.response-table-scroll::-webkit-scrollbar-thumb:hover {
+  background: #5a4038;
 }

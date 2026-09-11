@@ -1,18 +1,23 @@
 import React, { useState, useRef, useCallback } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { ArrowUp, Square, Cpu, Mic, MicOff } from "lucide-react";
-import { GEMINI_MODELS } from "../data/models";
+import { ArrowUp, Square, Mic, MicOff, Plus, Paperclip, X } from "lucide-react";
 
-function modelShortName(modelId: string): string {
-  const found = GEMINI_MODELS.find(m => m.id === modelId);
-  return found ? found.name.replace('Gemini ', '') : modelId;
+interface Attachment {
+  name: string;
+  mimeType: string;
+  data: string; // base64
+  previewUrl?: string; // for images
 }
 
+const ACCEPTED = "image/*,application/pdf,text/plain,text/csv,application/json";
+
 export const Composer: React.FC = () => {
-  const { sendMessage, isStreaming, stopStreaming, currentConversation } = useTokenLab();
+  const { sendMessage, isStreaming, stopStreaming } = useTokenLab();
   const [text, setText] = useState("");
   const [listening, setListening] = useState(false);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const recRef = useRef<any>(null);
 
   const toggleMic = useCallback(() => {
@@ -25,7 +30,10 @@ export const Composer: React.FC = () => {
     rec.onresult = (e: any) => {
       const t = Array.from(e.results).map((r: any) => r[0].transcript).join("");
       setText(t);
-      if (textareaRef.current) { textareaRef.current.style.height = "auto"; textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`; }
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+        textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 180)}px`;
+      }
     };
     rec.onerror = () => setListening(false);
     rec.onend   = () => setListening(false);
@@ -40,12 +48,11 @@ export const Composer: React.FC = () => {
   };
 
   const handleSend = () => {
-    if (!text.trim() || isStreaming) return;
-    sendMessage(text);
+    if ((!text.trim() && attachments.length === 0) || isStreaming) return;
+    sendMessage(text, attachments.map(({ mimeType, data }) => ({ mimeType, data })));
     setText("");
-    if (textareaRef.current) {
-      textareaRef.current.style.height = "auto";
-    }
+    setAttachments([]);
+    if (textareaRef.current) textareaRef.current.style.height = "auto";
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -54,32 +61,89 @@ export const Composer: React.FC = () => {
     e.target.style.height = `${Math.min(e.target.scrollHeight, 180)}px`;
   };
 
-  const hasContent = text.trim().length > 0;
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const result = reader.result as string;
+        const base64 = result.split(",")[1];
+        const att: Attachment = {
+          name: file.name,
+          mimeType: file.type || "application/octet-stream",
+          data: base64,
+        };
+        if (file.type.startsWith("image/")) att.previewUrl = result;
+        setAttachments(prev => [...prev, att]);
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = "";
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const hasContent = text.trim().length > 0 || attachments.length > 0;
 
   return (
-    <div id="composer-container" className="px-4 py-3 border-t border-[#e6e9ee] bg-white relative">
-      <div className="max-w-5xl mx-auto space-y-2">
-        {/* Composer Footer Bar */}
-        <div className="flex items-center justify-end px-1 text-xs text-slate-500 font-mono">
-          <div className="hidden sm:flex items-center gap-2 text-[11px] text-slate-400">
-            {currentConversation?.model && (
-              <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium border ${
-                currentConversation.model.includes('lite')
-                  ? 'bg-amber-50 border-amber-200 text-amber-700'
-                  : currentConversation.model.includes('2.5') || currentConversation.model.includes('2.0')
-                  ? 'bg-slate-100 border-slate-200 text-slate-600'
-                  : 'bg-blue-50 border-blue-200 text-blue-700'
-              }`}>
-                <Cpu className="w-2.5 h-2.5" />
-                {modelShortName(currentConversation.model)}
-              </span>
-            )}
-            <span>{text.length > 0 ? `${text.length} chars` : "Shift+Enter for new line"}</span>
+    <div className="px-3 sm:px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-6 pt-2 sm:pt-3 bg-white">
+      <div className="max-w-4xl mx-auto">
+        {/* Attachment chips */}
+        {attachments.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-2 px-1">
+            {attachments.map((att, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-1.5 bg-[var(--accent-8)] border border-[var(--accent-border)] rounded-lg px-2 py-1 text-[12px] text-[var(--accent)] font-medium max-w-[200px]"
+              >
+                {att.previewUrl ? (
+                  <img src={att.previewUrl} alt="" className="w-5 h-5 rounded object-cover shrink-0" />
+                ) : (
+                  <Paperclip className="w-3 h-3 shrink-0" />
+                )}
+                <span className="truncate">{att.name}</span>
+                <button
+                  type="button"
+                  onClick={() => removeAttachment(i)}
+                  className="ml-0.5 text-[var(--accent)]/60 hover:text-[var(--accent)] shrink-0 cursor-pointer"
+                >
+                  <X className="w-3 h-3" />
+                </button>
+              </div>
+            ))}
           </div>
-        </div>
+        )}
 
-        {/* Input Textarea & Action Button */}
-        <div className={`relative flex items-center bg-white border rounded-xl transition-all p-1.5 gap-2 ${listening ? "border-red-400 ring-2 ring-red-100" : "border-[#e6e9ee] focus-within:border-[#2f6fed] focus-within:ring-2 focus-within:ring-[#2f6fed]/10"}`} style={{ boxShadow: "0 1px 2px rgba(16,24,40,.03), 0 4px 14px rgba(16,24,40,.045)" }}>
+        {/* Pill-shaped input */}
+        <div
+          className={`flex items-center gap-1 sm:gap-1.5 bg-white border rounded-[28px] px-2.5 sm:px-3 py-1 sm:py-2.5 transition-all ${
+            listening ? "border-red-300" : "border-[#e2e6ed]"
+          }`}
+          style={{ boxShadow: "0 0 0 1px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.05)" }}
+        >
+          {/* + attachment button */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={ACCEPTED}
+            multiple
+            className="sr-only"
+            tabIndex={-1}
+            onChange={handleFiles}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#8a929d] hover:text-[var(--accent)] hover:bg-[var(--accent-8)] transition-colors cursor-pointer shrink-0"
+            title="Attach file (image, PDF, text)"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+
+          {/* Auto-growing textarea */}
           <textarea
             id="composer-input"
             ref={textareaRef}
@@ -87,40 +151,48 @@ export const Composer: React.FC = () => {
             value={text}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask Oala about career pathways, certification roadmaps, or skill requirements…"
-            className="flex-1 max-h-44 min-h-[38px] px-3 py-2 text-[15px] text-[#1c1f26] placeholder:text-[#8a929d] bg-transparent resize-none focus:outline-none leading-[1.68]"
+            placeholder="Ask Oala about career pathways, certifications, or skill gaps…"
+            className="flex-1 text-[16px] sm:text-[15px] text-[#1c1f26] placeholder:text-[#a8b0bb] bg-transparent resize-none overflow-hidden focus:outline-none leading-[1.55] sm:leading-[1.68] min-h-[28px] max-h-44 py-0.5"
           />
 
+          {/* Mic */}
           <button
+            type="button"
             onClick={toggleMic}
-            className={`w-8 h-8 shrink-0 rounded-lg flex items-center justify-center transition-all cursor-pointer ${listening ? "bg-red-50 text-red-500 hover:bg-red-100" : "text-slate-400 hover:bg-slate-100 hover:text-slate-600"}`}
+            className={`w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all cursor-pointer shrink-0 ${
+              listening
+                ? "bg-red-50 text-red-500 hover:bg-red-100"
+                : "text-[#8a929d] hover:text-[var(--accent)] hover:bg-[var(--accent-8)]"
+            }`}
             title={listening ? "Stop listening" : "Voice input"}
           >
-            {listening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+            {listening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
           </button>
 
+          {/* Circular send / stop */}
           {isStreaming ? (
             <button
               id="btn-stop-stream"
+              type="button"
               onClick={stopStreaming}
-              className="w-9 h-9 shrink-0 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-lg flex items-center justify-center transition-colors cursor-pointer"
-              title="Stop Generation"
-              aria-label="Stop Generation"
+              className="w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center bg-rose-50 text-rose-600 hover:bg-rose-100 transition-colors cursor-pointer shrink-0"
+              title="Stop generation"
             >
-              <Square className="w-4 h-4 fill-current" />
+              <Square className="w-3.5 h-3.5 fill-current" />
             </button>
           ) : (
             <button
               id="btn-send-message"
+              type="button"
               onClick={handleSend}
               disabled={!hasContent}
-              className={`w-9 h-9 shrink-0 rounded-lg flex items-center justify-center transition-all ${
-                hasContent
-                  ? "bg-[#2f6fed] hover:bg-[#1f5cd6] text-white shadow-xs cursor-pointer"
-                  : "bg-slate-100 text-slate-300 cursor-not-allowed"
+              className={`w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all shrink-0 ${
+                hasContent ? "text-white cursor-pointer" : "bg-slate-100 text-slate-300 cursor-not-allowed"
               }`}
-              title="Send Message (Enter)"
-              aria-label="Send Message"
+              style={hasContent ? { backgroundColor: 'var(--accent)' } : undefined}
+              onMouseEnter={e => { if (hasContent) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--accent-hover)'; }}
+              onMouseLeave={e => { if (hasContent) (e.currentTarget as HTMLButtonElement).style.backgroundColor = 'var(--accent)'; }}
+              title="Send (Enter)"
             >
               <ArrowUp className="w-4 h-4" />
             </button>

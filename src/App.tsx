@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { TokenLabProvider } from "./context/TokenLabContext";
+import { TokenLabProvider, useTokenLab } from "./context/TokenLabContext";
 import { Navbar } from "./components/Navbar";
 import { Sidebar } from "./components/Sidebar";
 import { ChatArea } from "./components/ChatArea";
@@ -17,6 +17,49 @@ import { ClarificationQuestionsModal } from "./components/ClarificationQuestions
 import { LocationPromptModal } from "./components/LocationPromptModal";
 import { PathwayWhiteboard } from "./components/PathwayWhiteboard";
 import { ProtocolRendererPage } from "./components/ProtocolRendererPage";
+
+function AppLoadingScreen() {
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white gap-4">
+      <div className="w-10 h-10 rounded-2xl animate-pulse" style={{ backgroundColor: 'var(--accent)' }} />
+      <div className="space-y-2 w-48">
+        <div className="h-2.5 bg-[#f0f0f0] rounded-full animate-pulse" />
+        <div className="h-2.5 bg-[#f0f0f0] rounded-full animate-pulse w-3/4 mx-auto" />
+      </div>
+    </div>
+  );
+}
+
+function AuthedApp({ onOpenRenderer }: { onOpenRenderer: () => void }) {
+  const { isLoading } = useTokenLab();
+
+  if (isLoading) return <AppLoadingScreen />;
+
+  return (
+    <div id="yuzee-token-lab-root" className="flex flex-col h-dvh w-screen bg-[#F9FAFB] text-slate-900 overflow-hidden antialiased selection:bg-sky-100 selection:text-sky-900">
+      <Navbar onOpenRenderer={onOpenRenderer} />
+      <div className="flex-1 min-h-0 flex overflow-hidden relative">
+        <Sidebar />
+        <main className="flex-1 min-h-0 flex flex-col min-w-0 bg-white relative">
+          <ChatArea />
+        </main>
+        <TokenInspector />
+        <PathwayWhiteboard />
+      </div>
+      <AdvancedLabModal />
+      <UserProfileModal />
+      <ContextInspectorModal />
+      <CareerContextModal />
+      <MemoryTimelineModal />
+      <BenchmarkModal />
+      <AnalyticsDashboardModal />
+      <ExportModal />
+      <SettingsModal />
+      <ClarificationQuestionsModal />
+      <LocationPromptModal />
+    </div>
+  );
+}
 
 function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [u, setU] = useState('');
@@ -89,6 +132,17 @@ export default function App() {
   const [page, setPage] = useState<'chat' | 'renderer'>('chat');
 
   useEffect(() => {
+    const DEFAULT_ACCENT = '#7244c6';
+    const saved = localStorage.getItem('oala-accent');
+    if (saved && saved !== '#8952ee') {
+      document.documentElement.style.setProperty('--accent', saved);
+    } else {
+      localStorage.setItem('oala-accent', DEFAULT_ACCENT);
+      document.documentElement.style.setProperty('--accent', DEFAULT_ACCENT);
+    }
+  }, []);
+
+  useEffect(() => {
     const token = localStorage.getItem('yuzee_auth') || '';
     if (!token) { setAuthed(false); return; }
     fetch('/api/auth/check', { headers: { Authorization: `Bearer ${token}` } })
@@ -97,16 +151,14 @@ export default function App() {
       .catch(() => setAuthed(false));
   }, []);
 
-  if (authed === null) {
-    return <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-400 text-sm">Loading…</div>;
-  }
+  if (authed === null) return <AppLoadingScreen />;
   if (!authed) {
     return <LoginPage onLogin={() => setAuthed(true)} />;
   }
 
   if (page === 'renderer') {
     return (
-      <div id="yuzee-token-lab-root" className="flex flex-col h-screen w-screen bg-[#F9FAFB] text-slate-900 font-sans overflow-hidden antialiased">
+      <div id="yuzee-token-lab-root" className="flex flex-col h-dvh w-screen bg-[#F9FAFB] text-slate-900 overflow-hidden antialiased">
         <ProtocolRendererPage onBack={() => setPage('chat')} />
       </div>
     );
@@ -114,39 +166,7 @@ export default function App() {
 
   return (
     <TokenLabProvider>
-      <div id="yuzee-token-lab-root" className="flex flex-col h-screen w-screen bg-[#F9FAFB] text-slate-900 font-sans overflow-hidden antialiased selection:bg-sky-100 selection:text-sky-900">
-        {/* Top App Header & Model/Preset Toolbar */}
-        <Navbar onOpenRenderer={() => setPage('renderer')} />
-
-        {/* Main Application Body */}
-        <div className="flex-1 flex overflow-hidden relative">
-          {/* Left Navigation Sidebar */}
-          <Sidebar />
-
-          {/* Center Chat Viewport with Live Pre-Flight Forecaster & Turns List */}
-          <main className="flex-1 flex flex-col min-w-0 bg-white relative">
-            <ChatArea />
-          </main>
-
-          {/* Right Telemetry & Context Diagnostics Drawer */}
-          <TokenInspector />
-          {/* Pathway Whiteboard Side Panel */}
-          <PathwayWhiteboard />
-        </div>
-
-        {/* Global Modals & Dialogs */}
-        <AdvancedLabModal />
-        <UserProfileModal />
-        <ContextInspectorModal />
-        <CareerContextModal />
-        <MemoryTimelineModal />
-        <BenchmarkModal />
-        <AnalyticsDashboardModal />
-        <ExportModal />
-        <SettingsModal />
-        <ClarificationQuestionsModal />
-        <LocationPromptModal />
-      </div>
+      <AuthedApp onOpenRenderer={() => setPage('renderer')} />
     </TokenLabProvider>
   );
 }
