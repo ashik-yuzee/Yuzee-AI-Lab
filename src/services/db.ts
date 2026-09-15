@@ -1,6 +1,7 @@
 import pg from "pg";
 import fs from "fs/promises";
 import path from "path";
+import { DEFAULT_MODEL_ID } from "../data/models";
 const { Pool } = pg;
 
 // ---- Local JSON file fallback (used when DATABASE_URL is absent) ----
@@ -106,6 +107,7 @@ const MIGRATION_SQLS = [
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS mode TEXT DEFAULT 'AUTO'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS compaction_history JSONB DEFAULT '[]'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS active_interaction JSONB`,
+  `ALTER TABLE messages ADD COLUMN IF NOT EXISTS micro_tool_name TEXT`,
 ];
 
 export async function initDb(): Promise<void> {
@@ -257,7 +259,7 @@ export async function saveConversation(conv: any): Promise<void> {
         new Date(conv.createdAt || Date.now()),
         new Date(conv.updatedAt || Date.now()),
         new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        conv.model ?? 'gemini-3.5-flash',
+        conv.model ?? DEFAULT_MODEL_ID,
         conv.mode ?? 'AUTO',
         conv.strategy ?? 'ADAPTIVE_HYBRID',
         conv.preset ?? 'BALANCED',
@@ -285,13 +287,14 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
   if (!pool) return;
   try {
     await pool.query(
-      `INSERT INTO messages (id, conversation_id, role, content, structured_response, user_event, telemetry, feedback, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      `INSERT INTO messages (id, conversation_id, role, content, structured_response, user_event, telemetry, feedback, micro_tool_name, created_at)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        ON CONFLICT (id) DO UPDATE SET
          content             = EXCLUDED.content,
          structured_response = EXCLUDED.structured_response,
          telemetry           = EXCLUDED.telemetry,
-         feedback            = EXCLUDED.feedback`,
+         feedback            = EXCLUDED.feedback,
+         micro_tool_name     = EXCLUDED.micro_tool_name`,
       [
         msg.id,
         conversationId,
@@ -301,6 +304,7 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
         msg.userEvent != null ? JSON.stringify(msg.userEvent) : null,
         msg.telemetry != null ? JSON.stringify(msg.telemetry) : null,
         msg.feedback != null ? JSON.stringify(msg.feedback) : null,
+        msg.microToolName ?? null,
         new Date(msg.createdAt || Date.now()),
       ]
     );
@@ -372,6 +376,7 @@ export async function loadConversations(): Promise<any[]> {
         userEvent: m.user_event ?? undefined,
         telemetry: m.telemetry ?? undefined,
         feedback: m.feedback ?? undefined,
+        microToolName: m.micro_tool_name ?? undefined,
         createdAt: new Date(m.created_at).getTime(),
       })),
     }));

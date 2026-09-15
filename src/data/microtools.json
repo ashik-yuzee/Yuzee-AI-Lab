@@ -1,0 +1,947 @@
+[
+  {
+    "id": "CORE_001",
+    "name": "Classify User Context",
+    "domain": "Control",
+    "purpose": "Identify who the user is, their situation, goal and decision stage so later tools are relevant.",
+    "use_when": "At the start of a flow or when the user situation changes.",
+    "trigger_examples": "I am in Year 12; I want to change careers; we need to train our staff",
+    "mini_prompt": "From the latest message and known profile, classify user_type, current_state, goal, decision_stage, location, constraints and unresolved_unknowns. Do not recommend anything yet. Return only fields needed to route the next response."
+  },
+  {
+    "id": "CORE_002",
+    "name": "Identify Entity and Intent",
+    "domain": "Control",
+    "purpose": "Detect what object the user is asking about and what operation they want.",
+    "use_when": "Before choosing a specialised micro-tool.",
+    "trigger_examples": "Tell me more about this; compare these; what skills are missing; who hires for this",
+    "mini_prompt": "Identify intent, primary_entity_type, primary_entity_id, secondary_entities, requested_depth and whether the user wants explain, compare, specialise, evaluate, map, trend, gap or act. Prefer stable IDs over names."
+  },
+  {
+    "id": "CORE_003",
+    "name": "Go Deeper",
+    "domain": "Control",
+    "purpose": "Move one level deeper inside the current object without restarting the conversation.",
+    "use_when": "When the user asks for more detail, opens an item, or selects a child element.",
+    "trigger_examples": "more details; drill into that; what is inside this; show specialisations",
+    "mini_prompt": "Expand exactly one useful level deeper from the current entity. Show the most decision-relevant children first, preserve the parent context, and return 2-5 next drill-down actions."
+  },
+  {
+    "id": "CORE_004",
+    "name": "Go Broader",
+    "domain": "Control",
+    "purpose": "Move upward to parent categories or adjacent broader fields.",
+    "use_when": "When the user is over-specialised, confused, or asks what broader field something belongs to.",
+    "trigger_examples": "what field is this in; broader careers; show the parent industry",
+    "mini_prompt": "Return the immediate parent category, one broader parent if useful, and a small set of adjacent branches. Explain the relationship in one line each."
+  },
+  {
+    "id": "CORE_005",
+    "name": "Related Entities",
+    "domain": "Control",
+    "purpose": "Connect an entity to useful related objects in other Yuzee domains.",
+    "use_when": "When the user wants to move from a course to jobs, a skill to companies, a company to training, etc.",
+    "trigger_examples": "what jobs use this; which courses teach it; which companies need this",
+    "mini_prompt": "Map the current entity to the requested related entity type. Rank relationships by directness and evidence strength. Return why each relationship exists."
+  },
+  {
+    "id": "CORE_006",
+    "name": "Compare Entities",
+    "domain": "Control",
+    "purpose": "Compare 2-4 entities against the user goal rather than generic rankings.",
+    "use_when": "When two or more items of the same or compatible type are selected.",
+    "trigger_examples": "compare these courses; which career is better; compare companies; compare industries",
+    "mini_prompt": "Compare the selected entities only on factors that materially affect this user. Highlight the biggest differences, trade-offs, closer fit, uncertainty and what could change the result. Avoid a generic feature dump."
+  },
+  {
+    "id": "CORE_007",
+    "name": "Explain This",
+    "domain": "Control",
+    "purpose": "Give a concise plain-language explanation tied to the user context.",
+    "use_when": "When a user asks what a term, result, score or object means.",
+    "trigger_examples": "what does this mean; explain AQF 7; what is MLOps",
+    "mini_prompt": "Explain the concept in plain language for this user. Include what it is, why it matters here, and one concrete example. Do not expand into unrelated advice."
+  },
+  {
+    "id": "CORE_008",
+    "name": "Why This Matters",
+    "domain": "Control",
+    "purpose": "Translate information into personal, employer or institution consequences.",
+    "use_when": "When the user sees a fact but needs to understand its significance.",
+    "trigger_examples": "why is this important; why should I care; what does this mean for us",
+    "mini_prompt": "Explain the consequence of this finding for the current goal. Separate immediate impact, future impact and whether action is actually required."
+  },
+  {
+    "id": "CORE_009",
+    "name": "Next Best Action",
+    "domain": "Control",
+    "purpose": "Choose the most useful next step after the current answer.",
+    "use_when": "After a tool response or when the user asks what to do next.",
+    "trigger_examples": "what should I do next; next step; what now",
+    "mini_prompt": "Recommend one primary next action and up to three alternatives. Prefer actions that reduce the biggest unresolved decision or gap. Explain each in one short line."
+  },
+  {
+    "id": "CORE_010",
+    "name": "Evidence Check",
+    "domain": "Control",
+    "purpose": "Audit evidence strength before presenting high-impact recommendations.",
+    "use_when": "For comparisons, shortages, future trends, company needs, eligibility and high-impact decisions.",
+    "trigger_examples": "show evidence; how sure are you; verify this",
+    "mini_prompt": "For each material claim, identify source, date, geography, evidence state and confidence. Flag unsupported, stale or conflicting claims. Return corrected wording where needed."
+  },
+  {
+    "id": "COURSE_001",
+    "name": "Course Details",
+    "domain": "Education",
+    "purpose": "Open a focused course profile without generating a full report.",
+    "use_when": "When a user clicks a course or asks for more detail.",
+    "trigger_examples": "tell me more about this course; open course; course details",
+    "mini_prompt": "Summarise this course for the current user: purpose, qualification/level, duration, delivery, structure, major specialisations, entry, cost/funding status where known, skills, work-integrated learning and main outcomes. Keep each item concise and expose deeper tools."
+  },
+  {
+    "id": "COURSE_002",
+    "name": "Compare Courses",
+    "domain": "Education",
+    "purpose": "Compare selected courses for a specific goal and circumstance.",
+    "use_when": "When 2-4 courses are selected.",
+    "trigger_examples": "compare these; which course is better for me",
+    "mini_prompt": "Compare selected courses on career alignment, curriculum depth, specialisation, practical experience, delivery, entry, cost/funding, flexibility and gaps. Weight only factors relevant to this user. State the biggest trade-off and what could change the result."
+  },
+  {
+    "id": "COURSE_003",
+    "name": "Course Level and Qualification",
+    "domain": "Education",
+    "purpose": "Explain qualification type, AQF level and learning complexity.",
+    "use_when": "When users need to understand Certificate/Diploma/Degree/Postgraduate level differences.",
+    "trigger_examples": "what level is this; is diploma lower than bachelor; what does AQF 7 mean",
+    "mini_prompt": "Identify qualification type and AQF level where applicable. Explain complexity, typical learning outcome and progression implications. Keep qualification level separate from skill proficiency and job seniority."
+  },
+  {
+    "id": "COURSE_004",
+    "name": "Course Structure",
+    "domain": "Education",
+    "purpose": "Show how a course is built.",
+    "use_when": "When the user asks what they will study or how the program is organised.",
+    "trigger_examples": "show structure; core vs electives; how is the degree built",
+    "mini_prompt": "Break the course into compulsory core, majors/specialisations, minors/streams, electives, capstone, WIL and sequencing. Highlight which components materially affect the user's goal."
+  },
+  {
+    "id": "COURSE_005",
+    "name": "Course Units",
+    "domain": "Education",
+    "purpose": "Drill from a course into units/subjects and what each contributes.",
+    "use_when": "When the user wants subject-level detail.",
+    "trigger_examples": "which subjects teach AI; show units; what do I study in year 2",
+    "mini_prompt": "Return only the units relevant to the requested focus or stage. For each unit show status (core/elective), what it teaches, skills/tools, prerequisites and contribution to the goal."
+  },
+  {
+    "id": "COURSE_006",
+    "name": "Course Specialisations",
+    "domain": "Education",
+    "purpose": "Explore majors, minors, streams and course specialisations.",
+    "use_when": "When a course offers multiple directions.",
+    "trigger_examples": "what majors are there; which specialisation suits AI; show streams",
+    "mini_prompt": "List available specialisations and explain what each changes: deeper subjects, skills, likely roles and trade-offs. Rank only against the current goal."
+  },
+  {
+    "id": "COURSE_007",
+    "name": "Course Skills Map",
+    "domain": "Education",
+    "purpose": "Map curriculum to skills and skill depth.",
+    "use_when": "When users ask what skills a course actually develops.",
+    "trigger_examples": "what skills will I learn; does this teach cloud; compare AI skills",
+    "mini_prompt": "Extract skills supported by curriculum evidence. For each skill show where it is taught, expected depth, whether core or optional, and relevance to target role. Separate taught, practised and merely exposed skills."
+  },
+  {
+    "id": "COURSE_008",
+    "name": "Course to Jobs",
+    "domain": "Education",
+    "purpose": "Show realistic occupations supported by the course.",
+    "use_when": "When the user asks what jobs a course can lead to.",
+    "trigger_examples": "what jobs can I get; career outcomes; jobs after this degree",
+    "mini_prompt": "Map the course to direct graduate roles, adjacent roles and later-progression roles. Explain whether the course alone is usually sufficient or what additional experience/certification is typically needed."
+  },
+  {
+    "id": "COURSE_009",
+    "name": "Course to Companies",
+    "domain": "Education",
+    "purpose": "Identify employers whose roles align with the skills produced by a course.",
+    "use_when": "When users want to know who might value the course or its skills.",
+    "trigger_examples": "which companies hire graduates like this; employers for this course",
+    "mini_prompt": "Map course skills to relevant occupations, then to employers with matching roles or hiring signals. Explain the connection and evidence state for each company."
+  },
+  {
+    "id": "COURSE_010",
+    "name": "Course Entry Check",
+    "domain": "Education",
+    "purpose": "Evaluate prerequisites and likely eligibility.",
+    "use_when": "When the user asks if they can get in.",
+    "trigger_examples": "can I get in; entry requirements; do I meet prerequisites",
+    "mini_prompt": "Compare the applicant profile with published entry requirements. Return met, not met, unclear and alternative pathways. Never convert historical entry scores into guarantees."
+  },
+  {
+    "id": "COURSE_011",
+    "name": "Course Cost and Funding",
+    "domain": "Education",
+    "purpose": "Explain tuition, funding, subsidy and likely out-of-pocket considerations.",
+    "use_when": "When the user asks about cost, CSP, VET subsidy or funding.",
+    "trigger_examples": "how much; is it funded; CSP; subsidy; payment options",
+    "mini_prompt": "Return published fees and funding pathways relevant to this user. Separate course price, government contribution/subsidy, eligibility rules and estimated user cost. Do not assume eligibility."
+  },
+  {
+    "id": "COURSE_012",
+    "name": "Study Experience",
+    "domain": "Education",
+    "purpose": "Describe what studying the course is likely to feel like.",
+    "use_when": "When users care about assessment, workload, practical/theory balance or delivery.",
+    "trigger_examples": "is it exam heavy; what is study like; online or campus; workload",
+    "mini_prompt": "Summarise delivery, assessment types, practical vs theoretical emphasis, timetable model, group work, placements and likely workload using published evidence. Then explain fit with stated learning preferences."
+  },
+  {
+    "id": "COURSE_013",
+    "name": "Course Gap Analysis",
+    "domain": "Education",
+    "purpose": "Identify what a specific course does not sufficiently cover for a target occupation.",
+    "use_when": "When users ask whether a specific course is sufficient preparation for a target role, or what the course leaves uncovered — not a personal skill gap check.",
+    "trigger_examples": "what will I still need; what is missing; is this enough for the job",
+    "mini_prompt": "Compare course-supported skills with target-role requirements. Return strong coverage, partial coverage, missing capabilities and non-course gaps such as experience, portfolio, licence or certification."
+  },
+  {
+    "id": "COURSE_014",
+    "name": "Course Freshness",
+    "domain": "Education",
+    "purpose": "Assess whether a course's content, tools, and topics are up to date with current industry practice.",
+    "use_when": "When a user or institution asks whether a course's content is modern and current — not whether it aligns with specific job requirements or long-term industry strategy.",
+    "trigger_examples": "is this course outdated; does it teach modern tools; future ready",
+    "mini_prompt": "Compare curriculum topics, skills and tools with current job and industry signals. Separate durable foundations from fast-changing tools. Identify stale, missing and emerging areas with evidence dates."
+  },
+  {
+    "id": "COURSE_015",
+    "name": "Course Alternatives and Pathways",
+    "domain": "Education",
+    "purpose": "Find alternative learning routes that reach the same qualification or career goal by a different path.",
+    "use_when": "When a specific course is ruled out by cost, entry requirements, duration, or fit — and the user needs a different route to the same qualification or career outcome, not formal recognition of prior learning.",
+    "trigger_examples": "what else can I do; cheaper option; pathway course; alternative route",
+    "mini_prompt": "Find alternative learning routes that satisfy the goal: qualification, pathway, short course, microcredential, certification, RPL, apprenticeship or experience. Explain trade-offs in time, depth, recognition and outcome."
+  },
+  {
+    "id": "COURSE_016",
+    "name": "Learning Type Details",
+    "domain": "Education",
+    "purpose": "Explain different formal and non-formal learning types.",
+    "use_when": "When the user is choosing between degree, VET, short course, microcredential, certification, bootcamp or work-based learning.",
+    "trigger_examples": "degree vs bootcamp; what is a microcredential; certificate vs diploma",
+    "mini_prompt": "Explain what this learning type is, typical depth, recognition, duration, assessment/evidence, best use cases and limitations. Distinguish AQF qualifications from non-AQF learning."
+  },
+  {
+    "id": "MICRO_001",
+    "name": "Microcredential Details",
+    "domain": "Education",
+    "purpose": "Evaluate a specific microcredential as a targeted, short-duration skills option.",
+    "use_when": "When a user wants to assess a specific microcredential for fast, targeted upskilling — as opposed to a full degree, VET qualification, or general course search.",
+    "trigger_examples": "is this microcredential worth it; short AI course; fast upskilling",
+    "mini_prompt": "Describe learning outcomes, workload, assessment, provider, recognition, credit arrangements if any, target skill gap and where it does or does not substitute for a larger qualification."
+  },
+  {
+    "id": "CAREER_001",
+    "name": "Career Details",
+    "domain": "Career",
+    "purpose": "Open an occupation or career profile tied to the user goal.",
+    "use_when": "When a user clicks a career or asks what it is like.",
+    "trigger_examples": "tell me about this career; what does this job do; career details",
+    "mini_prompt": "Summarise the occupation: purpose, main tasks, typical environment, skill level/specialisation, qualifications, key skills/tools, demand, related industries, employers and progression. Expose deeper tools instead of overloading the first response."
+  },
+  {
+    "id": "CAREER_002",
+    "name": "Career Levels",
+    "domain": "Career",
+    "purpose": "Show how responsibilities and expectations change from entry to expert/leadership.",
+    "use_when": "When the user wants progression or level-specific requirements.",
+    "trigger_examples": "junior vs senior; career levels; what is next after analyst",
+    "mini_prompt": "Define practical career levels for this occupation using responsibility, autonomy, complexity, influence and scope. For each level show typical work, skill depth and evidence needed. Do not infer level from years alone."
+  },
+  {
+    "id": "CAREER_003",
+    "name": "Career Specialisations",
+    "domain": "Career",
+    "purpose": "Explore subfields and specialist pathways within a career.",
+    "use_when": "When a broad career contains materially different directions.",
+    "trigger_examples": "AI specialisations; types of nurses; cybersecurity specialities",
+    "mini_prompt": "List meaningful specialisations, what distinguishes each, core skills, tools, typical employers, entry requirements and adjacent specialisations. Rank relevance to the user goal only when enough context exists."
+  },
+  {
+    "id": "CAREER_004",
+    "name": "Career Progression",
+    "domain": "Career",
+    "purpose": "Show realistic next moves and requirements to advance within a current career path or occupation.",
+    "use_when": "When users ask how to advance or progress within their current occupation or career track — not when changing to a different career or field.",
+    "trigger_examples": "how do I become senior; career progression; next role",
+    "mini_prompt": "Map likely progression routes, lateral options and specialist/management branches. For each transition show required capability changes, evidence and typical gaps."
+  },
+  {
+    "id": "CAREER_005",
+    "name": "Career Change Map",
+    "domain": "Career",
+    "purpose": "Map a transition from a current occupation or industry into a different career or field.",
+    "use_when": "When users want to move from their current occupation or industry into a different career or field — not about advancing within their existing career path.",
+    "trigger_examples": "how do I move from accounting to data; change career; transition into AI",
+    "mini_prompt": "Compare current and target role. Identify transferable skills, missing skills, experience gaps, credential gaps, shortest viable bridges and lower-risk adjacent roles. Return a staged transition plan."
+  },
+  {
+    "id": "JOB_001",
+    "name": "Job / Vacancy Details",
+    "domain": "Jobs",
+    "purpose": "Explain a specific job opportunity in context.",
+    "use_when": "When a user opens a vacancy or job card.",
+    "trigger_examples": "open this job; what does this role require; job details",
+    "mini_prompt": "Summarise employer, role, seniority, responsibilities, required/preferred skills, tools, qualifications, experience, location/work mode and application requirements. Highlight candidate-specific fit separately."
+  },
+  {
+    "id": "JOB_002",
+    "name": "Job Requirements",
+    "domain": "Jobs",
+    "purpose": "Separate essential, preferred and contextual requirements.",
+    "use_when": "When the user asks what is actually required.",
+    "trigger_examples": "what do I need; minimum requirements; must-have vs nice-to-have",
+    "mini_prompt": "Return requirements grouped as essential, preferred, regulated/licensed and employer-specific. For each, show evidence source and whether it is broadly occupational or specific to this employer."
+  },
+  {
+    "id": "JOB_003",
+    "name": "Job Tasks",
+    "domain": "Jobs",
+    "purpose": "Show what work is actually performed and at what frequency/importance where known.",
+    "use_when": "When a user wants to understand daily work.",
+    "trigger_examples": "what would I do each day; job tasks; responsibilities",
+    "mini_prompt": "Summarise core tasks, recurring tasks, occasional tasks and decision responsibilities. Link each important task to required skills/tools where evidence exists."
+  },
+  {
+    "id": "JOB_004",
+    "name": "Job Skills",
+    "domain": "Jobs",
+    "purpose": "Map a job to skill requirements and depth.",
+    "use_when": "When users ask what skills a role needs.",
+    "trigger_examples": "skills for this job; what should I learn; technical and soft skills",
+    "mini_prompt": "Return skill requirements grouped as foundational, technical/domain, tools/platforms and professional/human. Indicate required depth and whether evidence is occupation-wide, employer-specific or emerging."
+  },
+  {
+    "id": "JOB_005",
+    "name": "Job Tools and Technologies",
+    "domain": "Jobs",
+    "purpose": "Identify technologies used in a role and how central they are.",
+    "use_when": "When the user asks what software/equipment they need to know.",
+    "trigger_examples": "what tools do they use; which software should I learn",
+    "mini_prompt": "List tools and technologies with role context: core, common, optional, emerging or legacy. Explain what task each supports and whether the tool or underlying capability should be prioritised."
+  },
+  {
+    "id": "JOB_006",
+    "name": "Job Outlook and Demand",
+    "domain": "Jobs",
+    "purpose": "Show whether a career field is a growing field worth getting into, based on labour-market demand and employment prospects.",
+    "use_when": "When users ask if a career or field is a growing field, is worth getting into, has good job prospects, or is in high employment demand.",
+    "trigger_examples": "is this job in demand; future outlook; growth; is this career growing; is it worth getting into this field",
+    "mini_prompt": "Return current employment/demand indicators, shortage status where available and projected direction. Separate current shortage from projected growth. State geography, date and uncertainty."
+  },
+  {
+    "id": "JOB_007",
+    "name": "Job Location Demand",
+    "domain": "Jobs",
+    "purpose": "Show how demand varies by location.",
+    "use_when": "When geography materially affects opportunity.",
+    "trigger_examples": "where are these jobs; demand in Perth; regional opportunities",
+    "mini_prompt": "Compare demand signals by region using consistent metrics. Show where opportunity is stronger, where evidence is thin and how relocation/remote work may change the picture."
+  },
+  {
+    "id": "JOB_008",
+    "name": "AI and Automation Task Impact",
+    "domain": "Jobs",
+    "purpose": "Assess which tasks within a specific job or occupation are likely to be automated, augmented, or strengthened by AI.",
+    "use_when": "When users ask how AI or automation affects the tasks or responsibilities within a specific job or occupation — not the whole industry.",
+    "trigger_examples": "will AI replace this; which tasks get automated; future of this role",
+    "mini_prompt": "Classify tasks as likely automated, AI-augmented, transformed or primarily human-led based on evidence. Then identify capabilities that become more valuable. Avoid declaring the whole occupation obsolete from task exposure alone."
+  },
+  {
+    "id": "SKILL_001",
+    "name": "Skill Details",
+    "domain": "Skills",
+    "purpose": "Open a skill and connect it to tasks, roles, industries, companies and learning.",
+    "use_when": "When a user clicks a skill or asks what it means.",
+    "trigger_examples": "tell me about Python; what is stakeholder management; skill details",
+    "mini_prompt": "Explain the skill, subskills, where it is used, typical tasks, roles, industries, associated tools, prerequisites and learning routes. Keep proficiency separate and expose the level tool."
+  },
+  {
+    "id": "SKILL_002",
+    "name": "Skill Proficiency",
+    "domain": "Skills",
+    "purpose": "Define what beginner through advanced/expert capability looks like.",
+    "use_when": "When depth matters for job readiness or progression.",
+    "trigger_examples": "how good do I need to be; beginner vs advanced; what level is required",
+    "mini_prompt": "Describe observable capability at relevant proficiency levels using task complexity, autonomy, responsibility and quality of output. Where SFIA applies, map cautiously to SFIA responsibility levels; otherwise use domain-specific levels."
+  },
+  {
+    "id": "SKILL_003",
+    "name": "Skill Gap",
+    "domain": "Skills",
+    "purpose": "Compare a person or team's current skill set against the requirements of a target role, level, or employer.",
+    "use_when": "When users want to compare their current skills against the requirements of a specific target role, seniority level, or company — not a full readiness check covering experience and credentials.",
+    "trigger_examples": "what am I missing; skills gap; what does my team lack",
+    "mini_prompt": "Compare current vs target skill profile. Return strong, adequate, partial and missing skills, required depth and priority. Separate lack of evidence from lack of skill."
+  },
+  {
+    "id": "SKILL_004",
+    "name": "Transferable Skills",
+    "domain": "Skills",
+    "purpose": "Identify which existing skills carry directly into a new role or industry during a transition.",
+    "use_when": "When a user is changing career, being redeployed, or moving internally and wants to know which of their current skills transfer — not a general skill gap or gap plan.",
+    "trigger_examples": "what transfers; do I need to start again; skills from teaching to HR",
+    "mini_prompt": "Identify direct-transfer, partially transferable and non-transferable skills. Explain how the same skill is applied differently in the target context and what evidence would make the transfer credible."
+  },
+  {
+    "id": "SKILL_005",
+    "name": "Next Skills",
+    "domain": "Skills",
+    "purpose": "Identify and rank the highest-value skills to learn next for a defined target.",
+    "use_when": "When users ask which specific skill to prioritise or learn next — without needing a full personal action plan covering experience, credentials, and applications.",
+    "trigger_examples": "what should I learn next; top skills; what would improve my chances",
+    "mini_prompt": "Rank up to 7 next skills by impact on the target, gap severity, transferability, learning effort and market relevance. Explain why each is worth learning now."
+  },
+  {
+    "id": "SKILL_006",
+    "name": "Skill Trend",
+    "domain": "Skills",
+    "purpose": "Assess whether a specific skill or capability is growing, declining, or still in demand.",
+    "use_when": "When users ask whether a particular skill or capability is still relevant, in demand, rising, or declining — not about a technology tool and not about a whole career field.",
+    "trigger_examples": "is this skill growing; is Java dying; emerging skills",
+    "mini_prompt": "Assess trend direction using dated demand signals. Separate the underlying skill from specific tools. Show where demand is rising/falling, affected roles, drivers and confidence."
+  },
+  {
+    "id": "SKILL_007",
+    "name": "Skill Replacement / Evolution",
+    "domain": "Skills",
+    "purpose": "Show whether an older skill or capability is being replaced, absorbed, or transformed by something newer.",
+    "use_when": "When users specifically ask what is replacing a skill, whether a skill is becoming obsolete, or whether it is still worth learning given newer alternatives.",
+    "trigger_examples": "what replaces this; outdated tools; should I still learn it",
+    "mini_prompt": "Identify whether the capability is declining, being automated, renamed, absorbed into a broader skill or complemented by a new one. Return successor/adjacent capabilities and migration advice."
+  },
+  {
+    "id": "SKILL_008",
+    "name": "Skill Adjacencies",
+    "domain": "Skills",
+    "purpose": "Find skills that are easier or more valuable to learn because of an existing skill.",
+    "use_when": "When building efficient upskilling paths.",
+    "trigger_examples": "what should I learn after SQL; related skills; easiest adjacent skills",
+    "mini_prompt": "Return prerequisite, complementary and next-step skills. Explain why the adjacency exists and whether it improves breadth, depth or transition potential."
+  },
+  {
+    "id": "SKILL_009",
+    "name": "Learn This Skill",
+    "domain": "Skills",
+    "purpose": "Find suitable ways to acquire a skill.",
+    "use_when": "When the user chooses a skill to develop.",
+    "trigger_examples": "how can I learn this; courses for Kubernetes; train my staff in this",
+    "mini_prompt": "Find learning options matched to required depth and context: course, unit, microcredential, certification, project, workplace learning or experience. Explain which option is fastest, deepest and most recognised."
+  },
+  {
+    "id": "SKILL_010",
+    "name": "Skill to Courses",
+    "domain": "Skills",
+    "purpose": "Find courses that teach a specific skill at the needed depth.",
+    "use_when": "When users start from a skill rather than a provider/course.",
+    "trigger_examples": "which courses teach this; best course for cloud security",
+    "mini_prompt": "Find courses with curriculum evidence for the skill. Rank by depth, whether core or elective, assessment/practice evidence, recognition and user constraints."
+  },
+  {
+    "id": "SKILL_011",
+    "name": "Skill to Jobs",
+    "domain": "Skills",
+    "purpose": "Show where a skill creates employment options.",
+    "use_when": "When users ask what jobs use a skill.",
+    "trigger_examples": "jobs using Python; careers for counselling skills",
+    "mini_prompt": "Return occupations/jobs where the skill is core, common or differentiating. Show required depth and companion skills so the user does not overestimate the value of one skill alone."
+  },
+  {
+    "id": "SKILL_012",
+    "name": "Skill to Companies",
+    "domain": "Skills",
+    "purpose": "Find employers actively recruiting for a specific skill.",
+    "use_when": "When users start from a skill and want to know which companies or employers are currently looking for people who have it.",
+    "trigger_examples": "which companies need this; employers hiring Kubernetes",
+    "mini_prompt": "Find companies with current or recent evidence of roles requiring the skill. Return matched roles, frequency/recency signal and evidence state. Do not call this a company-wide shortage without stronger evidence."
+  },
+  {
+    "id": "IND_001",
+    "name": "Industry Details",
+    "domain": "Industry",
+    "purpose": "Open an industry and show its structure and workforce context.",
+    "use_when": "When the user clicks an industry.",
+    "trigger_examples": "tell me about healthcare; open mining industry; industry details",
+    "mini_prompt": "Summarise the industry, official classification level where available, major sub-industries, workforce, occupations, companies, skill demand, technology change, shortages and outlook. Expose drill-down actions."
+  },
+  {
+    "id": "IND_002",
+    "name": "Industry Subfields",
+    "domain": "Industry",
+    "purpose": "Move through official industry hierarchy or meaningful sub-sectors.",
+    "use_when": "When the user wants more granular industry detail.",
+    "trigger_examples": "sub-industries; sectors inside healthcare; types of manufacturing",
+    "mini_prompt": "Return immediate official child categories where available and clearly separate any Yuzee-added market segments or niches. Explain the predominant activity of each child."
+  },
+  {
+    "id": "IND_003",
+    "name": "Industry Specialisations / Niches",
+    "domain": "Industry",
+    "purpose": "Expose specialised market segments that matter to careers, skills and companies.",
+    "use_when": "When official classification is too broad for user decisions.",
+    "trigger_examples": "AI industry niches; renewable energy specialisations; fintech segments",
+    "mini_prompt": "Identify meaningful specialisations/niches within the industry based on distinct work, technologies, customers or skill needs. Map each back to the official parent industry and show key roles and skills."
+  },
+  {
+    "id": "IND_004",
+    "name": "Industry Job Map",
+    "domain": "Industry",
+    "purpose": "Show major, specialist, emerging and support occupations within an industry.",
+    "use_when": "When users ask what jobs exist in an industry.",
+    "trigger_examples": "jobs in mining; careers in health; roles in AI industry",
+    "mini_prompt": "Return occupations grouped as core, specialist, enabling/support and emerging. Show employment/demand signal and the industry relationship for each."
+  },
+  {
+    "id": "IND_005",
+    "name": "Industry Company Map",
+    "domain": "Industry",
+    "purpose": "Find relevant employers by industry, segment and location.",
+    "use_when": "When users want to explore employers.",
+    "trigger_examples": "companies in cybersecurity; mining employers in WA",
+    "mini_prompt": "Return relevant companies grouped by role in the ecosystem or segment. Include location and current hiring signal where available, without implying completeness."
+  },
+  {
+    "id": "IND_006",
+    "name": "Industry Skill Map",
+    "domain": "Industry",
+    "purpose": "Show capabilities that underpin an industry.",
+    "use_when": "When users ask which skills matter in a sector.",
+    "trigger_examples": "skills needed in aged care; mining skills; fintech skills",
+    "mini_prompt": "Return foundational, technical/domain, professional and emerging skills. Show which occupations drive each skill and whether demand is broad or concentrated."
+  },
+  {
+    "id": "IND_007",
+    "name": "Industry Shortages",
+    "domain": "Industry",
+    "purpose": "Identify specific occupations within an industry that have workforce shortages and explain the likely drivers.",
+    "use_when": "When users ask which occupations or roles within an industry are hard to fill, in short supply, or experiencing a worker shortage.",
+    "trigger_examples": "shortages in construction; hard to fill roles; lack of candidates",
+    "mini_prompt": "Identify shortage occupations associated with the industry and classify likely shortage drivers where official evidence exists: long training gap, short training gap, suitability gap, retention gap or uncertain. Explain implications for employers and learners."
+  },
+  {
+    "id": "IND_008",
+    "name": "Industry Regional Demand",
+    "domain": "Industry",
+    "purpose": "Compare industry activity and workforce demand by region.",
+    "use_when": "When location matters to career or workforce planning.",
+    "trigger_examples": "where is healthcare growing; mining jobs by state",
+    "mini_prompt": "Compare employment, growth and vacancy/demand signals across regions. Highlight material concentration and uncertainty for smaller samples."
+  },
+  {
+    "id": "IND_009",
+    "name": "Industry Technology Change",
+    "domain": "Industry",
+    "purpose": "Show technologies reshaping an industry and resulting skill changes.",
+    "use_when": "When users ask what technology is changing a sector.",
+    "trigger_examples": "tech changing healthcare; automation in mining; digital trends",
+    "mini_prompt": "Identify technologies with observed or projected impact, affected business functions, tasks, occupations and skills. Separate adoption evidence from forecast impact."
+  },
+  {
+    "id": "IND_010",
+    "name": "Industry AI Impact",
+    "domain": "Industry",
+    "purpose": "Explain how AI is changing work, skills, and roles across an entire industry or sector.",
+    "use_when": "When users ask how AI is transforming a broad industry or sector — not the impact on a specific job or individual occupation.",
+    "trigger_examples": "AI in finance; what AI changes in education; which roles are affected",
+    "mini_prompt": "Map AI impact by business function and task: automated, augmented, transformed or newly created. Identify occupations and skills most affected and new capability needs. Keep uncertainty explicit."
+  },
+  {
+    "id": "IND_011",
+    "name": "Industry Education Supply",
+    "domain": "Industry",
+    "purpose": "Show which courses and institutions feed talent into an industry.",
+    "use_when": "When employers/institutions want to understand talent pipelines.",
+    "trigger_examples": "which courses supply this industry; training pipeline; graduate sources",
+    "mini_prompt": "Map key occupations/skills to relevant courses and institutions. Distinguish regulated qualification pipelines from optional upskilling routes and work-based learning."
+  },
+  {
+    "id": "IND_012",
+    "name": "Industry Talent Gap",
+    "domain": "Industry",
+    "purpose": "Compare an industry's long-term workforce needs against current training and candidate supply.",
+    "use_when": "For strategic workforce or education planning — when the question is whether training supply is keeping pace with an industry's long-term demand, not about shortages in a specific occupation.",
+    "trigger_examples": "talent gap; are enough candidates being trained; supply vs demand",
+    "mini_prompt": "Compare demand signals, shortage evidence, candidate/worker supply and education/training supply. Identify whether the likely constraint is training capacity, suitability, retention, geography or uncertain."
+  },
+  {
+    "id": "COMP_001",
+    "name": "Company Details",
+    "domain": "Companies",
+    "purpose": "Open a company as a workforce and career object.",
+    "use_when": "When a user clicks a company.",
+    "trigger_examples": "tell me about this company; careers at this employer; company profile",
+    "mini_prompt": "Summarise company activity, industry/segments, locations, workforce functions, relevant occupations, current hiring signals, skills/technologies observed and learning/talent connections. Expose deeper tools."
+  },
+  {
+    "id": "COMP_002",
+    "name": "Company Roles",
+    "domain": "Companies",
+    "purpose": "Show occupations and jobs relevant to a company.",
+    "use_when": "When users want careers inside a particular employer.",
+    "trigger_examples": "jobs at this company; what roles do they hire; career paths here",
+    "mini_prompt": "Return currently advertised roles plus recurring/recent role families where evidence exists. Group by function, specialisation and seniority. Keep historical and current roles separate."
+  },
+  {
+    "id": "COMP_003",
+    "name": "Company Skills",
+    "domain": "Companies",
+    "purpose": "Show skills associated with a company's roles.",
+    "use_when": "When users ask what capabilities a company values.",
+    "trigger_examples": "skills this company wants; what should I learn for them",
+    "mini_prompt": "Aggregate skills from relevant roles and first-party workforce evidence. Show frequency, recency, role concentration and whether the signal is broad or role-specific."
+  },
+  {
+    "id": "COMP_004",
+    "name": "Company Tech Stack Signals",
+    "domain": "Companies",
+    "purpose": "Show technologies evidenced in a company's roles or public materials.",
+    "use_when": "When users want to know tools/platforms used by an employer.",
+    "trigger_examples": "what tech stack do they use; tools at this company",
+    "mini_prompt": "Return technologies with evidence source, role context and recency. Classify each as confirmed first-party, observed in hiring, derived, or uncertain. Do not present job-ad mentions as a complete tech stack."
+  },
+  {
+    "id": "COMP_005",
+    "name": "Company Hiring Signals",
+    "domain": "Companies",
+    "purpose": "Summarise current/recent recruitment activity.",
+    "use_when": "When users ask whether a company is hiring or what it is expanding.",
+    "trigger_examples": "are they hiring; hiring trend; what teams are growing",
+    "mini_prompt": "Summarise vacancy volume/recency and role mix over the requested period. Identify increases/decreases only when comparable historical data exists. Return evidence coverage and uncertainty."
+  },
+  {
+    "id": "COMP_006",
+    "name": "Company Hard-to-Fill Roles",
+    "domain": "Companies",
+    "purpose": "Identify roles that may be difficult for a company to fill.",
+    "use_when": "When workforce shortage or recruitment difficulty is the question.",
+    "trigger_examples": "which roles are hard to fill; where are they struggling to recruit",
+    "mini_prompt": "Combine vacancy persistence, repeated hiring, occupation shortage status and role requirements to identify potentially hard-to-fill roles. Return as DERIVED unless company directly confirms difficulty."
+  },
+  {
+    "id": "COMP_007",
+    "name": "Company Skill Gaps / Needs",
+    "domain": "Companies",
+    "purpose": "Identify skills a specific company appears to need more of, based on its hiring signals.",
+    "use_when": "When an employer or advisor asks what skill gaps or needs a specific company has — not which companies need a given skill.",
+    "trigger_examples": "what skills are they missing; company skills need; what candidates should bring",
+    "mini_prompt": "Identify strongly evidenced skill needs from hiring and workforce signals. Separate current recruitment demand, inferred internal gap and emerging need. Explain which roles drive each signal and confidence."
+  },
+  {
+    "id": "COMP_008",
+    "name": "Candidate Fit to Company",
+    "domain": "Companies",
+    "purpose": "Compare a candidate with employer-specific needs.",
+    "use_when": "When a user wants to know how well they fit a company or role.",
+    "trigger_examples": "am I a fit; what am I missing for this company; candidate match",
+    "mini_prompt": "Compare demonstrated candidate capabilities with the selected role/company requirements. Show strong fit, partial fit, gaps and evidence gaps. Recommend the smallest high-impact improvements."
+  },
+  {
+    "id": "COMP_009",
+    "name": "Company Talent Supply",
+    "domain": "Companies",
+    "purpose": "Estimate availability of qualified candidates for a specific company's roles by skill and location.",
+    "use_when": "When a specific employer asks whether enough qualified candidates exist in the market to fill their particular roles — not a broad industry-level supply question.",
+    "trigger_examples": "are there enough candidates; talent availability; candidate pool",
+    "mini_prompt": "Estimate talent supply using available candidate, occupation, employment and education pipeline signals. Return ranges/relative indicators, data coverage and key constraints rather than false precision."
+  },
+  {
+    "id": "COMP_010",
+    "name": "Train vs Hire",
+    "domain": "Companies",
+    "purpose": "Decide whether a workforce gap is better addressed through recruitment, upskilling, internal mobility or a mix.",
+    "use_when": "When an employer has a defined future capability need.",
+    "trigger_examples": "should we hire or train; build vs buy talent; 30 roles in 2 years",
+    "mini_prompt": "Compare external hiring difficulty with internal skill adjacency, time-to-competence and training availability. Recommend hire, train, redeploy or mixed strategy by role/skill, with assumptions and risks."
+  },
+  {
+    "id": "COMP_011",
+    "name": "Company Upskill Plan",
+    "domain": "Companies",
+    "purpose": "Build a targeted workforce learning plan.",
+    "use_when": "When the employer chooses to develop internal capability.",
+    "trigger_examples": "train our staff; upskill plan; close team skills gap",
+    "mini_prompt": "Create a staged upskilling plan grouped by skill clusters and learner starting levels. Use the smallest suitable learning interventions and include workplace practice/evidence, not courses alone."
+  },
+  {
+    "id": "COMP_012",
+    "name": "Internal Mobility",
+    "domain": "Companies",
+    "purpose": "Find workers or role families that can be reskilled into needed roles.",
+    "use_when": "When an employer wants to redeploy existing staff.",
+    "trigger_examples": "who can move into this role; internal talent; redeploy staff",
+    "mini_prompt": "Rank internal candidates/role families by transferable skills and gap size. Show development needed and do not use sensitive personal attributes."
+  },
+  {
+    "id": "COMP_013",
+    "name": "Company Provider Match",
+    "domain": "Companies",
+    "purpose": "Find institutions and learning providers that can address workforce requirements.",
+    "use_when": "When an employer wants external training partners.",
+    "trigger_examples": "find providers; who can train this; university/RTO partner",
+    "mini_prompt": "Match workforce skill needs to providers and courses using curriculum evidence, depth, delivery, recognition and location. Show exact skill coverage and remaining gaps."
+  },
+  {
+    "id": "COMP_014",
+    "name": "Talent Pipeline Design",
+    "domain": "Companies",
+    "purpose": "Design a multi-stage pipeline from training to experience to hiring.",
+    "use_when": "When an employer has repeat or future talent demand.",
+    "trigger_examples": "build talent pipeline; partner with institutions; future workforce",
+    "mini_prompt": "Design a talent pipeline linking occupations, skill requirements, relevant courses/providers, internships/WIL/apprenticeships, candidate readiness checks and hiring milestones. State where supply evidence is weak."
+  },
+  {
+    "id": "INST_001",
+    "name": "Institution Details",
+    "domain": "Institutions",
+    "purpose": "Open a provider as an education and industry-alignment object.",
+    "use_when": "When a user clicks an institution.",
+    "trigger_examples": "tell me about this provider; university/RTO details",
+    "mini_prompt": "Summarise provider type, locations, study modes, fields/specialisations, qualification levels, relevant courses, industry links and outcomes where supported. Expose course and alignment tools."
+  },
+  {
+    "id": "INST_002",
+    "name": "Institution Courses",
+    "domain": "Institutions",
+    "purpose": "Find courses and programs offered by a specific named institution or provider.",
+    "use_when": "When the user has identified a specific institution and wants to browse or filter the courses that provider offers — not a general search for courses on a topic.",
+    "trigger_examples": "courses at this university; programs for cybersecurity here",
+    "mini_prompt": "Return relevant courses grouped by level/type and explain their different intended outcomes. Rank by user goal only when context is sufficient."
+  },
+  {
+    "id": "INST_003",
+    "name": "Institution Specialisations",
+    "domain": "Institutions",
+    "purpose": "Show a provider's depth in a field beyond course titles.",
+    "use_when": "When users want to know what an institution is strong/specialised in.",
+    "trigger_examples": "AI specialisations here; health disciplines; what areas do they teach",
+    "mini_prompt": "Map disciplines, course specialisations and relevant units/research or facilities where supported. Explain whether specialisation is curriculum depth, research strength or marketing positioning."
+  },
+  {
+    "id": "INST_004",
+    "name": "Curriculum Skill Map",
+    "domain": "Institutions",
+    "purpose": "Map an institution's curriculum to concrete skills.",
+    "use_when": "For curriculum analysis, course comparison and workforce alignment.",
+    "trigger_examples": "what skills does this program teach; curriculum skill map",
+    "mini_prompt": "Extract curriculum-supported skills and show unit evidence, depth, practice/assessment evidence and whether core or optional. Separate stated outcomes from derived skill mappings."
+  },
+  {
+    "id": "INST_005",
+    "name": "Curriculum Job Alignment",
+    "domain": "Institutions",
+    "purpose": "Measure how well a specific program maps to the requirements of particular target occupations.",
+    "use_when": "When evaluating how well a specific course or program prepares learners for particular job roles or occupations — not a broad industry relevance question.",
+    "trigger_examples": "does this course prepare for this job; job alignment",
+    "mini_prompt": "Compare curriculum skills, tools and experience with target-role requirements. Return strong, partial and missing coverage plus non-curriculum requirements such as licences or experience."
+  },
+  {
+    "id": "INST_006",
+    "name": "Curriculum Industry Alignment",
+    "domain": "Institutions",
+    "purpose": "Assess whether a curriculum reflects the current and emerging skill needs of an entire industry.",
+    "use_when": "When an institution wants to know if its curriculum tracks current and emerging industry skill needs across a sector — for program review or redesign, not for matching against specific job roles.",
+    "trigger_examples": "is our course aligned to industry; what are we missing",
+    "mini_prompt": "Compare course skills/tools with current and emerging industry needs. Separate durable foundations, current alignment, emerging gaps and low-value legacy content. Include evidence dates."
+  },
+  {
+    "id": "INST_007",
+    "name": "Curriculum Gap Recommendations",
+    "domain": "Institutions",
+    "purpose": "Recommend curriculum additions or adjustments based on evidenced gaps.",
+    "use_when": "After curriculum alignment analysis.",
+    "trigger_examples": "what should we add; update curriculum; missing modules",
+    "mini_prompt": "Prioritise curriculum changes by labour-market value, durability, feasibility and whether the gap belongs in formal curriculum, elective, microcredential, WIL or extracurricular support."
+  },
+  {
+    "id": "INST_008",
+    "name": "Employer Partner Match",
+    "domain": "Institutions",
+    "purpose": "Find employers whose skill needs align with a provider's programs.",
+    "use_when": "When institutions want industry partners.",
+    "trigger_examples": "companies we should partner with; employer match; industry partners",
+    "mini_prompt": "Match program skills and student level to employer role/skill needs. Show why each employer is relevant and whether the match is based on hiring demand, confirmed partnership opportunity or derived alignment."
+  },
+  {
+    "id": "INST_009",
+    "name": "Placement / WIL Partner Match",
+    "domain": "Institutions",
+    "purpose": "Find employers suitable for internships, placements and WIL.",
+    "use_when": "When experience is part of the program or job-readiness gap.",
+    "trigger_examples": "placement partners; internship companies; WIL opportunities",
+    "mini_prompt": "Match student skills and learning outcomes to employers/roles suitable for supervised practical experience. Flag prerequisite, safety/licensing and capacity constraints."
+  },
+  {
+    "id": "INST_010",
+    "name": "Program Demand",
+    "domain": "Institutions",
+    "purpose": "Assess labour-market demand associated with a course/program.",
+    "use_when": "For program planning or learner outcome context.",
+    "trigger_examples": "is there demand for this program; should we offer more places",
+    "mini_prompt": "Map the program to likely occupations, then summarise current demand, shortages and projections. Include education supply where available and state uncertainty. Do not equate occupation growth with guaranteed enrolment demand."
+  },
+  {
+    "id": "CAND_001",
+    "name": "Candidate Profile",
+    "domain": "Candidate",
+    "purpose": "Create a structured current-state profile for matching and gap analysis.",
+    "use_when": "When a user wants personalised career/education guidance.",
+    "trigger_examples": "assess me; my skills; profile for this career",
+    "mini_prompt": "Summarise demonstrated education, experience, skills, tools, credentials, constraints and goals. Separate explicit evidence from inferred or unknown information."
+  },
+  {
+    "id": "CAND_002",
+    "name": "Candidate Readiness",
+    "domain": "Candidate",
+    "purpose": "Assess overall readiness for a specific next step — covering eligibility, skills, experience, credentials, and portfolio.",
+    "use_when": "When a user wants a full readiness assessment for a specific target role, course, or company — covering experience, credentials, and application readiness, not just a skills comparison.",
+    "trigger_examples": "am I ready; job ready; chance of getting this role",
+    "mini_prompt": "Assess readiness across eligibility, skills, skill depth, experience, evidence/portfolio, licences/credentials and application readiness. Return readiness by dimension, not a false probability of success."
+  },
+  {
+    "id": "CAND_003",
+    "name": "Candidate Gap Plan",
+    "domain": "Candidate",
+    "purpose": "Turn multiple readiness gaps into a staged personal action plan covering learning, experience, credentials, and applications.",
+    "use_when": "After a readiness assessment, when a user needs a comprehensive staged plan to close multiple gaps — not just a ranked list of which skills to learn next.",
+    "trigger_examples": "how do I close the gaps; plan to become job ready",
+    "mini_prompt": "Prioritise gaps by blocking impact and create a staged plan using learning, evidence, experience, application and networking actions. Prefer the smallest intervention that credibly closes each gap."
+  },
+  {
+    "id": "PROVE_001",
+    "name": "Prove a Skill",
+    "domain": "Candidate",
+    "purpose": "Show credible ways to demonstrate capability to employers or institutions.",
+    "use_when": "When the skill may exist but evidence is weak.",
+    "trigger_examples": "how do I prove this; portfolio idea; demonstrate the skill",
+    "mini_prompt": "Suggest evidence appropriate to the skill and target: assessed project, work sample, portfolio, certification, licence, supervised experience, reference or RPL evidence. Explain what good evidence should demonstrate."
+  },
+  {
+    "id": "RPL_001",
+    "name": "RPL / Prior Learning Evidence",
+    "domain": "Candidate",
+    "purpose": "Identify where existing work experience or prior study could be formally recognised, avoiding repetition of already-mastered learning.",
+    "use_when": "When an experienced user asks whether their prior work experience or earlier study can be formally recognised for credit — not about finding alternative courses or learning routes.",
+    "trigger_examples": "can I get RPL; recognise my experience; do I need to study this again",
+    "mini_prompt": "Map existing evidence to published learning outcomes or competency requirements. Identify potentially recognisable areas, missing evidence and provider assessment steps. Never guarantee RPL before provider assessment."
+  },
+  {
+    "id": "EXPERIENCE_001",
+    "name": "Experience Match",
+    "domain": "Experience",
+    "purpose": "Find practical experience that closes a specific readiness gap.",
+    "use_when": "When knowledge alone is not enough.",
+    "trigger_examples": "I need experience; internship for this skill; project to become job ready",
+    "mini_prompt": "Identify experience types that would most improve readiness: internship, work placement, project, volunteer work, open-source, freelance, part-time role or simulated project. Match the tasks to the gap that must be demonstrated."
+  },
+  {
+    "id": "APP_001",
+    "name": "Apprenticeship / Traineeship Match",
+    "domain": "Experience",
+    "purpose": "Find structured earn-and-learn pathways.",
+    "use_when": "When the goal is suitable for an apprenticeship/traineeship route.",
+    "trigger_examples": "apprenticeship options; earn and learn; traineeship",
+    "mini_prompt": "Match the goal to relevant apprenticeship/traineeship occupations and qualifications, explain entry requirements, duration, work/study structure and current opportunities where available."
+  },
+  {
+    "id": "TECH_001",
+    "name": "Technology / Tool Details",
+    "domain": "Technology",
+    "purpose": "Open a technology and connect it to tasks, skills, jobs and industries.",
+    "use_when": "When a user clicks or asks about a tool.",
+    "trigger_examples": "what is Kubernetes; who uses Salesforce; tool details",
+    "mini_prompt": "Explain what the technology does, the tasks it supports, underlying skills, roles/industries using it, common alternatives and how deeply the user needs to know it for the stated target."
+  },
+  {
+    "id": "TECH_002",
+    "name": "Technology Trend",
+    "domain": "Technology",
+    "purpose": "Assess adoption, growth, replacement and maturity of a specific technology or software tool.",
+    "use_when": "When the user asks whether a specific software, programming language, framework, or technical tool is worth learning or is becoming obsolete.",
+    "trigger_examples": "is this tool growing; old vs new platform; what is replacing it",
+    "mini_prompt": "Classify the technology as emerging, growing, established, niche, declining or being replaced using dated signals. Show affected roles, alternatives and underlying durable skills."
+  },
+  {
+    "id": "TREND_001",
+    "name": "Market Trend Explorer",
+    "domain": "Trends",
+    "purpose": "Explore broad, market-level changes across industries, occupations, skill sets, or hiring patterns.",
+    "use_when": "When users ask about broad market-level or sector-wide changes — not about a single specific skill, tool, occupation, or whether a particular career is worth entering.",
+    "trigger_examples": "new trends; what is growing; what should I watch",
+    "mini_prompt": "Identify meaningful changes over the requested period. For each trend show direction, strength, affected entities, drivers, evidence date, confidence and practical implication. Keep observed trends separate from projections."
+  },
+  {
+    "id": "TREND_002",
+    "name": "Emerging Roles",
+    "domain": "Trends",
+    "purpose": "Identify roles that are new or materially expanding because work is changing.",
+    "use_when": "When users want future career options.",
+    "trigger_examples": "new jobs; emerging AI roles; careers appearing now",
+    "mini_prompt": "Identify roles with growing evidence and explain whether they are genuinely new occupations, new specialisations or renamed combinations of existing work. Show skills and entry routes."
+  },
+  {
+    "id": "TREND_003",
+    "name": "Declining / Changing Roles",
+    "domain": "Trends",
+    "purpose": "Identify occupations losing headcount or being restructured due to automation, industry decline, or offshoring.",
+    "use_when": "When users ask which occupations or job categories are shrinking, disappearing, or under structural pressure — not about AI's task-level impact on a specific job.",
+    "trigger_examples": "jobs disappearing; declining roles; career risk",
+    "mini_prompt": "Assess whether employment is declining, tasks are changing or the role is being reconfigured. Show transferable skills and realistic adjacent roles. Avoid deterministic replacement claims."
+  },
+  {
+    "id": "TREND_004",
+    "name": "Qualification Trend",
+    "domain": "Trends",
+    "purpose": "Track changes in formal qualification, microcredential or certification requirements.",
+    "use_when": "When users ask whether degrees/certifications are becoming more or less important.",
+    "trigger_examples": "degree requirements changing; certification trends; microcredentials",
+    "mini_prompt": "Analyse how credential requirements are changing in relevant roles. Separate regulated requirements from employer preferences and skills-first hiring signals."
+  },
+  {
+    "id": "TREND_005",
+    "name": "Skill Trend Set",
+    "domain": "Trends",
+    "purpose": "Show clusters of skills that are rising or falling together in a field.",
+    "use_when": "When users want to understand which groups or clusters of related skills are moving together in a field — not the trend of a single specific skill.",
+    "trigger_examples": "new skill sets; skills growing together; future skills in cyber",
+    "mini_prompt": "Identify skill clusters gaining or losing importance together. Explain the work change behind the cluster and which skills are foundational versus tool-specific."
+  },
+  {
+    "id": "TREND_006",
+    "name": "Hiring Trend",
+    "domain": "Trends",
+    "purpose": "Track changes in recruitment activity.",
+    "use_when": "When the user asks who is hiring more or less.",
+    "trigger_examples": "hiring trend; demand increasing; companies recruiting more",
+    "mini_prompt": "Compare consistent vacancy/hiring signals over time. Show role mix, location mix and whether the change is broad or concentrated. Do not equate postings with net employment growth."
+  },
+  {
+    "id": "TREND_007",
+    "name": "Salary / Conditions Trend",
+    "domain": "Trends",
+    "purpose": "Show changes in remuneration and working conditions when reliable data exists.",
+    "use_when": "When pay or conditions affect decisions.",
+    "trigger_examples": "salary trend; remote work trend; pay by skill",
+    "mini_prompt": "Summarise available pay/conditions data with period, sample/source and level context. Avoid precise comparisons when sources use incompatible definitions."
+  },
+  {
+    "id": "TREND_008",
+    "name": "Regional Trend",
+    "domain": "Trends",
+    "purpose": "Show where workforce/industry opportunity is shifting geographically.",
+    "use_when": "When regional movement matters.",
+    "trigger_examples": "growth regions; where jobs are moving; regional skill demand",
+    "mini_prompt": "Compare regions on the same employment/demand indicators and identify meaningful change. State data sparsity and seasonal effects where relevant."
+  }
+]

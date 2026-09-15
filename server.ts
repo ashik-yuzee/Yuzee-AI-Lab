@@ -33,7 +33,7 @@ import {
 } from "./src/protocol/securityOverride";
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
-import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
+import { GEMINI_MODELS, calcTurnCost, DEFAULT_MODEL_ID } from "./src/data/models";
 import { initDb, logTurn, pruneExpired, keepAlive, dbPing, loadSessionStats, isDbEnabled, loadDailyCost, loadLifetimeStats, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
@@ -176,6 +176,7 @@ interface MessageItem {
   userEvent?: UserEvent;
   telemetry?: any;
   feedback?: any;
+  microToolName?: string;
   createdAt: number;
 }
 
@@ -344,7 +345,7 @@ app.get("/api/config/capabilities", (req, res) => {
     configured: hasKey,
     availableModels: GEMINI_MODELS.filter((m) => m.selectable).map((m) => m.id),
     modelsList: GEMINI_MODELS,
-    defaultModel: "gemini-3.5-flash",
+    defaultModel: DEFAULT_MODEL_ID,
     supportsThinking: true,
     supportsCachedTokens: true,
     supportsInteractionsApi: true,
@@ -707,7 +708,7 @@ app.get("/api/conversations", async (req, res) => {
 app.post("/api/conversations", (req, res) => {
   const id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const title = req.body?.title || "New Career Exploration";
-  const model = req.body?.model || "gemini-3.5-flash";
+  const model = req.body?.model || DEFAULT_MODEL_ID;
   const mode = req.body?.mode || "VANILLA";
   const strategy = req.body?.strategy || "ADAPTIVE_HYBRID";
   const preset = req.body?.preset || "BALANCED";
@@ -762,7 +763,7 @@ app.post("/api/conversations/load-demo", (req, res) => {
     title: "Cybersecurity Analyst Pathway (Demo)",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    model: "gemini-3.5-flash",
+    model: DEFAULT_MODEL_ID,
     mode: "AUTO",
     strategy: "ADAPTIVE_HYBRID",
     preset: "BALANCED",
@@ -981,7 +982,7 @@ app.post("/api/conversations/restore", (req, res) => {
     title: data.title || "Restored Conversation",
     createdAt: data.createdAt || Date.now(),
     updatedAt: data.updatedAt || Date.now(),
-    model: data.model || "gemini-3.5-flash-lite",
+    model: data.model || DEFAULT_MODEL_ID,
     mode: data.mode || "AUTO",
     strategy: data.strategy || "ADAPTIVE_HYBRID",
     preset: data.preset || "BALANCED",
@@ -1461,7 +1462,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       title: "Career Exploration",
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      model: req.body.model || "gemini-3.5-flash-lite",
+      model: req.body.model || DEFAULT_MODEL_ID,
       mode: req.body.mode || "AUTO",
       strategy: req.body.strategy || "ADAPTIVE_HYBRID",
       preset: req.body.preset || "BALANCED",
@@ -1510,9 +1511,15 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   else if (uc?.timezone) ctxParts.push(`Timezone: ${uc.timezone}`);
   if (upFacts.length > 0) ctxParts.push(`User facts: ${upFacts.slice(0, 8).join("; ")}`);
   if (userQuestionAnswers.length > 0) ctxParts.push(`USER_QUESTION_ANSWERS: ${JSON.stringify(userQuestionAnswers)}`);
+  const microToolPrompt: string | undefined = req.body.microToolPrompt;
+  const microToolNameFromReq: string | undefined = req.body.microToolName;
   const enrichedMessage = ctxParts.length > 0
     ? `[${ctxParts.join(" · ")}]\n${userMessageContent}`
     : userMessageContent;
+  // Append micro-tool mini-prompt as a scoped instruction block inside the user turn
+  const messageWithMicroTool = microToolPrompt
+    ? `${enrichedMessage}\n\n---MICRO_TOOL_INSTRUCTION---\n${microToolPrompt}\n---END_MICRO_TOOL---`
+    : enrichedMessage;
   const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const userPromptTokens = estimateTokens(userMessageContent);
 
@@ -1571,7 +1578,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   // 2. ASSEMBLE GEMINI REQUEST (IMMUTABLE PROMPT IN SYSTEM INSTRUCTION ONLY)
   const requestAssemblyStart = Date.now();
-  const modelId = req.body.model || conv.model || "gemini-3.5-flash-lite";
+  const modelId = req.body.model || conv.model || DEFAULT_MODEL_ID;
   const allowedModels = GEMINI_MODELS.filter(m => m.selectable).map(m => m.id);
   if (!allowedModels.includes(modelId)) {
     return res.status(400).json({ error: `Unknown model: ${modelId}` });
@@ -1586,7 +1593,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   const assembledReq = requestAssembler.assembleRequest({
     model: modelId,
-    messageText: enrichedMessage,
+    messageText: messageWithMicroTool,
     userEvent,
     careerContext: req.body.careerContext || conv.careerContext,
     summaryText: mem.summaryText,
@@ -1688,7 +1695,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       timeline: { aiRequestId: assembledReq.aiRequestId, requestReceivedAt, preProviderLatencyMs: 0, providerTtftMs: null, providerGenerationDurationMs: null, totalLatencyMs: Date.now() - requestReceivedAt },
     });
     const bypassUserMsg: MessageItem = { id: `user-${Date.now()}`, role: "user", content: userMessageContent, userEvent, createdAt: requestReceivedAt };
-    const bypassMsg: MessageItem = { id: messageId, role: "assistant", content: fullAssistantText, structuredResponse: bypassParsed, createdAt: Date.now() };
+    const bypassMsg: MessageItem = { id: messageId, role: "assistant", content: fullAssistantText, structuredResponse: bypassParsed, microToolName: microToolNameFromReq, createdAt: Date.now() };
     conv.messages.push(bypassUserMsg);
     conv.messages.push(bypassMsg);
     conv.updatedAt = Date.now();
@@ -2018,6 +2025,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       validation: validationResult,
       timestamp: Date.now(),
     },
+    microToolName: microToolNameFromReq,
     createdAt: Date.now(),
   };
   conv.messages.push(assistantMsg);

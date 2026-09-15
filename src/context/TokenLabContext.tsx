@@ -17,9 +17,7 @@ import {
   UserEvent,
 } from "../types";
 import * as api from "../services/api";
-import { GEMINI_MODELS } from "../data/models";
-
-const DEFAULT_MODEL_ID = GEMINI_MODELS.find(m => m.isDefault)?.id ?? "gemini-3.5-flash";
+import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
 
 interface TokenLabContextType {
   conversations: Conversation[];
@@ -108,6 +106,7 @@ interface TokenLabContextType {
   sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<void>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
+  exportConversation: (format: 'markdown' | 'json') => void;
   resetMemory: () => Promise<void>;
   refreshStats: () => Promise<void>;
   resetSessionStats: () => Promise<void>;
@@ -396,7 +395,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const updated = { ...currentConversation, ...updates, updatedAt: Date.now() };
     setCurrentConversation(updated);
     setConversations((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
-    await api.updateConversation(updated.id, updates);
+    await api.updateConversation(updated.id, updates).catch(() => {
+      // Server may not know about this conversation yet (e.g. restoring from localStorage after restart).
+      // Local state + localStorage are already updated above — this is non-fatal.
+    });
   };
 
   const applyOptimizationMode = (mode: OptimizationMode) => {
@@ -446,6 +448,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         break;
       case "ADVANCED":
         updates = { mode: "ADVANCED" };
+        break;
+      case "MICRO_PROMPT":
+        updates = {
+          mode: "MICRO_PROMPT",
+          strategy: "ADAPTIVE_HYBRID",
+          thinkingLevel: "adaptive",
+          recentTurnsToKeep: 100,
+          contextBudget: 270000,
+          responseMode: "standard",
+        };
         break;
     }
 
@@ -578,6 +590,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       createdAt: Date.now(),
     };
 
+    // microToolName is set after routing (below), so we patch it in after creation
     const streamingAssistantMsg: ChatMessage = {
       id: `asst-${Date.now()}`,
       role: "assistant",
@@ -619,6 +632,45 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return [...likesDislikes, ...generalFacts].slice(0, 8).map(f => f.text);
     })();
 
+    // MICRO_PROMPT mode: route message to best mini-prompt before sending
+    const MICRO_PROMPT_MIN_SCORE = 0.28;
+    let microToolPrompt: string | undefined;
+    let microToolName: string | undefined;
+    let microToolInfo: ChatMessage['microToolInfo'];
+    let microToolSkipped: ChatMessage['microToolSkipped'];
+    if (activeConv.mode === 'MICRO_PROMPT' && textMessage) {
+      try {
+        const { routeMessage } = await import('../services/MicroToolRouter');
+        const result = await routeMessage(textMessage);
+        if (result.score >= MICRO_PROMPT_MIN_SCORE) {
+          microToolPrompt = result.tool.mini_prompt;
+          microToolName = result.tool.name;
+          microToolInfo = {
+            id: result.tool.id,
+            name: result.tool.name,
+            domain: result.tool.domain,
+            purpose: result.tool.purpose,
+            useWhen: result.tool.use_when,
+            score: result.score,
+            miniPrompt: result.tool.mini_prompt,
+          };
+        } else {
+          microToolSkipped = { name: result.tool.name, score: result.score };
+        }
+      } catch { /* fail-safe: proceed without */ }
+    }
+
+    // Patch the streaming assistant message with the resolved tool name + info (or skipped state)
+    if (microToolName || microToolSkipped) {
+      setCurrentConversation(prev => {
+        if (!prev) return prev;
+        const msgs = [...prev.messages];
+        const last = msgs[msgs.length - 1];
+        if (last && last.role === 'assistant') msgs[msgs.length - 1] = { ...last, microToolName, microToolInfo, microToolSkipped };
+        return { ...prev, messages: msgs };
+      });
+    }
+
     api.streamChatMessage(
       activeConv.id,
       {
@@ -644,6 +696,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userQuestionAnswers: userQuestionAnswers,
         isOptionSelection: !!userEventPayload,
         attachments: attachments && attachments.length > 0 ? attachments : undefined,
+        microToolPrompt: microToolPrompt,
+        microToolName: microToolName,
       },
       {
         onStart: (data) => {
@@ -876,6 +930,36 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
+  const exportConversation = (format: 'markdown' | 'json') => {
+    const conv = currentConversation;
+    if (!conv) return;
+    let content: string;
+    let filename: string;
+    let mime: string;
+    if (format === 'json') {
+      content = JSON.stringify(conv, null, 2);
+      filename = `${conv.title || 'conversation'}.json`;
+      mime = 'application/json';
+    } else {
+      const lines: string[] = [`# ${conv.title || 'Conversation'}`, ''];
+      for (const msg of conv.messages) {
+        const role = msg.role === 'user' ? '**You**' : '**Oala**';
+        lines.push(`### ${role}`);
+        if (msg.microToolName) lines.push(`*Tool: ${msg.microToolName}*`);
+        lines.push(msg.content || '');
+        lines.push('');
+      }
+      content = lines.join('\n');
+      filename = `${conv.title || 'conversation'}.md`;
+      mime = 'text/markdown';
+    }
+    const blob = new Blob([content], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const resetMemory = async () => {
     if (!currentConversation) return;
     const res = await api.resetConversationMemory(currentConversation.id);
@@ -972,6 +1056,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         sendMessage,
         stopStreaming,
         submitFeedback,
+        exportConversation,
         resetMemory,
         refreshStats,
         resetSessionStats: resetSessionStatsAction,

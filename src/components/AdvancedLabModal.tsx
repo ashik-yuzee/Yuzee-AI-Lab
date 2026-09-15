@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import {
   OptimizationStrategy,
+  OptimizationMode,
   ThinkingLevel,
   ResponseMode,
   StructuredMemoryCapsule,
@@ -38,6 +39,7 @@ export const AdvancedLabModal: React.FC = () => {
     setActiveLabTab,
     currentConversation,
     updateCurrentConversationSettings,
+    applyOptimizationMode,
     resetMemory,
     sessionStats,
     resetSessionStats,
@@ -67,6 +69,13 @@ export const AdvancedLabModal: React.FC = () => {
     if (!isAdvancedLabOpen || defaultPromptContent) return;
     api.fetchSystemPrompt().then(r => setDefaultPromptContent(r.content)).catch(() => {});
   }, [isAdvancedLabOpen, defaultPromptContent]);
+
+  useEffect(() => {
+    if (!isAdvancedLabOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setAdvancedLabOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isAdvancedLabOpen, setAdvancedLabOpen]);
 
   if (!isAdvancedLabOpen) return null;
 
@@ -237,7 +246,7 @@ export const AdvancedLabModal: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-slate-100">
                     <div className="col-span-full">
                       <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-1.5">
-                        <span className="font-semibold">Shared defaults</span> — these values apply to all conversations and all users. Mode overrides (SAVE_TOKENS / FULL_CONTEXT) still apply on top.
+                        <span className="font-semibold">Shared defaults</span> — these values apply to all conversations and all users. Mode overrides (MICRO_PROMPT / SAVE_TOKENS / FULL_CONTEXT) still apply on top.
                       </p>
                     </div>
                     <AppleSlider
@@ -655,6 +664,39 @@ export const AdvancedLabModal: React.FC = () => {
 
             {effectiveTab === "optimization" && (
               <div className="space-y-6 max-w-4xl">
+                {/* Optimization Mode */}
+                <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-amber-500" />
+                    <span>Optimization Mode</span>
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {([
+                      { id: "MICRO_PROMPT", label: "Micro-Prompt", badge: "New", desc: "Routes each message to the best Yuzee mini-prompt, then sends to Gemini." },
+                      { id: "AUTO", label: "Auto (Balanced)", badge: "Adaptive", desc: "Dynamic budget, prefix caching, adaptive thinking." },
+                      { id: "SAVE_TOKENS", label: "Save Tokens", badge: "Economical", desc: "Compaction after 2 turns, 1,000 token budget." },
+                      { id: "FULL_CONTEXT", label: "Full Context", badge: "Baseline", desc: "Sends entire history without compression." },
+                      { id: "VANILLA", label: "Vanilla (AI Studio)", badge: "Default", desc: "No optimisation, no compaction, 8192 token output cap." },
+                    ] as { id: OptimizationMode; label: string; badge: string; desc: string }[]).map((m) => (
+                      <div
+                        key={m.id}
+                        onClick={() => applyOptimizationMode(m.id)}
+                        className={`p-3 rounded-lg border cursor-pointer transition-all ${
+                          (conv as any).mode === m.id
+                            ? "border-amber-500 bg-amber-50/50 text-amber-950 shadow-xs"
+                            : "border-slate-200 hover:border-slate-300 bg-white text-slate-700"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-xs text-slate-900">{m.label}</span>
+                          <span className="px-1.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-[9px] font-semibold uppercase tracking-wide">{m.badge}</span>
+                        </div>
+                        <div className="text-[11px] text-slate-500 mt-1 leading-normal">{m.desc}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
                 <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-2xs space-y-4">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800 flex items-center gap-1.5">
                     <Sliders className="w-4 h-4 text-amber-600" />

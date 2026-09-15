@@ -53,9 +53,11 @@ export const ChatArea: React.FC = () => {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
   const [speakingId, setSpeakingId] = React.useState<string | null>(null);
+  const [expandedThinking, setExpandedThinking] = React.useState<Set<string>>(new Set());
 
   const allMessages = currentConversation?.messages || [];
   const lastAssistant = [...allMessages].reverse().find(m => m.role === 'assistant' && !m.isStreaming);
@@ -101,6 +103,20 @@ export const ChatArea: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentConversation?.messages, isStreaming, hasSuggestions]);
+
+  // Auto-expand thinking panel while streaming, auto-collapse 1.5s after done
+  useEffect(() => {
+    const msgs = currentConversation?.messages || [];
+    const streamingMsg = msgs.find(m => m.role === 'assistant' && m.isStreaming && m.microToolInfo);
+    if (streamingMsg) {
+      setExpandedThinking(prev => new Set(prev).add(streamingMsg.id));
+      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    } else {
+      // Streaming stopped — schedule collapse
+      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+      collapseTimerRef.current = setTimeout(() => setExpandedThinking(new Set()), 1500);
+    }
+  }, [currentConversation?.messages, isStreaming]);
 
   const lastCounsellorGateIdRef = React.useRef<string | null>(null);
   useEffect(() => {
@@ -299,6 +315,50 @@ export const ChatArea: React.FC = () => {
                             <div key={msg.id || `a-${aIdx}`} id={`message-${msg.id}`} className="space-y-3">
                               {/* Oala label */}
                               <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#38596b] mb-2.5">Oala</div>
+
+                              {/* Micro-prompt skipped badge (low confidence) */}
+                              {msg.microToolSkipped && !msg.microToolInfo && (
+                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 text-[10px] font-medium mb-2">
+                                  <Brain className="w-3 h-3 text-slate-300" />
+                                  <span>Mini-prompt skipped — best match was <span className="font-semibold text-slate-500">{msg.microToolSkipped.name}</span> at {Math.round(msg.microToolSkipped.score * 100)}% (below confidence threshold)</span>
+                                </div>
+                              )}
+
+                              {/* Micro-prompt thinking panel */}
+                              {msg.microToolInfo && (
+                                <div className="mb-2 rounded-xl border border-amber-200/60 bg-amber-50/40 overflow-hidden text-[12px]">
+                                  <button
+                                    onClick={() => setExpandedThinking(prev => {
+                                      const next = new Set(prev);
+                                      next.has(msg.id) ? next.delete(msg.id) : next.add(msg.id);
+                                      return next;
+                                    })}
+                                    className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-amber-50/60 transition-colors"
+                                  >
+                                    <Brain className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                                    <span className="text-amber-700 font-medium flex-1">
+                                      {msg.isStreaming ? 'Routing to mini-prompt…' : `Routed via ${msg.microToolInfo.name}`}
+                                    </span>
+                                    <span className="text-amber-400 text-[10px] font-mono">
+                                      {Math.round(msg.microToolInfo.score * 100)}% match
+                                    </span>
+                                    <span className="text-amber-400 text-[10px] ml-1">{expandedThinking.has(msg.id) ? '▲' : '▼'}</span>
+                                  </button>
+                                  {expandedThinking.has(msg.id) && (
+                                    <div className="px-3 pb-3 space-y-2 border-t border-amber-200/40">
+                                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-2 text-[11px]">
+                                        <div><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Tool</span><div className="text-amber-800 font-semibold">{msg.microToolInfo.name}</div></div>
+                                        <div><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Domain</span><div className="text-slate-600">{msg.microToolInfo.domain}</div></div>
+                                        <div className="col-span-2"><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Why chosen</span><div className="text-slate-600 leading-snug">{msg.microToolInfo.useWhen}</div></div>
+                                      </div>
+                                      <div>
+                                        <div className="text-slate-400 uppercase tracking-wide text-[9px] font-bold mb-1">Injected mini-prompt</div>
+                                        <pre className="whitespace-pre-wrap text-[10px] leading-relaxed text-slate-500 bg-white/60 border border-amber-100 rounded-lg p-2 max-h-32 overflow-y-auto font-mono">{msg.microToolInfo.miniPrompt}</pre>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
 
                               {/* Compaction banner */}
                               {msg.telemetry?.compactionMetrics && (

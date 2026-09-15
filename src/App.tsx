@@ -17,6 +17,8 @@ import { ClarificationQuestionsModal } from "./components/ClarificationQuestions
 import { LocationPromptModal } from "./components/LocationPromptModal";
 import { PathwayWhiteboard } from "./components/PathwayWhiteboard";
 import { ProtocolRendererPage } from "./components/ProtocolRendererPage";
+import { ModelLoadingIndicator } from "./components/ModelLoadingIndicator";
+import { startWarmup } from "./services/MicroToolRouter";
 
 function AppLoadingScreen() {
   return (
@@ -131,6 +133,9 @@ export default function App() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [page, setPage] = useState<'chat' | 'renderer'>('chat');
 
+  // Start ONNX model download immediately — before auth, before anything else
+  useEffect(() => { startWarmup(); }, []);
+
   useEffect(() => {
     const DEFAULT_ACCENT = '#7244c6';
     const saved = localStorage.getItem('oala-accent');
@@ -165,8 +170,11 @@ export default function App() {
   }
 
   return (
-    <TokenLabProvider>
-      <AuthedApp onOpenRenderer={() => setPage('renderer')} />
-    </TokenLabProvider>
+    <>
+      <ModelLoadingIndicator />
+      <TokenLabProvider>
+        <AuthedApp onOpenRenderer={() => setPage('renderer')} />
+      </TokenLabProvider>
+    </>
   );
 }

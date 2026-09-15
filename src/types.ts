@@ -65,7 +65,7 @@ export type ModelId = string;
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high' | 'adaptive';
 
-export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA';
+export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA' | 'MICRO_PROMPT';
 
 export type OptimizationStrategy =
   | 'BASELINE'          // Baseline / Full History (High token usage)
@@ -237,6 +237,17 @@ export interface ChatMessage {
   isStreaming?: boolean;
   error?: string;
   errorCode?: string;
+  microToolName?: string;
+  microToolInfo?: {
+    id: string;
+    name: string;
+    domain: string;
+    purpose: string;
+    useWhen: string;
+    score: number;
+    miniPrompt: string;
+  };
+  microToolSkipped?: { name: string; score: number };
 }
 
 export interface Conversation {

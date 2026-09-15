@@ -385,6 +385,8 @@ export function streamChatMessage(
     userQuestionAnswers?: any[];
     isOptionSelection?: boolean;
     attachments?: Array<{ mimeType: string; data: string }>;
+    microToolPrompt?: string;
+    microToolName?: string;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal
