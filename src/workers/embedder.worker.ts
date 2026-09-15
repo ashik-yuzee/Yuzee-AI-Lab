@@ -41,10 +41,11 @@ async function init() {
   // @huggingface/transformers v4 has native ESM — no UMD/global scope issues
   const { pipeline: xPipeline, cos_sim: xCosSim } = await import('@huggingface/transformers');
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   embedder = await xPipeline('feature-extraction', MODEL, {
     quantized: true,
     progress_callback: progressCallback,
-  });
+  } as any);
   self.postMessage({ type: 'progress', pct: 85, label: 'Building tool index…' });
 
   const texts = tools.map(t => `${t.name}. ${t.use_when} ${t.purpose}`);
@@ -62,7 +63,7 @@ async function init() {
 
 let cosSim: ((a: Float32Array, b: Float32Array) => number) | null = null;
 const initPromise = init()
-  .then(cs => { cosSim = cs as (a: Float32Array, b: Float32Array) => number; })
+  .then(cs => { cosSim = cs as unknown as (a: Float32Array, b: Float32Array) => number; })
   .catch(() => {
     self.postMessage({ type: 'progress', pct: -1, label: 'Failed' });
   });

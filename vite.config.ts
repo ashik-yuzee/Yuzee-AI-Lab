@@ -19,7 +19,7 @@ export default defineConfig(() => {
     plugins: [onnxGlobalFix, react(), tailwindcss()],
     build: { outDir: 'dist/public', target: 'esnext' },
     optimizeDeps: { exclude: ['@xenova/transformers', '@huggingface/transformers', 'onnxruntime-web'] },
-    worker: { format: 'es', plugins: () => [onnxGlobalFix] },
+    worker: { format: 'es' as const, plugins: () => [onnxGlobalFix] },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
