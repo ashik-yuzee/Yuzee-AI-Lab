@@ -1,3 +1,4 @@
+import {parseOalaMention} from '../oala/invocation';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import {
   Conversation,
@@ -17,7 +18,9 @@ import {
   UserEvent,
 } from "../types";
 import * as api from "../services/api";
-import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
+import { GEMINI_MODELS } from "../data/models";
+
+const DEFAULT_MODEL_ID = GEMINI_MODELS.find(m => m.isDefault)?.id ?? "gemini-3.5-flash";
 
 interface TokenLabContextType {
   conversations: Conversation[];
@@ -103,7 +106,7 @@ interface TokenLabContextType {
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
-  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<void>;
+  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
   exportConversation: (format: 'markdown' | 'json') => void;
@@ -208,6 +211,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [sharedSettings, setSharedSettings] = useState<import('../services/api').SharedSettings | null>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+  const sendLockRef = useRef(false);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
   const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
 
@@ -397,7 +401,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setConversations((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     await api.updateConversation(updated.id, updates).catch(() => {
       // Server may not know about this conversation yet (e.g. restoring from localStorage after restart).
-      // Local state + localStorage are already updated above — this is non-fatal.
     });
   };
 
@@ -446,18 +449,11 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           responseMode: "vanilla",
         };
         break;
+      case "MICRO_PROMPT":
+        updates = {mode:"MICRO_PROMPT",strategy:"ADAPTIVE_HYBRID",thinkingLevel:"adaptive",responseMode:"standard"};
+        break;
       case "ADVANCED":
         updates = { mode: "ADVANCED" };
-        break;
-      case "MICRO_PROMPT":
-        updates = {
-          mode: "MICRO_PROMPT",
-          strategy: "ADAPTIVE_HYBRID",
-          thinkingLevel: "adaptive",
-          recentTurnsToKeep: 100,
-          contextBudget: 270000,
-          responseMode: "standard",
-        };
         break;
     }
 
@@ -518,15 +514,16 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const sendMessage = async (input: string | any, attachments?: Array<{ mimeType: string; data: string }>) => {
-    if (isStreaming) return;
-
+    if (isStreaming || sendLockRef.current) return false;
+    sendLockRef.current = true;
+    try {
     let textMessage = "";
     let userEventPayload: any = null;
     let userQuestionAnswers: any[] | undefined;
 
     if (typeof input === "string") {
       textMessage = input.trim();
-      if (!textMessage && (!attachments || attachments.length === 0)) return;
+      if (!textMessage && (!attachments || attachments.length === 0)) return false;
     } else if (input && typeof input === "object") {
       // Clarification answers payload: { message, userQuestionAnswers }
       if (input.message !== undefined && input.userQuestionAnswers !== undefined) {
@@ -538,13 +535,13 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         if (input.userEvent?.interaction) {
           const inter = input.userEvent.interaction;
           if (inter.self_input) {
-            textMessage = inter.self_input;
+            textMessage = input.value || inter.self_input;
           } else if (inter.selected_option_ids?.length) {
             textMessage = input.value || `Selected option: ${inter.selected_option_ids.join(", ")}`;
           } else if (inter.ranked_option_ids?.length) {
-            textMessage = `Prioritized options: ${inter.ranked_option_ids.join(" > ")}`;
+            textMessage = input.value || inter.ranked_option_ids.join(" → ");
           } else if (inter.fields) {
-            textMessage = `Submitted details: ${Object.entries(inter.fields).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
+            textMessage = input.value || `Submitted details: ${Object.entries(inter.fields).map(([k, v]) => `${k}: ${v}`).join(", ")}`;
           } else {
             textMessage = "Submitted response";
           }
@@ -577,7 +574,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             pendingOriginalMessageRef.current = textMessage;
             setHasDeferredMessage(true);
             setPendingClarificationQuestions({ questions: preCheck.questions, bridgeMessage: preCheck.bridgeMessage, originalMessage: textMessage });
-            return;
+            return false;
           }
         } catch { /* fail-safe: proceed normally */ }
       }
@@ -587,16 +584,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       id: `user-${Date.now()}`,
       role: "user",
       content: textMessage,
+      userEvent: userEventPayload || undefined,
       createdAt: Date.now(),
     };
 
-    // microToolName is set after routing (below), so we patch it in after creation
     const streamingAssistantMsg: ChatMessage = {
       id: `asst-${Date.now()}`,
       role: "assistant",
       content: "",
       createdAt: Date.now(),
       isStreaming: true,
+      streamProgress: { phase: "waiting" },
     };
 
     const updatedMessages = [...(activeConv.messages || []), userMsg, streamingAssistantMsg];
@@ -632,49 +630,29 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return [...likesDislikes, ...generalFacts].slice(0, 8).map(f => f.text);
     })();
 
-    // MICRO_PROMPT mode: route message to best mini-prompt before sending
-    const MICRO_PROMPT_MIN_SCORE = 0.28;
-    let microToolPrompt: string | undefined;
-    let microToolName: string | undefined;
-    let microToolInfo: ChatMessage['microToolInfo'];
-    let microToolSkipped: ChatMessage['microToolSkipped'];
-    if (activeConv.mode === 'MICRO_PROMPT' && textMessage) {
-      try {
-        const { routeMessage } = await import('../services/MicroToolRouter');
-        const result = await routeMessage(textMessage);
-        if (result.score >= MICRO_PROMPT_MIN_SCORE) {
-          microToolPrompt = result.tool.mini_prompt;
-          microToolName = result.tool.name;
-          microToolInfo = {
-            id: result.tool.id,
-            name: result.tool.name,
-            domain: result.tool.domain,
-            purpose: result.tool.purpose,
-            useWhen: result.tool.use_when,
-            score: result.score,
-            miniPrompt: result.tool.mini_prompt,
-          };
-        } else {
-          microToolSkipped = { name: result.tool.name, score: result.score };
-        }
-      } catch { /* fail-safe: proceed without */ }
+    let microToolSelection: import('../routing/policy').RoutingDecision | undefined;
+    const oalaMention = parseOalaMention(textMessage);
+    if(oalaMention.active && !userEventPayload){
+      setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,streamProgress:{phase:'routing'}}:m)}));
+      try{
+        const {routeMessage}=await import('../services/MicroToolRouter');
+        microToolSelection=await routeMessage(oalaMention.message,{signal:controller.signal,structuredAnswer:!!userEventPayload});
+      }catch{/* Continue with the main counsellor when optional routing is unavailable. */}
+      if(controller.signal.aborted)return false;
+      setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,routing:microToolSelection,streamProgress:{phase:'waiting'}}:m)}));
     }
+    if(controller.signal.aborted)return false;
 
-    // Patch the streaming assistant message with the resolved tool name + info (or skipped state)
-    if (microToolName || microToolSkipped) {
-      setCurrentConversation(prev => {
-        if (!prev) return prev;
-        const msgs = [...prev.messages];
-        const last = msgs[msgs.length - 1];
-        if (last && last.role === 'assistant') msgs[msgs.length - 1] = { ...last, microToolName, microToolInfo, microToolSkipped };
-        return { ...prev, messages: msgs };
-      });
-    }
-
+    return await new Promise<boolean>((resolve) => {
+    let accepted = false;
+    let failed = false;
+    controller.signal.addEventListener('abort', () => resolve(false), { once: true });
     api.streamChatMessage(
       activeConv.id,
       {
         message: textMessage,
+        mode: activeConv.mode,
+        microToolSelection,
         userEvent: userEventPayload,
         model: activeConv.model,
         strategy: activeConv.strategy,
@@ -696,32 +674,36 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userQuestionAnswers: userQuestionAnswers,
         isOptionSelection: !!userEventPayload,
         attachments: attachments && attachments.length > 0 ? attachments : undefined,
-        microToolPrompt: microToolPrompt,
-        microToolName: microToolName,
       },
       {
         onStart: (data) => {
           resolvedThinkingLevel = data.appliedThinkingLevel;
+          if(data.routing&&!controller.signal.aborted)setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,routing:data.routing}:m)}));
+        },
+        onStatus: (progress) => {
+          if (controller.signal.aborted) return;
+          setCurrentConversation(prev => prev?.id !== activeConv.id ? prev : ({...prev, messages: prev.messages.map(m => m.id === streamingAssistantMsg.id && m.isStreaming ? {...m,streamProgress:progress} : m)}));
         },
         onDelta: (chunk) => {
           accumulatedContent += chunk;
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               msgs[msgs.length - 1] = { ...last, content: accumulatedContent };
             }
             return { ...prev, messages: msgs };
           });
         },
         onStructured: (structData) => {
+          accepted = true;
           performance.mark('yuzee_first_structured');
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               // Preserve schemaValid/semanticValid/validationErrors set by onValidation.
               // structData is the raw protocol response, not a validation envelope.
               msgs[msgs.length - 1] = {
@@ -734,10 +716,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
         onValidation: (valData) => {
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               msgs[msgs.length - 1] = {
                 ...last,
                 schemaValid: valData.schemaValid,
@@ -769,10 +751,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           setActiveTurnTelemetry(telemetry);
 
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               msgs[msgs.length - 1] = {
                 ...last,
                 telemetry,
@@ -800,7 +782,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         },
         onCompaction: (compaction) => {
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             return {
               ...prev,
               compactionHistory: [...(prev.compactionHistory || []), compaction],
@@ -808,24 +790,20 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           });
         },
         onDone: () => {
+          if (controller.signal.aborted) return;
           performance.mark('yuzee_response_complete');
           try {
             performance.measure('yuzee_e2e_latency', 'yuzee_send_clicked', 'yuzee_response_complete');
           } catch { /* marks may be cleared between calls */ }
           setIsStreaming(false);
-          // Auto-open whiteboard and generate pathway when user asks for one
-          if (/\b(pathway|roadmap|career path|career plan|action plan|map out|plan out|next steps?|step[- ]by[- ]step|whiteboard|visuali[sz]e|visual.{0,5}map|build.{0,15}(path|plan|road|map)|create.{0,15}(path|plan|road|map)|show.{0,10}(path|plan|map)|generate.{0,10}(path|plan|map)|draw.{0,10}(path|plan|map))\b/i.test(textMessage)) {
-            setWhiteboardOpen(true);
-            setTokenInspectorOpen(false);
-            setTimeout(() => setWhiteboardGenerateTick(t => t + 1), 400);
-          }
+          resolve(accepted && !failed);
           abortControllerRef.current = null;
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
-              msgs[msgs.length - 1] = { ...last, isStreaming: false };
+            if (last?.id === streamingAssistantMsg.id) {
+              msgs[msgs.length - 1] = { ...last, isStreaming: false, ...(!accepted && !failed ? {error: "The reply stopped before it was ready. Your answer has been kept. Please try again.", errorCode: "INCOMPLETE_RESPONSE"} : {}) };
             }
             return { ...prev, messages: msgs };
           });
@@ -839,14 +817,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           }
         },
         onProtocolValidationError: (data) => {
+          failed = true;
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               msgs[msgs.length - 1] = {
                 ...last,
                 content: accumulatedContent || last.content,
+                error: "I couldn’t prepare a clear response. Please try again. Your answer has been kept.",
+                errorCode: "INVALID_RESPONSE",
                 schemaValid: false,
                 semanticValid: false,
                 validationErrors: data.errors || [],
@@ -856,14 +837,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           });
         },
         onError: (err) => {
+          if (controller.signal.aborted) return;
+          failed = true;
+          resolve(false);
           console.error("Stream failed:", err);
           setIsStreaming(false);
           abortControllerRef.current = null;
           setCurrentConversation((prev) => {
-            if (!prev) return prev;
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
-            if (last && last.role === "assistant") {
+            if (last?.id === streamingAssistantMsg.id) {
               msgs[msgs.length - 1] = {
                 ...last,
                 content: accumulatedContent || "",
@@ -878,6 +862,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       },
       controller.signal
     );
+    });
+    } finally { sendLockRef.current = false; }
   };
 
   const proceedWithDeferredMessage = () => {
@@ -906,7 +892,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const msgs = [...prev.messages];
         const last = msgs[msgs.length - 1];
         if (last?.role === "assistant" && last.isStreaming) {
-          msgs[msgs.length - 1] = { ...last, isStreaming: false };
+          msgs[msgs.length - 1] = { ...last, isStreaming: false, streamStopped: !last.structuredResponse, content: last.structuredResponse ? last.content : "" };
           return { ...prev, messages: msgs };
         }
         return prev;

@@ -54,6 +54,7 @@ export class YuzeeRequestAssembler {
   private promptHash: string = '';
   private promptBytes: number = 0;
   private responseSchemaJson: any = null;
+  private experienceRules: string = '';
   private schemaHash: string = '';
 
   private constructor() {
@@ -68,14 +69,15 @@ export class YuzeeRequestAssembler {
   }
 
   private loadAuthoritativeAssets(): void {
+    this.experienceRules = fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/clear-guidance.md'), 'utf-8') + '\n' + fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/learning-depth.md'), 'utf-8');
     const promptPath = path.resolve(process.cwd(), 'src/protocol/v1.3/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md');
     const schemaPath = path.resolve(process.cwd(), 'src/protocol/v1.3/Yuzee_Response_Schema_v1.3.json');
 
     if (fs.existsSync(promptPath)) {
       const buf = fs.readFileSync(promptPath);
-      this.promptContent = buf.toString('utf-8');
-      this.promptBytes = buf.length;
-      this.promptHash = crypto.createHash('sha256').update(buf).digest('hex');
+      this.promptContent = buf.toString('utf-8') + '\n' + this.experienceRules;
+      this.promptBytes = Buffer.byteLength(this.promptContent);
+      this.promptHash = crypto.createHash('sha256').update(this.promptContent).digest('hex');
     } else {
       console.warn(`[YuzeeRequestAssembler] Prompt file not found at ${promptPath}`);
     }
@@ -521,6 +523,8 @@ export class YuzeeRequestAssembler {
   public assembleRequest(params: {
     model: string;
     messageText: string;
+    microToolInstruction?: string;
+    oalaInstruction?: string;
     userEvent?: UserEvent;
     careerContext?: Record<string, string | undefined>;
     summaryText?: string;
@@ -545,8 +549,10 @@ export class YuzeeRequestAssembler {
     // 1. Resolve System Instruction
     let systemInstruction = this.promptContent;
     if (params.systemPromptMode === 'custom' && params.customSystemPrompt && params.customSystemPrompt.trim().length > 0) {
-      systemInstruction = params.customSystemPrompt.trim();
+      systemInstruction = params.customSystemPrompt.trim() + '\n' + this.experienceRules;
     }
+
+    if (params.oalaInstruction) systemInstruction += '\n\n' + params.oalaInstruction;
 
     // 2. Format Dynamic Context (Capsule + Summary + Recent Turns)
     const careerStr = this.formatCareerContext(params.careerContext || {});
@@ -566,7 +572,8 @@ export class YuzeeRequestAssembler {
     const dynamicContextTokenCount = estimateTokens(dynamicContextStr);
 
     // 3. Format Current User Input (UserEvent or Raw Text)
-    const currentUserStr = this.formatUserEvent(params.messageText, params.userEvent, params.responseMode);
+    const userInput = this.formatUserEvent(params.messageText, params.userEvent, params.responseMode);
+    const currentUserStr = params.microToolInstruction ? userInput+'\n\n'+params.microToolInstruction : userInput;
     const currentMessageTokenCount = estimateTokens(currentUserStr);
 
     // 4. Assembled Contents for Gemini

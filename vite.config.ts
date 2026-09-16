@@ -1,32 +1,17 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
-import {defineConfig, type Plugin} from 'vite';
-
-// Prepend `globalThis.global = globalThis` to onnxruntime-web UMD bundles so
-// their global-detection code finds `global` in browser/worker scope.
-const onnxGlobalFix: Plugin = {
-  name: 'onnx-global-fix',
-  transform(code, id) {
-    if (id.includes('onnxruntime-web') || id.includes('ort-web')) {
-      return { code: `globalThis.global = globalThis;\n${code}`, map: null };
-    }
-  },
-};
+import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    plugins: [onnxGlobalFix, react(), tailwindcss()],
+    plugins: [react(), tailwindcss()],
     build: { outDir: 'dist/public', target: 'esnext' },
     optimizeDeps: { exclude: ['@xenova/transformers', '@huggingface/transformers', 'onnxruntime-web'] },
-    worker: { format: 'es' as const, plugins: () => [onnxGlobalFix] },
+    worker: { format: 'es' as const },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
-        // Force all onnxruntime-web imports to the nested ESM bundle (v1.26, proper ESM, no UMD).
-        // Root onnxruntime-web@1.14.0 uses UMD (ort-web.min.js) which crashes in browser ESM context.
-        'onnxruntime-web/webgpu': path.resolve(__dirname, 'node_modules/@huggingface/transformers/node_modules/onnxruntime-web/dist/ort.webgpu.bundle.min.mjs'),
-        'onnxruntime-web': path.resolve(__dirname, 'node_modules/@huggingface/transformers/node_modules/onnxruntime-web/dist/ort.webgpu.bundle.min.mjs'),
       },
     },
     server: {

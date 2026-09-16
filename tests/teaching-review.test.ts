@@ -1,0 +1,24 @@
+import assert from 'node:assert/strict';
+import {makeResponse} from '../src/ux/fixtures';
+import {applyReviewedBlocks,shouldReviewTeaching,combineGenerationUsage} from '../src/services/TeachingAnswerReview';
+const original=makeResponse();original.content_blocks=Array.from({length:8},(_,i)=>({...original.content_blocks[0],id:'s'+i,title:'Section '+i,text:'Original explanation'}));
+assert.equal(shouldReviewTeaching(original),true);
+assert.equal(shouldReviewTeaching({...original,content_blocks:[{type:'text',title:'',text:'explanation '.repeat(150)}]}),true);
+const revised=original.content_blocks.map(b=>({...b,text:'Corrected explanation'}));
+const result=applyReviewedBlocks(original,JSON.stringify({content_blocks:revised}));
+assert.deepEqual(result.content_blocks,revised);
+for(const key of Object.keys(original).filter(k=>k!=='content_blocks'))assert.deepEqual(result[key],original[key]);
+assert.equal(original.content_blocks[0].text,'Original explanation');
+for(const invalid of ['{}','not json','{"content_blocks":[]}',JSON.stringify({content_blocks:revised,state:{injected:true}}),JSON.stringify({content_blocks:[{type:"text",title:"A heading",text:" "}]})])assert.throws(()=>applyReviewedBlocks(original,invalid));
+// Fewer sections can carry a complete answer; neither five headings nor original length is required.
+const concise=applyReviewedBlocks(original,JSON.stringify({content_blocks:[{...revised[0],title:'Your position',text:'You report one of two required samples. One remains outstanding; the provider still needs to assess suitability.'},{...revised[1],title:'Next step',text:'Check the provider criteria and prepare the second sample.'}]}));
+assert.equal(concise.content_blocks.length,2);
+assert.deepEqual(concise.interaction,original.interaction);
+assert.deepEqual(concise.state,original.state);
+assert.equal(shouldReviewTeaching({...original,response_intent:'PAUSE_CLOSURE'}),false);
+assert.equal(shouldReviewTeaching({...original,response_intent:'SAFETY_BOUNDARY'}),false);
+assert.equal(shouldReviewTeaching({...original,content_blocks:[{type:'text',title:'',text:'An elective is a subject you choose.'}]}),false);
+assert.deepEqual(combineGenerationUsage({promptTokenCount:100,candidatesTokenCount:50,totalTokenCount:150},{promptTokenCount:200,candidatesTokenCount:80,totalTokenCount:290,thoughtsTokenCount:10}),{promptTokenCount:300,candidatesTokenCount:130,totalTokenCount:440,thoughtsTokenCount:10});
+assert.equal(combineGenerationUsage({},{}).cachedContentTokenCount,undefined);
+const nullable=structuredClone(revised);nullable[0].items=[{id:'i',title:'',text:'Detail',value:'',status:null}];assert.equal(applyReviewedBlocks(original,JSON.stringify({content_blocks:nullable})).content_blocks[0].items[0].status,'');
+console.log('PASS: substantive-review selection, concise and safety exceptions, explanation-only edits, original-state protection, malformed/empty review rejection and concise complete rewrites, and combined provider usage.');

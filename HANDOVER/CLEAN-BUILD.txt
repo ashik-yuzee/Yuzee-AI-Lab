@@ -1,0 +1,28 @@
+
+> react-example@0.0.0 build
+> tsc --noEmit && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs --external:vite
+
+vite v6.4.3 building for production...
+transforming...
+✓ 2110 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/public/index.html                                                 1.09 kB │ gzip:     0.60 kB
+dist/public/assets/embedder.worker-C6ys2GOw.js                       376.63 kB
+dist/public/assets/transformers.web-zTrlc8P4.js                      557.80 kB
+dist/public/assets/ort-wasm-simd-threaded.asyncify-DMmc6YqF.wasm  23,567.05 kB │ gzip: 5,746.64 kB
+dist/public/assets/index-CqASOuI-.css                                101.23 kB │ gzip:    18.58 kB
+dist/public/assets/MicroRouterStatus-CDN6TFfx.js                       0.58 kB │ gzip:     0.38 kB
+dist/public/assets/MicroToolRouter-D7snZ4t9.js                       377.97 kB │ gzip:    45.09 kB
+dist/public/assets/index-BZZ9JrtV.js                                 901.48 kB │ gzip:   254.08 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.58s
+
+  dist/server.cjs      710.9kb
+  dist/server.cjs.map  956.3kb
+
+⚡ Done in 14ms

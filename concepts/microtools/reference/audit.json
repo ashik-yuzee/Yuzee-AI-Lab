@@ -1,0 +1,15 @@
+{
+  "toolCount": 105,
+  "ruleCount": 40,
+  "duplicates": [],
+  "nonLiteralNextToolReferences": [
+    [
+      "CORE_006",
+      "domain-specific detail tools"
+    ],
+    [
+      "CORE_009",
+      "Any action-capable RMO or micro-tool"
+    ]
+  ]
+}

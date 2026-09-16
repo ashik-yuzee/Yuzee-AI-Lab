@@ -1,0 +1,13 @@
+import fs from 'node:fs';
+import {AutoTokenizer,env} from '@huggingface/transformers';
+env.cacheDir='./data/minilm-cache';
+const tok=await AutoTokenizer.from_pretrained('Xenova/all-MiniLM-L6-v2',{local_files_only:true});
+const example=`Imagine you are building a small search feature for a website that helps users look up articles. A user types a detailed question into the search bar, hoping to find the exact guide they need. If they copy and paste a few paragraphs of text from another document into your search bar, the system will easily be able to process all of it without cutting anything off. However, if they try to paste an entire blog post or a long email thread into the input box, the model will reach its limit. It will read the first few paragraphs perfectly, but everything after that point will simply be ignored by the algorithm. For a standard product catalog, a frequently asked questions page, or a collection of short customer reviews, this limit is usually more than enough. You only run into issues when you try to feed the AI heavy documents like terms of service agreements, medical research papers, or full chapters of a book all at once.`;
+const count=text=>tok(text,{truncation:false,padding:false}).input_ids.dims.at(-1);
+const tools=JSON.parse(fs.readFileSync('src/routing/microtools.json','utf8')).filter(t=>!['CORE_001','CORE_002'].includes(t.id));
+const entries=tools.map(t=>({id:t.id,tokens:count(`${t.name}. ${t.use_when} ${t.purpose} Examples: ${t.trigger_examples}`)})).sort((a,b)=>b.tokens-a.tokens);
+const dense=('cybersecurity ' .repeat(120)+'recognition prerequisites qualification '.repeat(12)).slice(0,1799);
+const long='learning '.repeat(650)+'Actually I only want costs, not a course comparison.';
+const result={model:'Xenova/all-MiniLM-L6-v2',tokenizerMax:tok.model_max_length,includesSpecialTokens:true,example:{words:example.split(/\s+/).length,tokens:count(example)},descriptorCount:entries.length,maxDescriptor:entries[0],descriptorsOver256:entries.filter(t=>t.tokens>256),testLong:{characters:long.length,untruncatedTokens:count(long),defaultTruncatedTokens:tok(long,{truncation:true}).input_ids.dims.at(-1)},descriptors:entries};
+fs.writeFileSync('../outputs/MiniLM-Token-Audit.json',JSON.stringify(result,null,2));
+console.log(JSON.stringify({...result,descriptors:undefined},null,2));

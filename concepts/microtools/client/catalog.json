@@ -1,0 +1,947 @@
+[
+  {
+    "id": "CORE_001",
+    "name": "Classify User Context",
+    "domain": "Control",
+    "required_inputs": "user_message",
+    "allowed_next_tools": "CORE_002; CORE_003; CORE_009",
+    "output_fields": "user_type; current_state; goal; decision_stage; location; constraints; unresolved_unknowns; confidence",
+    "api_data_needs": "conversation context; profile API"
+  },
+  {
+    "id": "CORE_002",
+    "name": "Identify Entity and Intent",
+    "domain": "Control",
+    "required_inputs": "user_message",
+    "allowed_next_tools": "CORE_003; CORE_004; CORE_005; CORE_006; CORE_007",
+    "output_fields": "intent; entity_type; entity_ids; requested_depth; operation; confidence",
+    "api_data_needs": "UI selection state; entity registry"
+  },
+  {
+    "id": "CORE_003",
+    "name": "Go Deeper",
+    "domain": "Control",
+    "required_inputs": "entity_type; entity_id; current_depth",
+    "allowed_next_tools": "CORE_003; CORE_004; CORE_005; CORE_008",
+    "output_fields": "parent; children; why_each_matters; next_actions",
+    "api_data_needs": "entity graph; domain API"
+  },
+  {
+    "id": "CORE_004",
+    "name": "Go Broader",
+    "domain": "Control",
+    "required_inputs": "entity_type; entity_id",
+    "allowed_next_tools": "CORE_003; CORE_005; CORE_008",
+    "output_fields": "parent; broader_parent; adjacent_branches; relationship",
+    "api_data_needs": "taxonomy/classification API"
+  },
+  {
+    "id": "CORE_005",
+    "name": "Related Entities",
+    "domain": "Control",
+    "required_inputs": "entity_type; entity_id",
+    "allowed_next_tools": "CORE_003; CORE_006; COURSE_007; SKILL_010; SKILL_011; SKILL_012; IND_004; IND_005",
+    "output_fields": "related_entities; relationship_type; strength; rationale; evidence_state",
+    "api_data_needs": "knowledge graph; mapping tables"
+  },
+  {
+    "id": "CORE_006",
+    "name": "Compare Entities",
+    "domain": "Control",
+    "required_inputs": "entity_ids; entity_type; user_goal",
+    "allowed_next_tools": "CORE_007; CORE_009; domain-specific detail tools",
+    "output_fields": "decision_snapshot; comparison_factors; tradeoffs; closer_fit; unresolved_question; next_actions",
+    "api_data_needs": "entity APIs; user profile"
+  },
+  {
+    "id": "CORE_007",
+    "name": "Explain This",
+    "domain": "Control",
+    "required_inputs": "concept_or_entity",
+    "allowed_next_tools": "CORE_008; CORE_003",
+    "output_fields": "plain_explanation; why_it_matters; example; next_actions",
+    "api_data_needs": "taxonomy/glossary; current entity data"
+  },
+  {
+    "id": "CORE_008",
+    "name": "Why This Matters",
+    "domain": "Control",
+    "required_inputs": "finding; user_or_org_context",
+    "allowed_next_tools": "CORE_009; CAND_003; COMP_010; INST_006",
+    "output_fields": "immediate_impact; future_impact; action_needed; next_actions",
+    "api_data_needs": "current tool output; profile"
+  },
+  {
+    "id": "CORE_009",
+    "name": "Next Best Action",
+    "domain": "Control",
+    "required_inputs": "current_state; goal; latest_findings",
+    "allowed_next_tools": "Any action-capable RMO or micro-tool",
+    "output_fields": "primary_action; alternatives; reason; expected_outcome",
+    "api_data_needs": "current conversation; action registry"
+  },
+  {
+    "id": "CORE_010",
+    "name": "Evidence Check",
+    "domain": "Control",
+    "required_inputs": "claims",
+    "allowed_next_tools": "CORE_006; CORE_009",
+    "output_fields": "claim; source; date; geography; evidence_state; confidence; caveat",
+    "api_data_needs": "source registry; provenance metadata"
+  },
+  {
+    "id": "COURSE_001",
+    "name": "Course Details",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "COURSE_002; COURSE_003; COURSE_004; COURSE_005; COURSE_006; COURSE_007; COURSE_008; COURSE_009; COURSE_010; COURSE_011; COURSE_012; COURSE_013; COURSE_014; COURSE_015",
+    "output_fields": "snapshot; qualification; duration; delivery; structure; specialisations; entry; cost_funding; skills; WIL; outcomes; next_actions",
+    "api_data_needs": "course API; institution API; funding API"
+  },
+  {
+    "id": "COURSE_002",
+    "name": "Compare Courses",
+    "domain": "Education",
+    "required_inputs": "course_ids; user_goal",
+    "allowed_next_tools": "COURSE_004; COURSE_006; COURSE_007; COURSE_008; COURSE_010; COURSE_013; COURSE_014",
+    "output_fields": "closer_fit; factors; tradeoffs; unresolved_question; next_actions",
+    "api_data_needs": "course API; profile; labour-market mappings"
+  },
+  {
+    "id": "COURSE_003",
+    "name": "Course Level and Qualification",
+    "domain": "Education",
+    "required_inputs": "course_id or qualification_type",
+    "allowed_next_tools": "COURSE_016; CAREER_002; SKILL_002",
+    "output_fields": "qualification_type; aqf_level; level_meaning; progression; caveats",
+    "api_data_needs": "course API; AQF mapping"
+  },
+  {
+    "id": "COURSE_004",
+    "name": "Course Structure",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "COURSE_005; COURSE_006; COURSE_007",
+    "output_fields": "core; specialisations; electives; capstone; WIL; sequence; goal_relevance",
+    "api_data_needs": "course structure API; provider handbook data"
+  },
+  {
+    "id": "COURSE_005",
+    "name": "Course Units",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "SKILL_001; TECH_001; COURSE_006",
+    "output_fields": "unit_id; title; status; stage; skills; tools; prerequisites; relevance",
+    "api_data_needs": "unit API; syllabus data"
+  },
+  {
+    "id": "COURSE_006",
+    "name": "Course Specialisations",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "COURSE_005; COURSE_007; COURSE_008; CAREER_003",
+    "output_fields": "specialisations; focus; unique_units; skills; likely_roles; fit; tradeoffs",
+    "api_data_needs": "course API; specialisation curriculum"
+  },
+  {
+    "id": "COURSE_007",
+    "name": "Course Skills Map",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "SKILL_001; SKILL_002; COURSE_013; COURSE_014",
+    "output_fields": "skill; evidence_location; depth; core_optional; learning_mode; role_relevance",
+    "api_data_needs": "curriculum API; unit outcomes; skill ontology"
+  },
+  {
+    "id": "COURSE_008",
+    "name": "Course to Jobs",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "CAREER_001; JOB_001; COURSE_013; CAND_002",
+    "output_fields": "direct_roles; adjacent_roles; later_roles; sufficiency; extra_requirements",
+    "api_data_needs": "course outcomes; occupation taxonomy; job market data"
+  },
+  {
+    "id": "COURSE_009",
+    "name": "Course to Companies",
+    "domain": "Education",
+    "required_inputs": "course_id; location",
+    "allowed_next_tools": "COMP_001; COMP_002; COMP_003; CAND_002",
+    "output_fields": "company; matched_roles; matched_skills; evidence_state; why_relevant",
+    "api_data_needs": "course skill map; jobs/company data"
+  },
+  {
+    "id": "COURSE_010",
+    "name": "Course Entry Check",
+    "domain": "Education",
+    "required_inputs": "course_id; applicant_profile",
+    "allowed_next_tools": "COURSE_015; CORE_009",
+    "output_fields": "requirements; met; gaps; unclear; alternatives; next_actions",
+    "api_data_needs": "admissions API; provider requirements; applicant profile"
+  },
+  {
+    "id": "COURSE_011",
+    "name": "Course Cost and Funding",
+    "domain": "Education",
+    "required_inputs": "course_id; student_status; location",
+    "allowed_next_tools": "COURSE_010; CORE_009",
+    "output_fields": "published_fee; funding_programs; eligibility_conditions; estimated_user_cost_if_supported; caveats",
+    "api_data_needs": "course fees API; government funding datasets; profile"
+  },
+  {
+    "id": "COURSE_012",
+    "name": "Study Experience",
+    "domain": "Education",
+    "required_inputs": "course_id",
+    "allowed_next_tools": "COURSE_002; CORE_008",
+    "output_fields": "delivery; assessment; practical_theory; schedule; group_work; placements; fit",
+    "api_data_needs": "course handbook; unit assessment metadata"
+  },
+  {
+    "id": "COURSE_013",
+    "name": "Course Gap Analysis",
+    "domain": "Education",
+    "required_inputs": "course_id; target_role",
+    "allowed_next_tools": "CAND_003; SKILL_009; EXPERIENCE_001; COURSE_015",
+    "output_fields": "covered; partial; missing_skills; experience_gaps; credential_gaps; priority",
+    "api_data_needs": "course skill map; job/occupation requirements"
+  },
+  {
+    "id": "COURSE_014",
+    "name": "Course Freshness",
+    "domain": "Education",
+    "required_inputs": "course_id; target_roles",
+    "allowed_next_tools": "TREND_001; TECH_002; INST_006; COURSE_013",
+    "output_fields": "durable_foundations; current_alignment; stale_areas; emerging_gaps; evidence_dates",
+    "api_data_needs": "curriculum; job demand; trend data"
+  },
+  {
+    "id": "COURSE_015",
+    "name": "Course Alternatives and Pathways",
+    "domain": "Education",
+    "required_inputs": "goal; current_course_or_gap",
+    "allowed_next_tools": "COURSE_016; MICRO_001; RPL_001; APP_001; EXPERIENCE_001",
+    "output_fields": "alternatives; type; time; depth; recognition; tradeoffs; pathway",
+    "api_data_needs": "course marketplace; qualification framework; microcredentials"
+  },
+  {
+    "id": "COURSE_016",
+    "name": "Learning Type Details",
+    "domain": "Education",
+    "required_inputs": "learning_type",
+    "allowed_next_tools": "COURSE_015; MICRO_001; RPL_001",
+    "output_fields": "definition; formal_status; typical_depth; recognition; duration; evidence; best_for; limitations",
+    "api_data_needs": "AQF; microcredential framework"
+  },
+  {
+    "id": "MICRO_001",
+    "name": "Microcredential Details",
+    "domain": "Education",
+    "required_inputs": "microcredential_id",
+    "allowed_next_tools": "SKILL_001; COURSE_015; PROVE_001",
+    "output_fields": "outcomes; workload; assessment; provider; recognition; credit; skill_gap_fit; limitations",
+    "api_data_needs": "microcredential API; provider data"
+  },
+  {
+    "id": "CAREER_001",
+    "name": "Career Details",
+    "domain": "Career",
+    "required_inputs": "occupation_id",
+    "allowed_next_tools": "CAREER_002; CAREER_003; CAREER_004; JOB_001; JOB_003; JOB_004; JOB_005; JOB_006",
+    "output_fields": "snapshot; tasks; environment; skill_level; qualifications; skills; tools; demand; industries; progression; next_actions",
+    "api_data_needs": "occupation API; classification; labour market data"
+  },
+  {
+    "id": "CAREER_002",
+    "name": "Career Levels",
+    "domain": "Career",
+    "required_inputs": "occupation_id",
+    "allowed_next_tools": "SKILL_002; CAREER_004; CAND_002",
+    "output_fields": "levels; responsibility; autonomy; complexity; skills; evidence; next_level",
+    "api_data_needs": "role framework; occupation data; SFIA where applicable"
+  },
+  {
+    "id": "CAREER_003",
+    "name": "Career Specialisations",
+    "domain": "Career",
+    "required_inputs": "occupation_id or field_id",
+    "allowed_next_tools": "CAREER_001; JOB_001; SKILL_001; IND_002",
+    "output_fields": "specialisations; distinguishing_work; skills; tools; employers; entry; adjacency; fit",
+    "api_data_needs": "occupation taxonomy; job data"
+  },
+  {
+    "id": "CAREER_004",
+    "name": "Career Progression",
+    "domain": "Career",
+    "required_inputs": "current_role; target_direction",
+    "allowed_next_tools": "CAND_003; SKILL_005; COURSE_015; EXPERIENCE_001",
+    "output_fields": "routes; next_roles; capability_changes; evidence; gaps; branch_type",
+    "api_data_needs": "occupation mapping; role requirements"
+  },
+  {
+    "id": "CAREER_005",
+    "name": "Career Change Map",
+    "domain": "Career",
+    "required_inputs": "current_role; target_role; current_profile",
+    "allowed_next_tools": "SKILL_004; CAND_003; COURSE_015; EXPERIENCE_001; RPL_001",
+    "output_fields": "transferable; missing; experience_gaps; credentials; bridge_options; adjacent_roles; stages",
+    "api_data_needs": "occupation skill maps; user profile; labour data"
+  },
+  {
+    "id": "JOB_001",
+    "name": "Job / Vacancy Details",
+    "domain": "Jobs",
+    "required_inputs": "job_id",
+    "allowed_next_tools": "JOB_002; JOB_003; JOB_004; COMP_001; CAND_002",
+    "output_fields": "employer; role; seniority; responsibilities; required_skills; preferred_skills; tools; qualifications; experience; location; fit",
+    "api_data_needs": "job posting API; company API"
+  },
+  {
+    "id": "JOB_002",
+    "name": "Job Requirements",
+    "domain": "Jobs",
+    "required_inputs": "job_id or occupation_id",
+    "allowed_next_tools": "SKILL_003; CAND_002; COURSE_013",
+    "output_fields": "essential; preferred; licences; employer_specific; evidence_state",
+    "api_data_needs": "job ads; occupation profile; licensing data"
+  },
+  {
+    "id": "JOB_003",
+    "name": "Job Tasks",
+    "domain": "Jobs",
+    "required_inputs": "job_id or occupation_id",
+    "allowed_next_tools": "SKILL_001; TECH_001; JOB_008",
+    "output_fields": "tasks; frequency_or_importance; skills; tools; decision_scope",
+    "api_data_needs": "occupation data; job description"
+  },
+  {
+    "id": "JOB_004",
+    "name": "Job Skills",
+    "domain": "Jobs",
+    "required_inputs": "job_id or occupation_id",
+    "allowed_next_tools": "SKILL_001; SKILL_002; SKILL_003; CAND_002",
+    "output_fields": "skill; category; depth; scope; evidence_state; importance",
+    "api_data_needs": "job data; occupation skill map; skills ontology"
+  },
+  {
+    "id": "JOB_005",
+    "name": "Job Tools and Technologies",
+    "domain": "Jobs",
+    "required_inputs": "job_id or occupation_id",
+    "allowed_next_tools": "TECH_001; TECH_002; SKILL_006",
+    "output_fields": "tool; status; related_task; underlying_skill; priority",
+    "api_data_needs": "job ads; occupation data; tool taxonomy"
+  },
+  {
+    "id": "JOB_006",
+    "name": "Job Outlook and Demand",
+    "domain": "Jobs",
+    "required_inputs": "occupation_id; location",
+    "allowed_next_tools": "JOB_007; IND_007; TREND_001",
+    "output_fields": "current_demand; shortage_status; projected_growth; geography; period; uncertainty",
+    "api_data_needs": "JSA shortage; JSA projections; vacancy data"
+  },
+  {
+    "id": "JOB_007",
+    "name": "Job Location Demand",
+    "domain": "Jobs",
+    "required_inputs": "occupation_id; location_or_region_set",
+    "allowed_next_tools": "JOB_006; IND_008; COMP_002",
+    "output_fields": "regions; demand_signal; evidence_volume; relative_strength; caveats",
+    "api_data_needs": "regional employment; vacancy data"
+  },
+  {
+    "id": "JOB_008",
+    "name": "AI and Automation Task Impact",
+    "domain": "Jobs",
+    "required_inputs": "occupation_id",
+    "allowed_next_tools": "SKILL_006; SKILL_007; TREND_001",
+    "output_fields": "task; impact_type; rationale; emerging_skills; uncertainty",
+    "api_data_needs": "task data; research/trend sources"
+  },
+  {
+    "id": "SKILL_001",
+    "name": "Skill Details",
+    "domain": "Skills",
+    "required_inputs": "skill_id",
+    "allowed_next_tools": "SKILL_002; SKILL_006; SKILL_008; SKILL_009; SKILL_010; SKILL_011; SKILL_012",
+    "output_fields": "definition; subskills; tasks; roles; industries; tools; prerequisites; learning_routes; next_actions",
+    "api_data_needs": "skills ontology; job/course mappings"
+  },
+  {
+    "id": "SKILL_002",
+    "name": "Skill Proficiency",
+    "domain": "Skills",
+    "required_inputs": "skill_id; context_role",
+    "allowed_next_tools": "SKILL_003; PROVE_001; CAREER_002",
+    "output_fields": "levels; observable_behaviour; task_complexity; autonomy; evidence; mapping",
+    "api_data_needs": "skill framework; role expectations; SFIA where applicable"
+  },
+  {
+    "id": "SKILL_003",
+    "name": "Skill Gap",
+    "domain": "Skills",
+    "required_inputs": "current_skill_profile; target_skill_profile",
+    "allowed_next_tools": "SKILL_005; PROVE_001; CAND_003; COMP_007",
+    "output_fields": "strong; adequate; partial; missing; evidence_missing; target_depth; priority",
+    "api_data_needs": "profile; target role/company skill map"
+  },
+  {
+    "id": "SKILL_004",
+    "name": "Transferable Skills",
+    "domain": "Skills",
+    "required_inputs": "current_role; target_role; user_skill_profile",
+    "allowed_next_tools": "CAREER_005; SKILL_003; PROVE_001",
+    "output_fields": "direct_transfer; partial_transfer; context_shift; evidence_needed; gaps",
+    "api_data_needs": "occupation skill maps; user evidence"
+  },
+  {
+    "id": "SKILL_005",
+    "name": "Next Skills",
+    "domain": "Skills",
+    "required_inputs": "current_profile; target",
+    "allowed_next_tools": "SKILL_009; EXPERIENCE_001; COURSE_015; MICRO_001",
+    "output_fields": "skill; priority; impact; effort; market_relevance; why_now",
+    "api_data_needs": "skill gap; market trends; learning options"
+  },
+  {
+    "id": "SKILL_006",
+    "name": "Skill Trend",
+    "domain": "Skills",
+    "required_inputs": "skill_id; location",
+    "allowed_next_tools": "SKILL_007; SKILL_012; TREND_001; TECH_002",
+    "output_fields": "direction; evidence_period; affected_roles; industries; drivers; confidence",
+    "api_data_needs": "job trend data; industry data"
+  },
+  {
+    "id": "SKILL_007",
+    "name": "Skill Replacement / Evolution",
+    "domain": "Skills",
+    "required_inputs": "skill_or_tool_id",
+    "allowed_next_tools": "SKILL_005; TECH_002; COURSE_014",
+    "output_fields": "status; replacement_or_complement; relationship; affected_roles; migration_advice",
+    "api_data_needs": "trend data; job ads; industry sources"
+  },
+  {
+    "id": "SKILL_008",
+    "name": "Skill Adjacencies",
+    "domain": "Skills",
+    "required_inputs": "skill_id",
+    "allowed_next_tools": "SKILL_005; SKILL_009",
+    "output_fields": "related_skill; adjacency_type; rationale; value; learning_order",
+    "api_data_needs": "skills graph; curriculum/job co-occurrence"
+  },
+  {
+    "id": "SKILL_009",
+    "name": "Learn This Skill",
+    "domain": "Skills",
+    "required_inputs": "skill_id; target_depth",
+    "allowed_next_tools": "COURSE_015; MICRO_001; PROVE_001; EXPERIENCE_001",
+    "output_fields": "learning_options; type; depth; time; recognition; cost_if_known; fit",
+    "api_data_needs": "course marketplace; credential data"
+  },
+  {
+    "id": "SKILL_010",
+    "name": "Skill to Courses",
+    "domain": "Skills",
+    "required_inputs": "skill_id; target_depth",
+    "allowed_next_tools": "COURSE_001; COURSE_005; COURSE_007",
+    "output_fields": "course; depth; core_optional; evidence; recognition; constraints_fit",
+    "api_data_needs": "course curriculum; skill map"
+  },
+  {
+    "id": "SKILL_011",
+    "name": "Skill to Jobs",
+    "domain": "Skills",
+    "required_inputs": "skill_id; location",
+    "allowed_next_tools": "CAREER_001; JOB_006; SKILL_008",
+    "output_fields": "roles; relationship_strength; required_depth; companion_skills; demand",
+    "api_data_needs": "occupation skills; job data"
+  },
+  {
+    "id": "SKILL_012",
+    "name": "Skill to Companies",
+    "domain": "Skills",
+    "required_inputs": "skill_id; location",
+    "allowed_next_tools": "COMP_001; COMP_005; COMP_007",
+    "output_fields": "company; matched_roles; signal; recency; evidence_state",
+    "api_data_needs": "job/company data"
+  },
+  {
+    "id": "IND_001",
+    "name": "Industry Details",
+    "domain": "Industry",
+    "required_inputs": "industry_id",
+    "allowed_next_tools": "IND_002; IND_003; IND_004; IND_005; IND_006; IND_007; IND_008; IND_009; IND_010; IND_011; IND_012",
+    "output_fields": "classification; subindustries; occupations; companies; skills; shortages; technologies; outlook; next_actions",
+    "api_data_needs": "industry classification; labour market data"
+  },
+  {
+    "id": "IND_002",
+    "name": "Industry Subfields",
+    "domain": "Industry",
+    "required_inputs": "industry_id; current_level",
+    "allowed_next_tools": "IND_001; IND_003; IND_004",
+    "output_fields": "official_children; yuzee_segments; classification_codes; descriptions",
+    "api_data_needs": "ANZSIC taxonomy"
+  },
+  {
+    "id": "IND_003",
+    "name": "Industry Specialisations / Niches",
+    "domain": "Industry",
+    "required_inputs": "industry_id",
+    "allowed_next_tools": "CAREER_003; IND_004; IND_006; TECH_001",
+    "output_fields": "specialisation; parent_industry; distinguishing_activity; roles; skills; technologies",
+    "api_data_needs": "industry taxonomy; company/job clustering"
+  },
+  {
+    "id": "IND_004",
+    "name": "Industry Job Map",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location",
+    "allowed_next_tools": "CAREER_001; JOB_006; CAREER_003",
+    "output_fields": "occupation; category; relationship; employment_or_demand; emerging_flag",
+    "api_data_needs": "industry-occupation employment data; vacancy data"
+  },
+  {
+    "id": "IND_005",
+    "name": "Industry Company Map",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location",
+    "allowed_next_tools": "COMP_001; COMP_002; COMP_005",
+    "output_fields": "companies; segment; location; company_type; hiring_signal; evidence_state",
+    "api_data_needs": "company registry; job data"
+  },
+  {
+    "id": "IND_006",
+    "name": "Industry Skill Map",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location",
+    "allowed_next_tools": "SKILL_001; SKILL_006; IND_007",
+    "output_fields": "skill; category; driving_roles; breadth; demand_signal; emerging_flag",
+    "api_data_needs": "job/occupation skills; industry employment"
+  },
+  {
+    "id": "IND_007",
+    "name": "Industry Shortages",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location",
+    "allowed_next_tools": "COMP_006; COMP_010; INST_006; SKILL_005",
+    "output_fields": "occupation; shortage_status; driver; implication; evidence_date",
+    "api_data_needs": "JSA OSL/shortage drivers; regional labour data"
+  },
+  {
+    "id": "IND_008",
+    "name": "Industry Regional Demand",
+    "domain": "Industry",
+    "required_inputs": "industry_id; region_set",
+    "allowed_next_tools": "IND_005; JOB_007; TREND_008",
+    "output_fields": "region; employment; growth; demand_signal; concentration; uncertainty",
+    "api_data_needs": "JSA projections; regional employment"
+  },
+  {
+    "id": "IND_009",
+    "name": "Industry Technology Change",
+    "domain": "Industry",
+    "required_inputs": "industry_id",
+    "allowed_next_tools": "TECH_001; TECH_002; JOB_008; SKILL_006",
+    "output_fields": "technology; adoption_state; affected_functions; roles; skills; impact_type",
+    "api_data_needs": "industry reports; job data; technology signals"
+  },
+  {
+    "id": "IND_010",
+    "name": "Industry AI Impact",
+    "domain": "Industry",
+    "required_inputs": "industry_id",
+    "allowed_next_tools": "JOB_008; TREND_002; SKILL_005",
+    "output_fields": "functions; task_impacts; affected_roles; emerging_skills; new_roles; uncertainty",
+    "api_data_needs": "task/occupation data; research"
+  },
+  {
+    "id": "IND_011",
+    "name": "Industry Education Supply",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location",
+    "allowed_next_tools": "INST_001; INST_010; COMP_014",
+    "output_fields": "occupation; skills; courses; institutions; qualification_type; pipeline_type",
+    "api_data_needs": "course/institution data; occupation mappings"
+  },
+  {
+    "id": "IND_012",
+    "name": "Industry Talent Gap",
+    "domain": "Industry",
+    "required_inputs": "industry_id; location; time_horizon",
+    "allowed_next_tools": "IND_007; COMP_010; INST_006; COMP_014",
+    "output_fields": "demand; supply; gap_type; affected_roles; affected_skills; confidence; actions",
+    "api_data_needs": "shortage data; employment; candidate; education supply"
+  },
+  {
+    "id": "COMP_001",
+    "name": "Company Details",
+    "domain": "Companies",
+    "required_inputs": "company_id",
+    "allowed_next_tools": "COMP_002; COMP_003; COMP_004; COMP_005; COMP_006; COMP_007; COMP_008; COMP_009; COMP_010; COMP_011; COMP_012; COMP_013; COMP_014",
+    "output_fields": "overview; industries; locations; functions; roles; hiring_signal; skills; technologies; next_actions",
+    "api_data_needs": "company API; jobs; public first-party data"
+  },
+  {
+    "id": "COMP_002",
+    "name": "Company Roles",
+    "domain": "Companies",
+    "required_inputs": "company_id",
+    "allowed_next_tools": "JOB_001; CAREER_002; COMP_003",
+    "output_fields": "roles; function; seniority; current_or_recent; location; evidence_state",
+    "api_data_needs": "job postings; company careers data"
+  },
+  {
+    "id": "COMP_003",
+    "name": "Company Skills",
+    "domain": "Companies",
+    "required_inputs": "company_id",
+    "allowed_next_tools": "SKILL_001; SKILL_005; COMP_007",
+    "output_fields": "skill; frequency_signal; recency; roles; breadth; evidence_state",
+    "api_data_needs": "job ads; company sources; skills ontology"
+  },
+  {
+    "id": "COMP_004",
+    "name": "Company Tech Stack Signals",
+    "domain": "Companies",
+    "required_inputs": "company_id",
+    "allowed_next_tools": "TECH_001; SKILL_005",
+    "output_fields": "technology; evidence_state; source_context; roles; recency",
+    "api_data_needs": "job postings; company engineering/public sources"
+  },
+  {
+    "id": "COMP_005",
+    "name": "Company Hiring Signals",
+    "domain": "Companies",
+    "required_inputs": "company_id; time_period",
+    "allowed_next_tools": "COMP_002; COMP_006; TREND_006",
+    "output_fields": "current_openings; role_mix; trend_if_supported; locations; evidence_coverage",
+    "api_data_needs": "job posting history; company careers"
+  },
+  {
+    "id": "COMP_006",
+    "name": "Company Hard-to-Fill Roles",
+    "domain": "Companies",
+    "required_inputs": "company_id; location; time_period",
+    "allowed_next_tools": "COMP_007; COMP_009; COMP_010",
+    "output_fields": "role; signals; shortage_context; likely_driver; evidence_state; confidence",
+    "api_data_needs": "job history; JSA shortage; company first-party evidence"
+  },
+  {
+    "id": "COMP_007",
+    "name": "Company Skill Gaps / Needs",
+    "domain": "Companies",
+    "required_inputs": "company_id; location; time_period",
+    "allowed_next_tools": "COMP_008; COMP_009; COMP_010; COMP_011; SKILL_005",
+    "output_fields": "skill; need_type; driving_roles; signal; evidence_state; confidence",
+    "api_data_needs": "job ads; company data; internal skills inventory if authorised"
+  },
+  {
+    "id": "COMP_008",
+    "name": "Candidate Fit to Company",
+    "domain": "Companies",
+    "required_inputs": "candidate_profile; company_id",
+    "allowed_next_tools": "CAND_003; PROVE_001; SKILL_009",
+    "output_fields": "fit; strong_matches; partial; gaps; evidence_gaps; improvements",
+    "api_data_needs": "candidate profile; company/job requirements"
+  },
+  {
+    "id": "COMP_009",
+    "name": "Company Talent Supply",
+    "domain": "Companies",
+    "required_inputs": "role_or_skill_need; location",
+    "allowed_next_tools": "COMP_010; COMP_012; COMP_013; IND_012",
+    "output_fields": "supply_indicator; candidate_pool_signal; constraints; geography; coverage; confidence",
+    "api_data_needs": "candidate data; employment data; education pipeline"
+  },
+  {
+    "id": "COMP_010",
+    "name": "Train vs Hire",
+    "domain": "Companies",
+    "required_inputs": "required_roles_or_skills; timeframe; current_workforce_profile",
+    "allowed_next_tools": "COMP_011; COMP_012; COMP_013; COMP_014",
+    "output_fields": "need; recommendation; rationale; time; risk; internal_adjacency; external_supply",
+    "api_data_needs": "internal workforce data; labour market; training supply"
+  },
+  {
+    "id": "COMP_011",
+    "name": "Company Upskill Plan",
+    "domain": "Companies",
+    "required_inputs": "team_skill_profile; target_skills; timeframe",
+    "allowed_next_tools": "SKILL_009; COMP_013; INST_008; PROVE_001",
+    "output_fields": "skill_clusters; cohorts; learning_interventions; practice; milestones; evidence",
+    "api_data_needs": "internal profile; course/training marketplace"
+  },
+  {
+    "id": "COMP_012",
+    "name": "Internal Mobility",
+    "domain": "Companies",
+    "required_inputs": "workforce_profiles; target_roles",
+    "allowed_next_tools": "SKILL_004; SKILL_003; COMP_011",
+    "output_fields": "source_role_or_candidate; transferable_skills; gaps; readiness; development",
+    "api_data_needs": "authorised internal skills data; role maps"
+  },
+  {
+    "id": "COMP_013",
+    "name": "Company Provider Match",
+    "domain": "Companies",
+    "required_inputs": "required_skills; location; learner_level",
+    "allowed_next_tools": "INST_001; COURSE_001; INST_008",
+    "output_fields": "provider; course; matched_skills; depth; delivery; recognition; gaps",
+    "api_data_needs": "course/provider database; skill maps"
+  },
+  {
+    "id": "COMP_014",
+    "name": "Talent Pipeline Design",
+    "domain": "Companies",
+    "required_inputs": "future_roles; skills; hiring_volume; timeframe; location",
+    "allowed_next_tools": "INST_009; INST_010; EXPERIENCE_001; APP_001; CAND_002",
+    "output_fields": "roles; skills; providers; courses; experience_stage; candidate_stage; hiring_stage; risks",
+    "api_data_needs": "company demand; provider/course data; candidate pipeline"
+  },
+  {
+    "id": "INST_001",
+    "name": "Institution Details",
+    "domain": "Institutions",
+    "required_inputs": "institution_id",
+    "allowed_next_tools": "INST_002; INST_003; INST_004; INST_005; INST_006; INST_007; INST_008; INST_009; INST_010",
+    "output_fields": "provider_type; locations; modes; fields; levels; courses; partnerships_if_confirmed; outcomes; next_actions",
+    "api_data_needs": "institution registry; course database"
+  },
+  {
+    "id": "INST_002",
+    "name": "Institution Courses",
+    "domain": "Institutions",
+    "required_inputs": "institution_id",
+    "allowed_next_tools": "COURSE_001; COURSE_006; COURSE_002",
+    "output_fields": "course; level; type; focus; delivery; goal_fit",
+    "api_data_needs": "institution course catalogue"
+  },
+  {
+    "id": "INST_003",
+    "name": "Institution Specialisations",
+    "domain": "Institutions",
+    "required_inputs": "institution_id; field_id",
+    "allowed_next_tools": "COURSE_006; COURSE_005",
+    "output_fields": "discipline; specialisations; evidence_type; courses; units; facilities_or_research",
+    "api_data_needs": "provider catalogue; research/facility data"
+  },
+  {
+    "id": "INST_004",
+    "name": "Curriculum Skill Map",
+    "domain": "Institutions",
+    "required_inputs": "course_or_program_id",
+    "allowed_next_tools": "INST_005; INST_006; COURSE_007",
+    "output_fields": "skill; unit_evidence; depth; practice; assessment; core_optional; evidence_state",
+    "api_data_needs": "curriculum; learning outcomes; assessment metadata"
+  },
+  {
+    "id": "INST_005",
+    "name": "Curriculum Job Alignment",
+    "domain": "Institutions",
+    "required_inputs": "course_id; target_role",
+    "allowed_next_tools": "INST_006; COURSE_013; EXPERIENCE_001",
+    "output_fields": "strong; partial; missing; non_curriculum_requirements; overall_alignment",
+    "api_data_needs": "curriculum skill map; role requirements"
+  },
+  {
+    "id": "INST_006",
+    "name": "Curriculum Industry Alignment",
+    "domain": "Institutions",
+    "required_inputs": "course_id; target_industry; location",
+    "allowed_next_tools": "INST_007; IND_006; IND_009; TREND_001",
+    "output_fields": "foundations; current_alignment; emerging_gaps; legacy_risk; affected_roles; evidence_dates",
+    "api_data_needs": "curriculum; industry/job trends"
+  },
+  {
+    "id": "INST_007",
+    "name": "Curriculum Gap Recommendations",
+    "domain": "Institutions",
+    "required_inputs": "curriculum_gap_output",
+    "allowed_next_tools": "MICRO_001; INST_009; COURSE_005",
+    "output_fields": "gap; intervention_type; priority; rationale; implementation_level; evidence",
+    "api_data_needs": "alignment output; program constraints"
+  },
+  {
+    "id": "INST_008",
+    "name": "Employer Partner Match",
+    "domain": "Institutions",
+    "required_inputs": "course_or_skill_supply; location",
+    "allowed_next_tools": "COMP_001; COMP_014; INST_009",
+    "output_fields": "company; matched_skills; roles; partnership_use_case; evidence_state",
+    "api_data_needs": "course skill map; company/job demand"
+  },
+  {
+    "id": "INST_009",
+    "name": "Placement / WIL Partner Match",
+    "domain": "Institutions",
+    "required_inputs": "course_id; student_skill_level; location",
+    "allowed_next_tools": "EXPERIENCE_001; COMP_001",
+    "output_fields": "company; role_area; matched_learning_outcomes; prerequisites; suitability; evidence_state",
+    "api_data_needs": "course outcomes; company/job data; placement inventory"
+  },
+  {
+    "id": "INST_010",
+    "name": "Program Demand",
+    "domain": "Institutions",
+    "required_inputs": "course_or_program_id; location",
+    "allowed_next_tools": "IND_012; JOB_006; INST_006",
+    "output_fields": "target_roles; current_demand; shortages; projections; education_supply; uncertainty",
+    "api_data_needs": "program-role map; JSA data; enrolment data if available"
+  },
+  {
+    "id": "CAND_001",
+    "name": "Candidate Profile",
+    "domain": "Candidate",
+    "required_inputs": "user_profile",
+    "allowed_next_tools": "CAND_002; CAND_003; CAREER_005",
+    "output_fields": "education; experience; skills; tools; credentials; constraints; goals; unknowns",
+    "api_data_needs": "profile/CV data"
+  },
+  {
+    "id": "CAND_002",
+    "name": "Candidate Readiness",
+    "domain": "Candidate",
+    "required_inputs": "candidate_profile; target",
+    "allowed_next_tools": "CAND_003; PROVE_001; EXPERIENCE_001; COURSE_010",
+    "output_fields": "eligibility; skills; experience; evidence; credentials; application_readiness; blockers",
+    "api_data_needs": "candidate profile; target requirements"
+  },
+  {
+    "id": "CAND_003",
+    "name": "Candidate Gap Plan",
+    "domain": "Candidate",
+    "required_inputs": "readiness_or_gap_output; target",
+    "allowed_next_tools": "SKILL_009; PROVE_001; EXPERIENCE_001; COURSE_015; RPL_001",
+    "output_fields": "priority_gaps; actions; sequence; time; evidence_of_completion; alternative_route",
+    "api_data_needs": "gap output; learning/experience inventory"
+  },
+  {
+    "id": "PROVE_001",
+    "name": "Prove a Skill",
+    "domain": "Candidate",
+    "required_inputs": "skill_id; target_context",
+    "allowed_next_tools": "RPL_001; EXPERIENCE_001; MICRO_001",
+    "output_fields": "evidence_options; expected_standard; verification; effort; target_relevance",
+    "api_data_needs": "skills framework; credential/assessment data"
+  },
+  {
+    "id": "RPL_001",
+    "name": "RPL / Prior Learning Evidence",
+    "domain": "Candidate",
+    "required_inputs": "current_evidence; target_course_or_credential",
+    "allowed_next_tools": "COURSE_015; CAND_003",
+    "output_fields": "potential_matches; evidence; missing_evidence; provider_process; caveats",
+    "api_data_needs": "provider RPL rules; competency outcomes"
+  },
+  {
+    "id": "EXPERIENCE_001",
+    "name": "Experience Match",
+    "domain": "Experience",
+    "required_inputs": "target_role_or_skill; current_profile; location",
+    "allowed_next_tools": "PROVE_001; CAND_003; COMP_001",
+    "output_fields": "experience_type; target_tasks; skills_proven; duration; organisations_or_opportunities; gap_closed",
+    "api_data_needs": "experience inventory; company/jobs; candidate gaps"
+  },
+  {
+    "id": "APP_001",
+    "name": "Apprenticeship / Traineeship Match",
+    "domain": "Experience",
+    "required_inputs": "goal; location; eligibility_profile",
+    "allowed_next_tools": "COURSE_001; JOB_001; CORE_009",
+    "output_fields": "pathway; occupation; qualification; employer_or_GTO; duration; eligibility; opportunities",
+    "api_data_needs": "apprenticeship data; training packages; job inventory"
+  },
+  {
+    "id": "TECH_001",
+    "name": "Technology / Tool Details",
+    "domain": "Technology",
+    "required_inputs": "technology_id",
+    "allowed_next_tools": "TECH_002; SKILL_001; SKILL_009",
+    "output_fields": "definition; tasks; underlying_skills; roles; industries; alternatives; target_depth",
+    "api_data_needs": "technology taxonomy; job/course data"
+  },
+  {
+    "id": "TECH_002",
+    "name": "Technology Trend",
+    "domain": "Technology",
+    "required_inputs": "technology_id; location",
+    "allowed_next_tools": "SKILL_006; SKILL_007; TREND_001",
+    "output_fields": "status; trend; evidence_period; roles; industries; alternatives; durable_skills",
+    "api_data_needs": "job trends; industry sources; first-party/vendor lifecycle evidence"
+  },
+  {
+    "id": "TREND_001",
+    "name": "Market Trend Explorer",
+    "domain": "Trends",
+    "required_inputs": "trend_scope; location; time_period",
+    "allowed_next_tools": "TREND_002; TREND_003; TREND_004; TREND_005; TREND_006; TREND_007; TREND_008",
+    "output_fields": "trend; direction; strength; affected_entities; driver; evidence_date; confidence; implication",
+    "api_data_needs": "time-series labour/course/job data"
+  },
+  {
+    "id": "TREND_002",
+    "name": "Emerging Roles",
+    "domain": "Trends",
+    "required_inputs": "industry_or_skill_scope; location",
+    "allowed_next_tools": "CAREER_001; CAREER_003; SKILL_005",
+    "output_fields": "role; emergence_type; driver; skills; entry_routes; evidence_state",
+    "api_data_needs": "job-title trends; occupation taxonomy; market research"
+  },
+  {
+    "id": "TREND_003",
+    "name": "Declining / Changing Roles",
+    "domain": "Trends",
+    "required_inputs": "occupation_id_or_scope; location",
+    "allowed_next_tools": "CAREER_005; SKILL_004; JOB_008",
+    "output_fields": "change_type; evidence; affected_tasks; transferable_skills; adjacent_roles; actions",
+    "api_data_needs": "employment projections; task trends"
+  },
+  {
+    "id": "TREND_004",
+    "name": "Qualification Trend",
+    "domain": "Trends",
+    "required_inputs": "role_or_industry; location; time_period",
+    "allowed_next_tools": "COURSE_016; MICRO_001; PROVE_001",
+    "output_fields": "credential; trend; regulated_or_preference; affected_roles; skills_first_signal; evidence",
+    "api_data_needs": "job requirements; regulation; OECD skills-first research"
+  },
+  {
+    "id": "TREND_005",
+    "name": "Skill Trend Set",
+    "domain": "Trends",
+    "required_inputs": "industry_or_role; location; time_period",
+    "allowed_next_tools": "SKILL_006; SKILL_005; COURSE_014",
+    "output_fields": "skill_cluster; trend; driver; roles; foundational_skills; tool_skills",
+    "api_data_needs": "job skills time series; industry signals"
+  },
+  {
+    "id": "TREND_006",
+    "name": "Hiring Trend",
+    "domain": "Trends",
+    "required_inputs": "scope; location; time_period",
+    "allowed_next_tools": "COMP_005; JOB_006; IND_008",
+    "output_fields": "trend; vacancy_signal; role_mix; location_mix; breadth; caveat",
+    "api_data_needs": "job posting history; employment data"
+  },
+  {
+    "id": "TREND_007",
+    "name": "Salary / Conditions Trend",
+    "domain": "Trends",
+    "required_inputs": "scope; location; time_period",
+    "allowed_next_tools": "CAREER_001; JOB_007",
+    "output_fields": "pay_range_or_metric; trend; conditions; period; source; comparability_caveat",
+    "api_data_needs": "salary datasets; job ads; workforce surveys"
+  },
+  {
+    "id": "TREND_008",
+    "name": "Regional Trend",
+    "domain": "Trends",
+    "required_inputs": "scope; region_set; time_period",
+    "allowed_next_tools": "JOB_007; IND_008; COMP_005",
+    "output_fields": "region; change; indicator; period; concentration; uncertainty",
+    "api_data_needs": "regional employment; vacancy data"
+  }
+]

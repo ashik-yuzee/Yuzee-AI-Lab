@@ -9,3 +9,7 @@ coverage/
 # Runtime shared state — not committed; recreated from defaults on first start
 data/shared-settings.json
 data/conversations.json
+data/detail-research.json
+
+# Downloaded public MiniLM weights (recreated on demand)
+data/minilm-cache/

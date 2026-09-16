@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Personalised Course Intelligence &amp; Decision Report</title>
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-subtle: #e2e8f0;
+      --border-strong: #cbd5e1;
+      --accent-primary: #1e40af;
+      --accent-subtle: #eff6ff;
+      --accent-secondary: #0f766e;
+      --accent-secondary-subtle: #f0fdfa;
+      --warning-bg: #fffbeb;
+      --warning-border: #fef3c7;
+      --warning-text: #92400e;
+      --tag-bg: #f1f5f9;
+      --tag-text: #334155;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --radius-sm: 6px;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.6;
+      font-size: 16px;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    /* Header & Context Strip */
+    header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.25;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin-bottom: 20px;
+    }
+
+    .context-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .context-item {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .context-item span {
+      color: var(--text-muted);
+      margin-right: 4px;
+    }
+
+    /* Sections */
+    section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: -10px;
+      margin-bottom: 18px;
+    }
+
+    /* Grid & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      body {
+        padding: 32px 24px;
+      }
+      .grid-2 {
+        grid-template-columns: 1fr 1fr;
+      }
+      h1 {
+        font-size: 2.1rem;
+      }
+    }
+
+    .card {
+      background: var(--bg-page);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .card-accent-blue {
+      border-top: 4px solid var(--accent-primary);
+    }
+
+    .card-accent-teal {
+      border-top: 4px solid var(--accent-secondary);
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .card h4 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-top: 6px;
+    }
+
+    /* Snapshot Styles */
+    .snapshot-box {
+      background: var(--accent-subtle);
+      border: 1px solid #bfdbfe;
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .snapshot-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .alignment-label {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-primary);
+    }
+
+    .confidence-badge {
+      background: #dbeafe;
+      color: var(--accent-primary);
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .reasoning-chain {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      margin-top: 12px;
+      font-size: 0.925rem;
+    }
+
+    .reasoning-step {
+      margin-bottom: 6px;
+    }
+    .reasoning-step:last-child {
+      margin-bottom: 0;
+    }
+    .reasoning-step strong {
+      color: var(--text-main);
+    }
+
+    /* Badges & Tags */
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .badge-compulsory { background: #fee2e2; color: #991b1b; }
+    .badge-optional { background: #e0f2fe; color: #0369a1; }
+    .badge-specialisation { background: #fef3c7; color: #92400e; }
+    .badge-confirmed { background: #dcfce7; color: #166534; }
+    .badge-benchmark { background: #f1f5f9; color: #475569; }
+
+    /* Lists */
+    ul {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 0.95rem;
+    }
+
+    li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--accent-primary);
+      font-weight: bold;
+    }
+
+    /* Table / Item View */
+    .inventory-item {
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 10px;
+    }
+    .inventory-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .inventory-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .inventory-desc {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Expandable details */
+    details {
+      margin-top: 14px;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      overflow: hidden;
+    }
+
+    summary {
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: var(--bg-page);
+      user-select: none;
+      color: var(--accent-primary);
+    }
+
+    summary:hover {
+      background: var(--border-subtle);
+    }
+
+    .details-content {
+      padding: 16px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    /* Benchmark Indicators */
+    .benchmark-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .benchmark-row:last-child {
+      border-bottom: none;
+    }
+    .benchmark-status {
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .status-strong { color: #16a34a; }
+    .status-adequate { color: #0284c7; }
+    .status-partial { color: #d97706; }
+    .status-gap { color: #dc2626; }
+
+    /* Action Box */
+    .action-card {
+      background: var(--accent-secondary-subtle);
+      border: 1px solid #99f6e4;
+      border-radius: var(--radius-md);
+      padding: 20px;
+    }
+    .action-primary {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-secondary);
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <h1>Your Personalised Course Intelligence &amp; Decision Report</h1>
+    <p class="subtitle">Built around your goal, circumstances and the courses you're comparing.</p>
+    <div class="context-strip">
+      <div class="context-item"><span>Goal:</span> AI Automation Engineer</div>
+      <div class="context-item"><span>Student type:</span> Domestic</div>
+      <div class="context-item"><span>Courses compared:</span> 2</div>
+    </div>
+  </header>
+
+  <!-- SECTION 01: Decision Snapshot -->
+  <section id="decision-snapshot">
+    <h2 class="section-title">01. Decision Snapshot</h2>
+    <div class="snapshot-box">
+      <div class="snapshot-header">
+        <div class="alignment-label">Closer Alignment: Monash University (Bachelor of Computer Science)</div>
+        <div class="confidence-badge">Confidence: Moderate–High</div>
+      </div>
+      <p><strong>Biggest Difference:</strong> Monash provides deeper compulsory algorithmic depth, formal discrete/continuous mathematical foundations, and rigorous machine learning electives, whereas Deakin offers an applied software pipeline with direct IoT/Robotics integration options and flexible study delivery.</p>
+      
+      <div class="reasoning-chain">
+        <div class="reasoning-step"><strong>Target Alignment:</strong> Becoming an AI Automation Engineer requires combining core software architecture, mathematical modeling for autonomous agents, and system automation pipelines.</div>
+        <div class="reasoning-step"><strong>Curriculum Match:</strong> Monash integrates foundational mathematics (MAT1830 Discrete Mathematics, MAT1841 Continuous Mathematics) and advanced algorithms (FIT2004, FIT3155) into the compulsory core, enabling faster progression into deep learning and intelligent agents. Deakin introduces applied programming and AI earlier (SIT102, SIT112) but relies more on electives/majors for algorithmic rigor.</div>
+        <div class="reasoning-step"><strong>Consequence:</strong> Monash builds the theoretical depth necessary for complex model adaptation and robotic/AI control algorithms. However, Deakin remains highly competitive if you prioritise hands-on robotics, IoT engineering, or cloud deployment workflows.</div>
+      </div>
+      <p style="margin-top: 12px; font-size: 0.9rem; color: var(--text-muted);"><strong>Biggest Unresolved Question:</strong> Do you intend to build AI automation primarily at the model/algorithmic level (favouring Monash) or at the infrastructure/IoT/embedded application integration level (favouring Deakin)?</p>
+    </div>
+  </section>
+
+  <!-- SECTION 02: What Matters to You -->
+  <section id="your-priorities">
+    <h2 class="section-title">02. What Matters to You</h2>
+    <p class="section-subtitle">Based on your stated profile and target career path.</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Targeted Career Objective</h3>
+        <p>Becoming an <strong>AI Automation Engineer</strong>, requiring expertise in machine learning workflows, automated decision systems, agentic architectures, and systems integration.</p>
+      </div>
+      <div class="card">
+        <h3>Enrolment &amp; Delivery</h3>
+        <p>Studying as an <strong>Australian Domestic Student</strong>, seeking a verified 3-year undergraduate degree with Commonwealth Supported Place (CSP) availability.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 03: What Each Course Is Actually Designed To Do -->
+  <section id="course-purpose">
+    <h2 class="section-title">03. What Each Course Is Actually Designed To Do</h2>
+    <div class="grid-2">
+      <div class="card card-accent-blue">
+        <div class="badge badge-compulsory" style="width: fit-content;">Deakin University</div>
+        <h3>Bachelor of Computer Science (S306)</h3>
+        <p><strong>Qualification:</strong> AQF Level 7 (3 Years FT / 24 Credit Points)</p>
+        <p><strong>Course Archetype:</strong> Applied &amp; Industry-Connected Computer Science</p>
+        <p><strong>Primary Objective:</strong> Equips graduates to design, develop, and integrate software solutions addressing business and technology challenges with specialized practical pathways in Data Science, IoT, or Robotics.</p>
+        <p><strong>Main Orientation:</strong> Practical application, hands-on software builds, systems engineering, and industry project work.</p>
+        <p><strong>What It Is Not Designed To Do:</strong> It is not purely an abstract theoretical mathematics degree; it prioritises deployable coding and system-building over intensive pure mathematical proofs.</p>
+        <details>
+          <summary>Deakin Course Focus Details</summary>
+          <div class="details-content">
+            <p>Accredited by the Australian Computer Society (ACS). Emphasises project-based assessments and practical software pipelines across Cloud, IoT, and Data streams.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="card card-accent-teal">
+        <div class="badge badge-optional" style="width: fit-content;">Monash University</div>
+        <h3>Bachelor of Computer Science (C2001)</h3>
+        <p><strong>Qualification:</strong> AQF Level 7 (3 Years FT / 144 Credit Points)</p>
+        <p><strong>Course Archetype:</strong> Rigorous Algorithmic &amp; Theoretical Computer Science</p>
+        <p><strong>Primary Objective:</strong> Provides deep foundations in computational theory, algorithm analysis, mathematical modeling, and advanced software architecture.</p>
+        <p><strong>Main Orientation:</strong> Algorithmic complexity, formal logic, continuous/discrete mathematics, and specialized AI/Data Science tracks.</p>
+        <p><strong>What It Is Not Designed To Do:</strong> It is not a lightweight vocational IT diploma; it requires substantial mathematical proficiency and rigorous analytical performance.</p>
+        <details>
+          <summary>Monash Course Focus Details</summary>
+          <div class="details-content">
+            <p>Accredited by the Australian Computer Society (ACS). Features a compulsory two-unit capstone project sequence or Industry-Based Learning (IBL) placement program.</p>
+          </div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 04: How Each Course Is Built -->
+  <section id="course-anatomy">
+    <h2 class="section-title">04. How Each Course Is Built</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Deakin (S306) Structure</h3>
+        <ul>
+          <li><strong>Compulsory Core:</strong> 13–16 core units covering programming (SIT102), data science fundamentals (SIT112), discrete math (SIT192), computer networks, and algorithms.</li>
+          <li><strong>Majors / Sequences:</strong> Data Science, Robotics, or Internet of Things (IoT) (6 credit points).</li>
+          <li><strong>Electives:</strong> 4–6 elective units allowing cross-faculty study or extended software engineering minors.</li>
+          <li><strong>Capstone / WIL:</strong> Professional practice and industry capstone team project (SIT374 / SIT306) or elective industry placement.</li>
+          <li><strong>Delivery:</strong> Melbourne Burwood campus or flexible online / multi-trimester study.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Monash (C2001) Structure</h3>
+        <ul>
+          <li><strong>Compulsory Core:</strong> Rigorous common core including Python/Java programming (FIT1045, FIT1008), Discrete Math (MAT1830), Continuous Math (MAT1841), Algorithms &amp; Data Structures (FIT2004), and Object-Oriented Design (FIT2099).</li>
+          <li><strong>Specialisations:</strong> Advanced Computer Science (including FIT3155 Advanced Data Structures) OR Data Science.</li>
+          <li><strong>Electives:</strong> 8 free electives across university or faculty offerings (Deep Learning FIT3181, AI FIT3080).</li>
+          <li><strong>Capstone / WIL:</strong> Two-semester capstone studio project (FIT3161/FIT3162) OR competitive Industry-Based Learning (IBL - FIT3045, 18 pts).</li>
+          <li><strong>Delivery:</strong> Clayton campus (primarily on-campus cohort study, standard semester model).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 05: Skills You'll Build -->
+  <section id="skills">
+    <h2 class="section-title">05. Skills You'll Build</h2>
+    <p class="section-subtitle">Showing core competencies aligned with AI Automation Engineering.</p>
+
+    <div class="inventory-item">
+      <div class="inventory-header">
+        <span class="inventory-title">Algorithms &amp; Computational Complexity</span>
+        <span class="badge badge-compulsory">Core Technical</span>
+      </div>
+      <div class="inventory-desc">
+        <strong>Monash:</strong> Evidence Depth: 4 (Compulsory: FIT2004, FIT3155) — Rigorous theoretical and empirical analysis.<br>
+        <strong>Deakin:</strong> Evidence Depth: 3 (Compulsory: SIT221 / SIT232) — Practical algorithmic problem solving.
+      </div>
+    </div>
+
+    <div class="inventory-item">
+      <div class="inventory-header">
+        <span class="inventory-title">Applied Machine Learning &amp; AI Systems</span>
+        <span class="badge badge-specialisation">Target Role Critical</span>
+      </div>
+      <div class="inventory-desc">
+        <strong>Monash:</strong> Evidence Depth: 3 (Elective/Major: FIT3080 AI, FIT3181 Deep Learning) — Neural architectures, state spaces, heuristics.<br>
+        <strong>Deakin:</strong> Evidence Depth: 3 (Core/Major: SIT112 Intro to DS &amp; AI, SIT307 Applied Machine Learning) — Model deployment &amp; predictive pipelines.
+      </div>
+    </div>
+
+    <div class="inventory-item">
+      <div class="inventory-header">
+        <span class="inventory-title">Mathematical &amp; Statistical Modeling</span>
+        <span class="badge badge-compulsory">Foundational</span>
+      </div>
+      <div class="inventory-desc">
+        <strong>Monash:</strong> Evidence Depth: 4 (Compulsory: MAT1830 Discrete Math, MAT1841 Continuous Math for CS).<br>
+        <strong>Deakin:</strong> Evidence Depth: 3 (Compulsory: SIT192 Discrete Math; SIT191 Statistics optional/major-dependent).
+      </div>
+    </div>
+
+    <div class="inventory-item">
+      <div class="inventory-header">
+        <span class="inventory-title">Hardware, IoT &amp; Autonomous Systems Automation</span>
+        <span class="badge badge-specialisation">Domain Skill</span>
+      </div>
+      <div class="inventory-desc">
+        <strong>Deakin:</strong> Evidence Depth: 3 (Major dependent: Robotics / IoT majors, embedded systems, sensor integration).<br>
+        <strong>Monash:</strong> Evidence Depth: 1–2 (Elective dependent: FIT3159 Computer Architecture; embedded requires engineering double degree).
+      </div>
+    </div>
+
+    <details>
+      <summary>View full skills analysis (16 identified competencies)</summary>
+      <div class="details-content">
+        <ul>
+          <li><strong>Foundational:</strong> Problem Solving, Critical Thinking, Continuous Mathematics, Discrete Mathematics, Data Literacy, Analytical Reasoning.</li>
+          <li><strong>Professional &amp; Soft:</strong> Team Software Collaboration, Technical Documentation, Ethical AI Governance, Agile Project Management, Stakeholder Presentation.</li>
+          <li><strong>Hard &amp; Technical:</strong> Object-Oriented Software Design, Database Architecture (SQL/NoSQL), Data Structures Optimization, Linux/Unix Scripting, Distributed Systems.</li>
+          <li><strong>AI &amp; Automation:</strong> Neural Network Training, Search Algorithms, Agentic Automation Pipelines, Robotic Control Systems, API Integration.</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- SECTION 06: Tools & Technologies You'll Use -->
+  <section id="tools-technologies">
+    <h2 class="section-title">06. Tools &amp; Technologies You'll Use</h2>
+    <p class="section-subtitle">Key languages, frameworks, and environments encountered across both curricula.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Python</h3>
+        <p><strong>Status:</strong> Established (Universal AI Standard)</p>
+        <p><strong>Usage:</strong> Compulsory across both universities (Monash: FIT1045, FIT3080; Deakin: SIT112, SIT307). Used for data analysis, scripting, and neural network development.</p>
+      </div>
+
+      <div class="card">
+        <h3>Java / C++ (Systems Languages)</h3>
+        <p><strong>Status:</strong> Established (High-Performance Computing)</p>
+        <p><strong>Usage:</strong> Monash mandates Java/C++ in FIT2099/FIT1008 for OOP and algorithm efficiency. Deakin utilizes C++/C# in systems, robotics, and applied programming units.</p>
+      </div>
+
+      <div class="card">
+        <h3>PyTorch / TensorFlow</h3>
+        <p><strong>Status:</strong> Established / Growing (Deep Learning &amp; Modeling)</p>
+        <p><strong>Usage:</strong> Elective/Advanced level (Monash FIT3181 Deep Learning; Deakin SIT307 Machine Learning). Essential for building AI automation pipelines.</p>
+      </div>
+
+      <div class="card">
+        <h3>Git &amp; CI/CD Pipelines</h3>
+        <p><strong>Status:</strong> Established (Software Automation)</p>
+        <p><strong>Usage:</strong> Integrated in capstone projects and software design units (Monash FIT2099/FIT3161; Deakin SIT223/SIT374) for automated testing and version control.</p>
+      </div>
+    </div>
+
+    <details>
+      <summary>View full tools &amp; technology inventory</summary>
+      <div class="details-content">
+        <ul>
+          <li><strong>Languages:</strong> Python, Java, C++, C, SQL, Bash/Shell.</li>
+          <li><strong>AI &amp; Data Frameworks:</strong> NumPy, Pandas, Scikit-Learn, PyTorch, TensorFlow, OpenCV.</li>
+          <li><strong>Database Systems:</strong> PostgreSQL, MySQL, SQLite, MongoDB.</li>
+          <li><strong>Platforms &amp; DevOps:</strong> Docker (Derived/Benchmark), Linux OS, Git/GitHub, AWS/Azure Cloud Environments (Introduced/Elective).</li>
+        </ul>
+      </div>
+    </details>
+  </section>
+
+  <!-- SECTION 07: Where the Skills & Tools Actually Differ -->
+  <section id="skills-tools-difference">
+    <h2 class="section-title">07. Where the Skills &amp; Tools Actually Differ</h2>
+    <div class="card" style="background: var(--bg-card);">
+      <p><strong>Core Mathematical Rigour:</strong> Monash mandates two dedicated university-level mathematics units (discrete and continuous calculus/linear algebra), giving you deeper theoretical foundations for machine learning loss functions, backpropagation mechanics, and probabilistic robotics. Deakin focuses on applied discrete mathematics and practical statistical scripts.</p>
+      <br>
+      <p><strong>Robotics vs Algorithmic Software:</strong> Deakin offers distinct undergraduate major sequences in <em>Robotics</em> and <em>Internet of Things (IoT)</em>, providing direct lab access to physical automation devices, sensor networks, and microcontrollers. Monash approaches automation from a pure software, advanced algorithmic, and data modeling perspective within its standard Computer Science stream.</p>
+      <br>
+      <p><strong>Curriculum Execution:</strong> Monash will make you write highly optimized code from scratch to pass algorithmic benchmarking units. Deakin will guide you faster toward deploying functional full-stack and machine-learning prototypes integrated with existing frameworks.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 08: Where These Courses Can Take You -->
+  <section id="career-destinations">
+    <h2 class="section-title">08. Where These Courses Can Take You</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Direct / Graduate Roles</h3>
+        <ul>
+          <li><strong>Junior AI Automation Engineer:</strong> Developing automated scripts, API webhooks, and AI pipeline integrations.</li>
+          <li><strong>Graduate Software Engineer:</strong> Building robust backend services, data connectors, and test automation.</li>
+          <li><strong>Junior Machine Learning Engineer:</strong> Data preprocessing, baseline model training, and performance validation.</li>
+          <li><strong>Data / Systems Analyst:</strong> Automating reporting dashboards and ETL pipelines.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Later Progression Roles</h3>
+        <ul>
+          <li><strong>Senior AI Automation Architect:</strong> Designing enterprise-scale autonomous agent workflows and decision systems.</li>
+          <li><strong>Autonomous Systems Engineer:</strong> Leading intelligent robotics and embedded real-time automation.</li>
+          <li><strong>Lead MLOps Engineer:</strong> Managing production model deployment, monitoring drift, and CI/CD pipelines.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 09: What the Jobs Are Actually Like -->
+  <section id="job-differences">
+    <h2 class="section-title">09. What the Jobs Are Actually Like</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>AI Automation Engineer in Practice</h3>
+        <p><strong>Core Responsibility:</strong> Bridging machine learning models with automated business processes, workflow engines, and backend databases.</p>
+        <p><strong>Daily Tasks:</strong> Writing Python automation scripts, connecting LLM/agent APIs (e.g., LangChain, AutoGen), configuring webhook triggers, optimizing SQL queries, and dockerizing automation containers.</p>
+        <p><strong>Environment:</strong> Agile cross-functional teams, collaborating closely with product managers, data engineers, and operations specialists.</p>
+      </div>
+
+      <div class="card">
+        <h3>Software / Systems Engineer in Practice</h3>
+        <p><strong>Core Responsibility:</strong> Maintaining system integrity, microservice architecture, API reliability, and high-throughput processing.</p>
+        <p><strong>Daily Tasks:</strong> Writing modular OOP code (Java/C++/Python), code reviews, writing unit and integration tests, debugging production server logs, and maintaining cloud infrastructure.</p>
+        <p><strong>Environment:</strong> Engineering-heavy teams focused on scalability, system latency, reliability, and security standards.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 10: What Studying Each Course Will Feel Like -->
+  <section id="study-experience">
+    <h2 class="section-title">10. What Studying Each Course Will Feel Like</h2>
+    <div class="grid-2">
+      <div class="card card-accent-blue">
+        <h3>Deakin University</h3>
+        <ul>
+          <li><strong>Assessment Style:</strong> Mix of portfolio-based projects, practical coding assessments, group work, and applied lab demonstrations.</li>
+          <li><strong>Learning Pace:</strong> Flexible trimester calendar (T1, T2, optional T3) offering accelerated progression or study breaks.</li>
+          <li><strong>Format:</strong> High flexibility with robust Cloud Campus options alongside Burwood campus workshops.</li>
+          <li><strong>Cohort Interaction:</strong> Practical, team-centric lab sessions focusing on collaborative problem-solving and industry challenges.</li>
+        </ul>
+      </div>
+
+      <div class="card card-accent-teal">
+        <h3>Monash University</h3>
+        <ul>
+          <li><strong>Assessment Style:</strong> Rigorous mid-semester and final examinations combined with intensive individual programming assignments and group capstone deliverables.</li>
+          <li><strong>Learning Pace:</strong> Standard two-semester academic structure (Semester 1 &amp; 2) with fixed progression deadlines.</li>
+          <li><strong>Format:</strong> High on-campus presence at Clayton campus for tutorials, studio labs, and algorithm workshops.</li>
+          <li><strong>Cohort Interaction:</strong> Highly competitive and intellectually demanding peer environment with structured IBL cohort pathways.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 11: Who Each Course Is More Aligned For -->
+  <section id="course-alignment">
+    <h2 class="section-title">11. Who Each Course Is More Aligned For</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Monash University is more aligned if you:</h3>
+        <ul>
+          <li>Want deeper mathematical and algorithmic rigor to understand AI and machine learning from first principles.</li>
+          <li>Thrive in structured, high-intensity, on-campus university environments.</li>
+          <li>Target roles requiring advanced algorithmic problem-solving or research pathways in deep learning.</li>
+          <li>Want access to Monash's competitive Industry-Based Learning (IBL) scholarship placement program.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Deakin University is more aligned if you:</h3>
+        <ul>
+          <li>Prefer immediate hands-on software building, applied project portfolios, and rapid prototyping.</li>
+          <li>Want direct specialization in physical automation, IoT sensors, or robotics hardware.</li>
+          <li>Value schedule flexibility, online delivery options, or multi-trimester study pacing.</li>
+          <li>Prefer continuous project-based assessment over exam-heavy grading structures.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 12: Strengths, Limitations & Trade-offs -->
+  <section id="strengths-tradeoffs">
+    <h2 class="section-title">12. Strengths, Limitations &amp; Trade-offs</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Deakin Computer Science</h3>
+        <p><strong>Strengths:</strong> Highly accessible entry pathways, strong practical focus, dedicated IoT/Robotics majors, and flexible study schedules.</p>
+        <p><strong>Limitations:</strong> Less compulsory advanced mathematics compared to Monash; fewer specialized deep learning electives in standard core.</p>
+        <p><strong>Trade-off:</strong> You gain practical application speed and flexibility, but may need independent study in advanced mathematical theory for complex model research.</p>
+      </div>
+
+      <div class="card">
+        <h3>Monash Computer Science</h3>
+        <p><strong>Strengths:</strong> Strong algorithmic foundations, high academic reputation in computing theory, compulsory continuous mathematics, and established IBL industry links.</p>
+        <p><strong>Limitations:</strong> Rigid on-campus timetabling; higher prerequisite ATAR/math requirements; heavier examination weight.</p>
+        <p><strong>Trade-off:</strong> You build superior algorithmic and theoretical capabilities, but face a more demanding, exam-heavy academic workload.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 13: Future Readiness & AI -->
+  <section id="future-readiness">
+    <h2 class="section-title">13. Future Readiness &amp; AI</h2>
+    <div class="card" style="background: var(--bg-card);">
+      <p><strong>Durable Foundations:</strong> Both courses teach core programming logic, data structures, and computer systems architecture. These fundamentals remain resilient against automated code generation tools because understanding system architecture and logic verification is essential for AI governance.</p>
+      <br>
+      <p><strong>Evolving Nature of AI Automation Work:</strong></p>
+      <ul>
+        <li><strong>Highly Automatable:</strong> Routine boilerplate code generation, basic syntax translation, and manual regression script writing.</li>
+        <li><strong>AI-Augmented:</strong> API orchestrations, data pipeline cleaning, model parameter tuning, and test coverage generation.</li>
+        <li><strong>Human-Dominant:</strong> System integration architecture, ethical verification, edge-case troubleshooting in autonomous processes, and business logic formulation.</li>
+      </ul>
+      <br>
+      <p><strong>Emerging Skill Needs:</strong> AI Automation Engineers must master modern orchestration frameworks (LangGraph, Temporal), containerization (Docker, Kubernetes), and MLOps monitoring beyond standard university curricula.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 14: What a Modern Course Like This Should Be Doing -->
+  <section id="course-benchmark">
+    <h2 class="section-title">14. What a Modern Course Like This Should Be Doing</h2>
+    <p class="section-subtitle">Evaluating courses against the Yuzee AI &amp; Automation Curriculum Benchmark.</p>
+
+    <div class="benchmark-row">
+      <div class="inventory-header">
+        <strong>1. Core Algorithmic &amp; Mathematical Depth</strong>
+        <span class="benchmark-status status-strong">Monash: Strong | Deakin: Adequate</span>
+      </div>
+      <p class="inventory-desc">Ensures students understand linear algebra, calculus, and algorithm optimization needed for machine learning backpropagation.</p>
+    </div>
+
+    <div class="benchmark-row">
+      <div class="inventory-header">
+        <strong>2. Modern Cloud &amp; MLOps Deployment</strong>
+        <span class="benchmark-status status-partial">Monash: Partial | Deakin: Partial</span>
+      </div>
+      <p class="inventory-desc">Both courses introduce cloud concepts and databases, but enterprise-grade CI/CD and containerized MLOps pipelines require supplementary independent learning.</p>
+    </div>
+
+    <div class="benchmark-row">
+      <div class="inventory-header">
+        <strong>3. Practical Autonomous Systems / Agentic Workflows</strong>
+        <span class="benchmark-status status-adequate">Deakin: Strong (IoT/Robotics) | Monash: Adequate (AI Electives)</span>
+      </div>
+      <p class="inventory-desc">Deakin provides direct hardware/sensor/robotics pathways; Monash provides rigorous software agent and AI search algorithm models.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 15: What You Would Still Need -->
+  <section id="remaining-gaps">
+    <h2 class="section-title">15. What You Would Still Need</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Specific Course Gaps</h3>
+        <ul>
+          <li><strong>Containerization &amp; Orchestration:</strong> Neither course deeply tests Docker/Kubernetes in compulsory core units.</li>
+          <li><strong>Modern Agent Frameworks:</strong> Tooling like LangChain, LlamaIndex, or AutoGen evolves faster than standard academic syllabi.</li>
+          <li><strong>Production Cloud Certification:</strong> AWS Certified Cloud Practitioner / Solutions Architect or Azure AI Engineer.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Normal Graduate-to-Work Expectations</h3>
+        <ul>
+          <li><strong>GitHub Portfolio:</strong> 2–3 public repositories demonstrating autonomous agents, workflow automations, or end-to-end ML pipelines.</li>
+          <li><strong>Internship Experience:</strong> Completing a 6–12 month industry placement or demonstrable open-source contributions.</li>
+          <li><strong>Technical Interview Preparation:</strong> Practicing data structures and system design challenges on platforms like LeetCode.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 16: How This Matches Your Situation -->
+  <section id="personalised-match">
+    <h2 class="section-title">16. How This Matches Your Situation</h2>
+    <div class="reasoning-chain">
+      <div class="reasoning-step">
+        <strong>You told us:</strong> You want to become an AI Automation Engineer as a Domestic student in Australia.
+      </div>
+      <div class="reasoning-step">
+        <strong>Monash provides:</strong> Direct immersion into theoretical computer science, mandatory discrete &amp; continuous mathematics, advanced data structures, and top-tier AI elective streams.
+      </div>
+      <div class="reasoning-step">
+        <strong>What that means for you:</strong> You build the computational stamina needed to engineer sophisticated automation models and adapt quickly as AI architectures evolve.
+      </div>
+    </div>
+    <div class="reasoning-chain" style="margin-top: 12px;">
+      <div class="reasoning-step">
+        <strong>Alternative (Deakin):</strong> Deakin delivers a direct pathway if your view of AI automation focuses on IoT devices, robotics hardware, or if you require maximum timetable flexibility.
+      </div>
+      <div class="reasoning-step">
+        <strong>Verdict:</strong> <strong>Monash University</strong> has the closer overall alignment for software-driven AI Automation Engineering, provided you meet the mathematical prerequisites and prefer an on-campus structure.
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 17: What Could Change This Guidance? -->
+  <section id="what-could-change">
+    <h2 class="section-title">17. What Could Change This Guidance?</h2>
+    <ul>
+      <li><strong>Hardware / Robotics Focus:</strong> If your AI automation interest is centered on physical robotics, drones, or smart IoT hardware rather than enterprise software agents, Deakin's specialized majors offer superior direct integration.</li>
+      <li><strong>Prerequisites &amp; Entry ATAR:</strong> Monash requires VCE Mathematical Methods (or equivalent) and higher entry ATARs. If you do not meet these prerequisites, Deakin provides a more accessible and supportive entry route.</li>
+      <li><strong>Study Flexibility Needs:</strong> If you plan to work significant hours or need online/trimester pacing, Deakin's flexible delivery clearly supersedes Monash's rigid on-campus timetable.</li>
+    </ul>
+  </section>
+
+  <!-- SECTION 18: Your Next Step -->
+  <section id="next-action">
+    <h2 class="section-title">18. Your Next Step</h2>
+    <div class="action-card">
+      <div class="action-primary">Primary Action: Compare the Mathematics Prerequisites and Elective Maps</div>
+      <p>Review the Monash unit outlines for <strong>MAT1841 (Continuous Mathematics)</strong> and <strong>FIT3181 (Deep Learning)</strong> against Deakin’s <strong>SIT112 (Data Science &amp; AI)</strong> and <strong>Robotics Major</strong> to confirm which technical focus matches your existing math preparation and career vision.</p>
+      <p style="margin-top: 10px; font-size: 0.9rem; color: var(--text-muted);"><strong>Secondary Action:</strong> Check your VTAC eligibility and CSP entry requirements for both Melbourne campuses.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 19: Evidence & Confidence -->
+  <section id="evidence">
+    <h2 class="section-title">19. Evidence &amp; Confidence</h2>
+    <details>
+      <summary>Inspect Evidence Register &amp; Source Details</summary>
+      <div class="details-content">
+        <div class="inventory-item">
+          <p><strong>Claim:</strong> Monash C2001 requires compulsory discrete and continuous mathematics.</p>
+          <p><strong>State:</strong> Confirmed | <strong>Confidence:</strong> High | <strong>Source:</strong> Monash University Handbook (C2001 - MAT1830, MAT1841 unit requirements).</p>
+        </div>
+        <div class="inventory-item">
+          <p><strong>Claim:</strong> Deakin S306 offers dedicated majors in Data Science, IoT, and Robotics.</p>
+          <p><strong>State:</strong> Confirmed | <strong>Confidence:</strong> High | <strong>Source:</strong> Deakin University Undergraduate Course Guide &amp; S306 Course Structure.</p>
+        </div>
+        <div class="inventory-item">
+          <p><strong>Claim:</strong> Both degrees are accredited by the Australian Computer Society (ACS) at the professional level.</p>
+          <p><strong>State:</strong> Confirmed | <strong>Confidence:</strong> High | <strong>Source:</strong> ACS Accredited Programs Register &amp; Institutional Course Profiles.</p>
+        </div>
+        <div class="inventory-item">
+          <p><strong>Claim:</strong> AI Automation Engineers require MLOps and container orchestration (Docker/K8s) not fully covered in core standard units.</p>
+          <p><strong>State:</strong> Derived / Benchmark | <strong>Confidence:</strong> High | <strong>Source:</strong> Yuzee Industry Automation Benchmark &amp; Current Technical Hiring Standards.</p>
+        </div>
+      </div>
+    </details>
+  </section>
+
+</div>
+
+<!-- Com
+

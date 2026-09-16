@@ -11,10 +11,10 @@ import {
   Network,
   FileJson,
   Wrench,
-  Download,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
+
 
 export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRenderer }) => {
   const {
@@ -36,7 +36,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     activeTurnTelemetry,
     setAdvancedLabOpen,
     setActiveLabTab,
-    exportConversation,
   } = useTokenLab();
 
   const currentMode: OptimizationMode = (currentConversation?.mode as OptimizationMode) || "AUTO";
@@ -44,9 +43,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
   const displayMode = localMode ?? currentMode;
   // Reset local override when switching conversations
   useEffect(() => { setLocalMode(null); }, [currentConversation?.id]);
-
-  // Lock model + mode once a conversation has messages
-  const conversationStarted = (currentConversation?.messages || []).some(m => m.role === 'user');
 
   // Server-driven model registry
   const availableList = capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS;
@@ -86,13 +82,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     });
 
   const modeOptions: AppleSelectOption[] = [
-    {
-      value: "MICRO_PROMPT",
-      label: "Micro-Prompt",
-      description: "Routes each message to the best Yuzee mini-prompt, then sends to Gemini",
-      badge: "New",
-      badgeColor: "amber",
-    },
+    {value:"MICRO_PROMPT",label:"Oala assist (Preview)",description:"Type @Oala in your message for Yuzee service guidance. Local routing runs only when addressed.",badge:"Preview",badgeColor:"amber"},
     {
       value: "VANILLA",
       label: "Vanilla (AI Studio)",
@@ -166,7 +156,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           compact
           popoverWidth="w-80 sm:w-96"
           showSearchThreshold={5}
-          disabled={conversationStarted}
         />
 
         <AppleSelect
@@ -178,7 +167,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           compact
           popoverWidth="w-72 sm:w-84"
           showSearchThreshold={10}
-          disabled={conversationStarted}
         />
 
         <button
@@ -214,23 +202,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           <Wrench className="w-3.5 h-3.5 text-slate-500" />
           <span>Lab</span>
         </button>
-
-        {currentConversation && (currentConversation.messages || []).some(m => m.role === 'user') && (
-          <div className="relative group">
-            <button
-              id="btn-export"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-2xs cursor-pointer"
-              title="Export conversation"
-            >
-              <Download className="w-3.5 h-3.5 text-slate-500" />
-              <span>Save Chat</span>
-            </button>
-            <div className="absolute right-0 top-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg py-1 min-w-[120px] hidden group-hover:block z-50">
-              <button onClick={() => exportConversation('markdown')} className="w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50">Markdown (.md)</button>
-              <button onClick={() => exportConversation('json')} className="w-full text-left px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-50">JSON (.json)</button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Mobile-only: model selector */}
@@ -244,7 +215,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           compact
           popoverWidth="w-72"
           showSearchThreshold={5}
-          disabled={conversationStarted}
         />
       </div>
 

@@ -1,0 +1,41 @@
+{
+  "date": "2026-09-16",
+  "installation": "npm ci --offline --ignore-scripts --no-audit --no-fund succeeded using this machine npm cache; 371 packages installed",
+  "build": "npm run build passed in staged source copy",
+  "selected_tests": [
+    "test:counselling passed in staged copy",
+    "test:tool-reviews passed in staged copy"
+  ],
+  "startup": {
+    "temporary_local_login": {
+      "status": 200
+    },
+    "/api/protocol/info": {
+      "status": 200,
+      "bytes": 346
+    },
+    "/api/config/capabilities": {
+      "status": 200,
+      "bytes": 7111
+    },
+    "/api/conversations": {
+      "status": 200,
+      "bytes": 2
+    },
+    "/": {
+      "status": 200,
+      "html": true
+    }
+  },
+  "live_provider_calls": 0,
+  "environment": "Fresh runtime directory, no API key, no database URL; isolated temporary port. No live Gemini calls.",
+  "report_delivery": "HTML reports are supplied as local files. The compiled server returns the app shell at /output/...; an HTTP 200 there is not proof the report is served.",
+  "package_audit": {
+    "known_private_credentials_and_key_patterns": "no matches in included payload",
+    "existing_demo_defaults": "The Git baseline demo admin password remains in unchanged source and historical test helpers. It was excluded from the private-secret comparison; receivers must override demo authentication values.",
+    "required_files_present": true,
+    "source_files_compared_byte_for_byte": 202,
+    "runtime_conversations_excluded": true,
+    "dependency_and_model_cache_excluded": true
+  }
+}

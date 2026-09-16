@@ -1,3 +1,6 @@
+import { ChatStreamingStatus } from './ChatStreamingStatus';
+import { acceptedResponse, responseToReadableText } from "../ux/responsePresentation";
+import { MoreDetails } from './MoreDetails';
 import React, { useRef, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
@@ -42,6 +45,7 @@ export const ChatArea: React.FC = () => {
     currentConversation,
     sendMessage,
     isStreaming,
+    stopStreaming,
     inspectTurnTelemetry,
     capabilities,
     setPendingClarificationQuestions,
@@ -60,8 +64,8 @@ export const ChatArea: React.FC = () => {
   const [expandedThinking, setExpandedThinking] = React.useState<Set<string>>(new Set());
 
   const allMessages = currentConversation?.messages || [];
-  const lastAssistant = [...allMessages].reverse().find(m => m.role === 'assistant' && !m.isStreaming);
-  const lastStructured = lastAssistant?.structuredResponse as YuzeeResponseV13 | undefined;
+  const lastAssistant = [...allMessages].reverse().find(m => m.role === 'assistant' && !m.isStreaming && !m.error && m.schemaValid !== false && m.semanticValid !== false && acceptedResponse(m.structuredResponse || m.content));
+  const lastStructured = lastAssistant && !lastAssistant.error ? acceptedResponse(lastAssistant.structuredResponse || lastAssistant.content) : null;
   const suggestedActions = (!isStreaming && lastStructured?.interaction?.kind === 'none')
     ? (lastStructured.interaction.recommended_actions || [])
     : [];
@@ -102,7 +106,7 @@ export const ChatArea: React.FC = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [currentConversation?.messages, isStreaming, hasSuggestions]);
+  }, [currentConversation?.messages.length, isStreaming, hasSuggestions]);
 
   // Auto-expand thinking panel while streaming, auto-collapse 1.5s after done
   useEffect(() => {
@@ -137,33 +141,33 @@ export const ChatArea: React.FC = () => {
   }, [currentConversation?.messages, isStreaming, setPendingClarificationQuestions]);
 
   const copyMessage = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(responseToReadableText(text));
     setCopiedId(id);
     if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
     copyTimerRef.current = setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleInteractionEvent = (event: UserEvent) => { sendMessage(event); };
-
+  const handleInteractionEvent = (event: UserEvent) => sendMessage(event.userEvent ? event : event.value || '');
   const parseStructuredResponse = (msg: ChatMessage): YuzeeResponseV13 | null => {
-    if (msg.structuredResponse) return msg.structuredResponse;
-    if (!msg.content) return null;
-    const trimmed = msg.content.trim();
-    if (trimmed.startsWith("{") && trimmed.endsWith("}")) {
-      try {
-        const parsed = JSON.parse(trimmed);
-        if (parsed.schema_version === "1.3" && (parsed.content_blocks || parsed.blocks)) return parsed as YuzeeResponseV13;
-      } catch { /* streaming */ }
-    }
-    return null;
+    if (msg.streamStopped || (msg.isStreaming && !msg.structuredResponse)) return null;
+    if (msg.error || msg.schemaValid === false || msg.semanticValid === false || (msg.telemetry as any)?.validation?.protocolAccepted === false) return null;
+    return acceptedResponse(msg.structuredResponse || msg.content);
   };
 
   const messages = currentConversation?.messages || [];
+  // Reuse only details actually submitted by the person in this conversation.
+  const knownFields = messages.reduce<Record<string,string>>((known,msg) => {
+    if (msg.role !== 'user') return known;
+    const event = msg.userEvent as any;
+    const values = event?.userEvent?.interaction?.fields || event?.interaction?.fields || event?.fields;
+    if (values && typeof values === 'object') for (const [key,value] of Object.entries(values)) if (typeof value === 'string') known[key] = value;
+    return known;
+  }, {});
 
   const retryLastMessage = () => {
     const msgs = currentConversation?.messages || [];
     for (let i = msgs.length - 1; i >= 0; i--) {
-      if (msgs[i].role === "user") { sendMessage(msgs[i].content); break; }
+      if (msgs[i].role === "user") { sendMessage(msgs[i].userEvent || msgs[i].content); break; }
     }
   };
 
@@ -191,9 +195,9 @@ export const ChatArea: React.FC = () => {
     const configs: Record<string, { icon: React.ReactNode; title: string; detail: string; color: string }> = {
       RATE_LIMIT: { icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />, title: "Rate limit reached", detail: errorMsg || "Gemini rate limit reached. Wait a moment and try again.", color: "bg-amber-50 border-amber-200 text-amber-900" },
       QUOTA_EXHAUSTED: { icon: <AlertTriangle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />, title: "Daily quota reached", detail: errorMsg || "The free-tier Gemini quota for today has been used up.", color: "bg-red-50 border-red-200 text-red-900" },
-      AUTH_ERROR: { icon: <ShieldAlert className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />, title: "API key error", detail: "The GEMINI_API_KEY is missing or invalid. Check your .env file and restart the server.", color: "bg-red-50 border-red-200 text-red-900" },
-      FUNCTION_TIMEOUT: { icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />, title: "Response timed out (free-tier limit)", detail: "Switch to Flash Lite for faster responses, or ask a shorter question.", color: "bg-amber-50 border-amber-200 text-amber-900" },
-      PROVIDER_ERROR: { icon: <Wifi className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />, title: "Provider error", detail: errorMsg || "Gemini returned an error. Please try again.", color: "bg-slate-50 border-slate-200 text-slate-800" },
+      AUTH_ERROR: { icon: <ShieldAlert className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />, title: "The assistant cannot connect", detail: "The connection needs attention. Your answer has been kept.", color: "bg-red-50 border-red-200 text-red-900" },
+      FUNCTION_TIMEOUT: { icon: <Clock className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />, title: "The reply took too long", detail: "Your answer has been kept. Please try again.", color: "bg-amber-50 border-amber-200 text-amber-900" },
+      PROVIDER_ERROR: { icon: <Wifi className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />, title: "We couldn’t complete that reply", detail: errorMsg || "Your answer has been kept. Please try again.", color: "bg-slate-50 border-slate-200 text-slate-800" },
     };
     const cfg = configs[errorCode || 'PROVIDER_ERROR'] || configs['PROVIDER_ERROR'];
     return (
@@ -293,12 +297,12 @@ export const ChatArea: React.FC = () => {
                             : msg.content;
                           return (
                             <div id={`message-${msg.id}`}>
-                              <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#6d7782] mb-2.5">Student</div>
+                              <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#6d7782] mb-2.5">You</div>
                               <div
                                 className="inline-block text-[16px] sm:text-[15px] leading-[1.6] max-w-full sm:max-w-[85%] whitespace-pre-wrap px-3.5 sm:px-4 py-3"
                                 style={{ backgroundColor: 'var(--bubble-bg)', color: 'var(--bubble-text)', borderRadius: '18px 18px 6px 18px' }}
                               >
-                                {userDisplayContent}
+                                {userDisplayContent?.replace(/ Research reference: [a-f0-9-]{36}$/, '')}
                               </div>
                             </div>
                           );
@@ -380,18 +384,19 @@ export const ChatArea: React.FC = () => {
                               ) : structured ? (
                                 <ProtocolV13Renderer
                                   data={structured}
+                                  initialFields={knownFields}
                                   rawJson={msg.content}
                                   schemaValid={msg.schemaValid ?? true}
                                   semanticValid={msg.semanticValid ?? true}
                                   validationErrors={msg.validationErrors || []}
                                   onInteract={handleInteractionEvent}
-                                  readOnly={msg.isStreaming}
+                                  readOnly={isStreaming || !isLastAssistantMsg(msg.id)}
                                   conversationId={currentConversation?.id}
-                                  hideRecommendedActions={isLastAssistantMsg(msg.id)}
+                                  hideRecommendedActions={true}
                                   onOpenPathway={isLastAssistantMsg(msg.id) ? () => { setWhiteboardOpen(true); setTokenInspectorOpen(false); } : undefined}
                                 />
                               ) : (
-                                !msg.error && (!msg.isStreaming || (msg.content && !msg.content.trimStart().startsWith("{"))) && (
+                                !msg.error && !msg.streamStopped && !msg.isStreaming && (
                                   <div className="prose prose-slate max-w-none text-[16px] sm:text-[15px] leading-[1.7] sm:leading-[1.65] text-[#0d0d0d]
                                     prose-p:text-[16px] sm:prose-p:text-[15px] prose-p:leading-[1.7] sm:prose-p:leading-[1.65] prose-p:text-[#0d0d0d] prose-p:my-3
                                     prose-li:text-[16px] sm:prose-li:text-[15px] prose-li:text-[#0d0d0d]
@@ -399,35 +404,21 @@ export const ChatArea: React.FC = () => {
                                     prose-headings:text-[#0d0d0d] prose-headings:font-bold
                                     prose-code:bg-[#f4f4f4] prose-code:text-[#c7254e] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[13px]
                                     prose-pre:bg-[#1e1e1e] prose-pre:text-[#d4d4d4] prose-pre:rounded-xl prose-pre:p-4">
-                                    <Markdown remarkPlugins={[remarkGfm]}>{msg.content || "Generating guidance..."}</Markdown>
+                                    <Markdown remarkPlugins={[remarkGfm]}>{(msg.telemetry as any)?.validation?.protocolAccepted === false ? "This response could not be displayed. Please try again." : responseToReadableText(msg.content) || "Preparing your answer…"}</Markdown>
                                   </div>
                                 )
                               )}
 
+                              {structured && !msg.isStreaming && currentConversation && <MoreDetails key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={sendMessage} />}
                               {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 
-                              {/* Streaming shimmer */}
-                              {msg.isStreaming && (
-                                <div className="space-y-3">
-                                  {!structured && (
-                                    <div className="space-y-2.5 py-1">
-                                      <div className="h-3 bg-[#f4f4f4] rounded-full w-4/5 animate-pulse" />
-                                      <div className="h-3 bg-[#f4f4f4] rounded-full w-3/5 animate-pulse" />
-                                      <div className="h-3 bg-[#f4f4f4] rounded-full w-11/12 animate-pulse" />
-                                      <div className="h-3 bg-[#f4f4f4] rounded-full w-1/2 animate-pulse" />
-                                    </div>
-                                  )}
-                                  <div className="flex items-center gap-2 text-[12px] font-medium" style={{ color: 'var(--accent-70)' }}>
-                                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-                                    <span>Generating response…</span>
-                                  </div>
-                                </div>
-                              )}
+                              {msg.isStreaming && !structured && <ChatStreamingStatus phase={msg.streamProgress?.phase} startedAt={msg.createdAt} onStop={stopStreaming}/>}
+                              {msg.streamStopped && <div className="main-chat-stopped" role="status">Stopped. Your question is still here.<button type="button" onClick={retryLastMessage}>Try again</button></div>}
 
                               {msg.telemetry?.usage?.finishReason === 'MAX_TOKENS' && !msg.isStreaming && (
                                 <div className="flex items-start gap-2 p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900">
                                   <AlertTriangle className="w-3.5 h-3.5 text-amber-500 shrink-0 mt-0.5" />
-                                  <span>Response was truncated at the output token limit. Try switching to Detail mode for longer responses.</span>
+                                  <span>This answer reached its response limit and could not be completed. Please retry with one part of your question.</span>
                                 </div>
                               )}
 
@@ -488,7 +479,7 @@ export const ChatArea: React.FC = () => {
                                         <Code2 className="w-3.5 h-3.5" />
                                       </button>
                                     )}
-                                    <button onClick={() => speakMessage(msg.id, msg.content ?? "")} className={`p-1 rounded hover:bg-[#f4f4f4] ${speakingId === msg.id ? "text-[var(--accent)]" : "text-slate-400 hover:text-slate-600"}`} title={speakingId === msg.id ? "Stop speaking" : "Read aloud"}>
+                                    <button onClick={() => speakMessage(msg.id, responseToReadableText(msg.structuredResponse || msg.content))} className={`p-1 rounded hover:bg-[#f4f4f4] ${speakingId === msg.id ? "text-[var(--accent)]" : "text-slate-400 hover:text-slate-600"}`} title={speakingId === msg.id ? "Stop speaking" : "Read aloud"}>
                                       {speakingId === msg.id ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
                                     </button>
                                     <button onClick={() => copyMessage(msg.id, msg.content ?? "")} className="p-1 text-slate-400 hover:text-slate-600 rounded hover:bg-[#f4f4f4]" title="Copy">
@@ -544,7 +535,7 @@ export const ChatArea: React.FC = () => {
                   <button
                     key={act.id}
                     type="button"
-                    onClick={() => sendMessage({ type: "action_clicked", action_id: act.id, value: act.message, userEvent: { interaction: { question_id: "recommended_action", selected_option_ids: [act.id], self_input: act.message } }, timestamp: Date.now() } as any)}
+                    onClick={() => sendMessage(act.message)}
                     className="px-4 py-2 rounded-full text-[13px] font-semibold text-white cursor-pointer select-none"
                     style={{
                       backgroundColor: '#7244c6',

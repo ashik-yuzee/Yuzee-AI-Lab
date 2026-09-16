@@ -70,7 +70,7 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
   const semanticErrors: string[] = [];
   const warnings: string[] = [];
 
-  if (!json || typeof json !== 'object') {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) {
     return {
       jsonParsed: false,
       schemaValid: false,
@@ -86,7 +86,7 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
   // -------------------------------------------------------------
   // Layer 1: Canonical JSON Schema validation via Ajv
   // -------------------------------------------------------------
-  const isAjvValid = validateSchema(json);
+  const isAjvValid = Boolean(validateSchema(json));
   if (!isAjvValid && validateSchema.errors) {
     for (const err of validateSchema.errors) {
       const path = err.instancePath || 'root';
@@ -121,6 +121,8 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
   }
 
   const schemaValid = isAjvValid && schemaErrors.length === 0;
+  if (!schemaValid) return { jsonParsed: true, schemaValid: false, semanticValid: false, protocolAccepted: false, schemaErrors, semanticErrors: [], errors: schemaErrors, warnings };
+  semanticErrors.push(...validateDisplayInvariants(json));
 
   // -------------------------------------------------------------
   // Layer 2: Semantic & Invariant Rule Validation (Yuzee Prompt v0.12)
@@ -225,9 +227,8 @@ export function validateProtocolV13(json: any): ExtendedProtocolValidationResult
   }
 
   const semanticValid = semanticErrors.length === 0;
-  // AJV generates false positives for oneOf variants (e.g. text blocks failing table-block schema).
-  // Semantic invariants are the real quality gate — accept if they pass regardless of AJV noise.
-  const protocolAccepted = semanticValid;
+  // Both the wire contract and business invariants must pass.
+  const protocolAccepted = schemaValid && semanticValid;
   const allErrors = [...schemaErrors, ...semanticErrors];
 
   return {
@@ -247,11 +248,11 @@ export function validateProtocolV14(json: any): ExtendedProtocolValidationResult
   const semanticErrors: string[] = [];
   const warnings: string[] = [];
 
-  if (!json || typeof json !== 'object') {
+  if (!json || typeof json !== 'object' || Array.isArray(json)) {
     return { jsonParsed: false, schemaValid: false, semanticValid: false, protocolAccepted: false, schemaErrors: ['Response is not a valid JSON object'], semanticErrors: [], errors: ['Response is not a valid JSON object'], warnings: [] };
   }
 
-  const isAjvValid = validateSchemaV14(json);
+  const isAjvValid = Boolean(validateSchemaV14(json));
   if (!isAjvValid && validateSchemaV14.errors) {
     for (const err of validateSchemaV14.errors) {
       schemaErrors.push(`[Schema] ${err.instancePath || 'root'}: ${err.message || 'Invalid value'}`);
@@ -269,6 +270,8 @@ export function validateProtocolV14(json: any): ExtendedProtocolValidationResult
   if (!json.followups || typeof json.followups !== 'object') schemaErrors.push('followups object is required');
 
   const schemaValid = isAjvValid && schemaErrors.length === 0;
+  if (!schemaValid) return { jsonParsed: true, schemaValid: false, semanticValid: false, protocolAccepted: false, schemaErrors, semanticErrors: [], errors: schemaErrors, warnings };
+  semanticErrors.push(...validateDisplayInvariants(json));
 
   // Shared semantic invariants (same as v1.3)
   if (Array.isArray(json.content_blocks) && json.content_blocks.length > 0) {
@@ -413,7 +416,7 @@ export function validateProtocolV14(json: any): ExtendedProtocolValidationResult
   }
 
   const semanticValid = semanticErrors.length === 0;
-  const protocolAccepted = semanticValid;
+  const protocolAccepted = schemaValid && semanticValid;
 
   return {
     jsonParsed: true,
@@ -475,6 +478,10 @@ export function validateUserEventAgainstActiveInteraction(
   }
 
   const errors: string[] = [];
+  for (const name of ['selected_option_ids', 'ranked_option_ids'] as const) {
+    if (interaction[name] !== undefined && (!Array.isArray(interaction[name]) || !interaction[name]!.every(v => typeof v === 'string'))) return { valid: false, errors: ['Choices must be a list of valid option IDs.'] };
+  }
+  if (interaction.self_input !== undefined && typeof interaction.self_input !== 'string') return { valid: false, errors: ['Your answer must be text.'] };
 
   // Service Action Click Verification
   if (interaction.action_id) {
@@ -534,6 +541,7 @@ export function validateUserEventAgainstActiveInteraction(
   // Validate Multi Select
   if (inputType === 'multi_select') {
     const selected = interaction.selected_option_ids || [];
+    if (!selected.length && !interaction.self_input?.trim()) errors.push('Choose at least one option or enter your own answer.');
     const uniqueSelected = new Set(selected);
     if (uniqueSelected.size !== selected.length) {
       errors.push(`Duplicate option IDs submitted in multi-select.`);
@@ -567,21 +575,68 @@ export function validateUserEventAgainstActiveInteraction(
     }
   }
 
-  // Validate Fields (Handoff or structured form)
+  // Validate required fields and values against the active server-owned form.
   if (inputType === 'fields' || activeInteraction.kind === 'handoff') {
-    const trustedFields = Array.isArray(activeInteraction.fields) ? activeInteraction.fields : [];
-    const trustedFieldIds = trustedFields.map((f: any) => f.id || f.name);
-    const submittedFields = interaction.fields || {};
-
-    for (const fieldId of Object.keys(submittedFields)) {
-      if (!trustedFieldIds.includes(fieldId)) {
-        errors.push(`Submitted field ID "${fieldId}" is not an authorized field in active interaction.`);
-      }
-    }
+    errors.push(...validateInteractionFields(activeInteraction, interaction.fields).errors);
+  }
+  if (inputType === 'text' && (typeof interaction.self_input !== 'string' || !interaction.self_input.trim())) {
+    errors.push('Enter your answer before continuing.');
   }
 
   return {
     valid: errors.length === 0,
     errors,
   };
+}
+
+
+export function validateInteractionFields(active: any, values: unknown): { valid: boolean; errors: string[]; fieldErrors: Record<string, string> } {
+  const fieldErrors: Record<string, string> = {};
+  const fields = Array.isArray(active?.fields) ? active.fields : [];
+  if (!values || typeof values !== 'object' || Array.isArray(values)) { fieldErrors.form = 'Enter the requested details.'; values = {}; }
+  const submitted = values as Record<string, unknown>;
+  for (const key of Object.keys(submitted)) if (!fields.some((f: any) => f.id === key)) fieldErrors[key] = 'This field is not part of the current question.';
+  for (const field of fields) {
+    const value = submitted[field.id];
+    if (value !== undefined && typeof value !== 'string') { fieldErrors[field.id] = `${field.label} must be text.`; continue; }
+    const text = typeof value === 'string' ? value.trim() : '';
+    if (field.required && !text) fieldErrors[field.id] = `Enter ${field.id === 'location' ? 'a city, suburb or postcode' : field.label.toLowerCase()}.`;
+    else if (text.length > 500) fieldErrors[field.id] = 'Keep this answer under 500 characters.';
+    else if (text && field.input_type === 'single_select' && !(field.options || []).some((o: any) => (o.value || o.label) === text)) fieldErrors[field.id] = `Choose one of the listed options for ${field.label.toLowerCase()}.`;
+  }
+  return { valid: Object.keys(fieldErrors).length === 0, errors: Object.values(fieldErrors), fieldErrors };
+}
+
+function validateDisplayInvariants(json: any): string[] {
+  const errors: string[] = [];
+  const inter = json.interaction;
+  if (inter?.kind !== 'none') {
+    if (!inter?.question_id?.trim() || !inter?.question?.trim()) errors.push('An active question needs an ID and clear question text.');
+    const ids = (inter?.options || []).map((o: any) => o.id);
+    if (ids.some((id: string) => !id?.trim()) || new Set(ids).size !== ids.length) errors.push('Question option IDs must be nonempty and unique.');
+    if (inter?.input_type === 'single_select' && (ids.length < 2 || ids.length > 5)) errors.push('Single-choice questions need 2–5 options.');
+    if (inter?.input_type === 'multi_select' && (ids.length < 2 || ids.length > 6)) errors.push('Multiple-choice questions need 2–6 options.');
+    if (inter?.input_type === 'fields') {
+      const ids = inter.fields.map((f: any) => f.id);
+      if (!ids.length || new Set(ids).size !== ids.length) errors.push('A form needs nonempty, unique fields.');
+      for (const f of inter.fields) {
+        if (f.id === 'location' && (f.input_type === 'single_select' || f.options.length)) errors.push('Location must be a typed field without location choices.');
+        if (f.input_type === 'single_select' && !f.options.length) errors.push('A selection field needs choices.');
+      }
+    }
+    if (inter?.kind === 'handoff' && inter?.input_type !== 'fields') errors.push('A handoff must use fields.');
+    if (inter?.kind === 'question' && !['text','single_select','multi_select','ranked_select'].includes(inter.input_type)) errors.push('A question must have an answer control.');
+  }
+  if (inter?.kind === 'none' && inter.input_type !== 'none') errors.push('Inactive questions must not expose answer controls.');
+  for (const block of json.content_blocks || []) {
+    if (block.type === 'table' || block.type === 'comparison') {
+      const keys = block.columns.map((c: any) => c.key);
+      if (!keys.length || new Set(keys).size !== keys.length) errors.push('Comparison columns must be nonempty and unique.');
+      for (const row of block.rows) {
+        const cells = row.cells.map((c: any) => c.key);
+        if (cells.length !== keys.length || new Set(cells).size !== cells.length || cells.some((k: string) => !keys.includes(k))) errors.push('Every comparison row must preserve one cell per column.');
+      }
+    }
+  }
+  return errors;
 }

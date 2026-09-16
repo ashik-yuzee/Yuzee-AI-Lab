@@ -1,3 +1,4 @@
+import { parseChatProgress } from "../ux/streamProgress";
 import {
   CapabilitiesResponse,
   Conversation,
@@ -349,7 +350,8 @@ export async function runBenchmark(payload: {
 }
 
 export interface StreamCallbacks {
-  onStart?: (data: { conversationId: string; messageId: string; appliedThinkingLevel: string }) => void;
+  onStatus?: (progress: import("../ux/streamProgress").ChatStreamProgress) => void;
+  onStart?: (data: { conversationId: string; messageId: string; appliedThinkingLevel: string; routing?: import("../routing/policy").RoutingDecision }) => void;
   onDelta?: (text: string) => void;
   onStructured?: (data: any) => void;
   onValidation?: (data: any) => void;
@@ -385,8 +387,8 @@ export function streamChatMessage(
     userQuestionAnswers?: any[];
     isOptionSelection?: boolean;
     attachments?: Array<{ mimeType: string; data: string }>;
-    microToolPrompt?: string;
-    microToolName?: string;
+    mode?: string;
+    microToolSelection?: import("../routing/policy").RoutingDecision;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal
@@ -394,7 +396,8 @@ export function streamChatMessage(
   const controller = new AbortController();
   // Always use controller.signal for fetch so the returned cancel fn works.
   // When caller passes their own signal, forward its abort into our controller.
-  if (signal) signal.addEventListener("abort", () => controller.abort(), { once: true });
+  if (signal?.aborted) controller.abort();
+  else if (signal) signal.addEventListener("abort", () => controller.abort(), { once: true });
 
   (async () => {
     let doneCalled = false;
@@ -427,7 +430,9 @@ export function streamChatMessage(
       const response = await fetchWithRetry();
 
       if (!response.ok || !response.body) {
-        throw new Error(`Chat streaming failed with status ${response.status}`);
+        const detail = await response.json().catch(() => ({}));
+        const message = response.status === 400 ? 'This question may have changed. Review the latest question or send your answer as a message.' : response.status === 429 ? 'Please wait a moment, then try again.' : 'Your reply could not be completed. Please try again.';
+        throw Object.assign(new Error(message), { errorCode: String(response.status) });
       }
 
       const reader = response.body.getReader();
@@ -438,6 +443,7 @@ export function streamChatMessage(
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
+        if (controller.signal.aborted) return;
 
         buffer += decoder.decode(value, { stream: true });
         const lines = buffer.split("\n");
@@ -454,7 +460,9 @@ export function streamChatMessage(
             if (dataStr) {
               try {
                 const data = JSON.parse(dataStr);
-                if (currentEvent === "start" && callbacks.onStart) callbacks.onStart(data);
+                if (controller.signal.aborted) return;
+                if (currentEvent === "status") { const progress = parseChatProgress(data); if (progress) callbacks.onStatus?.(progress); }
+                else if (currentEvent === "start" && callbacks.onStart) callbacks.onStart(data);
                 else if (currentEvent === "delta" && callbacks.onDelta) callbacks.onDelta(typeof data === "string" ? data : data.delta || "");
                 else if (currentEvent === "structured" && callbacks.onStructured) callbacks.onStructured(data);
                 else if (currentEvent === "validation" && callbacks.onValidation) callbacks.onValidation(data);
@@ -478,10 +486,11 @@ export function streamChatMessage(
         }
       }
 
-      triggerDone();
+      if (!controller.signal.aborted) triggerDone();
     } catch (err: any) {
       if (err.name !== "AbortError" && callbacks.onError) {
-        callbacks.onError(err);
+        const networkFailure = /failed to fetch|networkerror|net::|load failed/i.test(err.message || '');
+        callbacks.onError(networkFailure ? Object.assign(new Error('The connection is unavailable. Your answer has been kept. Please try again when it is back.'), {errorCode:'NETWORK_ERROR'}) : err);
       }
     }
   })();

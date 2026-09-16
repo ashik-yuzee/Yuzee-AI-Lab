@@ -1,0 +1,42 @@
+{
+  "course-units": {
+    "observed": "A three-row example now shows consequences, checks the purpose and source before treating records as duplicates, and leaves an ambiguous date unresolved until its convention is known.",
+    "remaining": "The example teaches a checking method; it is not a confirmed course activity or permission to alter real records. Software, assessment and prerequisites remain unknown."
+  },
+  "entry-unknown": {
+    "observed": "The shorter answer explains what a work sample is, identifies the outstanding second sample and keeps the suitability of the existing sample unresolved.",
+    "remaining": "The provider still defines accepted formats. The supplied rules do not establish any other admission requirements."
+  },
+  "conditional-cost": {
+    "observed": "The answer calculates the AUD 2,520 subtotal from the supplied quote, distinguishes stated figures from calculated totals, and adds no invented subsidy percentage or fee amount.",
+    "remaining": "Funding, additional fees and payment timing still need real evidence. The response could use fewer evidence labels for an even lighter reading experience."
+  },
+  "repeated-ads": {
+    "observed": "The response is substantially shorter, gives possible reasons for copied ads and treats records over time and employer statements as helpful evidence rather than a universal test.",
+    "remaining": "Some language in this recorded answer, such as syndication, is still formal. The final reviewer now explicitly requests simpler alternatives; broader reader testing remains useful."
+  },
+  "curriculum-evidence": {
+    "observed": "The map uses understandable capability descriptions, separates the actual source phrase from inferred subskills and preserves unknown practice and assessment details.",
+    "remaining": "Some headings still sound analytical. A stated outcome is not proof of learner competence, and one elective does not establish what all other units teach."
+  },
+  "readiness-unknown": {
+    "observed": "The answer explains the difference between entering lists and checking sources, keeps induction status unresolved, and says the employer decides whether to accept a practice sample.",
+    "remaining": "The latest concise answer gives a practice activity rather than walking through specific mismatched quantities. A follow-up can demonstrate the check in more detail. Induction and capability evidence remain unverified."
+  },
+  "beginner-skill": {
+    "observed": "The lesson teaches five questions, gives a worked sequence, explains a common mistake and provides practice with a possible answer and circumstances that could change the order.",
+    "remaining": "The latest answer is 689 words: shorter than the earlier 944, but slightly above the narrower 550\u2013650 preference. It preserves a useful alternative order. Length targets remain soft; intended-reader testing is still needed."
+  },
+  "pay-comparability": {
+    "observed": "The answer teaches how to compare base rates and agreed paid hours, using a symbolic formula without invented work weeks, loading percentages or alternate annual totals.",
+    "remaining": "A real comparison still requires comparable roles and pay definitions; two unlike advertisements cannot establish a market trend."
+  },
+  "learning-depth": {
+    "observed": "The lesson begins with a plain definition, contrasts a premature refund promise with a useful clarifying question, and supplies a practice answer in the same response.",
+    "remaining": "The weak response is explicitly a mistake, not recommended wording. Actual remedies still require facts, policy and permission."
+  },
+  "placement-unknown": {
+    "observed": "The answer organises the decision into task fit, supervision, capacity, conditions and approval. Schedule and location are included alongside safety checks.",
+    "remaining": "Only the topic connection is supported. Actual tasks, an available place, conditions and institutional recognition remain to be confirmed."
+  }
+}

@@ -219,6 +219,7 @@ export interface MessageTelemetry {
 }
 
 export interface ChatMessage {
+  userEvent?: UserEvent;
   id: string;
   role: 'user' | 'assistant' | 'system';
   content: string;
@@ -235,6 +236,9 @@ export interface ChatMessage {
   };
   createdAt: number;
   isStreaming?: boolean;
+  streamProgress?: import("./ux/streamProgress").ChatStreamProgress;
+  streamStopped?: boolean;
+  routing?: import('./routing/policy').RoutingDecision;
   error?: string;
   errorCode?: string;
   microToolName?: string;

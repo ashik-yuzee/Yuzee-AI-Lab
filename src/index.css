@@ -1,3 +1,4 @@
+@import "./components/chat-experience.css";
 @import "tailwindcss";
 
 /* Accent color — updated at runtime via Settings */
@@ -109,4 +110,14 @@ html.font-open-sans body {
 
 .response-table-scroll::-webkit-scrollbar-thumb:hover {
   background: #5a4038;
+}
+
+/* Read comparisons without horizontal scrolling on a phone. */
+@media (max-width: 640px) {
+  .response-data-table { min-width: 0 !important; display: block; }
+  .response-data-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .response-data-table tbody, .response-data-table tr { display: block; width: 100%; }
+  .response-data-table tr { padding: 8px 0; border-bottom: 2px solid #e5ddd5 !important; }
+  .response-data-table td { display: block; width: 100%; overflow-wrap: anywhere; padding: 8px 14px !important; }
+  .response-data-table td::before { content: attr(data-label); display: block; font-size: 13px; font-weight: 650; color: #52606d; margin-bottom: 3px; }
 }

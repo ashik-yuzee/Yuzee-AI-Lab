@@ -1,23 +1,9 @@
 import pg from "pg";
-import fs from "fs/promises";
 import path from "path";
 import { DEFAULT_MODEL_ID } from "../data/models";
+import { LocalConversationStore } from './LocalConversationStore';
 const { Pool } = pg;
-
-// ---- Local JSON file fallback (used when DATABASE_URL is absent) ----
-const LOCAL_FILE = path.join(process.cwd(), "data", "conversations.json");
-
-async function readLocal(): Promise<any[]> {
-  try { return JSON.parse(await fs.readFile(LOCAL_FILE, "utf-8")); }
-  catch { return []; }
-}
-
-async function writeLocal(convs: any[]): Promise<void> {
-  try {
-    await fs.mkdir(path.dirname(LOCAL_FILE), { recursive: true });
-    await fs.writeFile(LOCAL_FILE, JSON.stringify(convs, null, 2));
-  } catch (err) { console.error("[local-db] write failed:", err); }
-}
+const localStore = new LocalConversationStore(path.join(process.cwd(), 'data', 'conversations.json'));
 
 // ---- PostgreSQL pool (optional) ----
 // Lazy — initialized in initDb() so dotenv has run before we read DATABASE_URL
@@ -215,10 +201,7 @@ export async function logTurn(turn: TurnLog): Promise<void> {
 
 export async function saveConversation(conv: any): Promise<void> {
   if (!pool) {
-    const all = await readLocal();
-    const idx = all.findIndex((c: any) => c.id === conv.id);
-    if (idx >= 0) all[idx] = conv; else all.push(conv);
-    await writeLocal(all);
+    await localStore.save(conv);
     return;
   }
   try {
@@ -315,8 +298,7 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
 
 export async function deleteConversation(id: string): Promise<void> {
   if (!pool) {
-    const all = await readLocal();
-    await writeLocal(all.filter((c: any) => c.id !== id));
+    await localStore.delete(id);
     return;
   }
   try {
@@ -327,7 +309,7 @@ export async function deleteConversation(id: string): Promise<void> {
 }
 
 export async function loadConversations(): Promise<any[]> {
-  if (!pool) return readLocal();
+  if (!pool) return localStore.list();
   try {
     const convResult = await pool.query(
       `SELECT * FROM conversations WHERE expires_at > NOW() ORDER BY updated_at DESC LIMIT 500`
