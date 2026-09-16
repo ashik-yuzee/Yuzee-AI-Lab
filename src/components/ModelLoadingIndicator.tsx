@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { onLoadProgress } from '../services/MicroToolRouter';
+import { onLoadProgress, modelDevice } from '../services/MicroToolRouter';
 
 const R = 16; // circle radius
 const C = 2 * Math.PI * R; // circumference
@@ -8,6 +8,7 @@ export function ModelLoadingIndicator() {
   const [pct, setPct] = useState(0);
   const [label, setLabel] = useState('Starting…');
   const [phase, setPhase] = useState<'loading' | 'done' | 'hidden'>('loading');
+  const [device, setDevice] = useState<'webgpu' | 'cpu' | null>(null);
 
   useEffect(() => {
     const unsub = onLoadProgress((p, l) => {
@@ -15,6 +16,7 @@ export function ModelLoadingIndicator() {
       setPct(Math.min(p, 100));
       setLabel(l);
       if (p >= 100) {
+        setDevice(modelDevice);
         setPhase('done');
         setTimeout(() => setPhase('hidden'), 2200);
       }
@@ -73,8 +75,11 @@ export function ModelLoadingIndicator() {
       )}
 
       <div className="flex flex-col min-w-0">
-        <span className="text-slate-800 font-semibold text-[11px] leading-tight">
+        <span className="text-slate-800 font-semibold text-[11px] leading-tight flex items-center gap-1">
           {phase === 'done' ? 'AI router ready' : 'Loading AI router'}
+          {phase === 'done' && device === 'webgpu' && (
+            <span className="px-1 py-0.5 rounded text-[8px] font-bold tracking-wide bg-violet-100 text-violet-600">GPU</span>
+          )}
         </span>
         <span className="text-slate-400 text-[10px] leading-tight truncate max-w-[120px]">{label}</span>
       </div>

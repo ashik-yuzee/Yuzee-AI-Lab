@@ -30,6 +30,7 @@ function emit(pct: number, label: string) {
 
 // ---------- state ----------
 export let modelReady = false;
+export let modelDevice: 'webgpu' | 'cpu' | null = null;
 let worker: Worker | null = null;
 let warmupStarted = false;
 let routeIdCounter = 0;
@@ -71,7 +72,7 @@ function getWorker(): Worker {
   worker.onmessage = (e: MessageEvent) => {
     const { type, pct, label, id, tool, score, message } = e.data;
     if (type === 'progress') { emit(pct, label); return; }
-    if (type === 'ready') { modelReady = true; return; }
+    if (type === 'ready') { modelReady = true; modelDevice = e.data.device ?? null; return; }
     if (type === 'result') {
       pendingRoutes.get(id)?.resolve({ tool: tool as MicroTool, score: score as number });
       pendingRoutes.delete(id);

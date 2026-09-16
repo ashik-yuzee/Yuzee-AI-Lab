@@ -35,17 +35,41 @@ function progressCallback(data: any) {
   }
 }
 
-async function init() {
-  self.postMessage({ type: 'progress', pct: 2, label: 'Starting download…' });
+async function probeWebGPU(): Promise<boolean> {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const gpu = (self as any).navigator?.gpu;
+    if (!gpu) return false;
+    const adapter = await gpu.requestAdapter();
+    return !!adapter;
+  } catch {
+    return false;
+  }
+}
 
-  // @huggingface/transformers v4 has native ESM — no UMD/global scope issues
+async function init() {
+  self.postMessage({ type: 'progress', pct: 2, label: 'Detecting hardware…' });
+
   const { pipeline: xPipeline, cos_sim: xCosSim } = await import('@huggingface/transformers');
+
+  // Prefer WebGPU for GPU-accelerated inference; fall back to CPU with quantized weights
+  const hasWebGPU = await probeWebGPU();
+  const device = hasWebGPU ? 'webgpu' : 'cpu';
+  const dtype  = 'q8'; // quantized int8 on both paths — same 22 MB download either way
+
+  self.postMessage({
+    type: 'progress',
+    pct: 5,
+    label: hasWebGPU ? 'GPU detected — loading model…' : 'Loading model…',
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   embedder = await xPipeline('feature-extraction', MODEL, {
-    quantized: true,
+    device,
+    dtype,
     progress_callback: progressCallback,
   } as any);
+
   self.postMessage({ type: 'progress', pct: 85, label: 'Building tool index…' });
 
   const texts = tools.map(t => `${t.name}. ${t.use_when} ${t.purpose}`);
@@ -55,8 +79,8 @@ async function init() {
     (out.data as Float32Array).slice(i * dim, (i + 1) * dim)
   );
 
-  self.postMessage({ type: 'progress', pct: 100, label: 'Ready' });
-  self.postMessage({ type: 'ready' });
+  self.postMessage({ type: 'progress', pct: 100, label: hasWebGPU ? 'Ready · GPU' : 'Ready · CPU' });
+  self.postMessage({ type: 'ready', device });
 
   return xCosSim;
 }
