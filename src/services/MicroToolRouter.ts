@@ -1,119 +1,61 @@
-/**
- * Routes messages to micro-tools using all-MiniLM-L6-v2 semantic embeddings.
- * Model runs in a Web Worker to avoid ONNX Runtime / Vite bundling conflicts.
- */
-import rawTools from '../data/microtools.json';
-
-export interface MicroTool {
-  id: string; name: string; domain: string; purpose: string;
-  use_when: string; trigger_examples: string; mini_prompt: string;
+import {abstain,chooseRoute,routingSkipReason,type RoutingDecision,MODEL_ID,ROUTER_MODEL_KEY} from '../routing/policy';
+export type RouterStatus='idle'|'loading'|'ready'|'unavailable';
+let status:RouterStatus='idle';
+let worker:Worker|null=null;
+let warmupTimer:ReturnType<typeof setTimeout>|undefined;
+let nextId=0;
+const listeners=new Set<(status:RouterStatus)=>void>();
+const pending=new Map<string,{finish:(decision:RoutingDecision)=>void}>();
+export const getRouterStatus=()=>status;
+export function onRouterStatus(callback:(status:RouterStatus)=>void){listeners.add(callback);callback(status);return()=>{listeners.delete(callback);};}
+function setStatus(value:RouterStatus){status=value;listeners.forEach(cb=>cb(value));}
+function unavailable(){
+ clearTimeout(warmupTimer);worker?.terminate();worker=null;setStatus('unavailable');
+ for(const {finish} of [...pending.values()])finish(abstain('unavailable'));
 }
-
-export interface RouteResult {
-  tool: MicroTool;
-  score: number;
-}
-
-// ---------- progress pub/sub ----------
-type ProgressCb = (pct: number, label: string) => void;
-const progressSubs: Set<ProgressCb> = new Set();
-
-export function onLoadProgress(cb: ProgressCb): () => void {
-  progressSubs.add(cb);
-  if (modelReady) cb(100, 'Ready');
-  return () => progressSubs.delete(cb);
-}
-
-function emit(pct: number, label: string) {
-  for (const cb of progressSubs) cb(Math.max(-1, Math.min(100, pct)), label);
-}
-
-// ---------- state ----------
-export let modelReady = false;
-export let modelDevice: 'webgpu' | 'cpu' | null = null;
-let worker: Worker | null = null;
-let warmupStarted = false;
-let routeIdCounter = 0;
-const pendingRoutes = new Map<string, { resolve: (r: RouteResult) => void; reject: (e: Error) => void }>();
-
-const tools = rawTools as MicroTool[];
-
-// ---------- keyword pre-routing ----------
-// Semantic embeddings can't reliably separate career-field queries from tech-domain queries.
-// These rules short-circuit for patterns where embedding similarity is inherently ambiguous.
-const KEYWORD_ROUTES: Array<{ patterns: RegExp[]; toolId: string }> = [
-  {
-    toolId: 'JOB_006',
-    patterns: [
-      /growing field/i,
-      /worth getting into/i,
-      /is\s+\w+\s+(a\s+)?(growing|good|worth(while)?)\s+(field|career|industry|profession)/i,
-      /(career|field|profession|industry)\s+(in\s+demand|outlook|prospects|growing|worth)/i,
-      /should\s+I\s+(get into|enter|pursue|go into)\s+\w/i,
-      /job\s+(market|outlook|prospects|demand)\s+for/i,
-    ],
-  },
-];
-
-function tryKeywordRoute(text: string): RouteResult | null {
-  for (const rule of KEYWORD_ROUTES) {
-    if (rule.patterns.some(p => p.test(text))) {
-      const tool = tools.find(t => t.id === rule.toolId);
-      if (tool) return { tool, score: 0.85 };
-    }
-  }
-  return null;
-}
-
-function getWorker(): Worker {
-  if (worker) return worker;
-  worker = new Worker(new URL('../workers/embedder.worker.ts', import.meta.url), { type: 'module' });
-
-  worker.onmessage = (e: MessageEvent) => {
-    const { type, pct, label, id, tool, score, message } = e.data;
-    if (type === 'progress') { emit(pct, label); return; }
-    if (type === 'ready') { modelReady = true; modelDevice = e.data.device ?? null; return; }
-    if (type === 'result') {
-      pendingRoutes.get(id)?.resolve({ tool: tool as MicroTool, score: score as number });
-      pendingRoutes.delete(id);
-      return;
-    }
-    if (type === 'error') {
-      pendingRoutes.get(id)?.reject(new Error(message as string));
-      pendingRoutes.delete(id);
-    }
+export function startWarmup(){
+ if(status==='loading'||status==='ready')return;
+ if(typeof Worker==='undefined'){setStatus('unavailable');return;}
+ setStatus('loading');
+ try{
+  worker=new Worker(new URL('../workers/embedder.worker.ts',import.meta.url),{type:'module'});
+  const source=worker;
+  worker.onmessage=event=>{
+   if(worker!==source)return;
+   const m=event.data;
+   if(m?.type==='ready'){clearTimeout(warmupTimer);setStatus('ready');}
+   else if(m?.type==='unavailable')unavailable();
+   else if(m?.type==='abstained'&&m.reason==='token-budget')pending.get(m.id)?.finish(abstain('token-budget'));
+   else if(m?.type==='result')pending.get(m.id)?.finish(chooseRoute(Array.isArray(m.candidates)?m.candidates:[]));
+   else if(m?.type==='error')pending.get(m.id)?.finish(abstain('inference-failed'));
   };
-
-  worker.onerror = (e) => {
-    emit(-1, 'Failed');
-    for (const { reject } of pendingRoutes.values()) reject(new Error(e.message));
-    pendingRoutes.clear();
-    worker = null;
+  worker.onerror=()=>{if(worker===source)unavailable();};
+  warmupTimer=setTimeout(unavailable,120000);
+  const modelId=localStorage.getItem(ROUTER_MODEL_KEY)||MODEL_ID;
+  worker.postMessage({type:'init',modelId});
+ }catch{unavailable();}
+}
+export function setRouterModel(id:string){
+ localStorage.setItem(ROUTER_MODEL_KEY,id);
+ if(status==='loading'||status==='ready')unavailable();
+ startWarmup();
+}
+/** Never delay chat for a cold model. Ready inference has a short bounded wait and cancellation. */
+export function routeMessage(text:string,{signal,structuredAnswer=false,timeoutMs=1500}:{signal?:AbortSignal;structuredAnswer?:boolean;timeoutMs?:number}={}):Promise<RoutingDecision>{
+ if(signal?.aborted)return Promise.resolve(abstain('cancelled'));
+ const skip=routingSkipReason(text,structuredAnswer);if(skip)return Promise.resolve(abstain(skip));
+ if(status!=='ready'||!worker){if(status==='idle')startWarmup();return Promise.resolve(abstain('not-ready'));}
+ if(pending.size>0)return Promise.resolve(abstain('busy'));
+ const id=String(++nextId),started=performance.now();
+ return new Promise(resolve=>{
+  const onAbort=()=>finish(abstain('cancelled'));
+  const timer=setTimeout(()=>{finish(abstain('timeout'));unavailable();},timeoutMs);
+  const finish=(result:RoutingDecision)=>{
+   if(!pending.has(id))return;
+   clearTimeout(timer);signal?.removeEventListener('abort',onAbort);pending.delete(id);
+   resolve({...result,latencyMs:Math.round(performance.now()-started)});
   };
-
-  return worker;
-}
-
-/** Call at app startup to pre-warm the model before the first chat message. */
-export async function startWarmup(): Promise<void> {
-  if (warmupStarted) return;
-  warmupStarted = true;
-  getWorker(); // worker auto-inits on creation
-}
-
-export async function routeMessage(userMessage: string): Promise<RouteResult> {
-  const kw = tryKeywordRoute(userMessage);
-  if (kw) return kw;
-
-  const w = getWorker();
-  const id = String(routeIdCounter++);
-  return new Promise((resolve, reject) => {
-    pendingRoutes.set(id, { resolve, reject });
-    w.postMessage({ type: 'route', id, text: userMessage });
-  });
-}
-
-// Fallback: a dummy tool so callers never crash if worker fails before routing
-export function getFallbackTool(): RouteResult {
-  return { tool: tools[0], score: 0 };
+  pending.set(id,{finish});signal?.addEventListener('abort',onAbort,{once:true});
+  try{worker!.postMessage({type:'route',id,text});}catch{finish(abstain('unavailable'));unavailable();}
+ });
 }

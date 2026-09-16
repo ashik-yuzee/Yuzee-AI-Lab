@@ -27,6 +27,8 @@ import {
 } from "lucide-react";
 import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
 import * as api from "../services/api";
+import { ROUTER_MODELS, ROUTER_MODEL_KEY, MODEL_ID } from "../routing/policy";
+import { setRouterModel } from "../services/MicroToolRouter";
 import { AppleSlider } from "./ui/AppleSlider";
 import { AppleToggle } from "./ui/AppleToggle";
 import { AppleConfirmDialog } from "./ui/AppleConfirmDialog";
@@ -59,6 +61,11 @@ export const AdvancedLabModal: React.FC = () => {
   const [benchmarkModel, setBenchmarkModel] = useState("");
   const [benchmarkStrategies, setBenchmarkStrategies] = useState<string[]>(["BASELINE", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"]);
   const [benchmarkIsLive, setBenchmarkIsLive] = useState(false);
+  const [routerModel, setRouterModelState] = useState<string>(
+    () => localStorage.getItem(ROUTER_MODEL_KEY) || MODEL_ID
+  );
+  const handleRouterModel = (id: string) => { setRouterModelState(id); setRouterModel(id); };
+
   const [defaultPromptContent, setDefaultPromptContent] = useState("");
   const [showPromptContent, setShowPromptContent] = useState(false);
   const [isReloadingPrompt, setIsReloadingPrompt] = useState(false);
@@ -246,7 +253,7 @@ export const AdvancedLabModal: React.FC = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2 border-t border-slate-100">
                     <div className="col-span-full">
                       <p className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 flex items-center gap-1.5">
-                        <span className="font-semibold">Shared defaults</span> — these values apply to all conversations and all users. Mode overrides (MICRO_PROMPT / SAVE_TOKENS / FULL_CONTEXT) still apply on top.
+                        <span className="font-semibold">Shared defaults</span> — these values apply to all conversations and all users. Mode overrides (Oala assist / Save Tokens / Full Context) still apply on top.
                       </p>
                     </div>
                     <AppleSlider
@@ -672,10 +679,10 @@ export const AdvancedLabModal: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {([
-                      { id: "MICRO_PROMPT", label: "Micro-Prompt", badge: "New", desc: "Routes each message to the best Yuzee mini-prompt, then sends to Gemini." },
+                      { id: "MICRO_PROMPT", label: "Oala assist (Preview)", badge: "Preview", desc: "Type @Oala in your message for Yuzee service guidance. Local routing runs only when addressed." },
                       { id: "AUTO", label: "Auto (Balanced)", badge: "Adaptive", desc: "Dynamic budget, prefix caching, adaptive thinking." },
-                      { id: "SAVE_TOKENS", label: "Save Tokens", badge: "Economical", desc: "Compaction after 2 turns, 1,000 token budget." },
-                      { id: "FULL_CONTEXT", label: "Full Context", badge: "Baseline", desc: "Sends entire history without compression." },
+                      { id: "SAVE_TOKENS", label: "Save Tokens (Aggressive)", badge: "Economical", desc: "Compaction after 2 turns, 1,000 token budget." },
+                      { id: "FULL_CONTEXT", label: "Full Context (Baseline)", badge: "Baseline", desc: "Sends entire history without compression." },
                       { id: "VANILLA", label: "Vanilla (AI Studio)", badge: "Default", desc: "No optimisation, no compaction, 8192 token output cap." },
                     ] as { id: OptimizationMode; label: string; badge: string; desc: string }[]).map((m) => (
                       <div
@@ -717,6 +724,36 @@ export const AdvancedLabModal: React.FC = () => {
                       checked={conv.useFlashLiteUtility ?? true}
                       onChange={(checked) => updateCurrentConversationSettings({ useFlashLiteUtility: checked })}
                     />
+                  </div>
+
+                  {/* Router Model */}
+                  <div className="pt-4 border-t border-slate-100 space-y-3">
+                    <div>
+                      <div className="text-xs font-semibold text-slate-800">Local Routing Model</div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">Switching restarts the router worker and re-downloads the model.</div>
+                    </div>
+                    <div className="space-y-1.5">
+                      {ROUTER_MODELS.map(m => (
+                        <button
+                          key={m.id}
+                          onClick={() => handleRouterModel(m.id)}
+                          className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-left transition-all cursor-pointer ${
+                            routerModel === m.id
+                              ? 'bg-amber-50 border-amber-300 text-amber-900'
+                              : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                          }`}
+                        >
+                          <div>
+                            <span className="font-semibold text-xs">{m.label}</span>
+                            <span className="text-[11px] text-slate-400 ml-2">{m.description}</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0 ml-2">
+                            <span className="font-mono text-[10px] text-slate-400">{m.size}</span>
+                            {routerModel === m.id && <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />}
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Economics Break-Even Calculator */}

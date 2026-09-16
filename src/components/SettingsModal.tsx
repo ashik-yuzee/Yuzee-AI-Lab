@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type, Cpu } from "lucide-react";
 import { fetchLifetimeStats } from "../services/api";
 import { formatCost } from "../data/models";
+import { ROUTER_MODELS, ROUTER_MODEL_KEY, MODEL_ID } from "../routing/policy";
+import { setRouterModel } from "../services/MicroToolRouter";
 
 export const SettingsModal: React.FC = () => {
   const {
@@ -43,6 +45,14 @@ export const SettingsModal: React.FC = () => {
     setAccent(hex);
     document.documentElement.style.setProperty('--accent', hex);
     localStorage.setItem('oala-accent', hex);
+  };
+
+  const [routerModel, setRouterModelState] = useState<string>(
+    () => localStorage.getItem(ROUTER_MODEL_KEY) || MODEL_ID
+  );
+  const handleRouterModel = (id: string) => {
+    setRouterModelState(id);
+    setRouterModel(id);
   };
 
   const [clearConfirm, setClearConfirm] = useState(false);
@@ -208,6 +218,37 @@ export const SettingsModal: React.FC = () => {
                   style={{ padding: 0 }}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Router Model */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <Cpu className="w-3.5 h-3.5 text-slate-500" />
+              <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Routing Model</span>
+              <span className="text-[10px] text-slate-400 ml-auto">restarts router on change</span>
+            </div>
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-1.5">
+              {ROUTER_MODELS.map(m => (
+                <button
+                  key={m.id}
+                  onClick={() => handleRouterModel(m.id)}
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg border text-left transition-all cursor-pointer ${
+                    routerModel === m.id
+                      ? 'bg-violet-50 border-violet-300 text-violet-900'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                  }`}
+                >
+                  <div>
+                    <span className="font-semibold text-xs">{m.label}</span>
+                    <span className="text-[11px] text-slate-400 ml-2">{m.description}</span>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 ml-2">
+                    <span className="font-mono text-[10px] text-slate-400">{m.size}</span>
+                    {routerModel === m.id && <Check className="w-3.5 h-3.5 text-violet-600" />}
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
 
