@@ -268,6 +268,21 @@ export async function preCheckMessage(payload: {
   } catch { return { needsClarification: false }; }
 }
 
+export async function generateInlinePathway(
+  conversationId: string
+): Promise<{ content: string; inputTokens: number; outputTokens: number }> {
+  const res = await fetch(`${API_BASE}/api/pathway/inline`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ conversationId }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as any).error || `Server error ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function generatePathway(
   messages: { role: string; content: string }[],
   style?: string,
@@ -389,6 +404,7 @@ export function streamChatMessage(
     attachments?: Array<{ mimeType: string; data: string }>;
     mode?: string;
     microToolSelection?: import("../routing/policy").RoutingDecision;
+    pathwayContext?: string;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal

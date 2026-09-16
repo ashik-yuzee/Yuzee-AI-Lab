@@ -107,6 +107,7 @@ interface TokenLabContextType {
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
   sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
+  triggerInlinePathway: () => Promise<void>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
   exportConversation: (format: 'markdown' | 'json') => void;
@@ -513,6 +514,54 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateCurrentConversationSettings(updates);
   };
 
+  const triggerInlinePathway = async () => {
+    let activeConv = currentConversation;
+    if (!activeConv) activeConv = await startNewConversation("Career Pathway");
+
+    const loadingMsg: import("../types").ChatMessage = {
+      id: `asst-pathway-${Date.now()}`,
+      role: "assistant",
+      content: "",
+      createdAt: Date.now(),
+      isStreaming: true,
+      streamProgress: { phase: "waiting" },
+    };
+
+    const updatedConv = { ...activeConv, messages: [...(activeConv.messages || []), loadingMsg] };
+    setCurrentConversation(updatedConv);
+    setConversations(prev => prev.map(c => c.id === updatedConv.id ? updatedConv : c));
+
+    try {
+      const result = await api.generateInlinePathway(activeConv.id);
+      let structured: any = null;
+      try { structured = JSON.parse(result.content); } catch { /* render as raw text */ }
+
+      setCurrentConversation(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          messages: prev.messages.map(m =>
+            m.id === loadingMsg.id
+              ? { ...m, isStreaming: false, content: result.content, structuredResponse: structured ?? undefined, streamProgress: undefined }
+              : m
+          ),
+        };
+      });
+    } catch (err: any) {
+      setCurrentConversation(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          messages: prev.messages.map(m =>
+            m.id === loadingMsg.id
+              ? { ...m, isStreaming: false, error: err?.message || "Pathway generation failed", streamProgress: undefined }
+              : m
+          ),
+        };
+      });
+    }
+  };
+
   const sendMessage = async (input: string | any, attachments?: Array<{ mimeType: string; data: string }>) => {
     if (isStreaming || sendLockRef.current) return false;
     sendLockRef.current = true;
@@ -643,6 +692,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     if(controller.signal.aborted)return false;
 
+    // Pathway RAG — retrieve relevant nodes before sending, gated on keyword match
+    let pathwayContext: string | undefined;
+    const PATHWAY_GATE = /tier|phase|step|course|skill|cost|year|month|fund|placement|pathway|learn|study|degree|certif|what should|recommend|how long|transition|career|job|role/i;
+    if (!userEventPayload && PATHWAY_GATE.test(textMessage)) {
+      try {
+        const { searchPathway } = await import('../services/MicroToolRouter');
+        const hits = await searchPathway(textMessage);
+        if (hits.length > 0) pathwayContext = hits.map(h => h.text).join('\n\n');
+      } catch { /* non-fatal — chat continues without pathway context */ }
+    }
+
     return await new Promise<boolean>((resolve) => {
     let accepted = false;
     let failed = false;
@@ -674,6 +734,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userQuestionAnswers: userQuestionAnswers,
         isOptionSelection: !!userEventPayload,
         attachments: attachments && attachments.length > 0 ? attachments : undefined,
+        pathwayContext: pathwayContext || undefined,
       },
       {
         onStart: (data) => {
@@ -1040,6 +1101,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         applyOptimizationMode,
         applyPreset,
         sendMessage,
+        triggerInlinePathway,
         stopStreaming,
         submitFeedback,
         exportConversation,

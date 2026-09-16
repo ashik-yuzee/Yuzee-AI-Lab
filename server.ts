@@ -15,6 +15,7 @@ import { GoogleGenAI, type GenerateContentConfig } from "@google/genai";
 import dotenv from "dotenv";
 import dns from "dns";
 import fs from "fs/promises";
+import { readFileSync } from "fs";
 
 import { YuzeeRequestAssembler } from "./src/services/YuzeeRequestAssembler";
 import {
@@ -262,6 +263,12 @@ app.post('/api/conversations/:id/details', makeRateLimit(6), async (req, res) =>
     emit({ type: 'error', error: safe });
   } finally { clearTimeout(timer); activeResearch.delete(conv.id); res.end(); }
 });
+
+// Mini-pathway inline prompt (loaded once at startup)
+let miniPathwayPrompt = '';
+try {
+  miniPathwayPrompt = readFileSync(path.resolve(process.cwd(), 'src/prompts/mini-pathway.md'), 'utf-8');
+} catch { console.warn('[server] mini-pathway.md not found — /api/pathway/inline will be unavailable'); }
 
 // Whiteboard generation stats (tracked separately from chat)
 const whiteboardStats = { calls: 0, inputTokens: 0, outputTokens: 0 };
@@ -651,6 +658,46 @@ Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON,
 });
 
 app.get("/api/pathway/stats", (_req, res) => res.json(whiteboardStats));
+
+// Inline pathway — runs the mini-pathway prompt against the conversation history
+// and returns a v1.3 JSON response to be rendered directly in chat.
+app.post("/api/pathway/inline", makeRateLimit(5), async (req, res) => {
+  if (!miniPathwayPrompt) return res.status(503).json({ error: "Mini-pathway prompt not loaded" });
+  const { conversationId } = req.body as { conversationId?: string };
+  const ai = getGemini();
+  if (!ai) return res.status(503).json({ error: "AI unavailable" });
+
+  const conv = conversationId ? conversations.get(conversationId) : null;
+  const recent = (conv?.messages || [])
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .slice(-12)
+    .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${String(m.content || '').slice(0, 400)}`)
+    .join('\n');
+
+  const userContent = recent
+    ? `Based on our conversation, generate a detailed career pathway report.\n\nConversation context:\n${recent}`
+    : 'Generate a career pathway report.';
+
+  try {
+    const resp = await ai.models.generateContent({
+      model: 'gemini-3.7-flash',
+      config: { systemInstruction: miniPathwayPrompt, maxOutputTokens: 65536 },
+      contents: userContent,
+    });
+    const inIn  = resp.usageMetadata?.promptTokenCount ?? 0;
+    const inOut = resp.usageMetadata?.candidatesTokenCount ?? 0;
+    whiteboardStats.calls++;
+    whiteboardStats.inputTokens  += inIn;
+    whiteboardStats.outputTokens += inOut;
+    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/inline', model: 'gemini-3.7-flash', inputTokens: inIn, outputTokens: inOut });
+    const text = (resp.text || '').trim();
+    const match = text.match(/\{[\s\S]*\}/);
+    if (!match) return res.status(500).json({ error: 'No JSON in response' });
+    return res.json({ content: match[0], inputTokens: inIn, outputTokens: inOut });
+  } catch (e: any) {
+    return res.status(500).json({ error: e?.message || 'Inline pathway failed' });
+  }
+});
 
 app.get("/api/tokens/utility-stats", (_req, res) => res.json({ whiteboard: whiteboardStats, utility: utilityStats }));
 
@@ -1577,9 +1624,12 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   else if (uc?.timezone) ctxParts.push(`Timezone: ${uc.timezone}`);
   if (upFacts.length > 0) ctxParts.push(`User facts: ${upFacts.slice(0, 8).join("; ")}`);
   if (userQuestionAnswers.length > 0) ctxParts.push(`USER_QUESTION_ANSWERS: ${JSON.stringify(userQuestionAnswers)}`);
-  const enrichedMessage = ctxParts.length > 0
-    ? `[${ctxParts.join(" · ")}]\n${userMessageContent}`
-    : userMessageContent;
+  const pathwayCtx = (req.body.pathwayContext as string | undefined)?.trim();
+  const enrichedMessage = [
+    ctxParts.length > 0 ? `[${ctxParts.join(" · ")}]` : null,
+    pathwayCtx ? `[PATHWAY_CONTEXT]\n${pathwayCtx}\n[/PATHWAY_CONTEXT]` : null,
+    userMessageContent,
+  ].filter(Boolean).join('\n');
   const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const userPromptTokens = estimateTokens(userMessageContent);
 

@@ -53,6 +53,7 @@ export const ChatArea: React.FC = () => {
     dismissCostWarning,
     setWhiteboardOpen,
     setTokenInspectorOpen,
+    triggerInlinePathway,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -393,7 +394,7 @@ export const ChatArea: React.FC = () => {
                                   readOnly={isStreaming || !isLastAssistantMsg(msg.id)}
                                   conversationId={currentConversation?.id}
                                   hideRecommendedActions={true}
-                                  onOpenPathway={isLastAssistantMsg(msg.id) ? () => { setWhiteboardOpen(true); setTokenInspectorOpen(false); } : undefined}
+                                  onOpenPathway={isLastAssistantMsg(msg.id) ? () => { triggerInlinePathway(); } : undefined}
                                 />
                               ) : (
                                 !msg.error && !msg.streamStopped && !msg.isStreaming && (

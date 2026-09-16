@@ -6,12 +6,16 @@ let warmupTimer:ReturnType<typeof setTimeout>|undefined;
 let nextId=0;
 const listeners=new Set<(status:RouterStatus)=>void>();
 const pending=new Map<string,{finish:(decision:RoutingDecision)=>void}>();
+export type PathwayHit={id:string;text:string;score:number};
+const pendingPathway=new Map<string,(hits:PathwayHit[])=>void>();
 export const getRouterStatus=()=>status;
 export function onRouterStatus(callback:(status:RouterStatus)=>void){listeners.add(callback);callback(status);return()=>{listeners.delete(callback);};}
 function setStatus(value:RouterStatus){status=value;listeners.forEach(cb=>cb(value));}
 function unavailable(){
  clearTimeout(warmupTimer);worker?.terminate();worker=null;setStatus('unavailable');
  for(const {finish} of [...pending.values()])finish(abstain('unavailable'));
+ for(const resolve of [...pendingPathway.values()])resolve([]);
+ pendingPathway.clear();
 }
 export function startWarmup(){
  if(status==='loading'||status==='ready')return;
@@ -28,6 +32,7 @@ export function startWarmup(){
    else if(m?.type==='abstained'&&m.reason==='token-budget')pending.get(m.id)?.finish(abstain('token-budget'));
    else if(m?.type==='result')pending.get(m.id)?.finish(chooseRoute(Array.isArray(m.candidates)?m.candidates:[]));
    else if(m?.type==='error')pending.get(m.id)?.finish(abstain('inference-failed'));
+   else if(m?.type==='pathwayResults'){const cb=pendingPathway.get(m.id);if(cb){pendingPathway.delete(m.id);cb(m.hits||[]);}}
   };
   worker.onerror=()=>{if(worker===source)unavailable();};
   warmupTimer=setTimeout(unavailable,120000);
@@ -39,6 +44,22 @@ export function setRouterModel(id:string){
  localStorage.setItem(ROUTER_MODEL_KEY,id);
  if(status==='loading'||status==='ready')unavailable();
  startWarmup();
+}
+/** Send pathway nodes to the worker for indexing. Fire-and-forget — silently no-ops if worker isn't ready. */
+export function indexPathway(nodes:{id:string;label:string;subtitle?:string;description?:string;type:string}[]):void{
+ if(status!=='ready'||!worker||nodes.length===0)return;
+ try{worker.postMessage({type:'indexPathway',nodes});}catch{}
+}
+/** Embed the query and return the top-3 most relevant pathway chunks. Returns [] when worker is unavailable. */
+export function searchPathway(text:string,timeoutMs=2000):Promise<PathwayHit[]>{
+ if(status!=='ready'||!worker)return Promise.resolve([]);
+ const id=String(++nextId);
+ return new Promise(resolve=>{
+  const timer=setTimeout(()=>{pendingPathway.delete(id);resolve([]);},timeoutMs);
+  pendingPathway.set(id,hits=>{clearTimeout(timer);resolve(hits);});
+  try{worker!.postMessage({type:'searchPathway',id,text});}
+  catch{clearTimeout(timer);pendingPathway.delete(id);resolve([]);}
+ });
 }
 /** Never delay chat for a cold model. Ready inference has a short bounded wait and cancellation. */
 export function routeMessage(text:string,{signal,structuredAnswer=false,timeoutMs=1500}:{signal?:AbortSignal;structuredAnswer?:boolean;timeoutMs?:number}={}):Promise<RoutingDecision>{

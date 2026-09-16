@@ -3,6 +3,9 @@ import {checkEmbeddingInput} from '../routing/tokenBudget';
 let extractor:any;
 let vectors:Float32Array[]=[];
 let initPromise:Promise<void>|null=null;
+// Pathway vector store — separate from tool routing index
+let pathwayVectors:Float32Array[]=[];
+let pathwayChunks:{id:string;text:string}[]=[];
 async function initialize(modelId:string){
  console.info('[MiniLM] Loading runtime');
  const {pipeline,env}=await import('@huggingface/transformers');
@@ -28,10 +31,51 @@ async function initialize(modelId:string){
 }
 let queue=Promise.resolve();
 self.onmessage=(event:MessageEvent)=>{
- const {type,id,text,modelId}=event.data||{};
+ const {type,id,text,modelId,nodes}=event.data||{};
  if(type==='init'){
   if(!initPromise)initPromise=initialize(modelId||MODEL_ID);
   initPromise.catch((error)=>{console.warn('[MiniLM] Initialization failed:',error instanceof Error?error.message:'Runtime unavailable');self.postMessage({type:'unavailable'});});return;
+ }
+ // Index pathway nodes into a separate vector store
+ if(type==='indexPathway'&&Array.isArray(nodes)){
+  queue=queue.then(async()=>{
+   try{
+    if(!initPromise)throw Error('Not initialized');
+    await initPromise;
+    pathwayVectors=[];pathwayChunks=[];
+    for(let i=0;i<nodes.length;i+=8){
+     const batch=nodes.slice(i,i+8);
+     const texts=batch.map((n:any)=>`${n.type}: ${n.label}\n${n.subtitle||''}\n${n.description||''}`.slice(0,400));
+     const out=await extractor(texts,{pooling:'mean',normalize:true});
+     const dim=out.dims.at(-1);
+     batch.forEach((_:any,j:number)=>{
+      pathwayVectors.push((out.data as Float32Array).slice(j*dim,(j+1)*dim));
+      pathwayChunks.push({id:batch[j].id,text:texts[j]});
+     });
+    }
+    self.postMessage({type:'pathwayIndexed',count:pathwayChunks.length});
+   }catch{/* non-fatal — pathway context degrades gracefully to no injection */}
+  });
+  return;
+ }
+ // Search pathway vectors with a query
+ if(type==='searchPathway'&&typeof id==='string'&&typeof text==='string'){
+  queue=queue.then(async()=>{
+   try{
+    if(!initPromise)throw Error('Not initialized');
+    await initPromise;
+    if(pathwayVectors.length===0){self.postMessage({type:'pathwayResults',id,hits:[]});return;}
+    const out=await extractor(text.slice(0,400),{pooling:'mean',normalize:true});
+    const q=out.data as Float32Array;
+    const scored=pathwayVectors.map((v,i)=>({
+     id:pathwayChunks[i].id,text:pathwayChunks[i].text,
+     score:v.reduce((sum,n,j)=>sum+n*q[j],0),
+    }));
+    scored.sort((a,b)=>b.score-a.score);
+    self.postMessage({type:'pathwayResults',id,hits:scored.slice(0,3)});
+   }catch{self.postMessage({type:'pathwayResults',id,hits:[]});}
+  });
+  return;
  }
  if(type!=='route'||typeof text!=='string'||text.length>1800)return;
  queue=queue.then(async()=>{
