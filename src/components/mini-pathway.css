@@ -1,0 +1,89 @@
+/* ── Mini Pathway offer button (portal into chat) ── */
+.mini-pathway-offer{display:flex;align-items:center;gap:14px;width:100%;margin-top:16px;padding:14px 16px;background:#fff;border:1px solid #dce3ec;border-radius:14px;cursor:pointer;text-align:left;transition:border-color .15s,background-color .15s}
+.mini-pathway-offer:hover{border-color:var(--accent-border,#b9a7df);background:var(--accent-5,#faf8ff)}
+.mini-pathway-offer:disabled{opacity:.6;cursor:default}
+.mini-pathway-offer svg:first-child{flex-shrink:0;color:var(--accent,#7244c6)}
+.mini-pathway-offer span{flex:1;min-width:0}
+.mini-pathway-offer strong{display:block;font-size:14px;font-weight:600;color:#26354a;line-height:1.5}
+.mini-pathway-offer small{display:block;font-size:12px;color:#718096;line-height:1.5;margin-top:2px}
+.mini-pathway-offer svg:last-child{flex-shrink:0;color:#a0aec0}
+
+/* ── Saved pathways control (portal in header) ── */
+.mini-pathway-saved-control{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid #dce3ec;border-radius:8px;background:#fff;font-size:12px;color:#5e6c80;cursor:pointer;transition:border-color .15s}
+.mini-pathway-saved-control:hover{border-color:var(--accent-border,#c0aef0);background:var(--accent-5,#faf8ff)}
+.mini-pathway-saved-control b{font-size:11px;font-weight:600;background:var(--accent,#7244c6);color:#fff;border-radius:999px;padding:0 6px;line-height:18px}
+
+/* ── Panel ── */
+.mini-pathway-panel{position:fixed;top:0;right:0;bottom:0;z-index:40;display:flex;flex-direction:column;background:#fff;border-left:1px solid #e2e8f0;box-shadow:-4px 0 20px rgba(0,0,0,.07);width:420px;min-width:280px;max-width:90vw;overflow:hidden}
+.mini-pathway-panel--expanded{top:0;left:0;right:0;bottom:0;width:100%!important;max-width:none;border-left:none;z-index:50}
+.mini-pathway-panel--resizing{transition:none!important}
+.mini-pathway-panel--resizing *{user-select:none}
+
+/* ── Resize handle ── */
+.mini-pathway-resize-handle{position:absolute;left:0;top:0;bottom:0;width:6px;cursor:col-resize;display:flex;align-items:center;justify-content:center;z-index:1}
+.mini-pathway-resize-handle span{width:3px;height:32px;border-radius:2px;background:rgba(0,0,0,.1);transition:background .15s}
+.mini-pathway-resize-handle:hover span,.mini-pathway-panel--resizing .mini-pathway-resize-handle span{background:var(--accent-70,rgba(114,68,198,.5))}
+
+/* ── Header ── */
+.mini-pathway-panel>header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px 14px 20px;border-bottom:1px solid #edf0f4;flex-shrink:0}
+.mini-pathway-heading{display:flex;align-items:center;gap:12px}
+.mini-pathway-heading-icon{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--accent-light,#ede7fb);color:var(--accent,#7244c6);flex-shrink:0}
+.mini-pathway-kicker{font-size:10px;font-weight:700;letter-spacing:.07em;color:#9aadbb;text-transform:uppercase}
+.mini-pathway-heading h2{font-size:16px;font-weight:700;color:#26354a;margin:0;line-height:1.3}
+.mini-pathway-header-actions{display:flex;align-items:center;gap:4px}
+.mini-pathway-expand{display:flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid #dce3ec;border-radius:8px;background:#fff;font-size:12px;color:#5e6c80;cursor:pointer;transition:border-color .15s}
+.mini-pathway-expand:hover{border-color:#b0bdd0;background:#f7f9fc}
+.mini-pathway-panel>header>div>button:last-child{display:grid;place-items:center;width:32px;height:32px;border-radius:8px;background:transparent;border:none;color:#8a96a6;cursor:pointer}
+.mini-pathway-panel>header>div>button:last-child:hover{background:#f4f6f9;color:#4a5568}
+
+/* ── History selector ── */
+.mini-pathway-history{padding:10px 16px;border-bottom:1px solid #edf0f4;flex-shrink:0}
+.mini-pathway-history label{display:block;font-size:11px;font-weight:600;color:#8a96a6;margin-bottom:5px}
+.mini-pathway-history label span{font-weight:500}
+.mini-pathway-history select{width:100%;font-size:13px;padding:6px 10px;border:1px solid #dce3ec;border-radius:8px;background:#fff;color:#26354a;cursor:pointer}
+.mini-pathway-history p{font-size:11px;color:#8a96a6;margin:5px 0 0;line-height:1.5}
+
+/* ── Body ── */
+.mini-pathway-body{flex:1;overflow-y:auto;padding:20px 20px 40px;display:flex;flex-direction:column;gap:16px}
+
+/* ── Notice / error ── */
+.mini-pathway-notice{padding:14px 16px;background:#fff8f0;border:1px solid #fad4a6;border-radius:10px;font-size:13px;line-height:1.6;color:#7c4f1e}
+.mini-pathway-notice p{margin:0 0 8px}
+.mini-pathway-notice button{font-size:12px;color:var(--accent,#7244c6);text-decoration:underline;text-underline-offset:3px;cursor:pointer;background:none;border:none;padding:0}
+
+/* ── Version note ── */
+.mini-pathway-version-note{padding:10px 14px;background:#f8f9fb;border:1px solid #e2e8f0;border-radius:8px;font-size:12px;color:#718096}
+.mini-pathway-version-note p{margin:0 0 6px}
+.mini-pathway-version-note button{font-size:12px;color:var(--accent,#7244c6);text-decoration:underline;cursor:pointer;background:none;border:none;padding:0}
+
+/* ── Caption ── */
+.mini-pathway-caption{font-size:12px;color:#8a96a6;line-height:1.65;margin:0}
+
+/* ── Create button ── */
+.mini-pathway-create{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border:1px dashed var(--accent-border,#c2aff0);border-radius:10px;background:var(--accent-5,#faf8ff);color:var(--accent,#7244c6);font-size:13px;font-weight:500;cursor:pointer;transition:background .15s,border-color .15s}
+.mini-pathway-create:hover{background:var(--accent-8,#f4f0ff);border-color:var(--accent,#7244c6)}
+
+/* ── Report wrapper ── */
+.mini-pathway-report{min-width:0;overflow-wrap:anywhere}
+
+/* ── Streaming ── */
+.mini-pathway-stream{display:flex;flex-direction:column;gap:14px}
+.mini-pathway-stream-status{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.mini-pathway-stream-status [role="status"]{display:flex;align-items:center;gap:7px;font-size:13px;color:#4a5568}
+.mini-pathway-stream-status [role="status"] svg{color:var(--accent,#7244c6);animation:mp-pulse 1.8s ease-in-out infinite}
+.mini-pathway-stream-status button{font-size:12px;color:#718096;text-decoration:underline;text-underline-offset:3px;background:none;border:none;cursor:pointer}
+.mini-pathway-stream-caption{font-size:11px;color:#9aadbb;margin:0;line-height:1.6}
+.mini-pathway-stream-section{margin-bottom:6px}
+
+/* ── Skeleton ── */
+.mini-pathway-skeleton{display:flex;flex-direction:column;gap:10px;padding-top:4px}
+.mini-pathway-skeleton-line{display:block;height:14px;border-radius:6px;background:linear-gradient(90deg,#f0f2f5 25%,#e4e7ec 50%,#f0f2f5 75%);background-size:400% 100%;animation:mp-shimmer 1.5s ease-in-out infinite}
+.mini-pathway-skeleton-title{height:18px;width:55%}
+.mini-pathway-skeleton-short{width:70%}
+
+@keyframes mp-shimmer{0%{background-position:100% 0}100%{background-position:-100% 0}}
+@keyframes mp-pulse{0%,100%{opacity:1}50%{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.mini-pathway-stream-status svg,.mini-pathway-skeleton-line{animation:none}}
+
+/* ── Mobile: panel goes to full width at narrow breakpoints ── */
+@media(max-width:640px){.mini-pathway-panel{width:100%!important;min-width:0;border-left:none}}

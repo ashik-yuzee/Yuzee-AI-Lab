@@ -17,8 +17,7 @@ import { ClarificationQuestionsModal } from "./components/ClarificationQuestions
 import { LocationPromptModal } from "./components/LocationPromptModal";
 import { PathwayWhiteboard } from "./components/PathwayWhiteboard";
 import { ProtocolRendererPage } from "./components/ProtocolRendererPage";
-import { ModelLoadingIndicator } from "./components/ModelLoadingIndicator";
-import { startWarmup } from "./services/MicroToolRouter";
+import { MiniPathwayExperience } from "./components/MiniPathwayExperience";
 
 function AppLoadingScreen() {
   return (
@@ -40,13 +39,16 @@ function AuthedApp({ onOpenRenderer }: { onOpenRenderer: () => void }) {
   return (
     <div id="yuzee-token-lab-root" className="flex flex-col h-dvh w-screen bg-[#F9FAFB] text-slate-900 overflow-hidden antialiased selection:bg-sky-100 selection:text-sky-900">
       <Navbar onOpenRenderer={onOpenRenderer} />
-      <div className="flex-1 min-h-0 flex overflow-hidden relative">
+      {/* Only the inner panes scroll. Hidden overflow would let anchor/focus
+          navigation scroll this shell and leave a blank area below it. */}
+      <div className="flex-1 min-h-0 flex overflow-clip relative" data-workspace-shell>
         <Sidebar />
         <main className="flex-1 min-h-0 flex flex-col min-w-0 bg-white relative">
           <ChatArea />
         </main>
         <TokenInspector />
         <PathwayWhiteboard />
+        <MiniPathwayExperience />
       </div>
       <AdvancedLabModal />
       <UserProfileModal />
@@ -133,9 +135,6 @@ export default function App() {
   const [authed, setAuthed] = useState<boolean | null>(null);
   const [page, setPage] = useState<'chat' | 'renderer'>('chat');
 
-  // Start ONNX model download immediately — before auth, before anything else
-  useEffect(() => { startWarmup(); }, []);
-
   useEffect(() => {
     const DEFAULT_ACCENT = '#7244c6';
     const saved = localStorage.getItem('oala-accent');
@@ -170,11 +169,8 @@ export default function App() {
   }
 
   return (
-    <>
-      <ModelLoadingIndicator />
-      <TokenLabProvider>
-        <AuthedApp onOpenRenderer={() => setPage('renderer')} />
-      </TokenLabProvider>
-    </>
+    <TokenLabProvider>
+      <AuthedApp onOpenRenderer={() => setPage('renderer')} />
+    </TokenLabProvider>
   );
 }
