@@ -11,6 +11,7 @@ import {
   Network,
   FileJson,
   Wrench,
+  Map,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
@@ -29,6 +30,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     setTokenInspectorOpen,
     isWhiteboardOpen,
     setWhiteboardOpen,
+    isMiniPathwayOpen,
+    setMiniPathwayOpen,
     setSettingsOpen,
     setProfileOpen,
     userProfile,
@@ -181,6 +184,20 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
         >
           <Network className="w-3.5 h-3.5 text-violet-600" />
           <span>Pathway</span>
+        </button>
+
+        <button
+          id="btn-mini-pathway"
+          onClick={() => { if (!isMiniPathwayOpen) { setSidebarOpen(false); setWhiteboardOpen(false); setTokenInspectorOpen(false); } setMiniPathwayOpen(!isMiniPathwayOpen); }}
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
+            isMiniPathwayOpen
+              ? "bg-violet-50 border-violet-300 text-violet-800 font-semibold"
+              : "bg-white border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300"
+          }`}
+          title={isMiniPathwayOpen ? "Close mini pathway" : "Open mini pathway"}
+        >
+          <Map className="w-3.5 h-3.5 text-violet-600" />
+          <span>Mini pathway</span>
         </button>
 
         <button

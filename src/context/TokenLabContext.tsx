@@ -84,6 +84,8 @@ interface TokenLabContextType {
   setSidebarOpen: (open: boolean) => void;
   isProfileOpen: boolean;
   setProfileOpen: (open: boolean) => void;
+  isMiniPathwayOpen: boolean;
+  setMiniPathwayOpen: (open: boolean) => void;
   userProfile: { id: string; text: string; category?: string; addedAt: number }[];
   setUserProfile: (facts: { id: string; text: string; category?: string; addedAt: number }[]) => void;
   userLocation: string;
@@ -199,6 +201,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(() => window.innerWidth >= 1024);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
+  const [isMiniPathwayOpen, setMiniPathwayOpen] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<{ id: string; text: string; category?: string; addedAt: number }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }
   });
@@ -1040,6 +1043,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setSidebarOpen,
         isProfileOpen,
         setProfileOpen,
+        isMiniPathwayOpen,
+        setMiniPathwayOpen,
         userProfile,
         setUserProfile,
         userLocation,

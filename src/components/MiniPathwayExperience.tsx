@@ -28,23 +28,22 @@ function waitForRouter(signal:AbortSignal):Promise<boolean>{
 }
 
 export function MiniPathwayExperience(){
- const {currentConversation:conv,isStreaming,userLocation,setWhiteboardOpen,setTokenInspectorOpen,setSidebarOpen}=useTokenLab();
+ const {currentConversation:conv,isStreaming,userLocation,setWhiteboardOpen,setTokenInspectorOpen,setSidebarOpen,isMiniPathwayOpen,setMiniPathwayOpen}=useTokenLab();
  const last=conv?.messages.at(-1),sourceId=last?.serverMessageId||last?.id||'';
  const [target,setTarget]=useState<HTMLElement|null>(null);
  const [historyTarget,setHistoryTarget]=useState<HTMLElement|null>(null);
  const [decision,setDecision]=useState<PathwayDecision|null>(null);
  const [hint,setHint]=useState<PathwayHint|null>(null);
- const [open,setOpen]=useState(false);
  const [expanded,setExpanded]=useState(false);
- const drawer=useDrawerResize(open,expanded);
+ const drawer=useDrawerResize(isMiniPathwayOpen,expanded);
  const [loading,setLoading]=useState(false),[stage,setStage]=useState('Preparing your mini pathway'),[error,setError]=useState('');
  const [draftBlocks,setDraftBlocks]=useState<YuzeeContentBlock[]>([]);
  const active=useRef<AbortController|null>(null),panel=useRef<HTMLElement|null>(null),opener=useRef<HTMLButtonElement|null>(null);
  const key=useRef('');key.current=`${conv?.id}:${sourceId}`;
- const reveal=()=>{setSidebarOpen(false);setWhiteboardOpen(false);setTokenInspectorOpen(false);setOpen(true);};
+ const reveal=()=>{setSidebarOpen(false);setWhiteboardOpen(false);setTokenInspectorOpen(false);setMiniPathwayOpen(true);};
  const history=usePathwayHistory(conv?.id,reveal);
  const run=history.selected;
- const close=()=>{active.current?.abort();setDraftBlocks([]);setLoading(false);setOpen(false);setExpanded(false);opener.current?.focus();};
+ const close=()=>{active.current?.abort();setDraftBlocks([]);setLoading(false);setMiniPathwayOpen(false);setExpanded(false);opener.current?.focus();};
  const generate=async(mode:'automatic'|'manual',selection:PathwayHint,parentSignal?:AbortSignal)=>{
   if(!conv)return;
   const requestKey=key.current,controller=new AbortController();active.current?.abort();active.current=controller;
@@ -60,7 +59,7 @@ export function MiniPathwayExperience(){
   }catch(e){if(!controller.signal.aborted&&key.current===requestKey)setError(e instanceof Error?e.message:'The mini pathway could not be prepared.');}
   finally{parentSignal?.removeEventListener('abort',abort);if(active.current===controller){active.current=null;setDraftBlocks([]);setLoading(false);}}
  };
- useEffect(()=>{setOpen(false);setExpanded(false);setError('');setHistoryTarget(document.getElementById('saved-pathways-control'));return()=>active.current?.abort();},[conv?.id]);
+ useEffect(()=>{setMiniPathwayOpen(false);setExpanded(false);setError('');setHistoryTarget(document.getElementById('saved-pathways-control'));return()=>active.current?.abort();},[conv?.id]);
  useEffect(()=>{document.getElementById('mini-pathway-body')?.scrollTo({top:0});},[run?.id]);
  useEffect(()=>{
   const controller=new AbortController();let alive=true;
@@ -94,12 +93,12 @@ export function MiniPathwayExperience(){
   return()=>{alive=false;controller.abort();};
  },[conv?.id,sourceId,isStreaming]);
  useEffect(()=>{
-  if(!open)return;
+  if(!isMiniPathwayOpen)return;
   const resize=()=>{if(window.innerWidth<1200)setSidebarOpen(false);};resize();
   const escape=(e:KeyboardEvent)=>{if(e.key==='Escape'){if(expanded)setExpanded(false);else close();}};
   window.addEventListener('keydown',escape);window.addEventListener('resize',resize);
   return()=>{window.removeEventListener('keydown',escape);window.removeEventListener('resize',resize);};
- },[open,expanded]);
+ },[isMiniPathwayOpen,expanded]);
  const stale=!!run&&run.sourceMessageId!==sourceId;
  const available=!!decision&&decision.action!=='none';
  const currentSaved=[...history.runs].reverse().find(r=>r.sourceMessageId===sourceId);
@@ -107,8 +106,8 @@ export function MiniPathwayExperience(){
  const card=available&&target&&!isStreaming?createPortal(<button ref={opener} type="button" className="mini-pathway-offer" disabled={loading} onClick={()=>{if(currentSaved){chooseSaved(currentSaved.id);reveal();}else if(hint)void generate('manual',hint);}}>
   <Map size={21}/><span><strong>{loading?'Preparing your mini pathway…':currentSaved?'Open your mini pathway':'Explore a mini pathway'}</strong><small>See possible routes, trade-offs and a practical next step.</small></span><ArrowRight size={19}/>
  </button>,target):null;
- const savedControl=historyTarget&&(history.runs.length>0||history.error||loading)?createPortal(<button type="button" className="mini-pathway-saved-control" aria-label={`Open saved pathways (${history.runs.length})`} aria-expanded={open} aria-controls="mini-pathway-panel" onClick={()=>{setError('');reveal();}}><Map size={17}/><span>Saved pathways</span><b>{history.runs.length}</b></button>,historyTarget):null;
- return <>{card}{savedControl}{open&&<aside id="mini-pathway-panel" ref={panel} className={`mini-pathway-panel${expanded?' mini-pathway-panel--expanded':''}${drawer.resizing?' mini-pathway-panel--resizing':''}`} style={expanded?undefined:{width:drawer.width}} aria-label="Mini pathway">
+ const savedControl=historyTarget&&(history.runs.length>0||history.error||loading)?createPortal(<button type="button" className="mini-pathway-saved-control" aria-label={`Open saved pathways (${history.runs.length})`} aria-expanded={isMiniPathwayOpen} aria-controls="mini-pathway-panel" onClick={()=>{setError('');reveal();}}><Map size={17}/><span>Saved pathways</span><b>{history.runs.length}</b></button>,historyTarget):null;
+ return <>{card}{savedControl}{isMiniPathwayOpen&&<aside id="mini-pathway-panel" ref={panel} className={`mini-pathway-panel${expanded?' mini-pathway-panel--expanded':''}${drawer.resizing?' mini-pathway-panel--resizing':''}`} style={expanded?undefined:{width:drawer.width}} aria-label="Mini pathway">
   {!expanded&&<div className="mini-pathway-resize-handle" {...drawer.separatorProps}><span aria-hidden="true"/></div>}
   <header><div className="mini-pathway-heading"><span className="mini-pathway-heading-icon" aria-hidden="true"><Map size={23}/></span><div><span className="mini-pathway-kicker">YOUR POSSIBILITIES</span><h2>Mini pathway</h2></div></div><div className="mini-pathway-header-actions">
    <button type="button" className="mini-pathway-expand" aria-label={expanded?'Restore mini pathway to side panel':'Expand mini pathway'} aria-expanded={expanded} aria-controls="mini-pathway-body" title={expanded?'Return to the side panel (Esc)':'Expand across the screen'} onClick={()=>setExpanded(v=>!v)}>{expanded?<Minimize2 size={18}/>:<Maximize2 size={18}/>}<span>{expanded?'Collapse':'Expand'}</span></button>
