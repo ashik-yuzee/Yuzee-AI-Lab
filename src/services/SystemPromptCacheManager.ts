@@ -27,7 +27,7 @@ export interface CacheStatus {
 export class SystemPromptCacheManager {
   private caches = new Map<string, CacheEntry>();
   private creating = new Set<string>();
-  private failed = new Set<string>(); // models that don't support caching on this tier
+  private failed = new Map<string, number>(); // model → timestamp of last failure
 
   /**
    * Returns the cachedContent name when ready, null otherwise.
@@ -60,7 +60,9 @@ export class SystemPromptCacheManager {
       }
     }
 
-    if (!this.creating.has(model) && !this.failed.has(model)) {
+    const failedAt = this.failed.get(model);
+    const canRetry = !failedAt || (Date.now() - failedAt > 5 * 60 * 1000);
+    if (!this.creating.has(model) && canRetry) {
       this._create(model, ai, systemInstruction, promptHash).catch(() => {});
     }
     return null;
@@ -83,7 +85,7 @@ export class SystemPromptCacheManager {
         config: {
           systemInstruction,
           ttl: `${TTL_SECONDS}s`,
-          displayName: `yuzee-prompt-v1.6-${model}`,
+          displayName: `yuzee-prompt-v1.7-${model}`,
         },
       });
       if (cache.name) {
@@ -95,7 +97,7 @@ export class SystemPromptCacheManager {
         console.log(`[CacheManager] Created cache ${cache.name} for ${model}`);
       }
     } catch (err) {
-      this.failed.add(model); // don't retry — caching not supported on this tier/model
+      this.failed.set(model, Date.now()); // retry after 5 min — transient errors can recover
     } finally {
       this.creating.delete(model);
     }

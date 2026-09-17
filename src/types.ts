@@ -189,6 +189,8 @@ export interface LifecycleTrace {
 }
 
 export interface MessageTelemetry {
+  routing?: import("./routing/policy").RoutingDecision;
+  preflight?: import("./routing/turnNeeds").TurnNeeds;
   usage: TokenUsageMetrics;
   contextMetrics: ContextBreakdown;
   compactionMetrics?: CompactionMetrics | null;
@@ -219,6 +221,8 @@ export interface MessageTelemetry {
 }
 
 export interface ChatMessage {
+  serverMessageId?: string;
+  preflight?: import("./routing/turnNeeds").TurnNeeds;
   userEvent?: UserEvent;
   id: string;
   role: 'user' | 'assistant' | 'system';
@@ -239,8 +243,6 @@ export interface ChatMessage {
   streamProgress?: import("./ux/streamProgress").ChatStreamProgress;
   streamStopped?: boolean;
   routing?: import('./routing/policy').RoutingDecision;
-  error?: string;
-  errorCode?: string;
   microToolName?: string;
   microToolInfo?: {
     id: string;
@@ -252,6 +254,8 @@ export interface ChatMessage {
     miniPrompt: string;
   };
   microToolSkipped?: { name: string; score: number };
+  error?: string;
+  errorCode?: string;
 }
 
 export interface Conversation {

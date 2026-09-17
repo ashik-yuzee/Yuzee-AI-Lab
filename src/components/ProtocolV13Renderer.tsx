@@ -62,6 +62,7 @@ interface ProtocolV13RendererProps {
   conversationId?: string;
   hideRecommendedActions?: boolean;
   onOpenPathway?: () => void;
+  pathwayLearningCues?: boolean;
 }
 
 export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({

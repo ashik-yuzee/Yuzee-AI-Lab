@@ -3,7 +3,7 @@ import { useTokenLab } from "../context/TokenLabContext";
 import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type, Cpu } from "lucide-react";
 import { fetchLifetimeStats } from "../services/api";
 import { formatCost } from "../data/models";
-import { ROUTER_MODELS, ROUTER_MODEL_KEY, MODEL_ID } from "../routing/policy";
+import { ROUTER_MODELS, ROUTER_MODEL_KEY, DEFAULT_ROUTER_MODEL } from "../routing/models";
 import { setRouterModel } from "../services/MicroToolRouter";
 
 export const SettingsModal: React.FC = () => {
@@ -48,7 +48,7 @@ export const SettingsModal: React.FC = () => {
   };
 
   const [routerModel, setRouterModelState] = useState<string>(
-    () => localStorage.getItem(ROUTER_MODEL_KEY) || MODEL_ID
+    () => localStorage.getItem(ROUTER_MODEL_KEY) || DEFAULT_ROUTER_MODEL
   );
   const handleRouterModel = (id: string) => {
     setRouterModelState(id);
@@ -244,7 +244,7 @@ export const SettingsModal: React.FC = () => {
                     <span className="text-[11px] text-slate-400 ml-2">{m.description}</span>
                   </div>
                   <div className="flex items-center gap-2 shrink-0 ml-2">
-                    <span className="font-mono text-[10px] text-slate-400">{m.size}</span>
+                    <span className="font-mono text-[10px] text-slate-400">{m.description}</span>
                     {routerModel === m.id && <Check className="w-3.5 h-3.5 text-violet-600" />}
                   </div>
                 </button>

@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { GEMINI_MODELS, DEFAULT_MODEL_ID } from "../data/models";
 import * as api from "../services/api";
-import { ROUTER_MODELS, ROUTER_MODEL_KEY, MODEL_ID } from "../routing/policy";
+import { ROUTER_MODELS, ROUTER_MODEL_KEY, DEFAULT_ROUTER_MODEL } from "../routing/models";
 import { setRouterModel } from "../services/MicroToolRouter";
 import { AppleSlider } from "./ui/AppleSlider";
 import { AppleToggle } from "./ui/AppleToggle";
@@ -62,7 +62,7 @@ export const AdvancedLabModal: React.FC = () => {
   const [benchmarkStrategies, setBenchmarkStrategies] = useState<string[]>(["BASELINE", "SUMMARY_RECENT", "ADAPTIVE_HYBRID", "SEMANTIC_EVIDENCE"]);
   const [benchmarkIsLive, setBenchmarkIsLive] = useState(false);
   const [routerModel, setRouterModelState] = useState<string>(
-    () => localStorage.getItem(ROUTER_MODEL_KEY) || MODEL_ID
+    () => localStorage.getItem(ROUTER_MODEL_KEY) || DEFAULT_ROUTER_MODEL
   );
   const handleRouterModel = (id: string) => { setRouterModelState(id); setRouterModel(id); };
 
@@ -748,7 +748,7 @@ export const AdvancedLabModal: React.FC = () => {
                             <span className="text-[11px] text-slate-400 ml-2">{m.description}</span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0 ml-2">
-                            <span className="font-mono text-[10px] text-slate-400">{m.size}</span>
+                            <span className="font-mono text-[10px] text-slate-400">{m.description}</span>
                             {routerModel === m.id && <CheckCircle2 className="w-3.5 h-3.5 text-amber-600" />}
                           </div>
                         </button>

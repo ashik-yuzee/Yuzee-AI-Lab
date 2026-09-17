@@ -1,3 +1,4 @@
+import type {TurnNeeds} from '../routing/turnNeeds';
 import React, { useEffect, useId, useRef, useState } from 'react';
 import { ArrowRight, ChevronDown, History, MapPin, MessageCircle, Pencil, Search, X } from 'lucide-react';
 import { researchDetails } from '../research/client';
@@ -5,16 +6,16 @@ import type { DetailResult } from '../research/types';
 import './research.css';
 import { ResearchAnswerCard } from './ResearchAnswerCard';
 
-export function MoreDetails({ conversationId, parentMessageId, disabled, onUse }:
-  { conversationId: string; parentMessageId: string; disabled: boolean; onUse: (message: string) => Promise<boolean> }) {
+export function MoreDetails({ conversationId, parentMessageId, disabled, onUse, offer }:
+  { offer: TurnNeeds; conversationId: string; parentMessageId: string; disabled: boolean; onUse: (message: string) => Promise<boolean> }) {
   const [open, setOpen] = useState(false);
-  const [target, setTarget] = useState('');
-  const [question, setQuestion] = useState('');
-  const [studyYear, setStudyYear] = useState('');
-  const [location, setLocation] = useState('');
+  const [target, setTarget] = useState(offer.scope.target);
+  const [question, setQuestion] = useState(offer.question);
+  const [studyYear, setStudyYear] = useState(offer.scope.studyYear);
+  const [location, setLocation] = useState(offer.scope.location);
   const [results, setResults] = useState<DetailResult[]>([]);
   const [selectedId, setSelectedId] = useState('');
-  const [editingScope, setEditingScope] = useState(true);
+  const [editingScope, setEditingScope] = useState(!offer.scope.target);
   const [replyTo, setReplyTo] = useState('');
   const [stage, setStage] = useState('');
   const [error, setError] = useState('');
@@ -72,7 +73,7 @@ export function MoreDetails({ conversationId, parentMessageId, disabled, onUse }
   const questionLimit = replyTo ? Math.max(1, 1500 - replyTo.length - 25) : 1500;
   return <section className={`research-panel ${open ? 'is-open' : ''}`}>
     <button type="button" className="research-panel-toggle" aria-expanded={open} aria-controls={`${id}-body`} onClick={() => setOpen(!open)}>
-      <span className="research-toggle-icon"><Search size={18} aria-hidden="true" /></span><span><strong>Explore more</strong><span>Ask a question. Get the details that matter to you.</span></span><ChevronDown className="research-toggle-chevron" size={20} aria-hidden="true" />
+      <span className="research-toggle-icon"><Search size={18} aria-hidden="true" /></span><span><strong>{offer.research?.title || "Check course details"}</strong><span>{offer.research?.description}</span></span><ChevronDown className="research-toggle-chevron" size={20} aria-hidden="true" />
     </button>
     {open && <div id={`${id}-body`} className="research-panel-body">
       {results.length > 1 && <details className="research-history"><summary><History size={16} aria-hidden="true" /><span>Saved answers</span><span className="research-count">{results.length}</span><ChevronDown size={16} aria-hidden="true" /></summary><div className="research-history-list">{[...results].reverse().map((result, index) => <button key={result.id} type="button" aria-pressed={selected?.id === result.id} disabled={active || disabled} onClick={() => { setSelectedId(result.id); if (!question.trim()) { useScope(result); setReplyTo(''); } setError(''); }}><span>{index === 0 ? 'Latest' : new Date(result.retrievedAt).toLocaleDateString()}</span><strong>{result.request.question}</strong>{selected?.id === result.id && <span className="research-history-current">Viewing</span>}</button>)}</div></details>}
@@ -84,8 +85,8 @@ export function MoreDetails({ conversationId, parentMessageId, disabled, onUse }
         } catch { setError('Your research is saved. Please try adding it to your plan again.'); }
       }} /></div>}
       <form ref={formRef} onSubmit={submit} className="research-question-form" aria-labelledby={`${id}-form-title`}>
-        <div className="research-form-heading"><MessageCircle size={20} aria-hidden="true" /><h3 id={`${id}-form-title`}>{replyTo ? 'Your answer' : results.length ? 'Ask another question' : 'What would you like to know?'}</h3></div>
-        {!results.length && <p className="research-help">Explore costs, entry requirements, skills or fitting study around your life.</p>}
+        <div className="research-form-heading"><MessageCircle size={20} aria-hidden="true" /><h3 id={`${id}-form-title`}>{replyTo ? 'Your answer' : results.length ? 'Ask another question' : 'Review your question'}</h3></div>
+        {!results.length && <p className="research-help">Your question and known details are ready. Check them before looking up sources.</p>}
         {!editingScope && target && <div className="research-context"><div><strong>{target}</strong><span><MapPin size={13} aria-hidden="true" />{[studyYear, location].filter(Boolean).join(' · ') || 'Year and location not added'}</span></div><button className="research-text-button" type="button" disabled={active || disabled} onClick={() => setEditingScope(true)}><Pencil size={14} aria-hidden="true" />Edit details</button></div>}
         {editingScope && <fieldset className="research-scope-fields" disabled={active || disabled || loadingSaved}><legend className="sr-only">Course and location details</legend>
           <label htmlFor={`${id}-target`}>Course or option<input id={`${id}-target`} value={target} onChange={e => setTarget(e.target.value)} required maxLength={350} placeholder="Course name and provider" /></label>

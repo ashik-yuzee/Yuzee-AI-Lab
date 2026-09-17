@@ -1,3 +1,6 @@
+import {selectedTopic} from '../routing/skillSuggestions';
+import {acceptedResponse} from '../ux/responsePresentation';
+import {needsQuery} from '../routing/turnNeeds';
 import {parseOalaMention} from '../oala/invocation';
 import React, { createContext, useContext, useEffect, useState, useCallback, useRef, useMemo } from "react";
 import {
@@ -106,17 +109,16 @@ interface TokenLabContextType {
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
-  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[] }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
-  triggerInlinePathway: () => Promise<void>;
+  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[]; skillChoice?: import("../routing/skillSuggestions").SkillChoice }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
-  exportConversation: (format: 'markdown' | 'json') => void;
   resetMemory: () => Promise<void>;
   refreshStats: () => Promise<void>;
   resetSessionStats: () => Promise<void>;
   inspectTurnTelemetry: (telemetry: any) => void;
   localStorageStats: { bytes: number; conversationCount: number; storageAvailable: boolean };
   clearLocalData: () => void;
+  exportConversation: (format: 'markdown' | 'json') => void;
 }
 
 const TokenLabContext = createContext<TokenLabContextType | null>(null);
@@ -514,54 +516,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     updateCurrentConversationSettings(updates);
   };
 
-  const triggerInlinePathway = async () => {
-    let activeConv = currentConversation;
-    if (!activeConv) activeConv = await startNewConversation("Career Pathway");
-
-    const loadingMsg: import("../types").ChatMessage = {
-      id: `asst-pathway-${Date.now()}`,
-      role: "assistant",
-      content: "",
-      createdAt: Date.now(),
-      isStreaming: true,
-      streamProgress: { phase: "waiting" },
-    };
-
-    const updatedConv = { ...activeConv, messages: [...(activeConv.messages || []), loadingMsg] };
-    setCurrentConversation(updatedConv);
-    setConversations(prev => prev.map(c => c.id === updatedConv.id ? updatedConv : c));
-
-    try {
-      const result = await api.generateInlinePathway(activeConv.id);
-      let structured: any = null;
-      try { structured = JSON.parse(result.content); } catch { /* render as raw text */ }
-
-      setCurrentConversation(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          messages: prev.messages.map(m =>
-            m.id === loadingMsg.id
-              ? { ...m, isStreaming: false, content: result.content, structuredResponse: structured ?? undefined, streamProgress: undefined }
-              : m
-          ),
-        };
-      });
-    } catch (err: any) {
-      setCurrentConversation(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          messages: prev.messages.map(m =>
-            m.id === loadingMsg.id
-              ? { ...m, isStreaming: false, error: err?.message || "Pathway generation failed", streamProgress: undefined }
-              : m
-          ),
-        };
-      });
-    }
-  };
-
   const sendMessage = async (input: string | any, attachments?: Array<{ mimeType: string; data: string }>) => {
     if (isStreaming || sendLockRef.current) return false;
     sendLockRef.current = true;
@@ -679,7 +633,23 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       return [...likesDislikes, ...generalFacts].slice(0, 8).map(f => f.text);
     })();
 
+    // Check needs on every free-text submission; structured Quiz events retain their controller.
+    let needsAssessment: import('../routing/turnNeeds').NeedHint | undefined;
+    if(!userEventPayload){
+      try{
+        const {assessMessageNeeds}=await import('../services/MicroToolRouter');
+        needsAssessment=await assessMessageNeeds(needsQuery(textMessage,activeConv.messages||[]),{signal:controller.signal});
+      }catch{/* Server rules and Gemini context remain available. */}
+    }
+    if(controller.signal.aborted)return false;
     let microToolSelection: import('../routing/policy').RoutingDecision | undefined;
+    let topicSelection: import('../routing/policy').RoutingDecision | undefined;
+    const priorAssistant=activeConv.messages?.at(-1);
+    const topic=selectedTopic(acceptedResponse(priorAssistant?.structuredResponse||priorAssistant?.content)?.interaction,userEventPayload);
+    if(topic){
+      try{const {routeMessage}=await import('../services/MicroToolRouter');topicSelection=await routeMessage(topic,{signal:controller.signal,topic:true});}catch{/* Existing Quiz interaction remains usable. */}
+    }
+
     const oalaMention = parseOalaMention(textMessage);
     if(oalaMention.active && !userEventPayload){
       setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,streamProgress:{phase:'routing'}}:m)}));
@@ -692,17 +662,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
     if(controller.signal.aborted)return false;
 
-    // Pathway RAG — retrieve relevant nodes before sending, gated on keyword match
-    let pathwayContext: string | undefined;
-    const PATHWAY_GATE = /tier|phase|step|course|skill|cost|year|month|fund|placement|pathway|learn|study|degree|certif|what should|recommend|how long|transition|career|job|role/i;
-    if (!userEventPayload && PATHWAY_GATE.test(textMessage)) {
-      try {
-        const { searchPathway } = await import('../services/MicroToolRouter');
-        const hits = await searchPathway(textMessage);
-        if (hits.length > 0) pathwayContext = hits.map(h => h.text).join('\n\n');
-      } catch { /* non-fatal — chat continues without pathway context */ }
-    }
-
     return await new Promise<boolean>((resolve) => {
     let accepted = false;
     let failed = false;
@@ -713,6 +672,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         message: textMessage,
         mode: activeConv.mode,
         microToolSelection,
+        topicSelection,
+        skillChoice: !userEventPayload && typeof input==='object' ? input.skillChoice : undefined,
+        needsAssessment,
         userEvent: userEventPayload,
         model: activeConv.model,
         strategy: activeConv.strategy,
@@ -734,10 +696,11 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         userQuestionAnswers: userQuestionAnswers,
         isOptionSelection: !!userEventPayload,
         attachments: attachments && attachments.length > 0 ? attachments : undefined,
-        pathwayContext: pathwayContext || undefined,
       },
       {
         onStart: (data) => {
+          if(!controller.signal.aborted)setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,serverMessageId:data.messageId}:m)}));
+          if(data.preflight&&!controller.signal.aborted)setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,preflight:data.preflight}:m)}));
           resolvedThinkingLevel = data.appliedThinkingLevel;
           if(data.routing&&!controller.signal.aborted)setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,routing:data.routing}:m)}));
         },
@@ -977,6 +940,35 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   };
 
+  const resetMemory = async () => {
+    if (!currentConversation) return;
+    const res = await api.resetConversationMemory(currentConversation.id);
+    setCurrentConversation(res);
+    setConversations((prev) => prev.map((c) => (c.id === res.id ? res : c)));
+  };
+
+  const resetSessionStatsAction = async () => {
+    await api.resetSessionStats();
+    await refreshStats();
+  };
+
+  const inspectTurnTelemetry = (telemetry: any) => {
+    setActiveTurnTelemetry(telemetry);
+    setTokenInspectorOpen(true);
+  };
+
+  const dismissCostWarning = () => setDailyCostWarning({ level: null, totalCostUsd: 0 });
+
+  const updateSharedSettingsAction = async (patch: Parameters<typeof api.updateSharedSettings>[0]) => {
+    const updated = await api.updateSharedSettings(patch);
+    setSharedSettings(updated);
+  };
+
+  const resetSharedPromptAction = async () => {
+    const updated = await api.resetSharedPrompt();
+    setSharedSettings(updated);
+  };
+
   const exportConversation = (format: 'markdown' | 'json') => {
     const conv = currentConversation;
     if (!conv) return;
@@ -1005,35 +997,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const a = document.createElement('a');
     a.href = url; a.download = filename; a.click();
     URL.revokeObjectURL(url);
-  };
-
-  const resetMemory = async () => {
-    if (!currentConversation) return;
-    const res = await api.resetConversationMemory(currentConversation.id);
-    setCurrentConversation(res);
-    setConversations((prev) => prev.map((c) => (c.id === res.id ? res : c)));
-  };
-
-  const resetSessionStatsAction = async () => {
-    await api.resetSessionStats();
-    await refreshStats();
-  };
-
-  const inspectTurnTelemetry = (telemetry: any) => {
-    setActiveTurnTelemetry(telemetry);
-    setTokenInspectorOpen(true);
-  };
-
-  const dismissCostWarning = () => setDailyCostWarning({ level: null, totalCostUsd: 0 });
-
-  const updateSharedSettingsAction = async (patch: Parameters<typeof api.updateSharedSettings>[0]) => {
-    const updated = await api.updateSharedSettings(patch);
-    setSharedSettings(updated);
-  };
-
-  const resetSharedPromptAction = async () => {
-    const updated = await api.resetSharedPrompt();
-    setSharedSettings(updated);
   };
 
   return (
@@ -1101,16 +1064,15 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         applyOptimizationMode,
         applyPreset,
         sendMessage,
-        triggerInlinePathway,
         stopStreaming,
         submitFeedback,
-        exportConversation,
         resetMemory,
         refreshStats,
         resetSessionStats: resetSessionStatsAction,
         inspectTurnTelemetry,
         localStorageStats,
         clearLocalData,
+        exportConversation,
       }}
     >
       {children}

@@ -9,7 +9,6 @@ import {
 import { useTokenLab } from "../context/TokenLabContext";
 import { generatePathway, recommendPathwayNodes, explainPathwayNode, fetchWhiteboardStats } from "../services/api";
 import { calcTurnCost, formatCost } from "../data/models";
-import { indexPathway } from "../services/MicroToolRouter";
 
 const PATHWAY_MODEL = "gemini-3.7-flash";
 
@@ -294,7 +293,6 @@ export const PathwayWhiteboard: React.FC = () => {
         setNodes(d.nodes);
         if (d.style)   setSelectedStyle(d.style);
         if (d.answers) setAnswers(d.answers);
-        indexPathway(d.nodes);
       }
     } catch {}
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -604,7 +602,6 @@ export const PathwayWhiteboard: React.FC = () => {
 
       if (streamId.current !== myId) return;
       persist(typed, selectedStyle, answers);
-      indexPathway(typed);
       setGenProgress(100); setStreaming(false);
       fetchWhiteboardStats().then(setWbTokens).catch(() => {});
       if (ttsEnabled) tts.speak("Your pathway is ready.");

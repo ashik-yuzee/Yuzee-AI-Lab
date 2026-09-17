@@ -1,3 +1,11 @@
+import {bypassCopy} from './src/ux/bypassCopy';
+import {shortReplyGuidance} from './src/ux/shortReplyGuidance';
+import {continueSkillQuestion} from './src/routing/skillContinuation';
+import {skillInputInstruction} from './src/routing/skillInputs';
+import {MiniPathwayService,PathwayError} from './src/miniPathway/service';
+import {concernsHelp,loadHelpEvidence,helpEvidenceInstruction,outdatedHelpClaim} from './src/services/HelpEvidence';
+import {acceptSkillChoice,acceptTopicRoute} from './src/routing/skillSuggestions';
+import {assessTurnNeeds,needsInstruction} from './src/routing/turnNeeds';
 import {TEACHING_REVIEW_INSTRUCTION,shouldReviewTeaching,applyReviewedBlocks,combineGenerationUsage} from './src/services/TeachingAnswerReview';
 import {oalaBasicAnswer} from './src/oala/basicResponses';
 import {parseOalaMention} from './src/oala/invocation';
@@ -15,7 +23,6 @@ import { GoogleGenAI, type GenerateContentConfig } from "@google/genai";
 import dotenv from "dotenv";
 import dns from "dns";
 import fs from "fs/promises";
-import { readFileSync } from "fs";
 
 import { YuzeeRequestAssembler } from "./src/services/YuzeeRequestAssembler";
 import {
@@ -179,6 +186,7 @@ function getGemini(): GoogleGenAI | null {
 
 // In-Memory Storage for Conversations & Telemetry
 interface MessageItem {
+  preflight?: import("./src/routing/turnNeeds").TurnNeeds;
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
@@ -227,6 +235,29 @@ interface ConversationItem {
 const conversations: Map<string, ConversationItem> = new Map();
 const detailResearch = new DetailResearchService(getGemini);
 const activeResearch = new Set<string>();
+const miniPathwayService = new MiniPathwayService(getGemini,undefined,run=>{
+ appendTokenLog({ts:Date.now(),endpoint:'/api/mini-pathway',model:run.model,conversationId:run.conversationId,inputTokens:run.usage.inputTokens,outputTokens:run.usage.outputTokens+run.usage.thinkingTokens});
+});
+
+app.get('/api/conversations/:id/mini-pathway', async (req,res)=>{
+ if(!conversations.has(req.params.id))return void res.status(404).json({error:'Conversation not found.'});
+ try{res.json(await miniPathwayService.list(req.params.id));}
+ catch{res.status(500).json({error:'Saved mini pathways could not be loaded.'});}
+});
+app.post('/api/conversations/:id/mini-pathway',makeRateLimit(6),async(req,res)=>{
+ const conv=conversations.get(req.params.id);
+ if(!conv)return void res.status(404).json({error:'Conversation not found.'});
+ const sourceId=req.body?.sourceMessageId;
+ const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),120000);
+ res.on('close',()=>{if(!res.writableEnded)abort.abort();});
+ res.setHeader('Content-Type','text/event-stream');res.setHeader('Cache-Control','no-cache');res.flushHeaders();
+ const emit=(value:any)=>{if(!res.destroyed)res.write(`data: ${JSON.stringify(value)}\n\n`);};
+ try{
+  const result=await miniPathwayService.generate(conv,req.body,abort.signal,stage=>emit({type:'progress',stage}),()=>conversations.get(conv.id)?.messages.at(-1)?.id===sourceId,event=>emit(event));
+  emit({type:'result',result});
+ }catch(error){emit({type:'error',error:error instanceof PathwayError?error.message:'The mini pathway could not be prepared.',status:error instanceof PathwayError?error.status:500});}
+ finally{clearTimeout(timer);res.end();}
+});
 
 app.get('/api/conversations/:id/details', async (req, res) => {
   if (!conversations.has(req.params.id)) return void res.status(404).json({ error: 'Conversation not found.' });
@@ -263,12 +294,6 @@ app.post('/api/conversations/:id/details', makeRateLimit(6), async (req, res) =>
     emit({ type: 'error', error: safe });
   } finally { clearTimeout(timer); activeResearch.delete(conv.id); res.end(); }
 });
-
-// Mini-pathway inline prompt (loaded once at startup)
-let miniPathwayPrompt = '';
-try {
-  miniPathwayPrompt = readFileSync(path.resolve(process.cwd(), 'src/prompts/mini-pathway.md'), 'utf-8');
-} catch { console.warn('[server] mini-pathway.md not found — /api/pathway/inline will be unavailable'); }
 
 // Whiteboard generation stats (tracked separately from chat)
 const whiteboardStats = { calls: 0, inputTokens: 0, outputTokens: 0 };
@@ -659,46 +684,6 @@ Reply in 2-4 short paragraphs. Be specific, practical, and encouraging. No JSON,
 
 app.get("/api/pathway/stats", (_req, res) => res.json(whiteboardStats));
 
-// Inline pathway — runs the mini-pathway prompt against the conversation history
-// and returns a v1.3 JSON response to be rendered directly in chat.
-app.post("/api/pathway/inline", makeRateLimit(5), async (req, res) => {
-  if (!miniPathwayPrompt) return res.status(503).json({ error: "Mini-pathway prompt not loaded" });
-  const { conversationId } = req.body as { conversationId?: string };
-  const ai = getGemini();
-  if (!ai) return res.status(503).json({ error: "AI unavailable" });
-
-  const conv = conversationId ? conversations.get(conversationId) : null;
-  const recent = (conv?.messages || [])
-    .filter(m => m.role === 'user' || m.role === 'assistant')
-    .slice(-12)
-    .map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${String(m.content || '').slice(0, 400)}`)
-    .join('\n');
-
-  const userContent = recent
-    ? `Based on our conversation, generate a detailed career pathway report.\n\nConversation context:\n${recent}`
-    : 'Generate a career pathway report.';
-
-  try {
-    const resp = await ai.models.generateContent({
-      model: 'gemini-3.7-flash',
-      config: { systemInstruction: miniPathwayPrompt, maxOutputTokens: 65536 },
-      contents: userContent,
-    });
-    const inIn  = resp.usageMetadata?.promptTokenCount ?? 0;
-    const inOut = resp.usageMetadata?.candidatesTokenCount ?? 0;
-    whiteboardStats.calls++;
-    whiteboardStats.inputTokens  += inIn;
-    whiteboardStats.outputTokens += inOut;
-    appendTokenLog({ ts: Date.now(), endpoint: '/api/pathway/inline', model: 'gemini-3.7-flash', inputTokens: inIn, outputTokens: inOut });
-    const text = (resp.text || '').trim();
-    const match = text.match(/\{[\s\S]*\}/);
-    if (!match) return res.status(500).json({ error: 'No JSON in response' });
-    return res.json({ content: match[0], inputTokens: inIn, outputTokens: inOut });
-  } catch (e: any) {
-    return res.status(500).json({ error: e?.message || 'Inline pathway failed' });
-  }
-});
-
 app.get("/api/tokens/utility-stats", (_req, res) => res.json({ whiteboard: whiteboardStats, utility: utilityStats }));
 
 app.get("/api/tokens/log", async (_req, res) => {
@@ -1059,6 +1044,7 @@ app.delete("/api/conversations/:id", (req, res) => {
   }
   deleteConversation(req.params.id).catch(() => {});
   detailResearch.remove(req.params.id).catch(() => {});
+  miniPathwayService.remove(req.params.id).catch(() => {});
   res.status(204).send();
 });
 
@@ -1089,7 +1075,7 @@ app.post("/api/conversations/restore", (req, res) => {
     title: data.title || "Restored Conversation",
     createdAt: data.createdAt || Date.now(),
     updatedAt: data.updatedAt || Date.now(),
-    model: data.model || DEFAULT_MODEL_ID,
+    model: data.model || "gemini-3.5-flash-lite",
     mode: data.mode || "AUTO",
     strategy: data.strategy || "ADAPTIVE_HYBRID",
     preset: data.preset || "BALANCED",
@@ -1624,12 +1610,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   else if (uc?.timezone) ctxParts.push(`Timezone: ${uc.timezone}`);
   if (upFacts.length > 0) ctxParts.push(`User facts: ${upFacts.slice(0, 8).join("; ")}`);
   if (userQuestionAnswers.length > 0) ctxParts.push(`USER_QUESTION_ANSWERS: ${JSON.stringify(userQuestionAnswers)}`);
-  const pathwayCtx = (req.body.pathwayContext as string | undefined)?.trim();
-  const enrichedMessage = [
-    ctxParts.length > 0 ? `[${ctxParts.join(" · ")}]` : null,
-    pathwayCtx ? `[PATHWAY_CONTEXT]\n${pathwayCtx}\n[/PATHWAY_CONTEXT]` : null,
-    userMessageContent,
-  ].filter(Boolean).join('\n');
+  const enrichedMessage = ctxParts.length > 0
+    ? `[${ctxParts.join(" · ")}]\n${userMessageContent}`
+    : userMessageContent;
   const messageId = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const userPromptTokens = estimateTokens(userMessageContent);
 
@@ -1688,7 +1671,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   // 2. ASSEMBLE GEMINI REQUEST (IMMUTABLE PROMPT IN SYSTEM INSTRUCTION ONLY)
   const requestAssemblyStart = Date.now();
-  const modelId = req.body.model || conv.model || DEFAULT_MODEL_ID;
+  const modelId = req.body.model || conv.model || "gemini-3.5-flash-lite";
   const allowedModels = GEMINI_MODELS.filter(m => m.selectable).map(m => m.id);
   if (!allowedModels.includes(modelId)) {
     return res.status(400).json({ error: `Unknown model: ${modelId}` });
@@ -1701,18 +1684,31 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     ? ss.customSystemPrompt.trim()
     : undefined; // undefined → assembler uses the default file-loaded prompt
 
+  const needsText = userEvent?.userEvent?.interaction?.self_input || userEvent?.interaction?.self_input || userMessageContent;
+  const turnNeeds = assessTurnNeeds({text:needsText,history:conv.messages,structured:!!userEvent,location:uc?.location,hint:req.body.needsAssessment});
   const oalaMention = parseOalaMention(userMessageContent);
-  const routingDecision = acceptClientRoute(req.body.microToolSelection, mode, userMessageContent, !!userEvent);
+  let routingDecision = req.body.skillChoice
+    ? acceptSkillChoice(req.body.skillChoice, conv.messages, userMessageContent, !!userEvent)
+    : req.body.topicSelection && userEvent ? acceptTopicRoute(req.body.topicSelection,conv.activeInteraction,userEvent)
+    : acceptClientRoute(req.body.microToolSelection, mode, userMessageContent, !!userEvent);
+  if (routingDecision.status !== 'selected' && !req.body.skillChoice && !req.body.topicSelection && userEvent) {
+    const continuation = continueSkillQuestion(conv.messages, conv.activeInteraction, userEvent);
+    if (continuation.status === 'selected') routingDecision = continuation;
+  }
+  if(req.body.skillChoice && routingDecision.status!=='selected')return res.status(400).json({error:'This suggestion is no longer available. Please use the latest response or ask your question in the message box.'});
+  const helpContext=concernsHelp(userMessageContent)||(routingDecision.toolId==='COURSE_011'&&concernsHelp(conv.messages.at(-1)?.content||''));
+  const helpEvidence=helpContext?await loadHelpEvidence():undefined;
   const oalaServices = oalaMention.active ? readYuzeeServices(requestAssembler.getPromptContent()) : [];
   const basicOalaAnswer = !userEvent && !req.body.attachments?.length ? oalaBasicAnswer(userMessageContent, oalaServices) : null;
   const oalaInstruction = oalaMention.active ? buildOalaInstruction(
     oalaServices,
     Object.values(TRUSTED_SERVICE_ACTIONS).filter(action => action.enabled && action.isConnectedInLab).map(action => action.actionId),
   ) : undefined;
+  const clarityInstruction = shortReplyGuidance(userMessageContent, historicalMessages, !!userEvent);
   const assembledReq = requestAssembler.assembleRequest({
     model: modelId,
     messageText: enrichedMessage,
-    microToolInstruction: scopedInstruction(routingDecision),
+    microToolInstruction: [scopedInstruction(routingDecision), needsInstruction(turnNeeds), helpEvidenceInstruction(helpEvidence), clarityInstruction].filter(Boolean).join("\n\n"),
     oalaInstruction,
     userEvent,
     careerContext: req.body.careerContext || conv.careerContext,
@@ -1769,6 +1765,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     aiRequestId: assembledReq.aiRequestId,
     appliedThinkingLevel: assembledReq.appliedThinkingLevel,
     routing: routingDecision,
+    preflight: turnNeeds,
     numericThinkingBudget: assembledReq.numericThinkingBudget,
     maxOutputTokens: assembledReq.maxOutputTokens,
     requestReceivedAt,
@@ -1799,9 +1796,12 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
 
   // Greeting/farewell bypass — skip Gemini entirely, costs 0 tokens
   // Option selections are pre-validated UI choices; bypass rubbish/classification check
-  const messageClass = req.body.isOptionSelection || oalaMention.active
+  const messageClass = userEvent || req.body.isOptionSelection || oalaMention.active
     ? 'career'
-    : requestAssembler.classifyUserMessage(userMessageContent);
+    : requestAssembler.classifyUserMessage(userMessageContent, {
+      hasConversation: historicalMessages.some(message => message.role === 'assistant'),
+      hasActiveQuestion: conv.activeInteraction?.kind === 'question',
+    });
   if (basicOalaAnswer || messageClass !== 'career') {
     if (timeoutHandle) clearTimeout(timeoutHandle); // prevent timer firing after res.end()
     const localResponse = makeBypassResponse(messageClass === 'career' ? 'greeting' : messageClass);
@@ -1957,7 +1957,10 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
 
   let teachingReviewError = '';
-  if (isJsonValid && finishReason !== 'MAX_TOKENS' && aiInstance && geminiConfig.responseSchema && shouldReviewTeaching(parsedResponse)) {
+  // Valid protocol JSON also arrives in Vanilla mode without constrained generation.
+  // Its substantive explanations need the same review as structured-output mode.
+  const teachingReviewSchema = geminiConfig.responseSchema || requestAssembler.getGeminiResponseSchema();
+  if (isJsonValid && finishReason !== 'MAX_TOKENS' && aiInstance && teachingReviewSchema?.properties?.content_blocks && shouldReviewTeaching(parsedResponse)) {
     try {
       sendProgress("reviewing");
       // Separate bounded review: it may edit explanation blocks, never interaction or service state.
@@ -1965,9 +1968,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
         model: assembledReq.model,
         contents: JSON.stringify({currentRequest:userMessageContent,conversation:conv.messages.slice(-10).map(m=>({role:m.role,content:m.content})),contextNotice:'Prior assistant claims are not verified evidence. User reports remain self-reported. There are no independently retrieved sources in this review payload.',candidate:{content_blocks:parsedResponse.content_blocks}}),
         config: {
-          systemInstruction: TEACHING_REVIEW_INSTRUCTION + (routingDecision.status==='selected' ? '\n\nApproved server-owned task guidance for this review (still return only content_blocks and prioritise the actual user request):\n'+(microTools.find(t=>t.id===routingDecision.toolId)?.mini_prompt||'') : ''),
+          systemInstruction: TEACHING_REVIEW_INSTRUCTION + '\n\n' + clarityInstruction + (routingDecision.status==='selected' ? '\n\nApproved server-owned task guidance for this review (still return only content_blocks and prioritise the actual user request):\n'+(microTools.find(t=>t.id===routingDecision.toolId)?.mini_prompt||'')+'\n'+skillInputInstruction(routingDecision.toolId!) : ''),
           responseMimeType: 'application/json',
-          responseSchema: {type:'object',properties:{content_blocks:(geminiConfig.responseSchema as any).properties.content_blocks},required:['content_blocks']},
+          responseSchema: {type:'object',properties:{content_blocks:(teachingReviewSchema as any).properties.content_blocks},required:['content_blocks']},
           maxOutputTokens: assembledReq.maxOutputTokens,
           abortSignal: AbortSignal.any([providerAbort.signal,AbortSignal.timeout(30000)]),
           ...(/^gemini-(3[.-]|2\.5)/.test(assembledReq.model) ? {thinkingConfig:{...requestAssembler.resolveThinkingConfig(assembledReq.model,'low').thinkingConfig,includeThoughts:false} as GenerateContentConfig['thinkingConfig']} : {}),
@@ -1980,6 +1983,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     } catch {
       teachingReviewError = 'The explanation review could not be completed. Please retry this question.';
     }
+  }
+  if(isJsonValid && outdatedHelpClaim(JSON.stringify(parsedResponse?.content_blocks||[]))) {
+    teachingReviewError='This answer used outdated student-loan repayment rules and was withheld. Please retry so the current official guidance can be checked.';
   }
   if (providerAbort.signal.aborted) return;
   sendProgress("checking");
@@ -2183,6 +2189,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   conv.messages.push(userMsg);
 
   const assistantMsg: MessageItem = {
+    preflight: turnNeeds,
     id: messageId,
     role: "assistant",
     content: fullAssistantText,
@@ -2196,6 +2203,8 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
       appliedThinkingLevel: assembledReq.appliedThinkingLevel,
       validation: validationResult,
       routing: routingDecision,
+      helpEvidence,
+      preflight: turnNeeds,
       timestamp: Date.now(),
     },
     createdAt: Date.now(),
@@ -2272,43 +2281,9 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   }
 });
 
-const RUBBISH_JOKES = [
-  "Did your cat just walk across the keyboard? That's either the world's most creative career question or feline sabotage. I'm here when you're ready — what career challenge can I help with?",
-  "I ran that through my career translator and got: *suspicious static*. Let's try again — what's on your career radar?",
-  "That message has the energy of someone falling asleep mid-type. Impressive. I'll be here when you wake up — ready to tackle your career questions!",
-  "My AI brain attempted to decode that and came back with: 'Please send help and maybe a CV.' Was I close? Let me know what you actually need!",
-  "Either you've discovered a new programming language or your keyboard staged a rebellion. Either way, I'm impressed. What career question were you actually going for?",
-  "That's not a career question — that's performance art. I respect it. But whenever you're ready to talk pathways, skills, or job moves, I'm all yours.",
-  "I showed that message to three career advisors and none of them could help either. Try again in plain English and I'll give you genuinely useful guidance!",
-];
-
-const IDLE_JOKES = [
-  "Ha! I see you're in a chatty mood. Love the energy. But I'm strictly a career person — think of me as that one friend who always steers the conversation back to 'have you updated your LinkedIn?' What career stuff can I help with?",
-  "Careful — I'm fluent in career advice but terrible at small talk. My therapist says it's a problem. Anyway, what's your career situation?",
-  "I would tell you a joke but I only know career puns. Why did the developer quit? Because they didn't get arrays. ...Now can we talk about your actual career?",
-  "Bold move coming to a career counsellor for casual chat. Bolder move than most people make with their CVs, honestly. What can I actually help you with?",
-  "Fun fact: I haven't had a day off since I was deployed. No weather updates, no jokes, no vibes — just pathways and certifications. Let's talk careers!",
-  "My hobbies include: career planning, job readiness assessments, and gently redirecting people who ask me what time it is. What's your career goal?",
-  "I don't do weather, but I do forecast 100% chance of career clarity if you tell me where you're trying to go. What's the goal?",
-  "I tried googling 'how to do small talk' and it just gave me a list of networking tips. So — what industry are you in?",
-];
-
 function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish' | 'idle'): YuzeeResponseV13 {
-  let text: string;
-  let intent: string;
-  if (kind === 'greeting') {
-    text = "Hi! I'm Oala, your Yuzee career counsellor. What career challenge can I help you with today? I can help with pathway planning, skill gap analysis, course options, job readiness, and more.";
-    intent = "SOCRATIC_DIRECTION";
-  } else if (kind === 'farewell') {
-    text = "You're welcome — happy to help anytime. Come back whenever you need career guidance!";
-    intent = "PAUSE_CLOSURE";
-  } else if (kind === 'idle') {
-    text = IDLE_JOKES[Math.floor(Math.random() * IDLE_JOKES.length)];
-    intent = "GENERAL_DELIVERY";
-  } else {
-    text = RUBBISH_JOKES[Math.floor(Math.random() * RUBBISH_JOKES.length)];
-    intent = "GENERAL_DELIVERY";
-  }
+  const text = bypassCopy(kind);
+  const intent = kind === 'greeting' ? 'SOCRATIC_DIRECTION' : kind === 'farewell' ? 'PAUSE_CLOSURE' : 'GENERAL_DELIVERY';
   return {
     schema_version: "1.3",
     current_mode: "A_CONVERSATION",

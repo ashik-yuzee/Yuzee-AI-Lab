@@ -115,6 +115,10 @@ export class YuzeeRequestAssembler {
     return this.responseSchemaJson;
   }
 
+  public getGeminiResponseSchema(): any {
+    return this.sanitizeSchemaForGemini(this.responseSchemaJson);
+  }
+
   public getSchemaHash(): string {
     return this.schemaHash;
   }
@@ -300,7 +304,10 @@ export class YuzeeRequestAssembler {
    *   'farewell'  — closing/thanks, no career content
    *   'career'    — send to Gemini
    */
-  public classifyUserMessage(text: string): 'greeting' | 'farewell' | 'rubbish' | 'idle' | 'career' {
+  public classifyUserMessage(text: string, context: {hasConversation?: boolean; hasActiveQuestion?: boolean} = {}): 'greeting' | 'farewell' | 'rubbish' | 'idle' | 'career' {
+    // Short replies and typed answers belong to the ongoing conversation.
+    // This bypass classifier is not the embedding router and must not gate understanding.
+    if (text.trim() && (context.hasConversation || context.hasActiveQuestion)) return 'career';
     const t = text.trim().toLowerCase().replace(/[!?.,']+$/, '').trim();
 
     const greetingPatterns = [
@@ -342,37 +349,15 @@ export class YuzeeRequestAssembler {
     if (farewellPatterns.some(p => p.test(t))) return 'farewell';
     if (idlePatterns.some(p => p.test(t))) return 'idle';
 
-    // Rubbish detection — after known-safe patterns so "hello" isn't rejected by franc
+    // Only empty / symbol-only input can take the local clarification path.
     if (this._isRubbish(t)) return 'rubbish';
-    if (!/\s/.test(t)) return 'rubbish'; // single unknown keyword, no context
     return 'career';
   }
 
   private _isRubbish(t: string): boolean {
-    if (!t || t.length < 2) return true;
-
-    // Pure symbol/emoji noise with no letters
-    if (/^[^a-z0-9]+$/i.test(t)) return true;
-
-    // Same character repeated 5+ times ("aaaaaaa", "!!!!!!!")
-    if (/(.)\1{4,}/.test(t)) return true;
-
-    // Keyboard row mash — 5+ consecutive chars from the same row
-    const rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
-    for (const row of rows) {
-      for (let i = 0; i <= row.length - 5; i++) {
-        if (t.includes(row.slice(i, i + 5))) return true;
-        // Also check reverse
-        const rev = row.slice(i, i + 5).split('').reverse().join('');
-        if (t.includes(rev)) return true;
-      }
-    }
-
-    // Every "word" has no vowels AND is longer than 2 chars (filters SQL, AWS, etc.)
-    const words = t.split(/\s+/).filter(w => w.length > 2 && /^[a-z]+$/.test(w));
-    if (words.length > 0 && words.every(w => !/[aeiou]/.test(w))) return true;
-
-    return false;
+    // Words, acronyms (RPL, SQL), numbers, single letters and non-Latin text
+    // can all be meaningful. Let Gemini interpret them or clarify respectfully.
+    return !t || !/[\p{L}\p{N}]/u.test(t);
   }
 
   /**

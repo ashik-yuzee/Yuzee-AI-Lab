@@ -268,21 +268,6 @@ export async function preCheckMessage(payload: {
   } catch { return { needsClarification: false }; }
 }
 
-export async function generateInlinePathway(
-  conversationId: string
-): Promise<{ content: string; inputTokens: number; outputTokens: number }> {
-  const res = await fetch(`${API_BASE}/api/pathway/inline`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ conversationId }),
-  });
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error((body as any).error || `Server error ${res.status}`);
-  }
-  return res.json();
-}
-
 export async function generatePathway(
   messages: { role: string; content: string }[],
   style?: string,
@@ -366,7 +351,7 @@ export async function runBenchmark(payload: {
 
 export interface StreamCallbacks {
   onStatus?: (progress: import("../ux/streamProgress").ChatStreamProgress) => void;
-  onStart?: (data: { conversationId: string; messageId: string; appliedThinkingLevel: string; routing?: import("../routing/policy").RoutingDecision }) => void;
+  onStart?: (data: { conversationId: string; messageId: string; appliedThinkingLevel: string; routing?: import("../routing/policy").RoutingDecision; preflight?: import("../routing/turnNeeds").TurnNeeds }) => void;
   onDelta?: (text: string) => void;
   onStructured?: (data: any) => void;
   onValidation?: (data: any) => void;
@@ -403,8 +388,10 @@ export function streamChatMessage(
     isOptionSelection?: boolean;
     attachments?: Array<{ mimeType: string; data: string }>;
     mode?: string;
+    needsAssessment?: import("../routing/turnNeeds").NeedHint;
+    skillChoice?: import("../routing/skillSuggestions").SkillChoice;
+    topicSelection?: import("../routing/policy").RoutingDecision;
     microToolSelection?: import("../routing/policy").RoutingDecision;
-    pathwayContext?: string;
   },
   callbacks: StreamCallbacks,
   signal?: AbortSignal

@@ -1,10 +1,14 @@
+import {outdatedHelpClaim} from '../services/HelpEvidence';
+import {suggestionText,canReviewResponseSkills} from '../routing/skillSuggestions';
+import {SkillSuggestions} from './SkillSuggestions';
+import {ChatTurnDivider} from './ChatTurnDivider';
+import {researchOffer} from '../routing/turnNeeds';
 import { ChatStreamingStatus } from './ChatStreamingStatus';
 import { acceptedResponse, responseToReadableText } from "../ux/responsePresentation";
 import { MoreDetails } from './MoreDetails';
 import React, { useRef, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
-import { RecommendedAction } from "../protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
 import Markdown from "react-markdown";
@@ -53,24 +57,22 @@ export const ChatArea: React.FC = () => {
     dismissCostWarning,
     setWhiteboardOpen,
     setTokenInspectorOpen,
-    triggerInlinePathway,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const collapseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [copiedId, setCopiedId] = React.useState<string | null>(null);
   const [rawJsonIds, setRawJsonIds] = React.useState<Set<string>>(new Set());
   const [speakingId, setSpeakingId] = React.useState<string | null>(null);
-  const [expandedThinking, setExpandedThinking] = React.useState<Set<string>>(new Set());
 
   const allMessages = currentConversation?.messages || [];
   const lastAssistant = [...allMessages].reverse().find(m => m.role === 'assistant' && !m.isStreaming && !m.error && m.schemaValid !== false && m.semanticValid !== false && acceptedResponse(m.structuredResponse || m.content));
   const lastStructured = lastAssistant && !lastAssistant.error ? acceptedResponse(lastAssistant.structuredResponse || lastAssistant.content) : null;
-  const suggestedActions = (!isStreaming && lastStructured?.interaction?.kind === 'none')
-    ? (lastStructured.interaction.recommended_actions || [])
-    : [];
-  const hasSuggestions = suggestedActions.length > 0;
+  const completedRoute=lastAssistant?.routing||lastAssistant?.telemetry?.routing;
+  const latestMessage=allMessages.at(-1);
+  const latestUser=[...allMessages].reverse().find(m=>m.role==='user');
+  const hasSuggestions=!!(!isStreaming && latestMessage===lastAssistant && !lastAssistant?.streamStopped && canReviewResponseSkills(lastStructured,latestUser?.content||''));
+  const reviewText=hasSuggestions ? suggestionText(lastStructured,allMessages.filter(m=>m.role==='user').slice(-3).map(m=>m.content)) : '';
   const isLastAssistantMsg = (msgId: string) => lastAssistant?.id === msgId;
 
   const speakMessage = React.useCallback((id: string, text: string) => {
@@ -108,20 +110,6 @@ export const ChatArea: React.FC = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [currentConversation?.messages.length, isStreaming, hasSuggestions]);
-
-  // Auto-expand thinking panel while streaming, auto-collapse 1.5s after done
-  useEffect(() => {
-    const msgs = currentConversation?.messages || [];
-    const streamingMsg = msgs.find(m => m.role === 'assistant' && m.isStreaming && m.microToolInfo);
-    if (streamingMsg) {
-      setExpandedThinking(prev => new Set(prev).add(streamingMsg.id));
-      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
-    } else {
-      // Streaming stopped — schedule collapse
-      if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
-      collapseTimerRef.current = setTimeout(() => setExpandedThinking(new Set()), 1500);
-    }
-  }, [currentConversation?.messages, isStreaming]);
 
   const lastCounsellorGateIdRef = React.useRef<string | null>(null);
   useEffect(() => {
@@ -273,22 +261,13 @@ export const ChatArea: React.FC = () => {
                 </div>
               </div>
             ) : (
-              /* Conversation turns — timeline layout */
+              /* Conversation turns — full-width reading flow */
               <div className="relative">
-                {/* Vertical timeline line — desktop only */}
-                <div className="hidden sm:block absolute sm:left-[27px] top-0 bottom-0 w-px bg-[#e5e8ec] pointer-events-none" />
-
                 <div className="space-y-8 sm:space-y-12">
                   {turnGroups.map((turn, tIdx) => (
-                    <div key={turn.userMsg?.id || `t-${tIdx}`} className="grid gap-x-6 grid-cols-1 sm:[grid-template-columns:56px_1fr]">
-                      {/* Left col — sticky turn number (desktop only) */}
-                      <div className="hidden sm:flex sticky top-6 self-start justify-center pt-0.5">
-                        <div className="w-9 h-9 rounded-full bg-white border border-[#e5e8ec] flex items-center justify-center text-[13px] font-bold text-[#6d7782] shadow-sm z-10 shrink-0">
-                          {turn.turnNum || "·"}
-                        </div>
-                      </div>
-
-                      {/* Right col — student + oala */}
+                    <div key={turn.userMsg?.id || `t-${tIdx}`} className="min-w-0">
+                      <ChatTurnDivider createdAt={turn.userMsg?.createdAt??turn.assistantMsgs[0]?.createdAt}/>
+                      {/* Student + oala */}
                       <div className="min-w-0 space-y-4 sm:space-y-5">
                         {/* Student message */}
                         {turn.userMsg && (() => {
@@ -312,6 +291,7 @@ export const ChatArea: React.FC = () => {
                         {/* Assistant messages */}
                         {turn.assistantMsgs.map((msg, aIdx) => {
                           const structured = parseStructuredResponse(msg);
+                          const offer = researchOffer(msg.preflight || (msg.telemetry as any)?.preflight);
                           const isCounsellorGate = !structured && !msg.isStreaming && msg.content?.trim().startsWith("{") && (() => {
                             try { const p = JSON.parse(msg.content!.trim()); return p.question_controller?.ask_questions === true; } catch { return false; }
                           })();
@@ -321,50 +301,6 @@ export const ChatArea: React.FC = () => {
                               {/* Oala label */}
                               <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#38596b] mb-2.5">Oala</div>
 
-                              {/* Micro-prompt skipped badge (low confidence) */}
-                              {msg.microToolSkipped && !msg.microToolInfo && (
-                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 text-[10px] font-medium mb-2">
-                                  <Brain className="w-3 h-3 text-slate-300" />
-                                  <span>Mini-prompt skipped — best match was <span className="font-semibold text-slate-500">{msg.microToolSkipped.name}</span> at {Math.round(msg.microToolSkipped.score * 100)}% (below confidence threshold)</span>
-                                </div>
-                              )}
-
-                              {/* Micro-prompt thinking panel */}
-                              {msg.microToolInfo && (
-                                <div className="mb-2 rounded-xl border border-amber-200/60 bg-amber-50/40 overflow-hidden text-[12px]">
-                                  <button
-                                    onClick={() => setExpandedThinking(prev => {
-                                      const next = new Set(prev);
-                                      next.has(msg.id) ? next.delete(msg.id) : next.add(msg.id);
-                                      return next;
-                                    })}
-                                    className="w-full flex items-center gap-2 px-3 py-2 text-left hover:bg-amber-50/60 transition-colors"
-                                  >
-                                    <Brain className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                                    <span className="text-amber-700 font-medium flex-1">
-                                      {msg.isStreaming ? 'Routing to mini-prompt…' : `Routed via ${msg.microToolInfo.name}`}
-                                    </span>
-                                    <span className="text-amber-400 text-[10px] font-mono">
-                                      {Math.round(msg.microToolInfo.score * 100)}% match
-                                    </span>
-                                    <span className="text-amber-400 text-[10px] ml-1">{expandedThinking.has(msg.id) ? '▲' : '▼'}</span>
-                                  </button>
-                                  {expandedThinking.has(msg.id) && (
-                                    <div className="px-3 pb-3 space-y-2 border-t border-amber-200/40">
-                                      <div className="grid grid-cols-2 gap-x-4 gap-y-1 pt-2 text-[11px]">
-                                        <div><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Tool</span><div className="text-amber-800 font-semibold">{msg.microToolInfo.name}</div></div>
-                                        <div><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Domain</span><div className="text-slate-600">{msg.microToolInfo.domain}</div></div>
-                                        <div className="col-span-2"><span className="text-slate-400 uppercase tracking-wide text-[9px] font-bold">Why chosen</span><div className="text-slate-600 leading-snug">{msg.microToolInfo.useWhen}</div></div>
-                                      </div>
-                                      <div>
-                                        <div className="text-slate-400 uppercase tracking-wide text-[9px] font-bold mb-1">Injected mini-prompt</div>
-                                        <pre className="whitespace-pre-wrap text-[10px] leading-relaxed text-slate-500 bg-white/60 border border-amber-100 rounded-lg p-2 max-h-32 overflow-y-auto font-mono">{msg.microToolInfo.miniPrompt}</pre>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              )}
-
                               {/* Compaction banner */}
                               {msg.telemetry?.compactionMetrics && (
                                 <div onClick={() => inspectTurnTelemetry(msg.telemetry)} className="flex items-center gap-1.5 p-2 bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg text-xs font-medium cursor-pointer hover:bg-emerald-100/70 transition-colors">
@@ -373,6 +309,12 @@ export const ChatArea: React.FC = () => {
                                 </div>
                               )}
 
+                              {structured && outdatedHelpClaim(responseToReadableText(structured)) && <aside role="note" className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-slate-800">
+                                <strong>This saved reply contains an outdated repayment rule.</strong>
+                                <p className="mt-1">Check current official guidance before using the repayment figures.</p>
+                                <a className="underline" href="https://www.education.gov.au/higher-education-loan-program/help-students/help-indexation-and-debt-reduction" target="_blank" rel="noreferrer">Read the government update</a>
+                                {isLastAssistantMsg(msg.id) && <button type="button" disabled={isStreaming} className="block mt-3 font-semibold text-violet-800" onClick={()=>sendMessage('Please correct the previous HECS-HELP repayment explanation using current official guidance. State which financial year the evidence supports and identify any future-year details that still need checking.')}>Check and explain the repayment rules</button>}
+                              </aside>}
                               {isCounsellorGate ? (
                                 <div className="flex items-center gap-2 p-3 bg-[var(--accent-8)] border border-[var(--accent-border)] rounded-xl text-xs text-[var(--accent)]">
                                   <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
@@ -394,7 +336,6 @@ export const ChatArea: React.FC = () => {
                                   readOnly={isStreaming || !isLastAssistantMsg(msg.id)}
                                   conversationId={currentConversation?.id}
                                   hideRecommendedActions={true}
-                                  onOpenPathway={isLastAssistantMsg(msg.id) ? () => { triggerInlinePathway(); } : undefined}
                                 />
                               ) : (
                                 !msg.error && !msg.streamStopped && !msg.isStreaming && (
@@ -410,7 +351,7 @@ export const ChatArea: React.FC = () => {
                                 )
                               )}
 
-                              {structured && !msg.isStreaming && currentConversation && <MoreDetails key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={sendMessage} />}
+                              {structured && offer && !msg.isStreaming && currentConversation && <MoreDetails offer={offer} key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={(message) => sendMessage(message)} />}
                               {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 
                               {msg.isStreaming && !structured && <ChatStreamingStatus phase={msg.streamProgress?.phase} startedAt={msg.createdAt} onStop={stopStreaming}/>}
@@ -423,6 +364,15 @@ export const ChatArea: React.FC = () => {
                                 </div>
                               )}
 
+                              {hasSuggestions && lastAssistant && msg.id===lastAssistant.id && <SkillSuggestions
+                                key={`${currentConversation?.id}:${lastAssistant.id}`}
+                                sourceMessageId={lastAssistant.serverMessageId||lastAssistant.id}
+                                reviewText={reviewText} userText={latestUser?.content||''}
+                                completedToolId={completedRoute?.status==='selected'?completedRoute.toolId:undefined}
+                                onChoose={(message,skillChoice)=>sendMessage({message,userQuestionAnswers:[],skillChoice})}
+                              />}
+
+                              {msg.id===latestMessage?.id&&structured&&!msg.isStreaming&&<div id="mini-pathway-offer" />}
                               {/* Telemetry footer */}
                               {msg.telemetry && !msg.isStreaming && (msg.structuredResponse || msg.content) && !msg.telemetry?.usage?.isMock && (
                                 <div className="pt-2 border-t border-[#f0f0f0] flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-1.5 gap-x-2 text-[11px] text-slate-400">
@@ -502,72 +452,7 @@ export const ChatArea: React.FC = () => {
           </div>
         </div>
 
-      {/* Next-steps suggestions */}
-      {hasSuggestions && (
-        <div className="px-5 sm:px-4 pb-4">
-          <div className="max-w-4xl mx-auto">
-            <div
-              className="rounded-2xl px-5 py-4"
-              style={{
-                background: 'linear-gradient(145deg, #f3eeff 0%, #ece4fc 100%)',
-                border: '1px solid #d4b8f5',
-                boxShadow: '0 2px 0 #fff inset, 0 6px 24px rgba(114,68,198,0.13)',
-              }}
-            >
-              {/* Header */}
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex gap-0.5">
-                  <span className="w-1 h-1 rounded-full" style={{ background: '#7244c6' }} />
-                  <span className="w-1 h-1 rounded-full" style={{ background: '#a278e0' }} />
-                  <span className="w-1 h-1 rounded-full" style={{ background: '#c8aaf0' }} />
-                </div>
-                <span className="text-[10px] font-bold uppercase tracking-widest" style={{ color: '#7244c6' }}>Continue with</span>
-              </div>
 
-              {/* Button tray — recessed inset */}
-              <div
-                className="rounded-xl px-3 py-3 flex flex-wrap gap-2"
-                style={{
-                  background: 'rgba(255,255,255,0.5)',
-                  boxShadow: 'inset 0 1px 4px rgba(114,68,198,0.14), inset 0 0 0 1px rgba(114,68,198,0.08)',
-                }}
-              >
-                {suggestedActions.map((act: RecommendedAction) => (
-                  <button
-                    key={act.id}
-                    type="button"
-                    onClick={() => sendMessage(act.message)}
-                    className="px-4 py-2 rounded-full text-[13px] font-semibold text-white cursor-pointer select-none"
-                    style={{
-                      backgroundColor: '#7244c6',
-                      boxShadow: '0 1px 0 rgba(255,255,255,0.22) inset, 0 3px 10px rgba(114,68,198,0.4)',
-                      transition: 'background-color 100ms, box-shadow 100ms, transform 80ms',
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.backgroundColor = '#5d33b0';
-                      e.currentTarget.style.boxShadow = '0 1px 0 rgba(255,255,255,0.22) inset, 0 5px 18px rgba(114,68,198,0.55)';
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.backgroundColor = '#7244c6';
-                      e.currentTarget.style.boxShadow = '0 1px 0 rgba(255,255,255,0.22) inset, 0 3px 10px rgba(114,68,198,0.4)';
-                    }}
-                    onMouseDown={e => {
-                      e.currentTarget.style.transform = 'translateY(1px) scale(0.97)';
-                      e.currentTarget.style.boxShadow = '0 0 0 rgba(114,68,198,0) inset, 0 1px 4px rgba(114,68,198,0.3)';
-                    }}
-                    onMouseUp={e => {
-                      e.currentTarget.style.transform = '';
-                      e.currentTarget.style.boxShadow = '0 1px 0 rgba(255,255,255,0.22) inset, 0 3px 10px rgba(114,68,198,0.4)';
-                    }}
-                  >
-                    {act.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Composer />
     </div>
