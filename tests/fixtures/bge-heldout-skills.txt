@@ -1,0 +1,103 @@
+CORE_003|We have already covered the basics of this apprenticeship. Can you unpack it further without starting again?
+CORE_004|Cybersecurity feels too narrow for me. What bigger areas does it sit within that I might consider?
+CORE_005|Connect renewable energy to the kinds of training, abilities, workplaces and occupations involved.
+CORE_006|Would a community project or a three-month internship be a better way for me to get experience? Compare both.
+CORE_007|The university keeps saying articulation agreement. What does that expression mean in everyday words?
+CORE_008|You mentioned accreditation. Why should that influence my decision about studying engineering?
+CORE_009|I have read the options and feel overwhelmed. Pick the single most useful thing for me to do tomorrow.
+CORE_010|This careers article makes a strong claim but gives no date. Help me judge whether I can rely on it.
+COURSE_001|Give me an overview of the Diploma of Community Services at TAFE Queensland.
+COURSE_002|Weigh up the accounting degrees at Monash and RMIT for someone working four days a week.
+COURSE_003|I left school years ago. Is a diploma at the same academic level as a bachelor degree?
+COURSE_004|How do the compulsory subjects, choices and credit totals fit together over this degree?
+COURSE_005|Walk me through what I would actually learn and do in each of the first semester subjects.
+COURSE_006|Within this business degree, should I take the marketing major or the logistics major?
+COURSE_007|Which abilities would this qualification develop, and which subjects build them?
+COURSE_008|What realistic first jobs could I apply for after finishing this laboratory diploma?
+COURSE_009|Which organisations might employ graduates of this cybersecurity certificate?
+COURSE_010|I have completed Year 12 without chemistry. Would I meet admission requirements for this pharmacy degree?
+COURSE_011|Apart from the advertised tuition, what money would I need for studying and how might I fund it?
+COURSE_012|I have children and weekend shifts. What would a normal week of classes and placement be like in this course?
+COURSE_013|Would this design certificate leave anything important untaught for a junior UX role?
+COURSE_014|The syllabus still lists software from ten years ago. Is the content current enough for today's workplaces?
+COURSE_015|I cannot enter the degree directly. What other qualifications or bridging routes could get me to the same destination?
+COURSE_016|How is learning in a bootcamp different from an apprenticeship or a university course?
+MICRO_001|Is this six-week university badge in digital marketing a worthwhile microcredential for the gap I have?
+CAREER_001|I have never met an occupational therapist. Explain what that career involves and what the work is like.
+CAREER_002|How would the expectations of a junior analyst differ from a senior analyst or team manager?
+CAREER_003|What different types of physiotherapist could I specialise as, and how does their work differ?
+CAREER_004|I am already a qualified electrician. How could I advance into supervising larger projects?
+CAREER_005|I have spent ten years cooking professionally and want to become a web developer. Map the change.
+JOB_001|Please explain this attached library assistant vacancy and what the opportunity actually involves.
+JOB_002|This advert says essential, desirable and an advantage. Which requirements must I actually satisfy?
+JOB_003|What tasks would occupy most of a dental assistant's working day?
+JOB_004|What abilities does a payroll officer need and how strong do they need to be?
+JOB_005|Which systems and pieces of equipment would I use regularly as a survey technician?
+JOB_006|Are employment prospects improving for speech pathologists, based on labour-market evidence?
+JOB_007|Would I find more refrigeration mechanic jobs in Perth or Adelaide?
+JOB_008|For an accounts clerk, which daily activities could AI take over and which still need a person?
+SKILL_001|What does stakeholder management involve as a skill? Show where someone uses it at work.
+SKILL_002|What would distinguish basic Excel ability from intermediate and expert ability in practice?
+SKILL_003|Here are my current abilities and the analyst role I want. Which required skills am I missing?
+SKILL_004|Which capabilities from managing a busy restaurant would carry over to an office coordinator role?
+SKILL_005|I want to become a data analyst. Put the most useful skills to learn next in priority order.
+SKILL_006|Is demand for bilingual customer communication increasing or decreasing?
+SKILL_007|Is manual data entry becoming a different capability now that automation handles the routine part?
+SKILL_008|I can already draw well. Which neighbouring abilities would be easier to develop from that foundation?
+SKILL_009|I struggle with public speaking. Give me a practical way to learn it with practice and feedback.
+SKILL_010|Which training courses teach negotiation beyond an introductory level?
+SKILL_011|I am particularly good at organising information. What jobs could use that capability?
+SKILL_012|Find businesses advertising for people with advanced SQL skills.
+IND_001|Explain how the Australian logistics sector works and where its main activities fit together.
+IND_002|What are the broad sub-sectors inside manufacturing, and how are they grouped?
+IND_003|What specialist niches exist within tourism beyond the mainstream holiday market?
+IND_004|Show the range of occupations needed to run the aged care sector, including the support jobs.
+IND_005|Which companies operate in food processing around regional Victoria?
+IND_006|What capabilities are important across the clean energy industry's workforce?
+IND_007|Which occupations are in short supply within construction, and what causes the shortages?
+IND_008|Compare the strength of the tourism industry and its workforce needs in Tasmania and Queensland.
+IND_009|What new production technologies are reshaping agriculture and the abilities its workforce needs?
+IND_010|How could artificial intelligence change the banking sector's roles and services as a whole?
+IND_011|Which providers and qualifications supply trained people to the disability support industry?
+IND_012|Will the number of people being trained meet the aged care industry's workforce needs over the next decade?
+COMP_001|Tell me about Bunnings as an employer and the kinds of working environment it offers.
+COMP_002|What job families exist inside Australia Post beyond delivery drivers?
+COMP_003|Build a map of the capabilities Canva needs across its different teams.
+COMP_004|What evidence is there for the software stack used inside Xero?
+COMP_005|Has Woolworths been recruiting recently, and which teams are advertising vacancies?
+COMP_006|Which vacancies at this manufacturer appear repeatedly because they are hard to fill?
+COMP_007|From this firm's hiring evidence, what capabilities does its workforce appear to be short of?
+COMP_008|Here is my background. How well does it fit this particular employer's needs?
+COMP_009|For our Adelaide engineering firm, how large is the local pool of candidates with the skills we require?
+COMP_010|Our warehouse needs automation expertise quickly. Should we recruit someone or train existing staff?
+COMP_011|Design a practical training program to improve digital capability across our existing team.
+COMP_012|Which roles in our organisation could current call-centre staff move into with some retraining?
+COMP_013|Which colleges could deliver the technical training our employees need?
+COMP_014|Design a repeatable route from student training through supervised work into hiring for our business.
+INST_001|Give me a profile of Swinburne as a learning provider, including its focus and support.
+INST_002|Which health qualifications does Victoria University actually offer?
+INST_003|How strong is this university in marine science, considering its teaching, facilities and research expertise?
+INST_004|Map our current syllabus and assessments to the capabilities students actually develop.
+INST_005|How well does our accounting program prepare graduates for the specific work of an assistant accountant?
+INST_006|Does this training curriculum reflect what the hospitality sector will need from its workforce?
+INST_007|We found weak practical assessment in our curriculum. What concrete changes should we make?
+INST_008|Which employers would be useful industry partners for our college's renewable energy programs?
+INST_009|Our college needs organisations to host supervised student placements. Who would be suitable?
+INST_010|Before launching this qualification, how can we assess whether employers need its graduates?
+CAND_001|Turn my work history, qualifications, abilities and goals into a useful profile for matching opportunities.
+CAND_002|Taking my qualifications, work samples, eligibility and experience together, am I ready to apply for this apprenticeship?
+CAND_003|I lack a credential, relevant experience and a portfolio. Create a staged plan to become ready to apply.
+PROVE_001|I claim I can analyse data. What could I show an employer to demonstrate it convincingly?
+RPL_001|Could my years of workplace learning earn credit towards a qualification so I do not repeat what I know?
+EXPERIENCE_001|I have studied marketing but never practised it. Find practical experience that would close that gap.
+APP_001|What paid traineeships could let me qualify while earning an income?
+TECH_001|Explain what Docker does, how people use it and when it is useful.
+TECH_002|Is adoption of this software platform still growing, or are organisations moving to something newer?
+TREND_001|What broad changes across the labour market should someone planning their future pay attention to?
+TREND_002|Which new kinds of job are appearing because the way businesses work is changing?
+TREND_003|Which occupations are shrinking or being reorganised, and what evidence shows that?
+TREND_004|Are employers changing the formal certificates or degrees they expect applicants to hold?
+TREND_005|Which combinations of skills are gaining importance together in digital commerce?
+TREND_006|How has recruitment activity changed across the economy over the last few years?
+TREND_007|How have pay, benefits and working hours changed for this occupation over time?
+TREND_008|Where are workforce opportunities moving geographically as industries change?

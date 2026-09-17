@@ -1,0 +1,18 @@
+/* Open, chat-style reading flow. Content is not divided into cards. */
+.guidance-section{container-type:inline-size;margin:26px 0;color:#253247}
+.guidance-section-title{font-size:18px!important;font-weight:650;line-height:1.5;letter-spacing:0!important;text-transform:none!important;color:#253247!important;margin:0 0 12px}
+.guidance-intro{font-size:16px;line-height:1.75;color:#374151;margin:0 0 12px;white-space:pre-wrap}
+.guidance-rows{list-style:disc;margin:0;padding:0 0 0 24px!important;display:block}
+.guidance-rows-ordered{list-style:decimal}
+.guidance-row{display:list-item;border:0;border-radius:0;padding:0!important;margin:0 0 18px;background:none;box-shadow:none}
+.guidance-row:last-child{margin-bottom:0}
+.guidance-row::marker{font-size:15px;color:#64748b}
+.guidance-row-content{min-width:0;padding-left:3px}
+.guidance-row-heading{display:flex;align-items:baseline;gap:5px 12px;flex-wrap:wrap}
+.guidance-row-title{font-size:16px;font-weight:650;line-height:1.65;margin:0;overflow-wrap:anywhere;color:#253247}
+.guidance-status{display:inline-flex;align-items:center;gap:5px;color:#64748b;font-size:12px;font-weight:500;line-height:1.5;white-space:nowrap}
+.guidance-tone-amber .guidance-status{color:#895316}
+.guidance-tone-rose .guidance-status{color:#a33d50}
+.guidance-description{font-size:16px;line-height:1.75;color:#374151;margin:5px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.guidance-side-label{font-size:13px;font-weight:600;margin-top:6px;color:#536176}
+@container(max-width:480px){.guidance-rows{padding-left:21px!important}.guidance-row-content{padding-left:1px}.guidance-row-heading{gap:2px 10px}}

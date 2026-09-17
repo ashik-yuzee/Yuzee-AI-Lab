@@ -1,0 +1,103 @@
+CORE_003|Could you unpack the explanation of photosynthesis we just read, with more detail?
+CORE_004|Zoom out from nursing and show me the broader healthcare field it belongs to.
+CORE_005|What other subjects are connected to environmental science, and how are they linked?
+CORE_006|Compare volunteering, a paid internship and a personal project as ways to gain experience.
+CORE_007|I keep hearing the word accreditation. What does it mean in everyday language?
+CORE_008|Why should I care about this finding that jobs increasingly mention data literacy?
+CORE_009|Given the options we discussed, what is the most useful single thing to do next?
+CORE_010|Can you check whether that statement has trustworthy evidence rather than just sounding convincing?
+COURSE_001|Give me a detailed overview of the Diploma of Community Services at a TAFE provider.
+COURSE_002|Help me decide between a nursing diploma and a nursing bachelor by comparing the courses.
+COURSE_003|What does an Australian graduate certificate mean compared with a bachelor qualification?
+COURSE_004|How is this degree put together across years, core subjects, electives and prerequisites?
+COURSE_005|Walk me through the subjects in this course and what I would actually learn in each.
+COURSE_006|Which majors or specialisations can I choose inside this business degree?
+COURSE_007|Map the skills taught by this cybersecurity course to the units and assessments that develop them.
+COURSE_008|Which occupations could this environmental science degree prepare me for?
+COURSE_009|Which companies in Melbourne might employ graduates of this logistics diploma?
+COURSE_010|I left school in year eleven. Would I meet the entry rules for this nursing course?
+COURSE_011|What would this course cost me, and which grants or subsidies could reduce the amount I pay?
+COURSE_012|What would an ordinary study week look like, including classes, homework and placements?
+COURSE_013|What job requirements for a junior data analyst are missing from this course curriculum?
+COURSE_014|Does this computing course still teach current industry practices, or is the curriculum outdated?
+COURSE_015|The degree I wanted is too expensive. What other study pathways could reach the same goal?
+COURSE_016|Explain the difference between a bootcamp, short course and formal qualification as learning options.
+MICRO_001|What is included in this university microcredential, and does it carry recognised credit?
+CAREER_001|Tell me what a career as an occupational therapist is like and who it might suit.
+CAREER_002|Explain junior, mid-level and senior positions in software engineering and how responsibility changes.
+CAREER_003|What different specialist directions can someone take within accounting as a career?
+CAREER_004|I am already a nurse. What are realistic next career moves as I become more experienced?
+CAREER_005|I have worked in retail for ten years and want to move into IT. Map a practical career change.
+JOB_001|Help me understand this specific advertised customer service vacancy and what the employer is offering.
+JOB_002|What qualifications, licences and experience are normally required for an electrician job?
+JOB_003|Describe the tasks a pharmacy assistant performs during a typical shift.
+JOB_004|What abilities does a project coordinator need to do the job well?
+JOB_005|Which software packages and technical tools do graphic designers use at work?
+JOB_006|What is the employment outlook for aged care workers in Queensland over the coming years?
+JOB_007|Compare demand for electricians between Perth, Adelaide and regional Victoria.
+JOB_008|Which tasks in a bookkeeper's working day could AI automate, and which still need a person?
+SKILL_001|Explain active listening as a skill and show me what doing it well looks like.
+SKILL_002|How could I tell whether my spreadsheet ability is beginner, intermediate or advanced?
+SKILL_003|Compare the skills I already have with what a junior analyst needs and identify my gaps.
+SKILL_004|Which skills from caring for my family could transfer into paid community support work?
+SKILL_005|I can already use spreadsheets. Which skills should I prioritise next for an analyst role?
+SKILL_006|Is demand for SQL skills increasing in Australian job adverts compared with last year?
+SKILL_007|Are manual bookkeeping skills being replaced, or changing into different capabilities?
+SKILL_008|I am good at written communication. What adjacent skills would be natural to build on that?
+SKILL_009|Teach me how to prioritise my work, with a worked example and something I can practise.
+SKILL_010|Which courses teach the Excel skills needed for office administration?
+SKILL_011|What kinds of jobs use negotiation skills regularly?
+SKILL_012|Which employers in Sydney are looking for people with Python skills?
+IND_001|Give me a beginner-friendly overview of the renewable energy industry.
+IND_002|Break the healthcare industry down into its main subfields so I can see how it is organised.
+IND_003|What specialised niches exist within the agriculture industry?
+IND_004|Show the main job families across the construction industry, beyond trades alone.
+IND_005|Which companies make up the Australian logistics industry, grouped by what they do?
+IND_006|Which skills are important across the hospitality industry?
+IND_007|Where are the most serious workforce shortages in Victoria's healthcare industry?
+IND_008|Compare renewable energy industry demand across Australia's states and regions.
+IND_009|Which new technologies are changing how the mining industry operates?
+IND_010|How might AI change the insurance industry and the mix of human work it needs?
+IND_011|Which education providers and qualifications supply graduates to the Australian cyber industry?
+IND_012|Compare future demand and available talent in Queensland construction to find the workforce gap.
+COMP_001|Give me an overview of Atlassian as a company, including what it does and how it is organised.
+COMP_002|What kinds of roles exist at this company across its different departments?
+COMP_003|Which skills appear to matter most to this company based on its advertised roles?
+COMP_004|What technology stack does this company appear to use, based on public evidence?
+COMP_005|Has this company's hiring activity increased or slowed over the last six months?
+COMP_006|Which roles at this employer seem difficult to fill, and what evidence supports that?
+COMP_007|What capability needs does this company's recruitment activity suggest it is trying to address?
+COMP_008|Compare my experience with this company's advertised analyst position and explain my fit.
+COMP_009|How much local talent is available for the cloud engineers our company needs?
+COMP_010|Should we train our existing team in data analysis or hire somebody who already has the skill?
+COMP_011|Build a three-month upskilling plan for our customer service team to handle digital support.
+COMP_012|Which internal roles could people in our current team move into using their existing skills?
+COMP_013|Find suitable training providers for our warehouse team's safety and supervision skills.
+COMP_014|Design a talent pipeline to recruit and train twenty technicians over the next year.
+INST_001|Tell me about this university as an institution and its main areas of focus.
+INST_002|What courses does this college offer in business and administration?
+INST_003|Which engineering specialisations are offered at this university?
+INST_004|Map the skills embedded in our institution's diploma curriculum to its learning outcomes.
+INST_005|How well does our diploma curriculum align with the requirements of a support worker occupation?
+INST_006|Does our training program align with the needs of the local manufacturing industry?
+INST_007|We identified missing practical skills in our curriculum. What changes should the program make?
+INST_008|Which employers would be useful partners for our college's new hospitality program?
+INST_009|Find possible work-integrated learning hosts for second-year engineering students in Melbourne.
+INST_010|Is there enough regional demand to justify introducing this new community services program?
+CAND_001|Help me turn my education, experience and strengths into a clear candidate profile.
+CAND_002|Am I ready to apply for this apprenticeship, based on the experience and qualifications I have?
+CAND_003|Create a plan to close the gaps from my readiness assessment before I apply for the job.
+PROVE_001|What project or work sample could I create to prove my customer research skills to an employer?
+RPL_001|How can I use evidence from years of work to seek recognition of prior learning toward a qualification?
+EXPERIENCE_001|Help me find suitable work experience opportunities to practise my new IT support skills.
+APP_001|Find pathways into a paid plumbing apprenticeship where I can learn while working.
+TECH_001|What is Power BI, what does it do and when would someone use it?
+TECH_002|How has adoption of Kubernetes changed among Australian technology employers?
+TREND_001|Give me an overview of recent changes in Australia's labour market and the evidence behind them.
+TREND_002|Which new roles are emerging as renewable energy technology develops?
+TREND_003|Which administration roles are declining or changing, and what work is taking their place?
+TREND_004|Are employers asking for different qualification levels than they did three years ago?
+TREND_005|Which group of skills is rising or falling in demand across nursing jobs?
+TREND_006|How have hiring volumes in retail changed over the last year?
+TREND_007|Compare pay and working-condition trends for aged care workers over the last three years.
+TREND_008|Compare recent labour market trends between regional Victoria and Melbourne.

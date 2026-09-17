@@ -1,0 +1,25 @@
+import assert from 'node:assert/strict';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {completedPathways,selectSavedPathway,pathwayContext,pathwayDate} from '../src/miniPathway/history';
+import {PathwayHistorySelector} from '../src/components/PathwayHistorySelector';
+import {pathwayFixture} from './mini-pathway-fixture';
+const run=(id:string,createdAt:string,extra:any={})=>({id,conversationId:'c1',sourceMessageId:'a1',status:'complete',createdAt,response:pathwayFixture(),...extra}) as any;
+const one=run('one','2026-09-16T13:00:00Z'),two=run('two','2026-09-16T14:00:00Z',{sourceMessageId:'a2'});
+const input=[two,one,run('failed','2026-09-16T15:00:00Z',{status:'error'}),run('running','2026-09-16T15:00:00Z',{status:'running'}),run('foreign','2026-09-16T16:00:00Z',{conversationId:'c2'}),run('missing','2026-09-16T17:00:00Z',{response:undefined}),one];
+const before=JSON.stringify(input),saved=completedPathways(input,'c1');
+assert.deepEqual(saved.map(r=>r.id),['one','two']);assert.equal(JSON.stringify(input),before);
+assert.equal(selectSavedPathway(saved,null)?.id,'two');assert.equal(selectSavedPathway(saved,'one')?.id,'one');
+assert.equal(selectSavedPathway(saved,'deleted')?.id,'two');assert.equal(selectSavedPathway([],'one'),null);
+// Updating a format or adding a pathway never deletes another completed report.
+assert.equal(completedPathways([...saved,run('three','2026-09-16T15:00:00Z')],'c1').length,3);
+assert.equal(completedPathways([...saved,{...one,response:{...one.response,response_intent:'ACTION_PLAN'}}],'c1').length,2);
+const messages=[{id:'u1',role:'user',content:'Explore IT support'},{id:'local-a1',serverMessageId:'a1',role:'assistant',content:'A report'},{id:'u2',role:'user',content:'Compare study options'},{id:'a2',role:'assistant',content:'Another report'}];
+assert.equal(pathwayContext(one,messages),'Explore IT support');assert.equal(pathwayContext(two,messages),'Compare study options');
+assert.equal(pathwayContext(one,[]),'Saved from an earlier answer');assert.equal(pathwayDate('not a date'),'Date unavailable');
+const html=renderToStaticMarkup(<PathwayHistorySelector runs={saved} selectedId="one" messages={messages} loading={false} onSelect={()=>{}}/>);
+assert.ok(html.includes('Saved pathways'));assert.ok(html.includes('Pathway 1'));assert.ok(html.includes('Pathway 2'));
+assert.ok(html.includes('value="one" selected=""'));assert.ok(html.includes('Based on: Explore IT support'));
+const streaming=renderToStaticMarkup(<PathwayHistorySelector runs={saved} selectedId="one" messages={messages} loading onSelect={()=>{}}/>);
+assert.ok(streaming.includes('disabled=""'));assert.ok(streaming.includes('Building a new pathway'));assert.ok(streaming.includes('Pathway 1'));
+console.log('PASS pathway history: conversation isolation, completed reports only, stable ordering, no lost reports, selection restoration, source context and selector loading state.');
