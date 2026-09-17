@@ -1,0 +1,33 @@
+// Written before candidate fitting. Same-author synthetic evaluation, not independent human certification.
+export const needEvaluation:[string,string][] = [
+ ['I do not understand a course prerequisite. Can you give me an example?','answer'],
+ ['Walk me through how to listen carefully to an unhappy colleague.','answer'],
+ ['What is the difference between learning online and on campus in general?','answer'],
+ ['Explain what the Yuzee platform helps families do.','answer'],
+ ['I want to work and learn but have not worked out what I enjoy.','clarify'],
+ ['Can I attend classes with unpredictable shifts and a baby at home?','clarify'],
+ ['I am torn between working outdoors and working with computers.','clarify'],
+ ['I want a suitable field of study, but cannot decide on a direction.','clarify'],
+ ['Please check Curtin University occupational therapy admission requirements for next year.','research'],
+ ['Find the latest published cost of the electrical pre-apprenticeship at Melbourne Polytechnic.','research'],
+ ['Verify compulsory attendance at workshops for the TAFE NSW automotive course.','research'],
+ ['Get the current course handbook for the Bachelor of Arts at the University of Adelaide.','research'],
+ ['Find the deadline for applying to the Master of Education at Griffith University.','research'],
+ ['Check the placement requirements for the social work degree at RMIT.','research'],
+ ['Who won the tennis match?','other'],['Write a fairy tale about a whale.','other'],
+ ['Please cancel that.','other'],['How can I remove a stain from the carpet?','other'],
+];
+export const pathwayEvaluation:[string,string][] = [
+ ['Show a plan from supermarket cashier to payroll officer.','pathway'],
+ ['I have chosen occupational therapy. What stages take me from school into that job?','pathway'],
+ ['Compare ways to enter commercial cookery through employment or college.','pathway'],
+ ['I need a realistic route back into paid work after looking after a relative.','pathway'],
+ ['School ends this year and I am unsure whether to train, study or work.','pathway'],
+ ['Build a sequence of learning and experience milestones towards a data analyst job.','pathway'],
+ ['I dislike my current occupation and want to explore a different direction.','pathway'],
+ ['Map the qualifications and supervised work needed to become a psychologist.','pathway'],
+ ['Can you explain a core subject?','other'],['Help me practise an interview answer.','other'],
+ ['When does this particular course close applications?','other'],['Check the fee amount for this semester.','other'],
+ ['Which identification documents are needed to enrol?','other'],['How does Yuzee use my data?','other'],
+ ['No more pathways please.','other'],['How do I roast potatoes?','other'],
+];

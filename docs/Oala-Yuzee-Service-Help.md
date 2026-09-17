@@ -1,5 +1,7 @@
 # @Oala Yuzee service help
 
+**Later update, 16 September:** a separate needs classifier now evaluates ordinary submitted text before Gemini. Explicit @Oala is still required for the 103-task mini-prompt injection. The older loading description below applies to the original integration. See [Turn-Needs-Preflight.md](Turn-Needs-Preflight.md) for the current split.
+
 Implemented locally on 16 September 2026 in the main chat.
 
 ## How to use

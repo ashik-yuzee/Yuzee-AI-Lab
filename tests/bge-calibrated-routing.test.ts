@@ -11,7 +11,7 @@ assert.ok(bgeMatchingIndex.length>206);
 const ranks=[{toolId:'COURSE_011',score:.78},{toolId:'COURSE_012',score:.735},{toolId:'CORE_010',score:.69},{toolId:BGE_OUT_OF_SCOPE,score:.3}];
 const d=chooseRoute(ranks,BGE_MODEL_ID);
 assert.equal(d.status,'selected');
-assert.equal(chooseRoute(ranks).status,'abstained');
+assert.equal(chooseRoute(ranks,'Xenova/all-MiniLM-L6-v2').status,'abstained');
 assert.equal(d.calibrationVersion,profile.version);
 assert.equal(acceptClientRoute(d,'AUTO','@Oala Explain tuition costs for this degree').toolId,'COURSE_011');
 for(const patch of [{modelId:'unknown'},{calibrationVersion:'old'},{domainMargin:undefined},{domainMargin:NaN},{domainMargin:.01},{routingFlow:'suggestion'},{score:.60},{toolId:'CORE_001'}]){

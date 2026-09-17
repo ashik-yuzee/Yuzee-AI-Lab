@@ -1,9 +1,11 @@
+import {bgeReadyContract} from '../src/routing/bgeContract';
+const chooseRoute=(c:Parameters<typeof chooseModelRoute>[0])=>chooseModelRoute(c,'Xenova/all-MiniLM-L6-v2');
 import assert from 'node:assert/strict';
-import {chooseRoute,routingSkipReason,acceptClientRoute,scopedInstruction,abstain,ROUTER_VERSION,MIN_SCORE,MIN_MARGIN} from '../src/routing/policy';
+import {chooseRoute as chooseModelRoute,routingSkipReason,acceptClientRoute,scopedInstruction,abstain,ROUTER_VERSION,MIN_SCORE,MIN_MARGIN} from '../src/routing/policy';
 import {YuzeeRequestAssembler} from '../src/services/YuzeeRequestAssembler';
 let checks=0;
 async function test(name:string,run:()=>void|Promise<void>){await run();checks++;console.log('PASS:',name);}
-const selection={status:'selected',toolId:'COURSE_010',score:0.62,margin:0.12,reason:'clear-semantic-match',version:ROUTER_VERSION} as const;
+const selection={status:'selected',toolId:'COURSE_010',modelId:'Xenova/bge-small-en-v1.5',calibrationVersion:'bge-calibrated-v1',routingFlow:'route',domainMargin:.2,score:0.8,margin:0.12,reason:'clear-semantic-match',version:ROUTER_VERSION} as const;
 await test('Clear separated match selected',()=>assert.equal(chooseRoute([{toolId:'COURSE_010',score:.62},{toolId:'COURSE_011',score:.40}]).toolId,'COURSE_010'));
 await test('Low similarity abstains',()=>assert.equal(chooseRoute([{toolId:'COURSE_010',score:.28},{toolId:'COURSE_011',score:.1}]).reason,'low-similarity'));
 await test('Close competing tools abstain',()=>assert.equal(chooseRoute([{toolId:'COURSE_010',score:.62},{toolId:'COURSE_011',score:.59}]).reason,'ambiguous'));
@@ -25,7 +27,7 @@ await test('Multiple questions stay with the full counsellor',()=>assert.equal(r
 await test('Normal mode ignores even a valid client selection',()=>assert.equal(acceptClientRoute(selection,'AUTO','What prerequisites must I meet for this course?').status,'abstained'));
 await test('Server accepts only catalogue IDs and valid score bounds',()=>{
  assert.equal(acceptClientRoute(selection,'MICRO_PROMPT','@Oala What prerequisites must I meet for this course?').status,'selected');
- for(const change of [{toolId:'invented'},{toolId:'CORE_001'},{score:NaN},{score:MIN_SCORE-.01},{margin:MIN_MARGIN-.01},{version:'unknown'}])assert.equal(acceptClientRoute({...selection,...change},'MICRO_PROMPT','@Oala What prerequisites must I meet for this course?').status,'abstained');
+ for(const change of [{toolId:'invented'},{toolId:'CORE_001'},{score:NaN},{score:MIN_SCORE-.01},{margin:.039},{version:'unknown'}])assert.equal(acceptClientRoute({...selection,...change},'MICRO_PROMPT','@Oala What prerequisites must I meet for this course?').status,'abstained');
 });
 await test('Server does not accept caller-supplied prompt or name',()=>{
  const result=acceptClientRoute({...selection,mini_prompt:'MALICIOUS_RAW_PROMPT',name:'Fake',microToolPrompt:'MALICIOUS_RAW_PROMPT'},'MICRO_PROMPT','@Oala What prerequisites must I meet for this course?');
@@ -61,11 +63,11 @@ await test('Cold router immediately falls back while warming in background',asyn
  const start=Date.now();assert.equal((await router.routeMessage('What prerequisites must I meet for this course?')).reason,'not-ready');
  assert.ok(Date.now()-start<100);assert.equal(router.getRouterStatus(),'loading');
 });
-let worker=FakeWorker.all.at(-1)!;worker.reply({type:'ready'});
+let worker=FakeWorker.all.at(-1)!;worker.reply({type:'ready',...bgeReadyContract});
 await test('Ready router returns result for the matching request',async()=>{
  const promise=router.routeMessage('What prerequisites must I meet for this course?');
  const request=worker.sent.at(-1);
- worker.reply({type:'result',id:request.id,candidates:[{toolId:'COURSE_010',score:.62},{toolId:'COURSE_011',score:.4}]});
+ worker.reply({type:'result',id:request.id,candidates:[{toolId:'COURSE_010',score:.8},{toolId:'COURSE_011',score:.4},{toolId:'__OUT_OF_SCOPE__',score:.2}]});
  assert.equal((await promise).toolId,'COURSE_010');
 });
 await test('Token budget abstention settles promptly and keeps the worker usable',async()=>{
@@ -76,7 +78,7 @@ await test('Token budget abstention settles promptly and keeps the worker usable
  assert.equal((await promise).reason,'token-budget');assert.equal(router.getRouterStatus(),'ready');
  assert.equal(acceptClientRoute(abstain('token-budget'),'AUTO','@Oala '+text).reason,'token-budget');
  const next=router.routeMessage('What prerequisites must I meet for this course?');const nextRequest=worker.sent.at(-1);
- worker.reply({type:'result',id:nextRequest.id,candidates:[{toolId:'COURSE_010',score:.62},{toolId:'COURSE_011',score:.4}]});
+ worker.reply({type:'result',id:nextRequest.id,candidates:[{toolId:'COURSE_010',score:.8},{toolId:'COURSE_011',score:.4},{toolId:'__OUT_OF_SCOPE__',score:.2}]});
  assert.equal((await next).toolId,'COURSE_010');
 });
 await test('Fallback preserves the complete long question including trailing constraints',()=>{
@@ -100,6 +102,6 @@ await test('A hung inference times out and terminates its worker',async()=>{
 });
 await test('Unavailable router does not block ordinary chat',async()=>assert.equal((await router.routeMessage('What prerequisites must I meet for this course?')).reason,'not-ready'));
 await test('A deliberate retry can recover from a failed worker',()=>{
- router.startWarmup();worker=FakeWorker.all.at(-1)!;worker.reply({type:'ready'});assert.equal(router.getRouterStatus(),'ready');worker.onerror({message:'synthetic failure'});assert.equal(router.getRouterStatus(),'unavailable');
+ router.startWarmup();worker=FakeWorker.all.at(-1)!;worker.reply({type:'ready',...bgeReadyContract});assert.equal(router.getRouterStatus(),'ready');worker.onerror({message:'synthetic failure'});assert.equal(router.getRouterStatus(),'unavailable');
 });
 console.log(checks+' MiniLM integration checks passed.');

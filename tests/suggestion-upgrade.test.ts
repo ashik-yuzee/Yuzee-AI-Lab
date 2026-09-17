@@ -9,7 +9,7 @@ const event={userEvent:{interaction:{selected_option_ids:['hecs']}}};
 assert.equal(isTopicMenu(menu),true);assert.match(selectedTopic(menu,event),/HECS/);
 assert.equal(isTopicMenu({...menu,question:'What is your residency status?'}),false);
 assert.equal(selectedTopic(menu,{userEvent:{interaction:{selected_option_ids:['fake']}}}),'');
-const route={status:'selected',toolId:'COURSE_011',score:.8,margin:.15,version:'minilm-guarded-v1'};
+const route={status:'selected',modelId:'Xenova/bge-small-en-v1.5',calibrationVersion:'bge-calibrated-v1',routingFlow:'topic',domainMargin:.2,toolId:'COURSE_011',score:.8,margin:.15,version:'minilm-guarded-v1'};
 assert.equal(acceptTopicRoute(route,menu,event).reason,'user-selected-topic');
 assert.equal(acceptTopicRoute({...route,toolId:'CORE_001'},menu,event).status,'abstained');
 assert.equal(acceptTopicRoute({...route,score:.2},menu,event).status,'abstained');

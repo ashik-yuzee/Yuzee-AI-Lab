@@ -1,3 +1,4 @@
+import {resolveShortQuery,type RoutingHistory} from './conversationQuery';
 import {DEFAULT_ROUTER_MODEL,ROUTER_MODELS} from './models';
 import {BGE_MODEL_ID,bgeGateResult} from './bgeMatching';
 import {BGE_OUT_OF_SCOPE} from './bgeDomain';
@@ -25,13 +26,19 @@ export function routingSkipReason(text:string,structuredAnswer=false):string|nul
  if(!s || s.length>1800)return 'input-length';
  if(!/[a-z]/i.test(s)||/[^\u0000-\u024f\u2000-\u206f]/.test(s))return 'language-or-symbols';
  if(/^(hi|hello|hey|thanks|thank you|yes|no|okay|ok|sure|not sure|i[’']?m not sure)[.!\s]*$/i.test(s))return 'conversation';
- if(/^actually\b/i.test(s)||/\b(stop|pause|cancel|forget|ignore|instead|rather than|do not|don[’']t|not interested|not looking)\b/i.test(s))return 'correction-or-boundary';
+ if(/^actually\b/i.test(s)||/\b(pause|cancel|forget|ignore|instead|rather than|do not|don[’']t|not interested|not looking)\b/i.test(s)||/^(?:please\s+)?stop\b|\bstop (?:suggesting|searching|asking|the|this|that)\b/i.test(s))return 'correction-or-boundary';
  if(/\b(kill myself|suicid|self.harm|hurt myself|emergency)\b/i.test(s))return 'sensitive-boundary';
- if(/^(more|tell me more|go on|continue|what about that|what about this|why|how much|what next)[?.!\s]*$/i.test(s))return 'needs-context';
+ if(/^(more|tell me more|go on|continue|what about that|what about this|what about (?:that|this|the second) one|does (?:that|this) qualify me|compare (?:them|these|those)|why|how much|what next)[?.!\s]*$/i.test(s))return 'needs-context';
  if(s.split(/\s+/).length<4)return 'needs-context';
  // Multiple jobs in one request belong with the full counsellor until a multi-tool planner is evaluated.
  if((s.match(/\?/g)||[]).length>1)return 'multiple-questions';
  return null;
+}
+export function routingInput(text:string,history:RoutingHistory=[],structured=false):{text:string;skip:string|null;resolved:boolean}{
+ const skip=routingSkipReason(text,structured);
+ if(skip!=='needs-context')return {text,skip,resolved:false};
+ const query=resolveShortQuery(text,history);
+ return query?{text:query,skip:null,resolved:true}:{text,skip,resolved:false};
 }
 export const indexText=(t:MicroTool)=>`${t.name}. ${t.use_when} ${t.purpose} Examples: ${t.trigger_examples}`;
 export function chooseRoute(candidates:Candidate[],modelId:string=DEFAULT_ROUTER_MODEL,flow:RoutingFlow='route'):RoutingDecision {
@@ -60,7 +67,7 @@ export function validateRouteSelection(value:unknown,flow:RoutingFlow='route'):R
  if(r.status!=='selected')return abstain('no-selection');
  if(!eligibleTools.some(t=>t.id===r.toolId))return abstain('unknown-tool');
  const modelId=r.modelId??DEFAULT_ROUTER_MODEL;
- if(!ROUTER_MODELS.some(m=>m.id===modelId))return abstain('unknown-model');
+ if(modelId!==BGE_MODEL_ID)return abstain('unknown-model');
  if(r.routingFlow&&r.routingFlow!==flow)return abstain('invalid-flow');
  const bge=modelId===BGE_MODEL_ID,gate=bge?bgeCalibration[flow]:{score:MIN_SCORE,margin:MIN_MARGIN};
  if(typeof r.score!=='number'||!Number.isFinite(r.score)||r.score<gate.score||r.score>1||typeof r.margin!=='number'||!Number.isFinite(r.margin)||r.margin<gate.margin||r.margin>2)return abstain('invalid-score');
@@ -69,10 +76,10 @@ export function validateRouteSelection(value:unknown,flow:RoutingFlow='route'):R
   ...(bge?{calibrationVersion:bgeCalibration.version,domainMargin:r.domainMargin}:{}),reason:'clear-semantic-match',version:ROUTER_VERSION};
 }
 /** Browser routing is advisory. Only allowlisted catalogue text can reach Gemini. */
-export function acceptClientRoute(value:unknown,mode:string,text:string,structuredAnswer=false):RoutingDecision {
+export function acceptClientRoute(value:unknown,mode:string,text:string,structuredAnswer=false,history:RoutingHistory=[]):RoutingDecision {
  const mention=parseOalaMention(text);
  if(!mention.active)return abstain('not-addressed');
- const skip=routingSkipReason(mention.message,structuredAnswer);if(skip)return abstain(skip);
+ const {skip}=routingInput(mention.message,history,structuredAnswer);if(skip)return abstain(skip);
  return validateRouteSelection(value,'route');
 }
 export function scopedInstruction(decision:RoutingDecision):string {

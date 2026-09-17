@@ -243,17 +243,6 @@ export interface ChatMessage {
   streamProgress?: import("./ux/streamProgress").ChatStreamProgress;
   streamStopped?: boolean;
   routing?: import('./routing/policy').RoutingDecision;
-  microToolName?: string;
-  microToolInfo?: {
-    id: string;
-    name: string;
-    domain: string;
-    purpose: string;
-    useWhen: string;
-    score: number;
-    miniPrompt: string;
-  };
-  microToolSkipped?: { name: string; score: number };
   error?: string;
   errorCode?: string;
 }

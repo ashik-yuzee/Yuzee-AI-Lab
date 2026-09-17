@@ -1,3 +1,5 @@
+import {BGE_MODEL_ID} from './bgeMatching';
+import {bgeProfiles,rankNeeds,needGate} from './bgeProfiles';
 import {parseOalaMention} from '../oala/invocation';
 
 // Small semantic index. These are routing descriptions, never user-facing answers.
@@ -13,7 +15,7 @@ export const needScenarios = [
   {id:'research', text:'Find the official units, syllabus and accreditation of this course for this year.'},
 ] as const;
 export type NeedKind = typeof needScenarios[number]['id'];
-export type NeedHint = {status:'selected'|'abstained'; kind?:NeedKind; score?:number; margin?:number; reason:string};
+export type NeedHint = {status:'selected'|'abstained'; kind?:NeedKind; score?:number; margin?:number; reason:string; modelId?:string; profileVersion?:string; failedGates?:string[]};
 export type NeedsHistory = {role:string; content:string; preflight?:TurnNeeds; telemetry?:{preflight?:TurnNeeds}}[];
 export type TurnNeeds = {
   version:'turn-needs-v1'; action:'answer'|'clarify'|'research'; reason:string;
@@ -22,7 +24,11 @@ export type TurnNeeds = {
   scope:{target:string; studyYear:string; location:string};
   research?:{title:string; description:string};
 };
-export function chooseNeed(candidates:{id:string;score:number}[]):NeedHint {
+export function chooseNeed(candidates:{id:string;score:number}[],modelId?:string):NeedHint {
+  if(modelId===BGE_MODEL_ID){
+    const r=rankNeeds(candidates);
+    return {status:r.selected?'selected':'abstained',kind:r.selected?r.id as NeedKind:undefined,score:r.score,margin:r.margin,reason:r.selected?'semantic-match':'uncertain',modelId,profileVersion:bgeProfiles.needs.version,failedGates:r.failedGates};
+  }
   const ranked=candidates.filter(c=>needScenarios.some(s=>s.id===c.id)&&Number.isFinite(c.score)&&c.score>=-1&&c.score<=1)
     .sort((a,b)=>b.score-a.score).filter((c,i,a)=>a.findIndex(x=>x.id===c.id)===i);
   if(ranked.length<2)return {status:'abstained',reason:'incomplete-ranking'};
@@ -33,8 +39,10 @@ export function chooseNeed(candidates:{id:string;score:number}[]):NeedHint {
 export function acceptNeedHint(value:unknown):NeedHint|undefined {
   const h=value as NeedHint|undefined;
   if(h?.status==='abstained')return {status:'abstained',reason:['incomplete-ranking','uncertain','cancelled','input-length','not-ready','busy','timeout','unavailable','inference-failed','token-budget'].includes(h.reason)?h.reason:'not-provided'};
-  if(!h||h.status!=='selected'||!needScenarios.some(s=>s.id===h.kind)||typeof h.score!=='number'||!Number.isFinite(h.score)||h.score<.5||h.score>1||typeof h.margin!=='number'||!Number.isFinite(h.margin)||h.margin<.08||h.margin>2)return;
-  return {status:'selected',kind:h.kind,score:h.score,margin:h.margin,reason:'semantic-match'};
+  const bge=h?.modelId===BGE_MODEL_ID,gate=bge?needGate(h?.kind):{score:.5,margin:.08};
+  if(h?.modelId&&(!bge||h.profileVersion!==bgeProfiles.needs.version))return;
+  if(!h||h.status!=='selected'||!needScenarios.some(s=>s.id===h.kind)||typeof h.score!=='number'||!Number.isFinite(h.score)||h.score<gate.score||h.score>1||typeof h.margin!=='number'||!Number.isFinite(h.margin)||h.margin<gate.margin||h.margin>2)return;
+  return {status:'selected',kind:h.kind,score:h.score,margin:h.margin,reason:'semantic-match',...(bge?{modelId:BGE_MODEL_ID,profileVersion:bgeProfiles.needs.version}:{})};
 }
 function explicitTarget(text:string):string {
   // Only explicit user wording is copied. No assistant claims are promoted to scope.

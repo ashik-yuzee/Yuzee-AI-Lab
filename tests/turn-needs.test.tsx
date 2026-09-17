@@ -1,3 +1,4 @@
+import {bgeReadyContract} from '../src/routing/bgeContract';
 import assert from 'node:assert/strict';
 import {assessTurnNeeds,chooseNeed,acceptNeedHint,needsInstruction,researchOffer,needsQuery} from '../src/routing/turnNeeds';
 import {YuzeeRequestAssembler} from '../src/services/YuzeeRequestAssembler';
@@ -47,7 +48,7 @@ class FakeWorker {
 Object.defineProperty(globalThis,'Worker',{value:FakeWorker,configurable:true});
 const router=await import('../src/services/MicroToolRouter');
 assert.equal((await router.assessMessageNeeds('What are the fees?')).reason,'not-ready');
-let worker=FakeWorker.last;worker.reply({type:'ready'});
+let worker=FakeWorker.last;worker.reply({type:'ready',...bgeReadyContract});
 let pending=router.assessMessageNeeds('What are the fees?');let request=worker.sent.at(-1);
 assert.equal(request.type,'needs');worker.reply({type:'needs-result',id:request.id,candidates:[{id:'research',score:.8},{id:'answer',score:.4}]});
 assert.equal((await pending).kind,'research');

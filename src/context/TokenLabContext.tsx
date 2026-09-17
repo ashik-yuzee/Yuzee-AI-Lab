@@ -658,7 +658,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,streamProgress:{phase:'routing'}}:m)}));
       try{
         const {routeMessage}=await import('../services/MicroToolRouter');
-        microToolSelection=await routeMessage(oalaMention.message,{signal:controller.signal,structuredAnswer:!!userEventPayload});
+        microToolSelection=await routeMessage(oalaMention.message,{signal:controller.signal,structuredAnswer:!!userEventPayload,history:activeConv.messages||[]});
       }catch{/* Continue with the main counsellor when optional routing is unavailable. */}
       if(controller.signal.aborted)return false;
       setCurrentConversation(prev=>prev?.id!==activeConv.id?prev:({...prev,messages:prev.messages.map(m=>m.id===streamingAssistantMsg.id?{...m,routing:microToolSelection,streamProgress:{phase:'waiting'}}:m)}));

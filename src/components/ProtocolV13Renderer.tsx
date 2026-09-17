@@ -1,3 +1,6 @@
+import {learningToneIn} from "../miniPathway/learningTypes";
+import {PathwayLearningCues} from "./PathwayLearningCues";
+import {GuidanceList} from "./GuidanceList";
 import React, { useState, useEffect, useId } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -61,8 +64,8 @@ interface ProtocolV13RendererProps {
   readOnly?: boolean;
   conversationId?: string;
   hideRecommendedActions?: boolean;
-  onOpenPathway?: () => void;
   pathwayLearningCues?: boolean;
+  onOpenPathway?: () => void;
 }
 
 export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
@@ -75,6 +78,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   readOnly = false,
   conversationId,
   hideRecommendedActions = false,
+  pathwayLearningCues = false,
   onOpenPathway,
 }) => {
   const outputAnchor = useId().replace(/:/g, "");
@@ -107,7 +111,6 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   const service = data.service_trigger;
   const serviceFlow: string = service?.primary_requested_service || 'NONE';
   const followups = data.followups;
-  const visibleStatus: Record<string,string> = {current: "Start here", next: "Next step", blocked: "Needs attention", warning: "Check this"};
 
   const handleActionClick = (actionId: string, message: string) => {
     if (!readOnly) onInteract?.({ type: 'action_clicked', action_id: actionId, value: message, timestamp: Date.now() });
@@ -211,203 +214,9 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
           </div>
         );
 
-      case "list": {
-        const WORKFLOW_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
-        const isWorkflow = block.items?.some((i: YuzeeItem) => WORKFLOW_STATUSES.has(i.status || ""));
-
-        if (isWorkflow) {
-          const statusColor: Record<string, string> = {
-            current:  "text-blue-600",
-            next:     "text-purple-600",
-            complete: "text-emerald-600",
-            blocked:  "text-rose-600",
-            warning:  "text-amber-600",
-          };
-          return (
-            <div key={block.id || index} className="space-y-2">
-              {(block.title || block.text) && (
-                <div className="mb-1">
-                  {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
-                  {block.text && <p className="text-[16px] text-[#5b6472] mt-0.5 leading-[1.7]">{block.text}</p>}
-                </div>
-              )}
-              <ul className="border-t border-slate-100">
-                {block.items?.map((item: YuzeeItem, iIdx: number) => {
-                  const s = item.status || "";
-                  const scls = statusColor[s] || "text-[#8a929d]";
-                  return (
-                    <li key={item.id || iIdx} className="py-6 border-b border-slate-100">
-                      <div className="flex items-baseline justify-between gap-4 mb-1">
-                        <p className="text-[17px] font-semibold text-[#1c1f26] leading-snug">{item.title}</p>
-                        {visibleStatus[s] && <span className={`shrink-0 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>{visibleStatus[s]}</span>}
-                      </div>
-                      {(item.text || item.value) && (
-                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          );
-        }
-
-        // Evidence row layout: items with side_label on LEFT in fixed 72px col (HAVE/NEED/GAP/PROOF pattern)
-        const hasSidePanel = block.items?.some((i: YuzeeItem) => i.side_label || i.side_text || (i as any).icon);
-        if (hasSidePanel) {
-          const sideLabelColor = (status: string | undefined, label: string | undefined): string => {
-            const s = (status || label || "").toLowerCase();
-            if (s === "have" || s === "positive" || s === "complete" || s === "completed") return "text-emerald-700";
-            if (s === "need" || s === "warning" || s === "gap") return "text-amber-700";
-            if (s === "neutral" || s === "muted") return "text-[#5b6472]";
-            if (s === "current" || s === "next" || s === "proof") return "text-blue-600";
-          };
-          const sideLabelIcon = (status: string | undefined, label: string | undefined): React.ReactNode => {
-            const s = (status || label || "").toLowerCase();
-            if (s === "have" || s === "positive" || s === "complete" || s === "completed") return <Check className="w-3 h-3" />;
-            if (s === "need" || s === "warning") return <AlertCircle className="w-3 h-3" />;
-            if (s === "gap") return <Minus className="w-3 h-3" />;
-            if (s === "proof") return <FileCheck className="w-3 h-3" />;
-            return null;
-          };
-          return (
-            <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
-              <ul className="border-t border-slate-100">
-                {block.items?.map((item: YuzeeItem, iIdx: number) => {
-                  const icon = (item as any).icon as string | undefined;
-                  const sideLabel = item.side_label || (item as any).side_label;
-                  const sideText = item.side_text || (item as any).side_text;
-                  const labelColor = sideLabelColor(item.status, sideLabel);
-                  const labelIcon = sideLabelIcon(item.status, sideLabel);
-                  return (
-                    <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
-                      <div className="shrink-0 pt-0.5">
-                        {sideLabel && (
-                          <div className={`flex items-center gap-1 ${labelColor}`}>
-                            {labelIcon}
-                            <p className="text-[11px] font-bold tracking-[0.12em] uppercase leading-none">{sideLabel}</p>
-                          </div>
-                        )}
-                        {icon && <span className="text-lg leading-none">{icon}</span>}
-                        {sideText && !sideLabel && <p className="text-[12px] text-[#5b6472] leading-snug">{sideText}</p>}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
-                        {item.text && <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text}</p>}
-                        {sideText && sideLabel && <p className="text-[13px] text-[#8a929d] mt-1">{sideText}</p>}
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          );
-        }
-
-        // Default: numbered ruled rows
-        const items = block.items || [];
-        return (
-          <div key={block.id || index} className="space-y-2">
-            {(block.title || block.text) && (
-              <div className="mb-1">
-                {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
-                {block.text && <p className="text-[16px] text-[#5b6472] mt-0.5 leading-[1.7]">{block.text}</p>}
-              </div>
-            )}
-            <ul className="border-t border-slate-100">
-              {items.map((item: YuzeeItem, iIdx: number) => {
-                const emoji = (item as any).icon as string | undefined;
-                const tag = emoji || String(iIdx + 1).padStart(2, "0");
-                const tagCls = item.status === "negative" ? "text-rose-500" : item.status === "positive" ? "text-emerald-600" : "text-[#8a929d]";
-                return (
-                  <li key={item.id || iIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
-                    <span className={`text-[11px] font-bold tracking-[0.13em] uppercase pt-0.5 ${tagCls}`}>{tag}</span>
-                    <div>
-                      <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
-                      {(item.text || item.value) && (
-                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
-                      )}
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        );
-      }
-
-      case "steps": {
-        const WORKFLOW_STEP_STATUSES = new Set(["current", "next", "complete", "blocked", "warning"]);
-        const hasStepStatuses = block.items?.some((i: YuzeeItem) => WORKFLOW_STEP_STATUSES.has(i.status || ""));
-
-        // Numbered ruled rows — when no workflow statuses are present
-        if (!hasStepStatuses) {
-          const stepItems = block.items || [];
-          return (
-            <div key={block.id || index} className="space-y-2">
-              {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
-              <ul className="border-t border-slate-100">
-                {stepItems.map((item: YuzeeItem, sIdx: number) => (
-                  <li key={item.id || sIdx} className="py-5 border-b border-slate-100 grid gap-[22px]" style={{ gridTemplateColumns: "72px 1fr" }}>
-                    <span className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d] pt-0.5">{String(sIdx + 1).padStart(2, "0")}</span>
-                    <div>
-                      <p className="text-[16px] font-semibold text-[#1c1f26] leading-snug mb-0.5">{item.title}</p>
-                      {(item.text || item.value) && (
-                        <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
-                      )}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          );
-        }
-
-        // Status-driven ruled rows (route/pathway style — title left, status badge right)
-        const stepStatusColor: Record<string, string> = {
-          current:  "text-blue-600",
-          next:     "text-purple-600",
-          complete: "text-emerald-600",
-          blocked:  "text-rose-600",
-          warning:  "text-amber-600",
-        };
-        const stepStatusIcon: Record<string, React.ReactNode> = {
-          current:  null,
-          next:     null,
-          complete: <Check className="w-3 h-3" />,
-          blocked:  <XCircle className="w-3 h-3" />,
-          warning:  <AlertTriangle className="w-3 h-3" />,
-        };
-        return (
-          <div key={block.id || index} className="space-y-2">
-            {block.title && <h4 className="text-[11px] font-bold tracking-[0.13em] uppercase text-[#8a929d]">{block.title}</h4>}
-            <ul className="border-t border-slate-100">
-              {block.items?.map((item: YuzeeItem, sIdx: number) => {
-                const s = item.status || "";
-                const scls = stepStatusColor[s] || "text-[#8a929d]";
-                const sIcon = stepStatusIcon[s];
-                return (
-                  <li key={item.id || sIdx} className="py-6 border-b border-slate-100">
-                    <div className="flex items-baseline justify-between gap-4 mb-1">
-                      <p className="text-[17px] font-semibold text-[#1c1f26] leading-snug">{item.title}</p>
-                      {visibleStatus[s] && (
-                        <span className={`shrink-0 flex items-center gap-1 text-[11px] font-bold tracking-[0.12em] uppercase ${scls}`}>
-                          {sIcon}
-                          {visibleStatus[s]}
-                        </span>
-                      )}
-                    </div>
-                    {(item.text || item.value) && (
-                      <p className="text-[16px] text-[#5b6472] leading-[1.7]">{item.text || item.value}</p>
-                    )}
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        );
-      }
+      case "list":
+      case "steps":
+        return <GuidanceList key={block.id || index} block={block} pathwayLearningCues={pathwayLearningCues}/>;
 
       case "table": {
         const columns = block.columns || [];
@@ -431,12 +240,13 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 </thead>
                 <tbody>
                   {rows.map((row, rIdx) => (
-                    <tr key={row.id || rIdx} style={{ borderBottom: "1px solid #e5ddd5" }}>
+                    <tr key={row.id || rIdx} data-learning-tone={pathwayLearningCues?learningToneIn((row.cells||[]).map(cell=>cell.value).join(" ")):undefined} style={{ borderBottom: "1px solid #e5ddd5" }}>
                       {columns.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
                         return (
-                          <td key={col.key} data-label={col.label} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", fontWeight: cIdx === 0 ? 600 : 400, background: "#fffdfb" }}>
+                          <td key={col.key} data-learning-tone={pathwayLearningCues?learningToneIn(cell?.value||""):undefined} data-label={col.label} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", fontWeight: cIdx === 0 ? 600 : 400, background: "#fffdfb" }}>
                             {cell?.value || "Not provided"}
+                            {pathwayLearningCues && cell?.value && <PathwayLearningCues text={cell.value}/>}
                           </td>
                         );
                       })}
@@ -478,15 +288,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                 </thead>
                 <tbody>
                   {cmpRows.map((row, rIdx) => (
-                    <tr key={row.id || rIdx} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #e5ddd5" : "none" }}>
+                    <tr key={row.id || rIdx} data-learning-tone={pathwayLearningCues?learningToneIn((row.cells||[]).map(cell=>cell.value).join(" ")):undefined} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #e5ddd5" : "none" }}>
                       {hasCriteria && (
                         <td data-label="Factor" style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#000000", background: "#fffdfb" }}>{row.criteria || row.id}</td>
                       )}
                       {cmpCols.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);
                         return (
-                          <td key={col.key} data-label={col.label} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", background: "#fffdfb" }}>
+                          <td key={col.key} data-learning-tone={pathwayLearningCues?learningToneIn(cell?.value||""):undefined} data-label={col.label} style={{ padding: "14px 16px", verticalAlign: "top", color: "#000000", background: "#fffdfb" }}>
                             {cell?.value || "Not provided"}
+                            {pathwayLearningCues && cell?.value && <PathwayLearningCues text={cell.value}/>}
                           </td>
                         );
                       })}
@@ -923,7 +734,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         <p className="text-[15px] text-[#0d0d0d] leading-[1.65] font-normal">{careText}</p>
       )}
 
-      {blocks[0] && <div id={`${outputAnchor}-section-0`} className="scroll-mt-6" data-output-type={blocks[0].type}>{renderBlock(blocks[0], 0)}</div>}
+      {blocks[0] && <div id={`${outputAnchor}-section-0`} className="scroll-mt-6" data-output-type={blocks[0].type} data-output-variant={blocks[0].variant || "default"}>{renderBlock(blocks[0], 0)}</div>}
 
       {readableSections.length >= 5 && (
         <nav aria-label="In this answer" className="rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3">
@@ -935,7 +746,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       )}
       {/* All explanations remain visible; links help readers move through longer answers. */}
       <div className="space-y-3">
-        {blocks.slice(1).map((block, offset) => { const idx=offset+1; return <div key={block.id || idx} id={`${outputAnchor}-section-${idx}`} className="scroll-mt-6" data-output-type={block.type}>{renderBlock(block, idx)}</div>; })}
+        {blocks.slice(1).map((block, offset) => { const idx=offset+1; return <div key={block.id || idx} id={`${outputAnchor}-section-${idx}`} className="scroll-mt-6" data-output-type={block.type} data-output-variant={block.variant || "default"}>{renderBlock(block, idx)}</div>; })}
       </div>
 
       {/* Pathway CTA — show when response maps a journey */}

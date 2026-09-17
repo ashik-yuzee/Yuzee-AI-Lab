@@ -1,0 +1,29 @@
+// BGE-specific descriptions. These classify intent; they are never evidence or user-facing advice.
+export const bgeNeedScenarios = [
+ {id:'answer',text:'Explain a course or career term in plain language, with an example. What does it mean?'},
+ {id:'answer',text:'Teach a practical skill. Demonstrate it, explain each step and give me an exercise to try.'},
+ {id:'answer',text:'Explain the services Yuzee provides and how they can help me.'},
+ {id:'answer',text:'Explain the general principles of fees, funding, admission and accreditation without checking a particular provider.'},
+ {id:'clarify',text:'I need help choosing a suitable career or subject, but have not decided what matters to me.'},
+ {id:'clarify',text:'Can I manage studying alongside shifts, work and family? I have not said how much time I have available.'},
+ {id:'clarify',text:'Several occupations interest me. Help me understand my preferences before recommending a direction.'},
+ {id:'research',text:'Look up the tuition price and additional charges for a named course and provider in the requested year.'},
+ {id:'research',text:'Verify the current admission conditions and application closing date for a particular qualification and institution.'},
+ {id:'research',text:'Find the official subject handbook, course accreditation and curriculum for this provider.'},
+ {id:'research',text:'Check attendance, practical training, placement and timetable rules for this institution and course.'},
+ {id:'other',text:'Hello. Thank you. Stop. Cancel this request. Change the topic.'},
+ {id:'other',text:'Unrelated requests about food, weather, sport, travel bookings, household repairs or entertainment.'},
+] as const;
+export const bgePathwayScenarios = [
+ {id:'pathway',text:'Explore possible education and employment routes for someone who is uncertain about their direction.'},
+ {id:'pathway',text:'Create a career transition plan, from my present occupation to a different kind of work.'},
+ {id:'pathway',text:'Map the study, training and work experience stages needed to enter my chosen profession.'},
+ {id:'pathway',text:'Compare routes into an occupation: university, vocational study, apprenticeship or direct employment.'},
+ {id:'pathway',text:'Plan my return to employment after a career break, with realistic learning and work steps.'},
+ {id:'pathway',text:'Help a school leaver explore future education and work directions before choosing a route.'},
+ {id:'pathway',text:'I know my career goal. Build a sequence of milestones, learning, practice and experience to reach it.'},
+ {id:'other',text:'Explain a single concept or teach a specific practical skill with examples and exercises.'},
+ {id:'other',text:'Check the fees, student finance, entry rules, application documents or deadline for one course.'},
+ {id:'other',text:'Give information about Yuzee services, my account, privacy or an application status.'},
+ {id:'other',text:'Greetings, thanks, stop requests, recipes, weather, news, entertainment and general trivia.'},
+] as const;

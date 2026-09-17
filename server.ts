@@ -1,3 +1,4 @@
+import { QUIZ_PROMPT_FILENAME, QUIZ_PROMPT_PATH, QUIZ_PROMPT_LABEL, QUIZ_PROMPT_VERSION } from './src/prompts/quizPrompt';
 import {bypassCopy} from './src/ux/bypassCopy';
 import {shortReplyGuidance} from './src/ux/shortReplyGuidance';
 import {continueSkillQuestion} from './src/routing/skillContinuation';
@@ -50,7 +51,7 @@ import {
 } from "./src/protocol/securityOverride";
 import { YuzeeResponseV13 } from "./src/protocol/v1.3/Yuzee_Response_Protocol_v1.3";
 import { UserEvent } from "./src/types/UserEvent";
-import { GEMINI_MODELS, calcTurnCost, DEFAULT_MODEL_ID } from "./src/data/models";
+import { GEMINI_MODELS, calcTurnCost } from "./src/data/models";
 import { initDb, logTurn, pruneExpired, keepAlive, dbPing, loadSessionStats, isDbEnabled, loadDailyCost, loadLifetimeStats, saveConversation, saveMessage, deleteConversation, loadConversations } from "./src/services/db";
 import { SharedSettingsManager } from "./src/shared-settings";
 
@@ -423,7 +424,7 @@ app.get("/api/config/capabilities", (req, res) => {
     configured: hasKey,
     availableModels: GEMINI_MODELS.filter((m) => m.selectable).map((m) => m.id),
     modelsList: GEMINI_MODELS,
-    defaultModel: DEFAULT_MODEL_ID,
+    defaultModel: "gemini-3.5-flash",
     supportsThinking: true,
     supportsCachedTokens: true,
     supportsInteractionsApi: true,
@@ -724,8 +725,9 @@ app.get("/api/system-prompt", (req, res) => {
     content: requestAssembler.getPromptContent(),
     hash: requestAssembler.getPromptHash(),
     bytes: requestAssembler.getPromptBytes(),
-    filename: "Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md",
-    filepath: "src/protocol/v1.3/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md",
+    filename: QUIZ_PROMPT_FILENAME,
+    version: QUIZ_PROMPT_VERSION,
+    filepath: QUIZ_PROMPT_PATH,
   });
 });
 
@@ -786,7 +788,7 @@ app.get("/api/conversations", async (req, res) => {
 app.post("/api/conversations", (req, res) => {
   const id = `conv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
   const title = req.body?.title || "New Career Exploration";
-  const model = req.body?.model || DEFAULT_MODEL_ID;
+  const model = req.body?.model || "gemini-3.5-flash";
   const mode = req.body?.mode || "VANILLA";
   const strategy = req.body?.strategy || "ADAPTIVE_HYBRID";
   const preset = req.body?.preset || "BALANCED";
@@ -841,7 +843,7 @@ app.post("/api/conversations/load-demo", (req, res) => {
     title: "Cybersecurity Analyst Pathway (Demo)",
     createdAt: Date.now(),
     updatedAt: Date.now(),
-    model: DEFAULT_MODEL_ID,
+    model: "gemini-3.5-flash",
     mode: "AUTO",
     strategy: "ADAPTIVE_HYBRID",
     preset: "BALANCED",
@@ -1281,7 +1283,7 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
         totalAssembledTokens: total,
         removedTokens: mem.removedTokens,
         includedSections: [
-          { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysTokens, preview: sysPrompt.slice(0, 75) },
+          { name: QUIZ_PROMPT_LABEL, description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysTokens, preview: sysPrompt.slice(0, 75) },
           ...(careerTokens > 0 ? [{ name: "Structured Memory Capsule", description: "Verified user constraints & goals", tokens: careerTokens, preview: careerStr.slice(0, 75) }] : []),
           ...(sumTokens > 0 ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: sumTokens, preview: mem.summaryText.slice(0, 75) }] : []),
           ...(recTokens > 0 ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: recTokens, preview: mem.recentHistoryText.slice(0, 75) }] : []),
@@ -1320,7 +1322,7 @@ app.post("/api/tokens/count", makeRateLimit(30), async (req, res) => {
     totalAssembledTokens: total,
     removedTokens: mem.removedTokens,
     includedSections: [
-      { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysRes.count, preview: sysPrompt.slice(0, 75) },
+      { name: QUIZ_PROMPT_LABEL, description: "Authoritative counsellor instruction (systemInstruction)", tokens: sysRes.count, preview: sysPrompt.slice(0, 75) },
       ...(careerRes.count > 0 ? [{ name: "Structured Memory Capsule", description: "Verified user constraints & goals", tokens: careerRes.count, preview: careerStr.slice(0, 75) }] : []),
       ...(sumRes.count > 0 ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: sumRes.count, preview: mem.summaryText.slice(0, 75) }] : []),
       ...(recRes.count > 0 ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: recRes.count, preview: mem.recentHistoryText.slice(0, 75) }] : []),
@@ -1690,7 +1692,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
   let routingDecision = req.body.skillChoice
     ? acceptSkillChoice(req.body.skillChoice, conv.messages, userMessageContent, !!userEvent)
     : req.body.topicSelection && userEvent ? acceptTopicRoute(req.body.topicSelection,conv.activeInteraction,userEvent)
-    : acceptClientRoute(req.body.microToolSelection, mode, userMessageContent, !!userEvent);
+    : acceptClientRoute(req.body.microToolSelection, mode, userMessageContent, !!userEvent, conv.messages);
   if (routingDecision.status !== 'selected' && !req.body.skillChoice && !req.body.topicSelection && userEvent) {
     const continuation = continueSkillQuestion(conv.messages, conv.activeInteraction, userEvent);
     if (continuation.status === 'selected') routingDecision = continuation;
@@ -2154,7 +2156,7 @@ app.post("/api/conversations/:id/messages", makeRateLimit(20), async (req, res) 
     totalAssembledTokens: inputTokens,
     removedTokens: mem.removedTokens,
     includedSections: [
-      { name: "Yuzee Main Prompt v1.6", description: "Authoritative counsellor instruction (systemInstruction)", tokens: estimateTokens(assembledReq.systemInstruction), preview: assembledReq.systemInstruction.slice(0, 75) },
+      { name: QUIZ_PROMPT_LABEL, description: "Authoritative counsellor instruction (systemInstruction)", tokens: estimateTokens(assembledReq.systemInstruction), preview: assembledReq.systemInstruction.slice(0, 75) },
       ...(mem.summaryText ? [{ name: "Conversation Summary", description: "Compact semantic memory", tokens: estimateTokens(mem.summaryText), preview: mem.summaryText.slice(0, 75) }] : []),
       ...(mem.recentHistoryText ? [{ name: "Recent Dialogue Turns", description: "Verbatim recent exchanges", tokens: estimateTokens(mem.recentHistoryText), preview: mem.recentHistoryText.slice(0, 75) }] : []),
       { name: "Current User Input", description: "Active incoming prompt / UserEvent", tokens: userPromptTokens, preview: userMessageContent.slice(0, 75) },

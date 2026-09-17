@@ -6,9 +6,9 @@ import {defineConfig} from 'vite';
 export default defineConfig(() => {
   return {
     plugins: [react(), tailwindcss()],
-    build: { outDir: 'dist/public', target: 'esnext' },
-    optimizeDeps: { exclude: ['@xenova/transformers', '@huggingface/transformers', 'onnxruntime-web'] },
-    worker: { format: 'es' as const },
+    build: { outDir: 'dist/public' },
+    optimizeDeps: {exclude:['@huggingface/transformers','onnxruntime-web']},
+    worker: {format:'es' as const},
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),

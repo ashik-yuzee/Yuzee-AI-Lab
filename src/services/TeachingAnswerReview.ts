@@ -25,6 +25,8 @@ Check every factual claim against the supplied information:
 - Generic role titles do not establish shifts, salary, job availability or personal suitability. Current market data and legal/funding/eligibility rules need relevant evidence; otherwise explain how to check, not the rule from memory.
 - Clearly label everyday examples and workplace scenarios as hypothetical. Added details within an explicitly hypothetical exercise are acceptable; never attribute them to the actual course/company/user. Avoid guarantees about the hypothetical result transferring to real life. Use only authorised, necessary information in examples and recommend fictional practice data.
 
+For course or training quality comparisons, remove invented quantitative quality benchmarks (such as a minimum percentage of workshop time), unsupported licensing/regulator/exam requirements, campus claims and partner networks. Neither an earlier assistant statement nor the candidate answer counts as a source. Keep this as educational decision support: describe supervised practice, individual feedback and evidence to request in plain words. Do not retain operational trade instructions, pressure settings, torch techniques or equipment specifications just to make a worked example detailed. Use a simple illustrative learner practice-and-feedback scenario instead. A repeated short follow-up should be re-explained plainly, not expanded into a near-identical technical checklist. Preserve the known comparison subjects, the useful explanation and the practical next step.
+
 Improve the counselling experience as well as evidence. You MAY shorten, merge or remove repetitive and irrelevant sections. There is no minimum heading count. Preserve requested items, the direct answer, decision-critical caveats, useful worked steps and concrete examples. A brief eligibility check does not need a fictional admissions story, a skill lesson need not end with a training audit, and a cost explanation should not invent extra calculations. A shorter complete answer is better than repeating warnings. Never reduce a substantive teaching request to a generic paragraph. For practice, include a sample answer after the invitation to try, with assumptions and alternatives if reasonable.
 Use the three plain source-relationship labels only where useful; do not change legal status enum values. Tables must not repeat a row label in an identical extra column. Simplify terms such as operational impact and longitudinal data. Remove filler and unnecessary questions in content, preserving quoted questions in worked examples. Do not invent citations. If no correction is needed return the blocks unchanged.
 
@@ -32,7 +34,9 @@ ${counsellingStyle.instruction}`;
 export function shouldReviewTeaching(response:any):boolean {
  if(!response||!Array.isArray(response.content_blocks))return false;
  if(/SAFETY|PAUSE|CLOSURE|SERVICE_/.test(response.response_intent||''))return false;
- const text=response.content_blocks.map((b:any)=>[b?.title,b?.text,...(Array.isArray(b?.items)?b.items.map((i:any)=>[i?.title,i?.text,i?.value].filter(Boolean).join(' ')):[])].filter(Boolean).join(' ')).join(' ');
+ // Count the visible teaching content, including comparisons and nested list items.
+ const visibleText=(value:any):string => typeof value==='string' ? value : Array.isArray(value) ? value.map(visibleText).join(' ') : value && typeof value==='object' ? Object.entries(value).filter(([key])=>['title','text','value','label','items','rows','cells','steps'].includes(key)).map(([,child])=>visibleText(child)).join(' ') : '';
+ const text=visibleText(response.content_blocks);
  return text.split(/\s+/).length>=120 || response.content_blocks.filter((b:any)=>b?.title?.trim()).length>=3;
 }
 export function applyReviewedBlocks(original:any,reviewText:string):any {

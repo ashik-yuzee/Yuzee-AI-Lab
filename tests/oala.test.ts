@@ -1,6 +1,7 @@
 import {oalaBasicAnswer} from '../src/oala/basicResponses';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {QUIZ_PROMPT_PATH} from '../src/prompts/quizPrompt';
 import {parseOalaMention,addressOala,isOalaSuggestion} from '../src/oala/invocation';
 import {readYuzeeServices,buildOalaInstruction} from '../src/oala/knowledge';
 import {acceptClientRoute,ROUTER_VERSION} from '../src/routing/policy';
@@ -23,7 +24,7 @@ test('Mention selection completes typed prefixes and preserves drafts',()=>{
  assert.equal(isOalaSuggestion('@Oala help'),false);
 });
 test('Every mode requires an explicit current mention, even legacy preview',()=>{
- const route={status:'selected',toolId:'COURSE_010',score:.62,margin:.12,version:ROUTER_VERSION};
+ const route={status:'selected',modelId:'Xenova/bge-small-en-v1.5',calibrationVersion:'bge-calibrated-v1',routingFlow:'route',domainMargin:.2,toolId:'COURSE_010',score:.8,margin:.12,version:ROUTER_VERSION};
  for(const mode of ['AUTO','MICRO_PROMPT','SAVE_TOKENS','CUSTOM']){
   assert.equal(acceptClientRoute(route,mode,'What prerequisites must I meet for this course?').reason,'not-addressed');
   assert.equal(acceptClientRoute(route,mode,'@Oala What prerequisites must I meet for this course?').status,'selected');
@@ -35,7 +36,7 @@ test('Mention does not bypass correction, uncertainty or structured-answer guard
  assert.equal(acceptClientRoute(null,'AUTO','@Oala Focus on study',true).reason,'structured-answer');
 });
 const assembler=YuzeeRequestAssembler.getInstance();
-const source=fs.readFileSync('src/protocol/v1.3/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md','utf8');
+const source=fs.readFileSync(QUIZ_PROMPT_PATH,'utf8');
 const catalogue=readYuzeeServices(source);
 test('Knowledge uses all 11 product-owned services exactly once',()=>{
  assert.equal(catalogue.length,11);assert.equal(new Set(catalogue.map(s=>s.id)).size,11);

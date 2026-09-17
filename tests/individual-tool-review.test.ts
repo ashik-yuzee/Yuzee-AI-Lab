@@ -14,7 +14,7 @@ for(const tool of audit.tools){
  const runtime=eligibleTools.find(t=>t.id===tool.id)!;
  assert.equal(runtime.mini_prompt,tool.reviewed_prompt,tool.id+' runtime drift');
  assert.notEqual(runtime.mini_prompt,tool.previous_runtime_prompt,tool.id+' was not changed');
- const selection={status:'selected',toolId:tool.id,score:.7,margin:.2,reason:'clear-semantic-match',version:ROUTER_VERSION} as const;
+ const selection={status:'selected',modelId:'Xenova/bge-small-en-v1.5',calibrationVersion:'bge-calibrated-v1',routingFlow:'route',domainMargin:.2,toolId:tool.id,score:.7,margin:.2,reason:'clear-semantic-match',version:ROUTER_VERSION} as const;
  const accepted=acceptClientRoute(selection,'AUTO','@Oala Explain the details of this selected topic for my learning goal.');
  assert.equal(accepted.toolId,tool.id);
  const instruction=scopedInstruction(accepted);
@@ -34,7 +34,7 @@ for(const tool of audit.tools){
  assert.equal(scopedInstruction(acceptClientRoute(selection,'AUTO','@Oala Continue this answer please.',true)),'');
 }
 for(const id of ['CORE_001','CORE_002','NOT_A_TOOL']){
- assert.equal(scopedInstruction({status:'selected',toolId:id,score:.9,margin:.3,reason:'clear-semantic-match',version:ROUTER_VERSION}),'');
+ assert.equal(scopedInstruction({status:'selected',modelId:'Xenova/bge-small-en-v1.5',calibrationVersion:'bge-calibrated-v1',routingFlow:'route',domainMargin:.2,toolId:id,score:.9,margin:.3,reason:'clear-semantic-match',version:ROUTER_VERSION}),'');
 }
 assert.equal(scopedInstruction(abstain('ambiguous')),'');
 assert.equal(microTools.length,105);

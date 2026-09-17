@@ -73,19 +73,13 @@ export function getTokenCacheKey(model: string, text: string): string {
 
 export function getCachedTokenCount(model: string, text: string): CachedTokenEntry | null {
   const key = getTokenCacheKey(model, text);
-  // Priority 1: Exact provider countTokens — move to end (LRU eviction)
+  // Priority 1: Exact provider countTokens
   if (exactTokenCache.has(key)) {
-    const entry = exactTokenCache.get(key)!;
-    exactTokenCache.delete(key);
-    exactTokenCache.set(key, entry);
-    return entry;
+    return exactTokenCache.get(key)!;
   }
-  // Priority 2: Estimate cache — move to end (LRU eviction)
+  // Priority 2: Estimate cache (retains source: 'estimate' forever)
   if (estimateTokenCache.has(key)) {
-    const entry = estimateTokenCache.get(key)!;
-    estimateTokenCache.delete(key);
-    estimateTokenCache.set(key, entry);
-    return entry;
+    return estimateTokenCache.get(key)!;
   }
   return null;
 }

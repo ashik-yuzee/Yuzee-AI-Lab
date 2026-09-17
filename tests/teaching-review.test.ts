@@ -4,6 +4,9 @@ import {applyReviewedBlocks,shouldReviewTeaching,combineGenerationUsage} from '.
 const original=makeResponse();original.content_blocks=Array.from({length:8},(_,i)=>({...original.content_blocks[0],id:'s'+i,title:'Section '+i,text:'Original explanation'}));
 assert.equal(shouldReviewTeaching(original),true);
 assert.equal(shouldReviewTeaching({...original,content_blocks:[{type:'text',title:'',text:'explanation '.repeat(150)}]}),true);
+// A table can contain the entire substantive explanation; count cell text too.
+assert.equal(shouldReviewTeaching({...original,content_blocks:[{type:'comparison',title:'Compare quality',text:'',rows:[{cells:[{key:'evidence',value:'Practical feedback and supervised learning. '.repeat(30)}]}]}]}),true);
+assert.equal(shouldReviewTeaching({...original,content_blocks:[{type:'comparison',title:'Brief comparison',text:'',rows:[{cells:[{key:'evidence',value:'Ask both providers.'}]}]}]}),false);
 const revised=original.content_blocks.map(b=>({...b,text:'Corrected explanation'}));
 const result=applyReviewedBlocks(original,JSON.stringify({content_blocks:revised}));
 assert.deepEqual(result.content_blocks,revised);

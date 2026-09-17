@@ -10,6 +10,12 @@ coverage/
 data/shared-settings.json
 data/conversations.json
 data/detail-research.json
+data/mini-pathways.json
+data/session-stats.json
+data/token-log.ndjson
+
+# Local editor / tool config
+.claude/settings.local.json
 
 # Downloaded public MiniLM weights (recreated on demand)
 data/minilm-cache/

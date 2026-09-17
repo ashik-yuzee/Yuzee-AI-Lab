@@ -351,7 +351,7 @@ export const ChatArea: React.FC = () => {
                                 )
                               )}
 
-                              {structured && offer && !msg.isStreaming && currentConversation && <MoreDetails offer={offer} key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={(message) => sendMessage(message)} />}
+                              {structured && offer && !msg.isStreaming && currentConversation && <MoreDetails offer={offer} key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={sendMessage} />}
                               {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 
                               {msg.isStreaming && !structured && <ChatStreamingStatus phase={msg.streamProgress?.phase} startedAt={msg.createdAt} onStop={stopStreaming}/>}

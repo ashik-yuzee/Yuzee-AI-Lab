@@ -159,7 +159,7 @@ export const Sidebar: React.FC = () => {
                             const trimmed = editingTitle.trim();
                             if (trimmed) {
                               if (isSelected) updateCurrentConversationSettings({ title: trimmed });
-                              else api.updateConversation(conv.id, { title: trimmed }).catch(() => {});
+                              else api.updateConversation(conv.id, { title: trimmed });
                             }
                             setEditingId(null);
                           }}
@@ -168,7 +168,7 @@ export const Sidebar: React.FC = () => {
                               const trimmed = editingTitle.trim();
                               if (trimmed) {
                                 if (isSelected) updateCurrentConversationSettings({ title: trimmed });
-                                else api.updateConversation(conv.id, { title: trimmed }).catch(() => {});
+                                else api.updateConversation(conv.id, { title: trimmed });
                               }
                               setEditingId(null);
                             } else if (e.key === "Escape") {

@@ -620,8 +620,8 @@ function validateDisplayInvariants(json: any): string[] {
       const ids = inter.fields.map((f: any) => f.id);
       if (!ids.length || new Set(ids).size !== ids.length) errors.push('A form needs nonempty, unique fields.');
       for (const f of inter.fields) {
-        if (f.id === 'location' && (f.input_type === 'single_select' || (f.options?.length ?? 0))) errors.push('Location must be a typed field without location choices.');
-        if (f.input_type === 'single_select' && !(f.options?.length ?? 0)) errors.push('A selection field needs choices.');
+        if (f.id === 'location' && (f.input_type === 'single_select' || f.options.length)) errors.push('Location must be a typed field without location choices.');
+        if (f.input_type === 'single_select' && !f.options.length) errors.push('A selection field needs choices.');
       }
     }
     if (inter?.kind === 'handoff' && inter?.input_type !== 'fields') errors.push('A handoff must use fields.');

@@ -1,7 +1,7 @@
 /**
  * Yuzee Request Assembler & Protocol v1.3 Builder
  * Responsible for:
- * - Loading and verifying immutable Yuzee Production Prompt v0.12 and Response Schema v1.3
+ * - Loading and verifying immutable Yuzee Quiz Prompt v1.7 and Response Schema v1.3
  * - Strict single-system-instruction enforcement (system instruction is NEVER copied into contents)
  * - Strict single-user-message enforcement
  * - Provider structured-output schema enforcement for Node.js @google/genai
@@ -9,6 +9,7 @@
  */
 
 import fs from 'fs';
+import { QUIZ_PROMPT_PATH, QUIZ_PROMPT_VERSION } from '../prompts/quizPrompt';
 import path from 'path';
 import crypto from 'crypto';
 import { GenerateContentConfig } from '@google/genai';
@@ -70,7 +71,7 @@ export class YuzeeRequestAssembler {
 
   private loadAuthoritativeAssets(): void {
     this.experienceRules = fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/clear-guidance.md'), 'utf-8') + '\n' + fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/learning-depth.md'), 'utf-8');
-    const promptPath = path.resolve(process.cwd(), 'src/protocol/v1.3/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md');
+    const promptPath = path.resolve(process.cwd(), QUIZ_PROMPT_PATH);
     const schemaPath = path.resolve(process.cwd(), 'src/protocol/v1.3/Yuzee_Response_Schema_v1.3.json');
 
     if (fs.existsSync(promptPath)) {
@@ -125,7 +126,7 @@ export class YuzeeRequestAssembler {
 
   public getProtocolInfo(isConfigured: boolean = false, trustedServicesCount: number = 4): ProtocolInfo {
     return {
-      promptVersion: '1.6',
+      promptVersion: QUIZ_PROMPT_VERSION,
       protocolVersion: '1.3',
       schemaVersion: '1.3',
       promptHash: this.promptHash,
@@ -361,7 +362,7 @@ export class YuzeeRequestAssembler {
   }
 
   /**
-   * Normalizes response mode capitalization to exact Prompt v0.12 spec
+   * Normalizes response mode capitalization to the response protocol specification
    */
   public normalizeModeCapitalization(mode: string = 'Standard'): string {
     const m = (mode || 'Standard').trim().toLowerCase();
@@ -397,7 +398,7 @@ export class YuzeeRequestAssembler {
       userEvent?.userEvent?.ui?.selected_mode;
 
     // Plain text message with no structured interaction → send raw text to match AI Studio behaviour.
-    // The v1.6 prompt expects USER_MESSAGE semantics; wrapping plain text in USER_EVENT JSON
+    // The quiz prompt expects USER_MESSAGE semantics; wrapping plain text in USER_EVENT JSON
     // causes the model to treat the turn as a UI-context continuation, which shifts response_intent
     // and suppresses initial overview/discovery content blocks.
     if (!hasInteraction && !explicitMode) {

@@ -1,7 +1,8 @@
+import {bgeReadyContract} from '../src/routing/bgeContract';
 import assert from 'node:assert/strict';
 import {selectSkillOffers,acceptSkillChoice,skillMessage,embeddingSections,allowSkillReview,canReviewResponseSkills} from '../src/routing/skillSuggestions';
 import {scopedInstruction} from '../src/routing/policy';
-const ranking=(id:string,score=.8,other=.3)=>[{toolId:id,score},{toolId:'COURSE_001',score:other}];
+const ranking=(id:string,score=.8,other=.3)=>[{toolId:id,score},{toolId:'COURSE_001',score:other},{toolId:'__OUT_OF_SCOPE__',score:.2}];
 const review=selectSkillOffers([ranking('COURSE_011'),ranking('COURSE_012'),ranking('COURSE_011',.85)]);
 assert.equal(review.offers.length,2);assert.equal(review.offers[0].toolId,'COURSE_011');
 assert.equal(selectSkillOffers([ranking('COURSE_011',.49,.48)]).offers.length,0);
@@ -35,7 +36,7 @@ class FakeWorker{static last:FakeWorker;onmessage:any;onerror:any;sent:any[]=[];
 Object.defineProperty(globalThis,'Worker',{value:FakeWorker,configurable:true});
 const router=await import('../src/services/MicroToolRouter');
 assert.equal((await router.reviewResponseSkills('Fees')).reason,'not-ready');
-router.startWarmup();const worker=FakeWorker.last;worker.reply({type:'ready'});
+router.startWarmup();const worker=FakeWorker.last;worker.reply({type:'ready',...bgeReadyContract});
 let p=router.reviewResponseSkills('Course fees and funding.');let req=worker.sent.at(-1);assert.equal(req.type,'suggest');
 worker.reply({type:'suggest-result',id:req.id,rankings:[ranking('COURSE_011')]});assert.equal((await p).offers[0].toolId,'COURSE_011');
 const abort=new AbortController();p=router.reviewResponseSkills('Fees',{signal:abort.signal});abort.abort();assert.equal((await p).reason,'cancelled');
@@ -43,6 +44,7 @@ assert.equal((await router.reviewResponseSkills('x'.repeat(30001))).reason,'inpu
 p=router.reviewResponseSkills('Fees');req=worker.sent.at(-1);worker.reply({type:'abstained',id:req.id,reason:'token-budget'});assert.equal((await p).reason,'token-budget');
 assert.equal((await router.reviewResponseSkills('Fees',{timeoutMs:5})).reason,'timeout');
 console.log('PASS skill ranking, ambiguity, allowlist, explicit injection, stale/corrupt choices, complete chunking, boundaries and worker lifecycle.');
-const related=selectSkillOffers([[{toolId:'COURSE_011',score:.72},{toolId:'COURSE_012',score:.68},{toolId:'CORE_010',score:.4}]]);
+// Historical L6 two-close-match behavior is intentionally not used by BGE.
+const related=selectSkillOffers([[{toolId:'COURSE_011',score:.72},{toolId:'COURSE_012',score:.68},{toolId:'CORE_010',score:.4}]],'Xenova/all-MiniLM-L6-v2');
 assert.equal(related.offers.length,2);
 assert.equal(selectSkillOffers([[{toolId:'COURSE_011',score:.72},{toolId:'COURSE_012',score:.68},{toolId:'CORE_010',score:.65}]]).offers.length,0);
