@@ -23,10 +23,11 @@ export function choosePathwayHint(candidates:{id:string;score:number}[]):Pathway
   .sort((a,b)=>b.score-a.score).filter((c,i,a)=>a.findIndex(x=>x.id===c.id)===i);
  if(ranked.length<2||ranked[0].id!=='pathway')return {status:'abstained',reason:'not-pathway'};
  const score=ranked[0].score,margin=score-ranked[1].score;
- return score>=.48&&margin>=.06?{status:'selected',score,margin,reason:'pathway-relevant'}:{status:'abstained',reason:'uncertain'};
+ // 0.42 threshold: domain-specific career queries (e.g. cybersecurity) score ~0.45 vs generic pathway scenarios; margin >= 0.06 still guards against noise
+ return score>=.42&&margin>=.06?{status:'selected',score,margin,reason:'pathway-relevant'}:{status:'abstained',reason:'uncertain'};
 }
 export function validPathwayHint(h:any):h is PathwayHint {
- return h?.status==='selected'&&Number.isFinite(h.score)&&h.score>=.48&&h.score<=1&&Number.isFinite(h.margin)&&h.margin>=.06&&h.margin<=2;
+ return h?.status==='selected'&&Number.isFinite(h.score)&&h.score>=.42&&h.score<=1&&Number.isFinite(h.margin)&&h.margin>=.06&&h.margin<=2;
 }
 export function pathwayScore(response:any):number|null {
  const c=response?.state?.user_confidence;
