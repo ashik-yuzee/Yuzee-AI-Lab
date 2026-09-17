@@ -987,7 +987,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       for (const msg of conv.messages) {
         const role = msg.role === 'user' ? '**You**' : '**Oala**';
         lines.push(`### ${role}`);
-        if (msg.microToolName) lines.push(`*Tool: ${msg.microToolName}*`);
+        if (msg.routing?.toolId) lines.push(`*Tool: ${msg.routing.toolId}*`);
         lines.push(msg.content || '');
         lines.push('');
       }
