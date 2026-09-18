@@ -153,7 +153,7 @@ body:has(.mini-pathway-panel--resizing),body:has(.mini-pathway-panel--resizing) 
 .mini-pathway-report nav li{padding:0}
 .mini-pathway-report td[data-learning-tone]{box-shadow:inset 3px 0 var(--course-edge)}
 .mini-pathway-report .response-data-table tr[data-learning-tone] td:first-child{background:var(--course-bg)!important;color:var(--course-ink)!important;box-shadow:inset 3px 0 var(--course-edge)}
-.mini-pathway-report .guidance-row[data-learning-tone]>.guidance-row-content{border-left:3px solid var(--course-edge);padding-left:12px;background:linear-gradient(90deg,var(--course-bg),transparent 60%)}
+.mini-pathway-report .guidance-row[data-learning-tone]>.guidance-row-content{box-shadow:inset 3px 0 var(--course-edge);padding-left:12px;background:linear-gradient(90deg,var(--course-bg),transparent 60%)}
 
 /* ── Streaming ── */
 .mini-pathway-stream-status{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 8px}
