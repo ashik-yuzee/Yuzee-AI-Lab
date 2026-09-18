@@ -5,11 +5,11 @@
   },
   {
     "id": "CORE_004",
-    "text": "Broaden from a narrow study or work interest to its parent field and neighbouring fields. Zoom out to see the bigger picture."
+    "text": "Show how a specific study topic or occupation fits within broader fields. Explain what larger sector or parent discipline it belongs to and which adjacent areas are connected."
   },
   {
     "id": "CORE_005",
-    "text": "Connect a study or work topic to related courses, skills, jobs, employers and industries. Show relationships across domains."
+    "text": "Show connections between a course, occupation or skill and the related training options, workplace abilities, employers and industries linked to it. Map the broader ecosystem around a subject."
   },
   {
     "id": "CORE_006",
@@ -17,15 +17,15 @@
   },
   {
     "id": "CORE_007",
-    "text": "Explain an unfamiliar education or employment term in plain language. Define it with a concrete everyday example for a beginner."
+    "text": "Explain what an unfamiliar education or employment term means in everyday language. Give a simple definition with a concrete example that makes the concept immediately clear."
   },
   {
     "id": "CORE_008",
-    "text": "Explain why a piece of study or career information matters to this person's decision. Show its practical consequences and relevance."
+    "text": "Explain why a specific study or career finding should influence someone's decision. Show the practical consequences of that information and why it matters to their choices."
   },
   {
     "id": "CORE_009",
-    "text": "Choose one useful action the person can take now after reviewing options. Prioritise the next step rather than constructing an entire plan."
+    "text": "Having reviewed study or career options, identify the single most valuable next action for the person to take in their education or employment journey. Recommend one concrete step and explain why it takes priority."
   },
   {
     "id": "CORE_010",
@@ -45,7 +45,7 @@
   },
   {
     "id": "COURSE_004",
-    "text": "Explain the overall architecture of a course: total credits, core subjects, elective choices, prerequisites and sequence across years or terms."
+    "text": "Describe the full structure of a degree or course program: compulsory subjects and elective options, total credit points required, prerequisite sequences and how the learning builds year by year or term by term."
   },
   {
     "id": "COURSE_005",
@@ -53,7 +53,7 @@
   },
   {
     "id": "COURSE_006",
-    "text": "Explain the majors, minors, streams and specialisations available inside a particular degree. Compare these course branches and their focus."
+    "text": "Describe and compare the majors, minors, streams and specialisations a student can choose inside a degree program. Help someone decide which specialisation to select and how each focus differs."
   },
   {
     "id": "COURSE_007",
@@ -65,7 +65,7 @@
   },
   {
     "id": "COURSE_009",
-    "text": "Identify employers that recruit graduates with the capabilities taught by a particular course. Connect course outcomes to companies and their roles."
+    "text": "Identify which organisations and employers hire graduates of a particular course or qualification. Explain which types of companies recruit people with those capabilities."
   },
   {
     "id": "COURSE_010",
@@ -101,7 +101,7 @@
   },
   {
     "id": "CAREER_001",
-    "text": "Describe an occupation: purpose, usual responsibilities, working environment, entry routes and who may enjoy the work."
+    "text": "Give a detailed description of a particular occupation: what people in that role do day-to-day, the kinds of organisations that employ them, typical entry pathways and what personal interests or abilities suit the work."
   },
   {
     "id": "CAREER_002",
@@ -117,7 +117,7 @@
   },
   {
     "id": "CAREER_005",
-    "text": "Plan a move from one occupation or industry to a different career. Compare transition routes and what must change from the person's present work."
+    "text": "Help someone change from their current job or industry into a different occupation. Identify which skills from their present work transfer, what they need to learn and the most realistic routes to make that career change."
   },
   {
     "id": "JOB_001",
@@ -141,15 +141,15 @@
   },
   {
     "id": "JOB_006",
-    "text": "Assess employment prospects for an occupation. Use labour-market evidence to explain demand, growth and competition for jobs."
+    "text": "Assess the current and near-term employment outlook for a particular occupation. Use labour-market data to explain whether job demand is growing, stable or declining and what that means for someone pursuing that career."
   },
   {
     "id": "JOB_007",
-    "text": "Compare demand for the same occupation in different cities or regions. Identify where that job has more opportunities."
+    "text": "Compare job availability for the same occupation across different Australian cities or regions. Explain where a particular role is in higher demand and which location offers better opportunities."
   },
   {
     "id": "JOB_008",
-    "text": "Examine which tasks in one occupation could be automated or supported by AI. Explain changing human responsibilities task by task."
+    "text": "Analyse the daily tasks in a specific occupation to identify which activities could be taken over by AI automation and which still require human judgment. Explain the resulting shift in work responsibilities."
   },
   {
     "id": "SKILL_001",
@@ -157,11 +157,11 @@
   },
   {
     "id": "SKILL_002",
-    "text": "Describe beginner, intermediate and advanced proficiency in a specific skill. Give observable examples that distinguish each capability level."
+    "text": "Describe what beginner, intermediate and advanced ability looks like for a named skill. Give observable, practical examples that clearly mark the boundary between each proficiency level."
   },
   {
     "id": "SKILL_003",
-    "text": "Compare a person's current skills with a target role's required skills. Identify demonstrated capabilities and missing skill areas."
+    "text": "Compare what a person already knows or can demonstrate against what a specific target job or role requires. Name which skills are already evidenced and which gaps still need to be filled."
   },
   {
     "id": "SKILL_004",
@@ -169,11 +169,11 @@
   },
   {
     "id": "SKILL_005",
-    "text": "Prioritise which skills a person should learn next for their goal. Explain learning order, dependencies and expected benefit."
+    "text": "Identify and rank the skills a person should develop next to progress toward their career or study goal. Explain the recommended learning sequence and why each skill has priority over others."
   },
   {
     "id": "SKILL_006",
-    "text": "Assess whether demand for one specific skill is increasing or declining. Explain the evidence for that skill's market value over time."
+    "text": "Determine whether demand for a particular named skill is growing or falling in the job market. Show evidence of the trend and what it means for someone who holds or is building that skill."
   },
   {
     "id": "SKILL_007",
@@ -185,7 +185,7 @@
   },
   {
     "id": "SKILL_009",
-    "text": "Help someone acquire a specific skill through learning activities, practice, feedback and resources suited to their starting level."
+    "text": "Help someone develop a specific professional or work-related skill. Plan practical learning activities, hands-on exercises and feedback cycles suited to their current ability and career needs."
   },
   {
     "id": "SKILL_010",
@@ -193,15 +193,15 @@
   },
   {
     "id": "SKILL_011",
-    "text": "Identify job roles in which a particular skill is valuable. Turn an existing capability into employment possibilities."
+    "text": "Given a skill or personal strength, identify which occupations and job roles make regular use of that ability. Connect what someone is good at to concrete employment opportunities."
   },
   {
     "id": "SKILL_012",
-    "text": "Find employers hiring people with a particular skill. Use recruiting evidence to connect the capability to companies."
+    "text": "Search for organisations and businesses currently advertising for people who have a specific technical or professional skill. Use recruitment evidence to match the capability with employers."
   },
   {
     "id": "IND_001",
-    "text": "Explain an industry's structure, main activities, value chain and workforce. Give an overview of a whole sector."
+    "text": "Explain how an entire industry or sector operates: its main business activities, how the supply chain fits together, major employers and the types of workforce it employs. Give a structured overview."
   },
   {
     "id": "IND_002",
@@ -213,7 +213,7 @@
   },
   {
     "id": "IND_004",
-    "text": "Map the different occupations employed across an industry, including frontline, support and specialist roles."
+    "text": "List and describe the various types of jobs and occupations employed across an industry sector, including frontline workers, administrators, technical specialists and management roles beyond the most visible positions."
   },
   {
     "id": "IND_005",
@@ -253,7 +253,7 @@
   },
   {
     "id": "COMP_002",
-    "text": "Map the job families and occupations within a particular company. Explain the kinds of roles its workforce contains."
+    "text": "List and describe the job families, occupational categories and types of roles that exist across a particular employer's workforce. Explain what kinds of positions this organisation contains beyond its most visible jobs."
   },
   {
     "id": "COMP_003",
@@ -293,7 +293,7 @@
   },
   {
     "id": "COMP_012",
-    "text": "Identify existing employees or job families that could move into other roles inside the same organisation. Plan internal mobility and reskilling."
+    "text": "Plan internal career mobility within an organisation. Identify which existing staff or teams could be reskilled and transitioned into different roles inside the same employer through targeted training."
   },
   {
     "id": "COMP_013",

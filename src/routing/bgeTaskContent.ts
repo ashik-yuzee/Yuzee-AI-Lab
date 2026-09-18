@@ -11,6 +11,7 @@ export const bgeNeedScenarios = [
  {id:'research',text:'Verify the current admission conditions and application closing date for a particular qualification and institution.'},
  {id:'research',text:'Find the official subject handbook, course accreditation and curriculum for this provider.'},
  {id:'research',text:'Check attendance, practical training, placement and timetable rules for this institution and course.'},
+ {id:'research',text:'Find the clinical placement requirements and supervised practice hours needed for this qualification at this provider.'},
  {id:'other',text:'Hello. Thank you. Stop. Cancel this request. Change the topic.'},
  {id:'other',text:'Unrelated requests about food, weather, sport, travel bookings, household repairs or entertainment.'},
 ] as const;

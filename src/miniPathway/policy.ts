@@ -15,8 +15,11 @@ export const pathwayScenarios = [
  {id:'pathway',text:'My career direction is clear. Show the next stages, skills, experience and learning options in my career pathway.'},
  {id:'pathway',text:'I have chosen IT support because I enjoy diagnosing technical problems and explaining solutions to people. Outline a flexible plan for learning, practice and my first support job.'},
  {id:'pathway',text:'I have compared the work and am confident in my career choice. Show the next stages towards my first job, building on my strengths and keeping the plan flexible.'},
+ {id:'pathway',text:'I want to move from my current job in retail into IT. I do not know the steps to take or which route is realistic.'},
+ {id:'pathway',text:'I am returning to work after being away to raise children. Help me explore what is realistic and map the steps back into employment.'},
+ {id:'pathway',text:'Plan the stages from my first coding course all the way through to landing my first software development job.'},
  {id:'other',text:'Explain a specific course fee, HECS repayment calculation, scholarship or entry requirement. I do not need a new career pathway.'},
- {id:'other',text:'Teach me a specific skill or explain a term with examples. I know my learning goal.'},
+ {id:'other',text:'Teach me a specific skill or explain a technical term with worked examples. I know my learning goal and do not need a pathway.'},
  {id:'other',text:'Hello, thanks, okay. Tell me about the weather or a recipe. Stop or cancel this conversation.'},
  {id:'other',text:'What does Yuzee offer? Explain the services, privacy policy, account or application status.'},
 ] as const;

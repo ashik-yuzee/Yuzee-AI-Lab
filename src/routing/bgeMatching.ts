@@ -2,7 +2,7 @@ import content from './bgeSkillContent.json';
 import registry from './microtools.json';
 import {BGE_OUT_OF_SCOPE,bgeDomainExamples} from './bgeDomain';
 export const BGE_MODEL_ID='Xenova/bge-small-en-v1.5';
-export const BGE_CONTENT_VERSION='bge-skills-v1';
+export const BGE_CONTENT_VERSION='bge-skills-v2';
 export const bgeMatchingIndex=[
  ...content.flatMap(t=>{const legacy=registry.find(x=>x.id===t.id)!;return [
   {toolId:t.id,text:t.text},
