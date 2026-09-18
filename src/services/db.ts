@@ -118,6 +118,7 @@ export async function initDb(): Promise<void> {
     console.log("[db] Schema ready");
   } catch (err) {
     console.error("[db] Init failed:", err);
+    pool = null;
   }
 }
 
