@@ -8,9 +8,9 @@ export const LocationPromptModal: React.FC = () => {
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  useEffect(() => { if (!userLocation && !sessionStorage.getItem(SESSION_KEY)) setVisible(true); }, []);
+  useEffect(() => { if (!userLocation && !sessionStorage.getItem(SESSION_KEY) && !localStorage.getItem(SESSION_KEY)) setVisible(true); }, []);
   useEffect(() => { if (visible) inputRef.current?.focus(); }, [visible]);
-  const close = () => { sessionStorage.setItem(SESSION_KEY, '1'); setVisible(false); };
+  const close = () => { sessionStorage.setItem(SESSION_KEY, '1'); try { localStorage.setItem(SESSION_KEY, '1'); } catch {} setVisible(false); };
   const save = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) { setError('Type a town, city or postcode, or choose Skip for now.'); inputRef.current?.focus(); return; }

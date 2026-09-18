@@ -13,7 +13,7 @@ export function useDrawerResize(open:boolean,expanded:boolean){
  const maximum=Math.max(1,viewport>=1200?viewport-360:viewport);
  const minimum=Math.min(320,maximum);
  const clamp=(value:number)=>Math.round(Math.max(minimum,Math.min(maximum,value)));
- const defaultWidth=viewport>=1600?490:viewport<1200?480:440;
+ const defaultWidth=Math.floor(viewport*0.45);
  const width=clamp(preferred??defaultWidth);
  useEffect(()=>{const resize=()=>setViewport(window.innerWidth);window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
  useEffect(()=>{try{if(preferred===null)localStorage.removeItem(WIDTH_KEY);else localStorage.setItem(WIDTH_KEY,String(preferred));}catch{/* Resizing still works if browser storage is unavailable. */}},[preferred]);

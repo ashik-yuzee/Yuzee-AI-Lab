@@ -2303,10 +2303,14 @@ function makeBypassResponse(kind: 'greeting' | 'farewell' | 'rubbish' | 'idle'):
 // Vite Middleware / Static Serving
 // -------------------------------------------------------------
 async function startServer() {
+  let httpServer: import("http").Server | undefined;
   if (process.env.NODE_ENV !== "production") {
     const { createServer: createViteServer } = await import("vite");
+    const { createServer: createHttpServer } = await import("http");
+    // Share the HTTP server with Vite so HMR WebSocket runs on the same port
+    httpServer = createHttpServer(app);
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: { server: httpServer } },
       appType: "spa",
     });
     app.use(vite.middlewares);
@@ -2355,7 +2359,7 @@ async function startServer() {
     pingIv.unref();
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  (httpServer ?? app).listen(PORT, "0.0.0.0", () => {
     console.log(`Yuzee AI Token Lab running on port ${PORT}`);
   });
 }

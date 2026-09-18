@@ -1,4 +1,3 @@
-import {PathwayColourGuide} from "./PathwayLearningCues";
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
 import {Map,ArrowRight,X,Maximize2,Minimize2} from 'lucide-react';
@@ -15,6 +14,7 @@ import {MiniPathwayStreaming} from './MiniPathwayStreaming';
 import type {YuzeeContentBlock} from '../types';
 import {usePathwayHistory} from '../miniPathway/usePathwayHistory';
 import {PathwayHistorySelector} from './PathwayHistorySelector';
+import {PathwayColourGuide} from './PathwayLearningCues';
 
 function waitForRouter(signal:AbortSignal):Promise<boolean>{
  return new Promise(resolve=>{
@@ -61,6 +61,7 @@ export function MiniPathwayExperience(){
  };
  useEffect(()=>{setMiniPathwayOpen(false);setExpanded(false);setError('');setHistoryTarget(document.getElementById('saved-pathways-control'));return()=>active.current?.abort();},[conv?.id]);
  useEffect(()=>{document.getElementById('mini-pathway-body')?.scrollTo({top:0});},[run?.id]);
+ useEffect(()=>{document.getElementById('mini-pathway-body')?.scrollTo({top:0});},[expanded]);
  useEffect(()=>{
   const controller=new AbortController();let alive=true;
   setTarget(document.getElementById('mini-pathway-offer'));setDecision(null);setHint(null);setError('');
@@ -103,8 +104,8 @@ export function MiniPathwayExperience(){
  const available=!!decision&&decision.action!=='none';
  const currentSaved=[...history.runs].reverse().find(r=>r.sourceMessageId===sourceId);
  const chooseSaved=(id:string)=>{history.select(id);setError('');};
- const card=available&&target&&!isStreaming?createPortal(<button ref={opener} type="button" className="mini-pathway-offer" disabled={loading} onClick={()=>{if(currentSaved){chooseSaved(currentSaved.id);reveal();}else if(hint)void generate('manual',hint);}}>
-  <Map size={21}/><span><strong>{loading?'Preparing your mini pathway…':currentSaved?'Open your mini pathway':'Explore a mini pathway'}</strong><small>See possible routes, trade-offs and a practical next step.</small></span><ArrowRight size={19}/>
+ const card=!!currentSaved&&target&&!isStreaming?createPortal(<button ref={opener} type="button" className="mini-pathway-offer" disabled={loading} onClick={()=>{chooseSaved(currentSaved.id);reveal();}}>
+  <Map size={21}/><span><strong>{loading?'Preparing your mini pathway…':'Open your mini pathway'}</strong><small>See possible routes, trade-offs and a practical next step.</small></span><ArrowRight size={19}/>
  </button>,target):null;
  const savedControl=historyTarget&&(history.runs.length>0||history.error||loading)?createPortal(<button type="button" className="mini-pathway-saved-control" aria-label={`Open saved pathways (${history.runs.length})`} aria-expanded={isMiniPathwayOpen} aria-controls="mini-pathway-panel" onClick={()=>{setError('');reveal();}}><Map size={17}/><span>Saved pathways</span><b>{history.runs.length}</b></button>,historyTarget):null;
  return <>{card}{savedControl}{isMiniPathwayOpen&&<aside id="mini-pathway-panel" ref={panel} className={`mini-pathway-panel${expanded?' mini-pathway-panel--expanded':''}${drawer.resizing?' mini-pathway-panel--resizing':''}`} style={expanded?undefined:{width:drawer.width}} aria-label="Mini pathway">
@@ -115,12 +116,11 @@ export function MiniPathwayExperience(){
   </div></header>
   <PathwayHistorySelector runs={history.runs} selectedId={run?.id} messages={conv?.messages||[]} loading={loading} onSelect={chooseSaved}/>
   <div id="mini-pathway-body" className="mini-pathway-body">
-   <PathwayColourGuide/>
    {history.error&&<div className="mini-pathway-notice" role="alert"><p>{history.error}</p><button type="button" onClick={history.retry}>Reload saved pathways</button></div>}
    {!loading&&available&&hint&&!isStreaming&&!currentSaved&&history.runs.length>0&&<button type="button" className="mini-pathway-create" onClick={()=>void generate('manual',hint)}>Create a pathway from the latest answer <ArrowRight size={15}/></button>}
    {loading?<MiniPathwayStreaming stage={stage} blocks={draftBlocks} source={acceptedResponse(last?.structuredResponse||last?.content||'')} onStop={()=>{active.current?.abort();setDraftBlocks([]);setLoading(false);setError('Stopped. You can try again when you are ready.');}}/>:
     error?<div role="alert" className="mini-pathway-notice"><p>{error}</p>{hint&&!isStreaming&&<button type="button" onClick={()=>void generate('manual',hint)}>Try again</button>}{run&&<button type="button" onClick={()=>setError('')}>Return to saved pathway</button>}</div>:
-    run?.response?<><p className="mini-pathway-caption">{stale?'Saved from an earlier answer. You can keep this open while continuing your conversation.':'Options to explore, not a decision made for you. Continue answering in the main chat.'}</p>{run.version!==MINI_PATHWAY_VERSION&&<div className="mini-pathway-version-note"><p>This saved pathway uses an earlier report format.</p>{hint&&!stale&&!isStreaming&&<button type="button" onClick={()=>void generate('manual',hint)}>Update this pathway</button>}</div>}<div className="mini-pathway-report"><ProtocolV13Renderer data={miniPathwayPanelResponse(run.response)} readOnly hideRecommendedActions pathwayLearningCues/></div><p className="mini-pathway-caption">Generated by Gemini from this conversation. No source lookup was performed; check course details, time estimates and eligibility before relying on them.</p></>:
+    run?.response?<>{stale&&<p className="mini-pathway-caption">Saved from an earlier answer. You can keep this open while continuing your conversation.</p>}{run.version!==MINI_PATHWAY_VERSION&&<div className="mini-pathway-version-note"><p>This saved pathway uses an earlier report format.</p>{hint&&!stale&&!isStreaming&&<button type="button" onClick={()=>void generate('manual',hint)}>Update this pathway</button>}</div>}<div className="mini-pathway-report"><PathwayColourGuide/><ProtocolV13Renderer data={miniPathwayPanelResponse(run.response)} readOnly hideRecommendedActions pathwayLearningCues/></div><p className="mini-pathway-caption">Generated by Gemini from this conversation. No source lookup was performed; check course details, time estimates and eligibility before relying on them.</p></>:
     <p className="mini-pathway-caption">Continue in the chat. You can open a mini pathway when it is relevant.</p>}
   </div>
  </aside>}</>;

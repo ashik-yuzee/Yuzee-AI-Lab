@@ -734,16 +734,17 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         <p className="text-[15px] text-[#0d0d0d] leading-[1.65] font-normal">{careText}</p>
       )}
 
-      {blocks[0] && <div id={`${outputAnchor}-section-0`} className="scroll-mt-6" data-output-type={blocks[0].type} data-output-variant={blocks[0].variant || "default"}>{renderBlock(blocks[0], 0)}</div>}
-
       {readableSections.length >= 5 && (
-        <nav aria-label="In this answer" className="rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3">
-          <p className="text-sm font-semibold text-slate-700 mb-2">In this answer</p>
-          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-            {readableSections.map(section => <li key={section.index}><a className="text-sky-800 underline decoration-sky-200 underline-offset-4 hover:decoration-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4" href={`#${outputAnchor}-section-${section.index}`}>{section.title}</a></li>)}
-          </ul>
-        </nav>
+        <details className="in-this-answer-details">
+          <summary>In this answer <span>Jump to a section</span></summary>
+          <nav aria-label="In this answer">
+            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+              {readableSections.map(section => <li key={section.index}><a className="text-sky-800 underline decoration-sky-200 underline-offset-4 hover:decoration-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4" href={`#${outputAnchor}-section-${section.index}`}>{section.title}</a></li>)}
+            </ul>
+          </nav>
+        </details>
       )}
+      {blocks[0] && <div id={`${outputAnchor}-section-0`} className="scroll-mt-6" data-output-type={blocks[0].type} data-output-variant={blocks[0].variant || "default"}>{renderBlock(blocks[0], 0)}</div>}
       {/* All explanations remain visible; links help readers move through longer answers. */}
       <div className="space-y-3">
         {blocks.slice(1).map((block, offset) => { const idx=offset+1; return <div key={block.id || idx} id={`${outputAnchor}-section-${idx}`} className="scroll-mt-6" data-output-type={block.type} data-output-variant={block.variant || "default"}>{renderBlock(block, idx)}</div>; })}

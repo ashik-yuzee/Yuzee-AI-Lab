@@ -1,0 +1,16 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/components/mini-pathway.css"
+        ],
+        "createdAt": "2026-09-18T04:46:59.823Z"
+      }
+    ]
+  }
+}

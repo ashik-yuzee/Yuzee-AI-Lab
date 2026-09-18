@@ -86,31 +86,28 @@ html.font-open-sans body {
 
 /* Response tables stay horizontally scrollable on small screens. */
 .response-table-scroll {
-  overflow-x: scroll;
+  overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-gutter: stable;
-  scrollbar-width: auto;
-  scrollbar-color: #6e584b #ede8e3;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(114,68,198,.18) transparent;
   -webkit-overflow-scrolling: touch;
 }
 
 .response-table-scroll::-webkit-scrollbar {
-  height: 10px;
+  height: 3px;
 }
 
 .response-table-scroll::-webkit-scrollbar-track {
-  background: #ede8e3;
-  border-radius: 9999px;
+  background: transparent;
 }
 
 .response-table-scroll::-webkit-scrollbar-thumb {
-  background: #6e584b;
-  border: 2px solid #ede8e3;
+  background: rgba(0,0,0,.15);
   border-radius: 9999px;
 }
 
 .response-table-scroll::-webkit-scrollbar-thumb:hover {
-  background: #5a4038;
+  background: rgba(114,68,198,.22);
 }
 
 /* Read comparisons without horizontal scrolling on a phone. */
