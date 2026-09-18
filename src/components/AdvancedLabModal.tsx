@@ -90,6 +90,7 @@ export const AdvancedLabModal: React.FC = () => {
     maxOutputTokens: undefined,
     useMultiTurn: true,
     useStructuredOutput: false,
+    usePathwayRag: false,
   };
 
   const handleCareerFieldChange = (field: keyof StructuredMemoryCapsule, value: string) => {
@@ -677,6 +678,13 @@ export const AdvancedLabModal: React.FC = () => {
                       description="Routes summarization, compaction, and classification tasks to Gemini 3.5 Flash-Lite for minimum cost."
                       checked={conv.useFlashLiteUtility ?? true}
                       onChange={(checked) => updateCurrentConversationSettings({ useFlashLiteUtility: checked })}
+                    />
+
+                    <AppleToggle
+                      label="Pathway RAG Context"
+                      description="Injects relevant sections of the active mini pathway into each follow-up turn so the chat model can reference routes, timelines and next steps. Adds ~1,250 tokens per turn. Off by default."
+                      checked={!!conv.usePathwayRag}
+                      onChange={(checked) => updateCurrentConversationSettings({ usePathwayRag: checked })}
                     />
                   </div>
 

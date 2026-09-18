@@ -273,6 +273,7 @@ export interface Conversation {
   maxOutputTokens?: number;
   useMultiTurn?: boolean;
   useStructuredOutput?: boolean;
+  usePathwayRag?: boolean;
   messages: ChatMessage[];
   compactionHistory: CompactionMetrics[];
 }
