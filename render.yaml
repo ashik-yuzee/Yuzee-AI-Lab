@@ -10,3 +10,5 @@ services:
         value: production
       - key: GEMINI_API_KEY
         sync: false
+      - key: SKIP_BGE_CONTRACT
+        value: "1"

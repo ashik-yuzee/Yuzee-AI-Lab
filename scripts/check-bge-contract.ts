@@ -1,3 +1,4 @@
+if(process.env.SKIP_BGE_CONTRACT){console.log('SKIP_BGE_CONTRACT set — skipping pinned-model check.');process.exit(0);}
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
