@@ -1,0 +1,278 @@
+{
+  "test_id": "DISCOVER_004-T05",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 30,
+  "input_context": {
+    "user_message": "I want to explore big five snapshot, but what I said earlier probably contradicts this.",
+    "prior_context_text": "Prior context contains conflicting signals.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "6d41f00ae8c3ef0d230d113a53e1881ecac5ce690b741a0f2be94afd535a70d1",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5028
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "work_tendency_scenario",
+        "purpose": "Ground initial personality tendencies in a concrete work-style situation rather than abstract labels.",
+        "prompt": "When starting a complex new team project with ambiguous guidelines, which situation feels most natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_structure",
+            "label": "Build structure first",
+            "detail": "Clarify timelines, define roles, and organize a step-by-step plan before diving in."
+          },
+          {
+            "id": "opt_ideation",
+            "label": "Explore possibilities freely",
+            "detail": "Brainstorm novel angles, experiment, and adapt direction as new ideas emerge."
+          },
+          {
+            "id": "opt_coordination",
+            "label": "Focus on team alignment",
+            "detail": "Check in with teammates, ensure consensus, and maintain harmony across different viewpoints."
+          },
+          {
+            "id": "opt_action",
+            "label": "Execute and iterate quickly",
+            "detail": "Start building or testing immediate components to learn from tangible feedback."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User primary working style and personality tendencies across Big Five dimensions",
+      "Specific contradictory preferences from prior conversations"
+    ],
+    "result": {
+      "limitations": [
+        {
+          "label": "Non-psychometric instrument",
+          "detail": "This exploratory snapshot provides qualitative tendencies rather than clinical percentiles or fixed career rules.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "next_actions": [],
+      "personality_tendencies": [],
+      "summary": "Starting personality tendencies exploration using concrete scenario grounding."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Initial scenario response needed to identify baseline work tendencies."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated Personality Tendencies Snapshot with an initial work scenario to resolve context ambiguity.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Pending user response to the first work scenario."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: baseline personality tendencies in team/work settings."
+      ],
+      "recommended_next_action": "Complete the work scenario selection to establish grounded tendencies."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets DISCOVER_004 matching the requested objective.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims prior context contains conflicting signals ('Prior context contains conflicting signals.'), but no concrete prior facts or answers are provided in the fixture context.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The emitted question is concrete, scenario-based, discriminative, and allows unsure.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses scenario_test, which is explicitly allowed by the V2 UI allow-list [spectrum | scenario_test | single_choice | short_answer | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the objective prompt overrides regarding qualitative exploration and scenario-based approach.",
+          "evidence_pointer": "candidate.result.limitations[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported factual assertions or fake psychometric claims are made; unknowns are cleanly preserved.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Explicitly disclaims clinical/validated percentiles, adhering to the qualitative reflection override.",
+          "evidence_pointer": "candidate.result.limitations[0].detail"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops in NEEDS_INPUT at interaction 0 without premature completion.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blockers appropriately set, avoiding any predictive success score.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns the required envelope with confirmed inputs, result, unknowns, readiness, and compact handoff.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard structured intent (CONTINUE_CHAT) with no illegal direct endpoints or unconfirmed writes.",
+          "evidence_pointer": "candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted specific contradictory prior facts/turns, marking prior_context only as a placeholder string, preventing evaluation of specific context contradiction resolution."
+      ],
+      "summary": "Candidate validly initializes DISCOVER_004 with an approved scenario_test primitive, qualitative psychometric disclaimers, and correct readiness/handoff schemas. Known-context reuse is marked NOT_ASSESSABLE due to missing concrete prior facts in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2991,
+      "total_input_tokens": 2139,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2139
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 852,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2536,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2536
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 870
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5028,
+  "usage": {
+    "total_tokens": 2913,
+    "total_input_tokens": 2121,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2121
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 792,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5210,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5210
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 809
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "SCHOOL_028",
+  "reason": "Explore flexible, part-time, online, and local training pathways structured around your daily family and caring responsibilities.",
+  "disposition": "SUGGEST",
+  "selectionId": "046f139c-e9cc-4ba1-8344-7f5580e7f50f",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7884506769285982,
+  "margin": 0.021056202950414216,
+  "userConfidence": null,
+  "createdAt": 1789733766422
+}

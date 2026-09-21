@@ -1,0 +1,255 @@
+{
+  "test_id": "PROFILE_005-T03",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "MINIMAL_INPUT",
+  "model": "gemini-3.7-flash",
+  "source_row": 504,
+  "input_context": {
+    "user_message": "Help me with my skills, but I have not given you much information.",
+    "prior_context_text": "Required target/entity/context may be missing.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "4115c60cd8be83d15a3ca45279bec700c7f0f1a5b0dc640100cb86ec5246ac90",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4282
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "profile_editor",
+        "id": "skills_entry_editor",
+        "purpose": "Capture initial self-reported skills or areas of strength from the user",
+        "prompt": "List the skills, tools, or strengths you currently use or want to build into your profile.",
+        "required": true,
+        "options": [],
+        "content": [
+          {
+            "label": "Skill Entry Guide",
+            "detail": "Enter specific skills (e.g., Python, Team Leadership, Data Analysis, Customer Service). You can confirm evidence and proficiency afterwards.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Skills inventory initialization requested",
+        "basis": "User requested assistance setting up skills profile without prior context",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "User's specific skills and capabilities",
+      "Evidence status for individual skills",
+      "User proficiency levels"
+    ],
+    "result": {
+      "summary": "Waiting for initial user skills input to populate the capability profile inventory."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Skills Information",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User wants to build their skills profile; prompting for initial skill inputs.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Skills profile initialized and waiting for user input."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Specific skills, proficiency, and evidence"
+      ],
+      "recommended_next_action": "Enter key skills to map evidence and proficiency."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correct objective PROFILE_005 maintained for the user's request to work on their skills.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no pre-existing confirmed facts in the context, and the candidate did not re-ask already known information.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The prompt asks for concrete initial skills/tools/strengths needed to build the profile inventory without asking redundant or irrelevant questions.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'profile_editor', which is explicitly allowed by the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the skill profile capture workflow and correctly marks readiness as disabled in accordance with the V2 readiness policy (NONE).",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Did not invent any skills or proficiencies when none were provided; accurately flagged missing data under unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic scores or career success claims were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Returned NEEDS_INPUT appropriately because critical skills data is missing from the initial prompt.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness policy for PROFILE_005 is NONE; readiness is appropriately set to enabled: false with no arbitrary score.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, standard envelope with compact handoff to Oala containing confirmed inputs, unknowns, result, and next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, unsafe autonomous writes, or policy violations.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate properly handled missing initial skills information by setting status to NEEDS_INPUT, deploying a valid V2 primitive ('profile_editor'), respecting the readiness policy (NONE), and avoiding any fabricated data."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2892,
+      "total_input_tokens": 2105,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2105
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 787,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2502,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2502
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 805
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4282,
+  "usage": {
+    "total_tokens": 2801,
+    "total_input_tokens": 2193,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2193
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 608,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5878,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5878
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 625
+          }
+        ]
+      }
+    ]
+  }
+}

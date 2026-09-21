@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "DISCOVER_001",
+  "reason": "Explore broad activity interests to help identify which career paths and tasks naturally suit you.",
+  "disposition": "SUGGEST",
+  "selectionId": "3934bfb2-6953-4557-9f14-cfb65f3c4f3a",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8975683296974154,
+  "margin": 0.1220811048166639,
+  "userConfidence": null,
+  "createdAt": 1789733780426
+}

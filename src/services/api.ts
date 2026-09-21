@@ -1,3 +1,4 @@
+import {visibleWorkspaceId} from '../orchestration/workspacePresence';
 import { parseChatProgress } from "../ux/streamProgress";
 import {
   CapabilitiesResponse,
@@ -355,7 +356,7 @@ export interface StreamCallbacks {
   onDelta?: (text: string) => void;
   onStructured?: (data: any) => void;
   onValidation?: (data: any) => void;
-  onProtocolValidationError?: (data: { errors: string[]; rawJson?: string }) => void;
+  onProtocolValidationError?: (data: { errors: string[]; rawJson?: string; reviewFailureCode?: string }) => void;
   onUsage?: (data: any) => void;
   onCompaction?: (data: any) => void;
   onDone?: () => void;
@@ -366,6 +367,8 @@ export function streamChatMessage(
   conversationId: string,
   payload: {
     message?: string;
+    objectiveResultId?: string;
+    objectiveResultRevision?: number;
     userEvent?: any;
     model?: string;
     strategy?: OptimizationStrategy;
@@ -419,7 +422,7 @@ export function streamChatMessage(
             return await fetch(`${API_BASE}/api/conversations/${conversationId}/messages`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
+              body: JSON.stringify({...payload,visibleWorkspaceId:visibleWorkspaceId(conversationId)}),
               signal: controller.signal,
             });
           } catch (err: any) {

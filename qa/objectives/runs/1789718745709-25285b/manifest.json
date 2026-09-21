@@ -1,0 +1,26 @@
+{
+  "run_id": "1789718745709-25285b",
+  "created": "2026-09-18T08:05:45.710Z",
+  "version": "objective-harness-0.1",
+  "model": "gemini-3.7-flash",
+  "api": "Interactions",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "test_ids": [
+    "DISCOVER_001-T01",
+    "DISCOVER_001-T02",
+    "DISCOVER_001-T03",
+    "DISCOVER_001-T04",
+    "DISCOVER_001-T05",
+    "DISCOVER_001-T06",
+    "DISCOVER_001-T07",
+    "DISCOVER_001-T08"
+  ],
+  "test_count": 8,
+  "configuration": {
+    "temperature": 0,
+    "seed": 316,
+    "thinking_level": "low",
+    "max_output_tokens": 8192
+  },
+  "production_modified": false
+}

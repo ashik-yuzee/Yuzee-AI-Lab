@@ -1,10 +1,11 @@
-export type ChatProgressPhase = 'routing' | 'waiting' | 'thinking' | 'receiving' | 'checking' | 'reviewing';
+export type ChatProgressPhase = 'routing' | 'waiting' | 'thinking' | 'receiving' | 'checking' | 'reviewing' | 'retrying';
 export type ChatStreamProgress = { phase: ChatProgressPhase };
 const phases: Record<ChatProgressPhase,{titles:string[];subtext:string}> = {
   routing:{titles:['Choosing useful guidance'],subtext:'Finding a focus for your question. You can stop at any time.'},
   waiting:{titles:['Getting your answer ready','Waiting for a response'],subtext:'You can stop at any time. Your question will stay here.'},
   thinking:{titles:['Considering your question','Working on a useful answer'],subtext:'A clear answer first, then the next useful step.'},
   receiving:{titles:['Your answer is coming through','Receiving your answer'],subtext:'We will show it once the complete response has been checked.'},
+  retrying:{titles:['Gemini is busy — retrying once'],subtext:'Your message is kept. You can stop this request at any time.'},
   reviewing:{titles:['Reviewing the explanation','Checking claims against the context'],subtext:'Checking the detail against the information provided.'},
   checking:{titles:['Checking the display format'],subtext:'Making sure the answer is ready to display.'},
 };

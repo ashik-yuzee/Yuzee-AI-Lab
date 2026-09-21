@@ -1,0 +1,429 @@
+{
+  "test_id": "SUP-05",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2.1",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "What will I learn from this unit, and does it prove I can do the job?",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "course": "Fictional Intro to Data",
+      "goal": "Understand skills taught versus ability proven"
+    },
+    "approved_evidence": [
+      {
+        "id": "fixture-course-1",
+        "kind": "SYNTHETIC_APPROVED_EXCERPT",
+        "as_of": "2026-09-18",
+        "text": "The unit introduces spreadsheets and cleaning a practice dataset. Learners submit one practice workbook for individual feedback. No workplace assessment is specified."
+      }
+    ],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "61bc9c40967a130d57956b628370acf64b700a60367cdadae4e72a521d33d927",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.next_actions"
+        }
+      ],
+      "latency_ms": 8189
+    }
+  ],
+  "failures": [
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.next_actions"
+    }
+  ],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "evidence_curriculum_overview",
+        "purpose": "Show approved evidence regarding unit contents and assessment",
+        "prompt": "Current curriculum evidence for Fictional Intro to Data",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Curriculum Excerpt",
+            "detail": "The unit introduces spreadsheets and cleaning a practice dataset. Learners submit one practice workbook for individual feedback. No workplace assessment is specified.",
+            "source_status": "SOURCED_CURRENT_FACT",
+            "evidence_refs": [
+              "fixture-course-1"
+            ]
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "skill_matrix",
+        "id": "skills_and_depth_breakdown",
+        "purpose": "Map curriculum content to learning depth and workplace evidence",
+        "prompt": "Breakdown of skills introduced versus workplace verification",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill / Capability",
+          "Learning Depth",
+          "Assessment Evidence",
+          "Workplace Verification"
+        ],
+        "rows": [
+          {
+            "label": "Spreadsheet Basics",
+            "cells": [
+              "Spreadsheet Fundamentals",
+              "INTRODUCED",
+              "Practice workbook submission",
+              "Not assessed in workplace context"
+            ]
+          },
+          {
+            "label": "Data Cleaning",
+            "cells": [
+              "Cleaning practice datasets",
+              "PRACTISED",
+              "One practice workbook with individual feedback",
+              "No workplace performance demonstrated"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "next_steps_handoff",
+        "purpose": "Provide clear paths forward for skill verification and pathway research",
+        "prompt": "Next checks and related exploration",
+        "required": true,
+        "options": [
+          {
+            "id": "check_gaps",
+            "label": "Explore Course Gap Check",
+            "detail": "Identify what additional practical evidence or projects are needed for employment."
+          },
+          {
+            "id": "continue_chat",
+            "label": "Discuss in Chat",
+            "detail": "Ask Oala how to demonstrate practical skills to employers."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "course": "Fictional Intro to Data",
+      "goal": "Understand skills taught versus ability proven"
+    },
+    "derived_signals": [
+      {
+        "signal": "Unit covers introductory concepts and practice tasks without proving workplace job readiness",
+        "basis": "Curriculum details practice dataset tasks and workbook feedback, but explicitly notes no workplace assessment is specified.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific industry tools or software versions taught beyond general spreadsheets",
+      "Employer recognition or external accreditation of the unit"
+    ],
+    "result": {
+      "course_capabilities": [
+        {
+          "skill_or_capability": "Spreadsheet Fundamentals",
+          "curriculum_basis": [
+            {
+              "label": "Unit Introduction",
+              "detail": "Unit introduces spreadsheets.",
+              "source_status": "SOURCED_CURRENT_FACT",
+              "evidence_refs": [
+                "fixture-course-1"
+              ]
+            }
+          ],
+          "learning_depth_status": "INTRODUCED",
+          "assessment_evidence": "Workbook submission with feedback",
+          "uncertainty": "Specific spreadsheet functions and tools not detailed"
+        },
+        {
+          "skill_or_capability": "Data Cleaning",
+          "curriculum_basis": [
+            {
+              "label": "Practice Dataset Cleaning",
+              "detail": "Unit covers cleaning a practice dataset with feedback on one workbook.",
+              "source_status": "SOURCED_CURRENT_FACT",
+              "evidence_refs": [
+                "fixture-course-1"
+              ]
+            }
+          ],
+          "learning_depth_status": "PRACTISED",
+          "assessment_evidence": "One submitted practice workbook",
+          "uncertainty": "Complexity and scale of practice datasets unknown"
+        }
+      ],
+      "practical_components": [
+        {
+          "label": "Practice Workbook",
+          "detail": "Cleaning practice dataset submitted for individual feedback",
+          "source_status": "SOURCED_CURRENT_FACT",
+          "evidence_refs": [
+            "fixture-course-1"
+          ]
+        }
+      ],
+      "summary": "The unit teaches introductory spreadsheet concepts and data cleaning on simulated practice datasets. Completing this unit provides foundational practice but does not prove job readiness or workplace performance, as no workplace assessment is included.",
+      "unknowns": [
+        {
+          "label": "Workplace Portfolio Requirements",
+          "detail": "What specific portfolio evidence target employers expect beyond practice exercises.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Course Understanding Readiness",
+      "score": 85,
+      "dimensions": [
+        {
+          "name": "Curriculum Clarity",
+          "score": 90,
+          "reason": "Clear syllabus details on taught skills and practice exercises."
+        },
+        {
+          "name": "Assessment Transparency",
+          "score": 90,
+          "reason": "Clear confirmation of practice workbook feedback and absence of workplace assessment."
+        },
+        {
+          "name": "Job Capability Alignment",
+          "score": 75,
+          "reason": "Distinction between academic practice and workplace mastery is established."
+        }
+      ],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in Chat",
+        "type": "CONTINUE_CHAT"
+      },
+      {
+        "id": "research_required",
+        "label": "Research Industry Portfolio Requirements",
+        "type": "RESEARCH"
+      }
+    ],
+    "handoff": {
+      "summary": "Completed capability breakdown for Fictional Intro to Data. Clarified that unit introduces spreadsheets and data cleaning with workbook feedback, but does not provide workplace assessment or prove on-the-job capability.",
+      "confirmed_user_inputs": {
+        "course": "Fictional Intro to Data",
+        "goal": "Understand skills taught versus ability proven"
+      },
+      "result": {
+        "summary": "Unit introduces spreadsheet basics and data cleaning via simulated practice workbooks, but does not demonstrate workplace job competency."
+      },
+      "evidence_and_unknowns": [
+        "Evidence fixture-course-1 confirms practice workbook assessment and no workplace assessment.",
+        "Unknown: exact software tools and specific employer expectations."
+      ],
+      "recommended_next_action": "Explore Course Gap Check or discuss building independent portfolio projects in chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Appropriately processes STUDY_005 for course capabilities versus workplace proof.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Reuses confirmed facts (course name and goal) without asking redundant questions.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Does not emit unnecessary low-quality questions when sufficient context and approved evidence are present.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses only approved UI primitives (evidence_panel, skill_matrix, action_handoff).",
+          "evidence_pointer": "candidate.ui[*].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Faithfully applies overrides: categorizes learning depth (INTRODUCED/PRACTISED) and explicitly avoids conflating unit completion with job mastery.",
+          "evidence_pointer": "candidate.result.course_capabilities"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Strictly bases curriculum details and assessment claims on fixture-course-1.",
+          "evidence_pointer": "candidate.ui[0].content[0].evidence_refs"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Makes no unvalidated psychometric or predictive life success claims.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops with status COMPLETE once capability mapping and readiness evaluation are complete.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Uses Course Understanding Readiness and evaluates clarity rather than individual job success odds.",
+          "evidence_pointer": "candidate.readiness.name"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Produces a compact, well-structured semantic handoff for Oala.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized tool calls, endpoint writes, or URL fabrication.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "Candidate fully conforms to the STUDY_005 specification and V2 overrides, maintaining evidence discipline and proper readiness semantics."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3516,
+      "total_input_tokens": 2914,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2914
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 602,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3311,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3311
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 621
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 8189,
+  "usage": {
+    "total_tokens": 4092,
+    "total_input_tokens": 2264,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2264
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1828,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6115,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6115
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1844
+          }
+        ]
+      }
+    ]
+  }
+}

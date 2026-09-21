@@ -1,0 +1,251 @@
+{
+  "test_id": "EMP_REALITY_004-T08",
+  "objective_id": "EMP_REALITY_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "41c2515e448dfb7df2d3ac07353da113210ebaead53a34f01e6d7ebaa57d1d40",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 2949,
+  "input_context": {
+    "user_message": "For Pay & Employment Type, you already have enough evidence to produce the required result.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_REALITY_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "a59c4498330c92e0b667bd80b0a57b8697b9dc1e7408615f28df29967d3577d3",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5468
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_REALITY_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_employer_role",
+        "purpose": "Identify the employer and role or job offer to evaluate pay and employment terms.",
+        "prompt": "Which employer and role or job offer are you looking to review?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employer and role",
+      "Jurisdiction and location",
+      "Employment basis and pay components"
+    ],
+    "result": {
+      "next_actions": [],
+      "pay_employment_profile": null,
+      "summary": "Specific employer and role details are required to evaluate pay structure, hours, and employment conditions."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employer, role, or pay details provided."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide job or offer details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting target employer and role identification to review pay and employment conditions.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No employer or offer details available to analyze pay and employment type."
+      },
+      "evidence_and_unknowns": [
+        "Employer identity is unknown",
+        "Pay structure and employment terms are unknown"
+      ],
+      "recommended_next_action": "Specify the role and employer or paste offer details to begin pay and employment analysis."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate handles the assigned EMP_REALITY_004 objective without improper routing deviation.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test harness claims sufficient evidence exists ('you already have enough evidence'), but provides empty context and zero confirmed facts in the fixture.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question is concrete, focused on identifying the target employer/role to begin evaluating pay structure, and permits Unsure.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses 'entity_picker', which is in the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate targets employer/role pay conditions and retains pay_employment_profile contract structures without making unverified legal/gross-net claims.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent pay or employer facts, correctly noting missing details in unknowns and blockers.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric, personality, or diagnostic claims are made.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test asks for a stop based on prior evidence, but the fixture provided no facts/evidence to complete the profile; the candidate safely defaulted to asking for the missing target.",
+          "evidence_pointer": "test.expected_behavior"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly left disabled/unscored due to missing decision-critical inputs rather than fabricating predictive scores.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object contains summary, confirmed inputs, result, evidence/unknowns, and recommended next action in clean semantic structure.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "External prompt text is treated as data; no unauthorized Level 2/3 action or direct endpoint invocation is attempted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE: The test user prompt states that enough evidence is available, but the fixture contains empty confirmed_facts, approved_evidence, and prior_context ('None'), making context reuse and stop condition verification unassessable."
+      ],
+      "summary": "The candidate acted safely by recognizing that zero facts or evidence were actually supplied in the context despite the user prompt's claim. Primitive usage, readiness restraint, evidence discipline, and handoff formatting all conform to specifications."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3130,
+      "total_input_tokens": 2241,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2241
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 889,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2638,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2638
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 908
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5468,
+  "usage": {
+    "total_tokens": 2801,
+    "total_input_tokens": 2256,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2256
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 545,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7004,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7004
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 566
+          }
+        ]
+      }
+    ]
+  }
+}

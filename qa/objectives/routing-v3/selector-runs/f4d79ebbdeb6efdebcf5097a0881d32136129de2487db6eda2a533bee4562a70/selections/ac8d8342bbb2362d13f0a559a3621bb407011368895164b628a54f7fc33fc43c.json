@@ -1,0 +1,28 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "NONE",
+  "decision": "NONE",
+  "objective_id": "",
+  "reason": "The user is in the middle of a chat-based exploratory dialogue clarifying their interests across coding and user observation, which is best handled directly in conversation.",
+  "disposition": "NONE",
+  "selectionId": "c7444319-fdb3-4f8a-8116-f16af87e8916",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v4-context",
+  "selectedSimilarity": null,
+  "selectedRank": null,
+  "retrievalSources": [],
+  "margin": null,
+  "userConfidence": {
+    "score": 35,
+    "band": "low",
+    "evidence_strength": "weak",
+    "trend": "unknown",
+    "reason_codes": [
+      "EXPLICIT_UNCERTAINTY",
+      "CRITERIA_UNCLEAR",
+      "ROUTE_UNRESOLVED",
+      "ACTION_EXPLORING"
+    ]
+  },
+  "createdAt": 1789734229255
+}

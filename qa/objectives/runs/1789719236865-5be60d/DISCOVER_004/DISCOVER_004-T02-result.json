@@ -1,0 +1,277 @@
+{
+  "test_id": "DISCOVER_004-T02",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 27,
+  "input_context": {
+    "user_message": "Use what you already know and help me with big five snapshot.",
+    "prior_context_text": "Profile already contains two relevant confirmed signals and one constraint.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "3a61d4ed0047d70e84a5714bb5dc55183dc412a7722eac72cab894724ef70513",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6224
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "work_approach_scenario",
+        "purpose": "Explore work-behaviour tendencies across collaboration and structure",
+        "prompt": "When tackling a new team project with an open-ended goal, which approach sounds most natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "structured_planner",
+            "label": "Build a clear plan first",
+            "detail": "Clarify timelines, roles, and milestones before diving into execution."
+          },
+          {
+            "id": "rapid_explorer",
+            "label": "Explore ideas and adapt as you go",
+            "detail": "Start experimenting right away and adjust directions based on what emerges."
+          },
+          {
+            "id": "people_facilitator",
+            "label": "Align the group and gather input",
+            "detail": "Focus on team consensus, communication, and shared understanding first."
+          },
+          {
+            "id": "independent_analyst",
+            "label": "Investigate deeply on your own",
+            "detail": "Examine details and data independently before proposing solutions."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Work-behaviour tendencies across core collaboration and problem-solving dimensions"
+    ],
+    "result": {
+      "limitations": [
+        {
+          "label": "Qualitative Snapshot Only",
+          "detail": "This snapshot provides exploratory qualitative tendencies rather than psychometric trait percentiles or rigid career rules.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "next_actions": [],
+      "personality_tendencies": [],
+      "summary": "Beginning personality tendencies snapshot to explore natural work styles and preferences."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Awaiting user scenario response to identify qualitative work tendencies"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated personality tendencies snapshot with a realistic work scenario.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Waiting for initial scenario response to derive qualitative tendencies."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Natural work style and problem-solving approach in unstructured projects"
+      ],
+      "recommended_next_action": "Complete the project approach scenario test."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Candidate correctly maintains the DISCOVER_004 objective matching the user's explicit request for a Big Five snapshot.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture description claims prior context exists ('Profile already contains two relevant confirmed signals and one constraint'), but the actual context fixture provides empty confirmed_facts ({}) and session data, preventing evaluation of context reuse.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Asks a concrete, realistic work-approach scenario with distinct options and allows unsure.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'scenario_test', which is explicitly permitted under V2 allowed UI primitives.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Candidate structures the exploration around qualitative work-behaviour tendencies without rigid psychometric assertions or fixed career prescriptions.",
+          "evidence_pointer": "candidate.result.limitations[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No invented factual claims, statistics, or unsupported external data are introduced.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Candidate refrains from calculating trait scores or percentiles, explicitly noting in limitations that this is an exploratory qualitative snapshot.",
+          "evidence_pointer": "candidate.result.limitations[0].detail"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Since interaction count is 0 and no data has been collected, candidate appropriately emits status NEEDS_INPUT with a single initial question.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is appropriately disabled while awaiting user inputs rather than outputting an unsupported score.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides a clean, semantic handoff structure to Oala containing confirmed inputs, summary, unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard structured UI intent without unauthorized write operations, endpoint fabrication, or unsafe actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture describes prior context ('Profile already contains two relevant confirmed signals and one constraint') but provides empty objects context.confirmed_facts and context.session.confirmed_answers, making Known-context reuse not assessable."
+      ],
+      "summary": "The candidate strictly adheres to the DISCOVER_004 objective rules and V2 psychometric restraints, emitting a valid scenario_test primitive without unsupported scores. Known-context reuse is marked NOT_ASSESSABLE due to missing concrete data in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3004,
+      "total_input_tokens": 2122,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2122
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 882,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2519,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2519
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 901
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6224,
+  "usage": {
+    "total_tokens": 2897,
+    "total_input_tokens": 2122,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2122
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 775,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5211,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5211
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 792
+          }
+        ]
+      }
+    ]
+  }
+}

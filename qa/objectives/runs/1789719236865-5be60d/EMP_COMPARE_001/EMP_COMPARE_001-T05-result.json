@@ -1,0 +1,258 @@
+{
+  "test_id": "EMP_COMPARE_001-T05",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 3086,
+  "input_context": {
+    "user_message": "For Compare Employers, two pieces of information conflict. One source says one thing and another says something else.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "4e57c6f99b1f9b413dd7e116c31c9c1419bf8b31d3f4e6efb72f6b28683a6653",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4094
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_employers",
+        "purpose": "Identify the employers and roles to compare",
+        "prompt": "Which specific employers and roles are you comparing?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Encountered conflicting information across external sources",
+        "basis": "User statement regarding two conflicting sources",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target employers being compared",
+      "Specific role, level, or program scope",
+      "Nature of the conflicting claims or dimensions"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Comparison is blocked until specific employers, roles, and conflicting claims are identified."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No specific employers or roles identified",
+        "Conflicting source data needs verification against verified criteria"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Employer Details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User reported conflicting information between sources. Prompted user to specify the employers and roles to resolve the scope.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Pending selection of employers and roles."
+      },
+      "evidence_and_unknowns": [
+        "Target employers unknown",
+        "Conflicting data items unverified"
+      ],
+      "recommended_next_action": "Specify the target employers and roles to enable structured verification and comparison."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly preserved the EMP_COMPARE_001 objective as instructed.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Prior context was 'None' in the fixture, so reuse of prior facts cannot be evaluated.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The entity picker directly asks for the essential missing information (specific employers/roles) necessary to resolve the comparison.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The primitive 'entity_picker' is included in the V2 allow-list: [entity_picker | comparison_grid | constraint_builder | tradeoff_matrix | evidence_panel | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly sets status to NEEDS_INPUT and requests employer/role entities since none were provided.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent employers or source facts, accurately recording the user's conflicting signal as derived context and noting necessary unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims or predictive scores were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate accurately stops at NEEDS_INPUT without fabricating comparison outputs.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with score null and appropriate blockers documented.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff structure contains summary, confirmed inputs, evidence/unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, external tool executions, or unauthorized write actions are emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture provided no specific employers or conflicting data ('MISSING_CONCRETE_STATE_OR_EVIDENCE'), preventing direct assessment of dynamic conflict surfacing across populated comparison dimensions."
+      ],
+      "summary": "The candidate handled the vague/abstract user prompt appropriately by returning NEEDS_INPUT with an entity_picker primitive to collect target employers and roles before proceeding, adhering strictly to schema and evidence rules."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3117,
+      "total_input_tokens": 2289,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2289
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 828,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2686,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2686
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 847
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4094,
+  "usage": {
+    "total_tokens": 2877,
+    "total_input_tokens": 2294,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2294
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 583,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7301,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7301
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 603
+          }
+        ]
+      }
+    ]
+  }
+}

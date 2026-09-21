@@ -1,0 +1,234 @@
+{
+  "id": "dfc38da6-4715-4c89-9d2a-824f3fca14a2",
+  "conversationId": "live-preview-PROFILE_005",
+  "objectiveId": "PROFILE_005",
+  "label": "My skills",
+  "sourceMessageId": "u",
+  "revision": 1,
+  "interactionCount": 0,
+  "state": "COMPLETE",
+  "createdAt": 1789726744100,
+  "updatedAt": 1789726751471,
+  "plan": {
+    "objective_id": "PROFILE_005",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_review",
+        "purpose": "Review reported skills and clear non-skills for this conversation draft.",
+        "prompt": "Here is the current draft of your reported skills based on what you shared.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Excel Filters",
+            "detail": "Self-reported use in a work context.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Pivot Tables & SQL",
+            "detail": "Explicitly confirmed as no prior experience.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          }
+        ],
+        "columns": [
+          "Skill / Tool",
+          "Status",
+          "Evidence Level"
+        ],
+        "rows": [
+          {
+            "label": "Excel Filters",
+            "cells": [
+              "Excel Filters",
+              "Reported in use",
+              "Self-Reported"
+            ]
+          },
+          {
+            "label": "Excel Pivot Tables",
+            "cells": [
+              "Excel Pivot Tables",
+              "No experience",
+              "Self-Reported Absence"
+            ]
+          },
+          {
+            "label": "SQL",
+            "cells": [
+              "SQL",
+              "No experience",
+              "Self-Reported Absence"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "evidence_panel",
+        "id": "evidence_notes",
+        "purpose": "Show evidence distinctions and confirm no analyst role is inferred.",
+        "prompt": "Evidence and inference boundaries recorded for this draft:",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Role Inference Policy",
+            "detail": "No data analyst role or advanced analytics capability has been inferred from Excel filter use.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Draft Status",
+            "detail": "This skill summary is a draft for this conversation and is not permanently saved to a live profile.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "handoff_view",
+        "purpose": "Continue discussing skills or career paths in chat.",
+        "prompt": "What would you like to explore next?",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Clarified spreadsheet capability boundary",
+        "basis": "User confirmed practical use of Excel filters while explicitly disclaiming Pivot Tables, SQL, and any Data Analyst role inference.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific industry or job role where Excel filters are used",
+      "Other software or workplace skills possessed"
+    ],
+    "result": {
+      "summary": "Drafted your skills summary: Excel filters recorded as self-reported work experience. Pivot tables and SQL recorded with no experience. No data analyst role or advanced capability inferred.",
+      "skills_profile": [
+        {
+          "skill_id": "excel_filters",
+          "user_label": "Excel Filters",
+          "proficiency_status": "PRACTISED",
+          "evidence_status": "SELF_REPORTED",
+          "evidence_refs": [
+            "user_message"
+          ],
+          "source_type": "USER_REPORT",
+          "last_evidenced": null,
+          "user_confirmed": true
+        },
+        {
+          "skill_id": "excel_pivot_tables",
+          "user_label": "Excel Pivot Tables",
+          "proficiency_status": "NO_EXPERIENCE",
+          "evidence_status": "SELF_REPORTED",
+          "evidence_refs": [
+            "user_message"
+          ],
+          "source_type": "USER_REPORT",
+          "last_evidenced": null,
+          "user_confirmed": true
+        },
+        {
+          "skill_id": "sql",
+          "user_label": "SQL",
+          "proficiency_status": "NO_EXPERIENCE",
+          "evidence_status": "SELF_REPORTED",
+          "evidence_refs": [
+            "user_message"
+          ],
+          "source_type": "USER_REPORT",
+          "last_evidenced": null,
+          "user_confirmed": true
+        }
+      ],
+      "disputed": [],
+      "profile_update_candidate": "Draft recorded for current session",
+      "next_actions": [
+        {
+          "label": "Continue Chat",
+          "detail": "Discuss more skills or explore relevant job options without assuming an analyst path.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Captured Excel filters as a self-reported skill and recorded Pivot Tables and SQL as unpractised. No data analyst role was inferred.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Captured Excel filters as a self-reported skill and recorded Pivot Tables and SQL as unpractised. No data analyst role was inferred."
+      },
+      "evidence_and_unknowns": [
+        "Confirmed: Uses Excel filters at work",
+        "Confirmed: Has not used Pivot Tables or SQL",
+        "Constraint: Do not infer Data Analyst role"
+      ],
+      "recommended_next_action": "Continue chat to explore roles matching your actual administrative or operational skill set."
+    }
+  },
+  "context": {
+    "user_message": "I want to check the skills I have told you about: I use Excel filters at work but I have never used pivot tables or SQL. Keep those separate, and do not infer that I am a data analyst.",
+    "prior_context_text": "",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "context_limited": false
+  }
+}

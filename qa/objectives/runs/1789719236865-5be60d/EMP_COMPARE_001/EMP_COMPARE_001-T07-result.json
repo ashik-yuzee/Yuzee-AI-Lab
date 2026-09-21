@@ -1,0 +1,250 @@
+{
+  "test_id": "EMP_COMPARE_001-T07",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 3088,
+  "input_context": {
+    "user_message": "While doing Compare Employers, here is an unrelated request that does not change this objective.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "NO_ACTUAL_OFF_TOPIC_REQUEST"
+  ],
+  "request_sha256": "7b2d719b627ab6762b3244a2705f2dd16d8697634ac5cfe69edeaa5e5dfa7735",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4073
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "employer_select",
+        "purpose": "Select two or more employers to compare opportunities",
+        "prompt": "Which employers or graduate programs would you like to compare?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": 2,
+          "max": 5,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employers to compare",
+      "Target roles or program levels",
+      "User location, progression, and work condition priorities"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Please select at least two employers or roles to initiate the structured comparison."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employers selected for comparison"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in Chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting selection of two or more employers to begin comparison.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting employer selection."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Target employers and role scopes"
+      ],
+      "recommended_next_action": "Select the employers or roles you wish to compare."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate maintained the correct selected objective (EMP_COMPARE_001) in response to the user turn.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no confirmed prior facts in context, so no supplied context was re-asked or ignored.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The initial UI interaction focuses directly on gathering the primary required entities (2-5 employers) to begin comparison.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'entity_picker', which is permitted by the V2 allow-list for EMP_COMPARE_001.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly sets up initial employer selection flow as step 1 for comparison without premature synthesis.",
+          "evidence_pointer": "candidate.stage"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unverified claims or invented facts were introduced; unknowns are properly tracked.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, scores, or predicted career outcomes were emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Interaction appropriately paused at NEEDS_INPUT stage given zero employer inputs.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blocker 'No employers selected for comparison' rather than giving an unsupported score.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Semantic handoff payload is cleanly populated with summary, unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No autonomous writes, direct endpoints, or policy violations present.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Test fixture notes 'NO_ACTUAL_OFF_TOPIC_REQUEST'; the user prompt is a generic placeholder ('While doing Compare Employers, here is an unrelated request...')."
+      ],
+      "summary": "The candidate strictly follows the EMP_COMPARE_001 specification, deploying the approved entity_picker component, maintaining evidence discipline, and outputting valid handoff structures under empty input context."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3038,
+      "total_input_tokens": 2230,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2230
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 808,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2627,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2627
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 827
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4073,
+  "usage": {
+    "total_tokens": 2796,
+    "total_input_tokens": 2290,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2290
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 506,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7297,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7297
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 524
+          }
+        ]
+      }
+    ]
+  }
+}

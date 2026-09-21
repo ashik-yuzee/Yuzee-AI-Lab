@@ -1,0 +1,269 @@
+// =============================================================
+// Global styles — import in angular.json > styles
+// Order matters: tokens first, then component sheets, then overrides
+// =============================================================
+
+// 1. Design tokens + AQF palette (must be first — others @import it)
+@import 'tokens';
+
+// 2. Bootstrap 5 (loaded via angular.json or CDN — see note below)
+// If using npm: @import '~bootstrap/scss/bootstrap';
+// If using CDN, skip here and add to index.html
+
+// 3. Component stylesheet modules
+@import 'chat';
+@import 'mini-pathway';
+@import 'guidance-list';
+
+// ── Global resets & layout ────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-sans;
+  font-size: 16px;
+  line-height: 1.6;
+  color: $text-primary;
+  background: $body-bg;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// App root fills the viewport
+app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+// ── Typography defaults ───────────────────────────────────
+h1, h2, h3, h4, h5, h6 {
+  font-family: $font-sans;
+  color: $text-heading;
+  margin: 0;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+
+  &:hover { text-decoration: underline; text-underline-offset: 3px; }
+}
+
+code, pre {
+  font-family: $font-mono;
+  font-size: .875em;
+}
+
+// ── Global scrollbar ──────────────────────────────────────
+* { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.12) transparent; }
+*::-webkit-scrollbar { width: 5px; height: 5px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 9999px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.22); }
+
+// ── App layout shell ──────────────────────────────────────
+.app-layout {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  background: $body-bg;
+}
+
+// Sidebar
+.app-sidebar {
+  width: 18rem; // 288px — same as w-72 in Tailwind
+  flex-shrink: 0;
+  background: $sidebar-bg;
+  border-right: 1px solid $border-sidebar;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform .25s ease;
+
+  @media (max-width: 991px) { // Bootstrap lg breakpoint
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+
+    &.is-open { transform: translateX(0); }
+  }
+}
+
+// Mobile backdrop
+.sidebar-backdrop {
+  display: none;
+
+  @media (max-width: 991px) {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 45;
+    background: rgba(0,0,0,.35);
+    animation: sidebar-fade-in .2s ease;
+  }
+}
+
+@keyframes sidebar-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+// Main content area
+.app-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+// Navbar
+.app-navbar {
+  height: 52px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 16px;
+  background: #fff;
+  border-bottom: 1px solid $border-sidebar;
+}
+
+// Chat + panel split
+.app-content {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+// Chat area
+.app-chat-area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: $chat-bg;
+}
+
+// ── Bootstrap overrides ───────────────────────────────────
+
+// Buttons: accent colour
+.btn-accent {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-active-bg: var(--accent-hover);
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  border-radius: 9px;
+  font-weight: 600;
+}
+
+// Form controls: accent focus ring
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 .2rem color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+// Dropdowns
+.dropdown-menu {
+  border: 1px solid $border-panel;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+  padding: 4px;
+}
+
+.dropdown-item {
+  border-radius: 7px;
+  font-size: 14px;
+
+  &:active { background: var(--accent-8); color: var(--accent); }
+}
+
+// ── Prose content (Markdown output) ───────────────────────
+.prose-content {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #2c333d;
+  overflow-wrap: anywhere;
+
+  p { margin: 0 0 .9em; &:last-child { margin-bottom: 0; } }
+
+  h1, h2, h3 { font-weight: 700; color: $text-heading; }
+  h1 { font-size: 1.5em; margin: 1.2em 0 .6em; }
+  h2 { font-size: 1.25em; margin: 1em 0 .5em; }
+  h3 { font-size: 1.1em; margin: .9em 0 .45em; }
+
+  ul, ol { padding-left: 1.5em; margin: .5em 0; }
+  li { margin: .3em 0; }
+
+  code {
+    font-size: .875em;
+    background: var(--accent-8);
+    color: var(--accent);
+    padding: .1em .35em;
+    border-radius: 5px;
+  }
+
+  pre {
+    background: #1e2330;
+    color: #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.65;
+    margin: .8em 0;
+  }
+
+  blockquote {
+    background: #f8fafc;
+    border-radius: 8px;
+    margin: .8em 0;
+    padding: .6em 1em;
+    color: $text-muted;
+    font-style: italic;
+  }
+
+  hr { border: none; border-top: 1px solid $border-default; margin: 1.2em 0; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { padding: 8px 12px; text-align: left; border-bottom: 1px solid $border-default; }
+  th { font-weight: 600; color: $text-heading; background: #f8fafc; }
+}
+
+// ── Utility helpers ───────────────────────────────────────
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.text-accent { color: var(--accent); }
+.bg-accent   { background: var(--accent); }
+
+// ── Accent persistence (JS sets this) ────────────────────
+// To override the accent at runtime:
+// document.documentElement.style.setProperty('--accent', '#newcolor');
+// Also persist to localStorage key 'oala-accent'
+
+// ── Ion overrides for Ionic/Capacitor builds ──────────────
+// Suppress Ionic default header styles when using our own navbar
+ion-header.no-shadow::after { display: none; }
+ion-content { --background: #{$body-bg}; }

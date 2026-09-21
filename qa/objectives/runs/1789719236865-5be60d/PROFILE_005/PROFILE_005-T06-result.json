@@ -1,0 +1,226 @@
+{
+  "test_id": "PROFILE_005-T06",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 507,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "0b4dad749b54a2e15e158f97b56ba7d4cb240d60db460cf979da8532a18667ef",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5524
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "disputed": [],
+      "next_actions": [],
+      "profile_update_candidate": null,
+      "skills_profile": [],
+      "summary": "No skill profile changes made as the user's message is unrelated to building or updating a skills inventory."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User made an off-topic request unrelated to skills profiling; closed objective with no action.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No skill inventory action taken."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Handle user's conversation request in Oala chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Off-topic selection is not measured by this already-selected planner, but candidate correctly handled the off-topic prompt by executing a no-action completion/handoff back to Oala chat.",
+          "evidence_pointer": "candidate.handoff.recommended_next_action"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No context was supplied and none was inappropriately re-asked or fabricated.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No unnecessary questions were generated for an off-topic request.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid primitives were emitted; empty UI list provided for no-action completion.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Output complies with the V2 contract for PROFILE_005 (empty skills_profile, disputed, profile_update_candidate, next_actions) while noting no skill actions were taken.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsourced current facts or unsupported claims were invented.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career predictions, or diagnostic assertions were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Candidate stopped immediately with status COMPLETE upon receiving an unrelated prompt.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Correctly adhered to the V2 readiness policy (NONE / enabled: false) for this skill inventory objective.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic result returned to Oala explaining the no-action closure and recommending returning to Oala chat.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emitted only approved structured schema; no forbidden writes or autonomous external actions.",
+          "evidence_pointer": "candidate"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate properly handled an off-topic user request by executing a clean no-action COMPLETE handoff back to Oala chat adhering to all V2 overrides and schema constraints."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2676,
+      "total_input_tokens": 1909,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1909
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 767,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2306,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2306
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 786
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5524,
+  "usage": {
+    "total_tokens": 2934,
+    "total_input_tokens": 2182,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2182
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 321,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 431,
+    "raw_prompt_token": 5867,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5867
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 337
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 431
+          }
+        ]
+      }
+    ]
+  }
+}

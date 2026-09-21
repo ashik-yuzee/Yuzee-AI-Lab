@@ -1,0 +1,246 @@
+{
+  "test_id": "EMP_COMPARE_001-T03",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "MINIMAL_INPUT",
+  "model": "gemini-3.7-flash",
+  "source_row": 3084,
+  "input_context": {
+    "user_message": "Help me with Compare Employers.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "92c3fed60b9a11435030efbdda54da6c8f30b28bf34185162d084eb9b2ec6c0a",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4568
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "employer_select",
+        "purpose": "Select or input the employers and specific roles or programs you want to compare.",
+        "prompt": "Which employers and roles/programs are you considering?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": 2,
+          "max": 5,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employers and specific roles or programs to compare",
+      "User priorities and hard constraints"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Please specify at least two employers and roles to begin the comparison."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employers or roles specified for comparison"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting user specification of employers and target roles to initiate structured comparison.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting employer and role selection."
+      },
+      "evidence_and_unknowns": [
+        "Target employers unknown",
+        "User role scope and priorities unknown"
+      ],
+      "recommended_next_action": "Specify two or more employers and roles to compare."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the intended objective EMP_COMPARE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context contained no prior facts; no confirmed facts were re-asked.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks the single highest-impact initial question (which employers and roles to compare) using an entity_picker component.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "entity_picker is within the approved V2 list [entity_picker | comparison_grid | constraint_builder | tradeoff_matrix | evidence_panel | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Accurately targets employer and role/program selection with appropriate min/max selection bounds.",
+          "evidence_pointer": "candidate.ui[0].purpose"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No invented employer facts or claims were made given missing initial input.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims or fake scores were emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stopped and surfaced NEEDS_INPUT at interaction 0 when material inputs are absent.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled and lists clear blockers instead of fabricating readiness scores.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns complete envelope with semantic summary, unknowns, next_actions, and compact handoff.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT action with no external endpoints or unauthorized writes.",
+          "evidence_pointer": "candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "All criteria passed. The candidate correctly asks for the required employers and roles using an allowed primitive, cleanly adheres to evidence and readiness rules, and returns a valid handoff structure."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2975,
+      "total_input_tokens": 2211,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2211
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 764,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2608,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2608
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 782
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4568,
+  "usage": {
+    "total_tokens": 2793,
+    "total_input_tokens": 2279,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2279
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 514,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7286,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7286
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 532
+          }
+        ]
+      }
+    ]
+  }
+}

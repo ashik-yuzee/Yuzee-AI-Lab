@@ -1,0 +1,232 @@
+{
+  "test_id": "DISCOVER_001-T06",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 7,
+  "input_context": {
+    "user_message": "I already completed interest explorer and nothing has changed.",
+    "prior_context_text": "Objective result exists and no material context changed.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "573088a2daaea2f44ce1357855fa89859ded37bb6d167260d212276eec0ffaf1",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5204
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "interest_themes": [],
+      "next_actions": [],
+      "summary": "Interest explorer was previously completed and no material context or updates were reported.",
+      "unknowns": []
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User noted that interest exploration was already completed with no changes. Objective closed without redundant re-assessment.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "interest_themes": [],
+        "next_actions": [],
+        "summary": "Interest explorer was previously completed and no material context or updates were reported.",
+        "unknowns": []
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Proceed with exploring matching careers or next conversational goals in chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the user has already completed the interest explorer and immediately marks status as COMPLETE rather than re-running the objective.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture notes prior context text 'Objective result exists and no material context changed' but provides empty confirmed_facts/confirmed_answers, making full context reuse unassessable due to missing concrete state.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant or unnecessary questions were asked; UI list is empty.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No unapproved UI primitives were emitted.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Appropriately avoids re-running DISCOVER_001 and honors the rule to avoid redundant questioning when already completed.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Candidate does not invent facts or hallucinate unsupported interest themes.",
+          "evidence_pointer": "candidate.result.interest_themes"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, scores, or career success probabilities were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Interaction stops immediately with status COMPLETE without asking any redundant questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is disabled appropriately upon immediate completion/routing out without fake predictive scores.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides a clean, compact semantic handoff summary and recommends next conversational steps.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Only standard structured intent is emitted with no direct endpoint calls or unauthorized writes.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture states prior objective results exist, but supplies empty confirmed_facts and confirmed_answers (MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+      ],
+      "summary": "Candidate correctly handles the user prompt indicating DISCOVER_001 was already completed by completing the objective immediately without redundant questions and providing a clean handoff."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2637,
+      "total_input_tokens": 1849,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1849
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 788,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2246,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2246
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 807
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5204,
+  "usage": {
+    "total_tokens": 2781,
+    "total_input_tokens": 2035,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2035
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 340,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 406,
+    "raw_prompt_token": 6351,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6351
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 357
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 406
+          }
+        ]
+      }
+    ]
+  }
+}

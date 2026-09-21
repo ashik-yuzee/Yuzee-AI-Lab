@@ -1,0 +1,234 @@
+{
+  "test_id": "PROFILE_005-T05",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 506,
+  "input_context": {
+    "user_message": "We already completed my skills and nothing has changed.",
+    "prior_context_text": "Completed objective result exists.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "c4ceb0d1fb28c6863166fb3b7da341311b696691b6a6780e19d404997bf009a8",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4401
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Skills profile already current",
+        "basis": "User confirmed skills were previously completed and no updates are needed.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [],
+    "result": {
+      "summary": "Skills profile is acknowledged as complete and unchanged. No updates required."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User indicated skills profile is already complete with no changes needed.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No profile updates required."
+      },
+      "evidence_and_unknowns": [
+        "User confirmed prior skills profile remains accurate."
+      ],
+      "recommended_next_action": "Proceed to explore matching jobs or next career exploration objectives."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate handles the current objective without routing away inappropriately, recognizing the existing completion state.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture asserts a completed objective result exists but omits any concrete prior profile state in confirmed_facts or context.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No questions are asked as the user stated skills are already completed and unchanged.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid primitives emitted; empty UI list used for immediate completion.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the objective override to acknowledge completion without forcing re-discovery, aligning with V2 readiness policy (disabled).",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded or invented facts are introduced.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric scores or career predictions made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Immediately stops and marks COMPLETE / PROCEED upon user indication that profile is already complete.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Correctly honors V2 readiness policy NONE by disabling readiness.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns clean semantic handoff object with next recommended exploration action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, dangerous writes, or unconfirmed autonomous actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omits the specific prior skills profile payload despite asserting 'Completed objective result exists', preventing full assessment of concrete context reuse."
+      ],
+      "summary": "Candidate correctly recognizes that the user's skills profile is already complete and unchanged, halting further questioning and returning a complete handoff without re-running discovery or violating readiness constraints."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2678,
+      "total_input_tokens": 1920,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1920
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 758,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2317,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2317
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 777
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4401,
+  "usage": {
+    "total_tokens": 2662,
+    "total_input_tokens": 2183,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2183
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 332,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 147,
+    "raw_prompt_token": 5868,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5868
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 348
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 147
+          }
+        ]
+      }
+    ]
+  }
+}

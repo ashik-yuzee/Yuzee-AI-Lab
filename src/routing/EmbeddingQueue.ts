@@ -1,5 +1,5 @@
 /** Cooperative priority scheduler. Optional multi-chunk work yields after each embedding. */
-export const taskPriority={route:0,needs:1,pathway:2,topic:3,suggest:4} as const;
+export const taskPriority={route:0,needs:1,pathway:2,topic:3,suggest:4,objectives:5} as const;
 export class EmbeddingQueue {
  private jobs=new Map<string,{priority:number;order:number;work:AsyncGenerator<void,void,unknown>}>();
  private order=0; private running=false;

@@ -1,0 +1,309 @@
+{
+  "test_id": "PROFILE_005-T07",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 508,
+  "input_context": {
+    "user_message": "You already have every input needed for my skills. Give me the result now.",
+    "prior_context_text": "Required inputs/output evidence are sufficient.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "48c552099bae5ab9fb411b6cd2c4f63c5708b6e54488fed3983346aa78ca54c4",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6093
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_summary_table",
+        "purpose": "Review identified skill profile and evidence statuses",
+        "prompt": "Your current skill inventory based on available records:",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Proficiency",
+          "Evidence Status",
+          "Source"
+        ],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "skills_action_handoff",
+        "purpose": "Proceed to exploring jobs matching your skills or skill gap analysis",
+        "prompt": "Choose your next exploration step:",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_jobs_from_skills",
+            "label": "Explore Jobs From My Skills",
+            "detail": "Discover career roles that align with your confirmed skill capabilities."
+          },
+          {
+            "id": "opt_skill_gap",
+            "label": "Skill Gap Analysis",
+            "detail": "Compare your current skills against target role requirements."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "disputed": [],
+      "next_actions": [
+        {
+          "label": "Explore Jobs",
+          "detail": "Explore jobs matching your current skills profile",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "profile_update_candidate": null,
+      "skills_profile": [],
+      "summary": "Skills profile review completed with available inputs."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Skills inventory profile processed. User ready for next exploration.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "disputed": [],
+        "next_actions": [
+          {
+            "label": "Explore Jobs",
+            "detail": "Explore jobs matching your current skills profile",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "profile_update_candidate": null,
+        "skills_profile": [],
+        "summary": "Skills profile review completed with available inputs."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Explore career pathways and roles matching your skills."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the specified objective ID PROFILE_005.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture declares that required inputs exist but leaves confirmed_facts and session answers empty (MISSING_CONCRETE_STATE_OR_EVIDENCE), so context reuse cannot be evaluated.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks no redundant questions and completes immediately.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits only allowed UI primitives ('skill_matrix' and 'action_handoff').",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the V2 output contract schema including skills_profile, disputed, profile_update_candidate, and next_actions.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded or fabricated factual claims were introduced.",
+          "evidence_pointer": "candidate.result.skills_profile"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "The model makes no diagnostic, validated-instrument, or career success probability claims.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stops immediately with status COMPLETE and stage PROCEED upon user request without redundant queries.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Follows mandatory V2 override ('NONE. This is a skill inventory/persistence objective, not a skill-readiness score.') and disables readiness scoring.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff envelope is generated.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized writes or external endpoints are triggered.",
+          "evidence_pointer": "candidate.stage"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted actual skill facts in confirmed_facts despite prior context asserting that required inputs exist (MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+      ],
+      "summary": "The candidate properly stopped immediately without redundant questioning, disabled readiness as mandated by V2 overrides, and used only valid primitives. Known-context reuse was marked NOT_ASSESSABLE due to missing concrete state in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3043,
+      "total_input_tokens": 2237,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2237
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 806,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2634,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2634
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 825
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6093,
+  "usage": {
+    "total_tokens": 2950,
+    "total_input_tokens": 2105,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2105
+      }
+    ],
+    "total_cached_tokens": 1174,
+    "cached_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 1174
+      }
+    ],
+    "total_output_tokens": 845,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7338,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7338
+          }
+        ],
+        "cache_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 4096
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 865
+          }
+        ]
+      }
+    ]
+  }
+}

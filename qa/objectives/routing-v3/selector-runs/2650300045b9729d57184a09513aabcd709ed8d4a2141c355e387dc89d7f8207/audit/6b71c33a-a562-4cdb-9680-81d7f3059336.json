@@ -1,0 +1,450 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "DECIDE_003",
+      "score": 0.7336946462235693,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5859266702313951,
+      "contextScore": 0.7336946462235693
+    },
+    {
+      "id": "LEARN_006",
+      "score": 0.6656988941565984,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5788846312577283,
+      "contextScore": 0.6656988941565984
+    },
+    {
+      "id": "EMP_SAFE_001",
+      "score": 0.6354988896396638,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.580421659980142,
+      "contextScore": 0.6354988896396638
+    },
+    {
+      "id": "SCHOOL_018",
+      "score": 0.6252922858364311,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6252922858364311
+    },
+    {
+      "id": "JOB_COMPARE_002",
+      "score": 0.6036920546479667,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6036920546479667
+    },
+    {
+      "id": "DECIDE_005",
+      "score": 0.599360415514235,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.599360415514235
+    },
+    {
+      "id": "SCHOOL_006",
+      "score": 0.5978507833468528,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5978507833468528
+    },
+    {
+      "id": "GOAL_005",
+      "score": 0.5974585301627499,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5974585301627499
+    },
+    {
+      "id": "PROFILE_010",
+      "score": 0.5967803481821493,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5967803481821493
+    },
+    {
+      "id": "PROFILE_008",
+      "score": 0.596600023993031,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.596600023993031
+    },
+    {
+      "id": "SCHOOL_010",
+      "score": 0.5960490715055007,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5960490715055007
+    },
+    {
+      "id": "GOAL_002",
+      "score": 0.5846939222997709,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5846939222997709
+    },
+    {
+      "id": "SCHOOL_009",
+      "score": 0.5842753496710007,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5842753496710007
+    },
+    {
+      "id": "PROFILE_005",
+      "score": 0.5838078646604057,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5838078646604057
+    },
+    {
+      "id": "JOB_DISCOVER_007",
+      "score": 0.5827225070294508,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5827225070294508
+    },
+    {
+      "id": "SCHOOL_015",
+      "score": 0.679219763085773,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.679219763085773
+    },
+    {
+      "id": "PATH_001",
+      "score": 0.6778948217149096,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6778948217149096
+    },
+    {
+      "id": "RECOVERY_003",
+      "score": 0.6697804170763771,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6697804170763771
+    },
+    {
+      "id": "PROFILE_006",
+      "score": 0.5757202965034292,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5757202965034292
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "that one, I think",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "No referenced option is known.",
+      "confirmed_facts": [],
+      "possible_need": "No referenced option is known.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "No referenced option is known."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "DECIDE_003",
+        "button_label": "Help me make the decision",
+        "outcome": "Identify whether the blockage is missing information, too many options, fear, conflicting priorities, pressure, cost, entry or goal uncertainty.",
+        "when_to_use": "Serve when user is unable to choose despite having options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Why Am I Stuck?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Why Am I Stuck?: Identify whether the blockage is missing information, too many options, fear, conflicting priorities, pressure, cost, entry or goal uncertainty. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Options under consideration, user priorities, constraints, unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "LEARN_006",
+        "button_label": "Help me learn this",
+        "outcome": "Explain what it is, why it matters, beginner target, practice, tools, resources/evidence and next level.",
+        "when_to_use": "Serve when user selects a specific capability.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Learn One Skill' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Learn One Skill: Explain what it is, why it matters, beginner target, practice, tools, resources/evidence and next level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_SAFE_001",
+        "button_label": "Check this opportunity",
+        "outcome": "Check legal entity, company domain/contact consistency, role existence and suspicious payment/sensitive-data requests.",
+        "when_to_use": "Serve when user encounters unfamiliar employer/opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Employer or Job Legitimate?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Assess employer or offer legitimacy with evidence; do not claim verified legitimacy without checks.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_018",
+        "button_label": "My choice vs other people’s expectations",
+        "outcome": "Separate the student’s own goals/values from external expectations and prepare a neutral comparison.",
+        "when_to_use": "Serve when parents/teachers/peers strongly influence the choice.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Choice vs Other People’s Expectations' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Choice vs Other People’s Expectations: Separate the student’s own goals/values from external expectations and prepare a neutral comparison. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_COMPARE_002",
+        "button_label": "Which uses what I already know?",
+        "outcome": "Compare skill overlap with each occupation and identify where evidence is strongest.",
+        "when_to_use": "Serve when user wants to maximize existing capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Job Uses More of My Skills?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Job Uses More of My Skills?: Compare skill overlap with each occupation and identify where evidence is strongest. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DECIDE_005",
+        "button_label": "Stress-test my choice",
+        "outcome": "Test cost, work hours, failed first preference, relocation, goal change and other constraints.",
+        "when_to_use": "Serve when user wants to know whether a choice remains workable under changed conditions.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Option Stress Test' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Option Stress Test: Test cost, work hours, failed first preference, relocation, goal change and other constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Options under consideration, user priorities, constraints, unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_006",
+        "button_label": "Use what I enjoy",
+        "outcome": "Identify which activities within subjects are actually enjoyable and connect them to paths.",
+        "when_to_use": "Serve when student wants subject choice based on enjoyment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Enjoy: Identify which activities within subjects are actually enjoyable and connect them to paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "GOAL_005",
+        "button_label": "Help me narrow it down",
+        "outcome": "Ask discriminating questions that separate remaining options instead of repeating generic assessments.",
+        "when_to_use": "Serve when user has too many career ideas.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Narrow My Options' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Narrow My Options: Ask discriminating questions that separate remaining options instead of repeating generic assessments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "PROFILE_010",
+        "button_label": "My decision confidence",
+        "outcome": "Track clarity/confidence without treating it as factual eligibility.",
+        "when_to_use": "Serve when user wants to indicate how settled they are.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Decision Confidence' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Decision Confidence: Track clarity/confidence without treating it as factual eligibility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "PROFILE_008",
+        "button_label": "My experience",
+        "outcome": "Store structured experiences and evidence.",
+        "when_to_use": "Serve when user wants work/volunteer/project experience recognized.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Experience' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Experience: Store structured experiences and evidence. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_010",
+        "button_label": "Check my subject combination",
+        "outcome": "Check ATAR eligibility, prerequisites, option preservation, workload, overlap and missing foundations.",
+        "when_to_use": "Serve when student wants a final sanity check.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Combination Checker' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Combination Checker: Check ATAR eligibility, prerequisites, option preservation, workload, overlap and missing foundations. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "GOAL_002",
+        "button_label": "Picture my future",
+        "outcome": "Explore preferred people/ideas/things balance, environment, autonomy, structure, travel and study/earning trade-offs.",
+        "when_to_use": "Serve when user cannot name careers but can imagine a future lifestyle.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Future Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Future Me: Explore preferred people/ideas/things balance, environment, autonomy, structure, travel and study/earning trade-offs. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_009",
+        "button_label": "Is this combination too much?",
+        "outcome": "Estimate assessment, exam, practical and project load alongside work/sport/family commitments.",
+        "when_to_use": "Serve when student is considering several demanding subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Workload Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Workload Check: Estimate assessment, exam, practical and project load alongside work/sport/family commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PROFILE_005",
+        "button_label": "My skills",
+        "outcome": "Save skills with demonstrated/self-reported/unknown evidence labels.",
+        "when_to_use": "Serve when user wants a reusable capability profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Skills: Save skills with demonstrated/self-reported/unknown evidence labels. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_007",
+        "button_label": "Show me something different",
+        "outcome": "Surface adjacent and surprising occupations that still have defensible links to the profile.",
+        "when_to_use": "Serve when user is stuck on obvious occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs I Might Not Have Considered' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs I Might Not Have Considered: Surface adjacent and surprising occupations that still have defensible links to the profile. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_015",
+        "button_label": "What should I check before deciding?",
+        "outcome": "Identify missing decision evidence such as placements, commute, accreditation, maths, cost, internships or course structure.",
+        "when_to_use": "Serve when student has options but does not know which unknowns matter.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Decision Evidence Checklist' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Decision Evidence Checklist: Identify missing decision evidence such as placements, commute, accreditation, maths, cost, internships or course structure. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_001",
+        "button_label": "Show all my options",
+        "outcome": "Show university, VET, apprenticeship, traineeship, work+study, bridging, gap-year/experience and short-learning routes.",
+        "when_to_use": "Serve when student does not know the range of post-school routes.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Can I Do After School?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Can I Do After School?: Show university, VET, apprenticeship, traineeship, work+study, bridging, gap-year/experience and short-learning routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_003",
+        "button_label": "What are my options now?",
+        "outcome": "Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed.",
+        "when_to_use": "Serve when academic result or subject change disrupts plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Failed or Dropped a Subject' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Failed or Dropped a Subject: Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PROFILE_006",
+        "button_label": "My subjects",
+        "outcome": "Save current/completed/planned school subjects and performance where provided.",
+        "when_to_use": "Serve when school student is planning subjects/pathways.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Subjects: Save current/completed/planned school subjects and performance where provided. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 3969,
+      "total_input_tokens": 3909,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3909
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 60,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4315,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4315
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 76
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:17:07Z",
+    "updated": "2026-09-18T12:17:07Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0T7al11SzApUXGhvtuV0V8zY8eyomHlNIwnCATjFFw/L+5FG99XyDhYfGcqOz6bGkgBfLDUJJDsyCCg58lNUr6T2t6fCBxzHO5Z0IBTPNpQgX4rRNubA9rQqbm34Cj+ipQfVoKuCZ+",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"LOW\",\n  \"workspace_need\": \"NONE\",\n  \"decision\": \"CLARIFY\",\n  \"objective_id\": \"\",\n  \"reason\": \"The reference 'that one' is ambiguous without prior context or identified options.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "LOW",
+    "workspace_need": "NONE",
+    "decision": "CLARIFY",
+    "objective_id": "",
+    "reason": "The reference 'that one' is ambiguous without prior context or identified options.",
+    "disposition": "NONE",
+    "selectionId": "d24a6bb0-c866-41af-bafe-817173f8e282",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": null,
+    "margin": 0.06799575206697084,
+    "userConfidence": null,
+    "createdAt": 1789733827250
+  }
+}

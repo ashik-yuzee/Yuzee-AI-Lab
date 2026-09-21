@@ -7,8 +7,12 @@ export const ROUTER_MODELS=[
  {id:'Xenova/bge-small-en-v1.5',label:'BGE-small',revision:'ea104dacec62c0de699686887e3f920caeb4f3e3',pooling:'cls',tokenBudget:512,description:'Calibrated skill matching · 512-token input window'},
 ] as const;
 export const DEFAULT_ROUTER_MODEL=ROUTER_MODELS[2].id;
-export type RouterModelId=typeof ROUTER_MODELS[number]['id'];
 export function routerModel(value:unknown){return ROUTER_MODELS.find(m=>m.id===value)||ROUTER_MODELS[2];}
 
+export const CLOUDFLARE_ROUTER_MODELS=[
+ {id:'cloudflare/llama-3.1-8b-fast',label:'Llama 3.1-8b Fast',description:'Server-side LLM routing via Cloudflare Workers AI · requires CLOUDFLARE_API_TOKEN'},
+] as const;
+
 // Legacy models remain available to offline comparison scripts only.
-export const RUNTIME_ROUTER_MODELS=[ROUTER_MODELS[2]] as const;
+export const RUNTIME_ROUTER_MODELS=[ROUTER_MODELS[2],...CLOUDFLARE_ROUTER_MODELS] as const;
+export type RouterModelId=typeof RUNTIME_ROUTER_MODELS[number]['id'];

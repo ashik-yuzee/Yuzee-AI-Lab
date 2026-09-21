@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "STUDY_005",
+  "reason": "Translate these course unit names into the concrete practical skills, tasks, and capabilities you will actually learn.",
+  "disposition": "SUGGEST",
+  "selectionId": "fc1c9362-99a2-4090-8fa8-84c5186f6d29",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8209441540843669,
+  "margin": 0.07914696777090946,
+  "userConfidence": null,
+  "createdAt": 1789733792239
+}

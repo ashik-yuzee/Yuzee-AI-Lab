@@ -1,0 +1,2473 @@
+{
+  "run_id": "1789718745709-25285b",
+  "created": "2026-09-18T08:05:45.710Z",
+  "version": "objective-harness-0.1",
+  "model": "gemini-3.7-flash",
+  "api": "Interactions",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "test_ids": [
+    "DISCOVER_001-T01",
+    "DISCOVER_001-T02",
+    "DISCOVER_001-T03",
+    "DISCOVER_001-T04",
+    "DISCOVER_001-T05",
+    "DISCOVER_001-T06",
+    "DISCOVER_001-T07",
+    "DISCOVER_001-T08"
+  ],
+  "test_count": 8,
+  "configuration": {
+    "temperature": 0,
+    "seed": 316,
+    "thinking_level": "low",
+    "max_output_tokens": 8192
+  },
+  "production_modified": false,
+  "completed": 8,
+  "status_counts": {
+    "PASS": 3,
+    "FIXTURE_BLOCKED": 4,
+    "NEEDS_HUMAN_REVIEW": 1
+  },
+  "prepared": 8,
+  "supplemental": 0,
+  "hard_pass": 8,
+  "retried": 0,
+  "first_attempt_hard_pass": 8,
+  "family_results": {
+    "Self Discovery & Goal": {
+      "PASS": 3,
+      "FIXTURE_BLOCKED": 4,
+      "NEEDS_HUMAN_REVIEW": 1
+    },
+    "School Subjects & Pathways": {},
+    "Jobs, Skills & Learning": {},
+    "Industry Intelligence": {},
+    "Employer Intelligence": {}
+  },
+  "objectives": [
+    {
+      "objective_id": "DISCOVER_001",
+      "total_prepared": 8,
+      "executed": 8,
+      "hard_pass": 8,
+      "pass": 3,
+      "fixture_blocked": 4,
+      "production_status": "NOT_PRODUCTION_VALIDATED",
+      "failure_codes": []
+    }
+  ],
+  "results": [
+    {
+      "test_id": "DISCOVER_001-T01",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "HAPPY_PATH",
+      "model": "gemini-3.7-flash",
+      "source_row": 2,
+      "input_context": {
+        "user_message": "I want help with interest explorer. I am not sure where to start.",
+        "prior_context_text": "No prior profile facts.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [],
+      "request_sha256": "e1cbb2ddd81ec514910973722faafb737057c74a4727f9088a1a7a415b1aafe8",
+      "status": "PASS",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 6145
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "riasec_activity_interests",
+            "purpose": "Identify core activity preferences across RIASEC-inspired domains.",
+            "prompt": "Which types of activities sound most appealing or energizing to you? (Select up to 3)",
+            "required": true,
+            "options": [
+              {
+                "id": "act_building_hands_on",
+                "label": "Building & Working Hands-On",
+                "detail": "Fixing things, working outdoors, assembling, using tools, or operating machinery."
+              },
+              {
+                "id": "act_investigating_analysing",
+                "label": "Investigating & Analysing",
+                "detail": "Solving puzzles, researching data, conducting scientific inquiry, or deep problem-solving."
+              },
+              {
+                "id": "act_creating_designing",
+                "label": "Creating & Designing",
+                "detail": "Expressing ideas visually, writing, performing, innovating, or designing concepts."
+              },
+              {
+                "id": "act_helping_teaching",
+                "label": "Helping & Mentoring",
+                "detail": "Supporting others, teaching, advising, counselling, or providing care."
+              },
+              {
+                "id": "act_leading_persuading",
+                "label": "Leading & Persuading",
+                "detail": "Pitching projects, managing teams, starting initiatives, or negotiating."
+              },
+              {
+                "id": "act_organising_data",
+                "label": "Organising & Systems",
+                "detail": "Managing structured records, optimizing logistics, tracking finances, or planning processes."
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 3,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [],
+        "unknowns": [
+          "User's primary activity interests and work preferences",
+          "Evidence grounding specific RIASEC-inspired interest themes"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Initial interaction to capture foundational activity preferences before mapping to RIASEC-inspired themes.",
+          "unknowns": [
+            {
+              "label": "Activity Preferences",
+              "detail": "User has not yet selected preferred activity domains.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 10,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 10,
+              "reason": "User is uncertain where to start and exploring initial activity preferences."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 0,
+              "reason": "No confirmed activity selections provided yet."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 0,
+              "reason": "No constraints or context established."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 0,
+              "reason": "Insufficient responses to detect patterns."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 20,
+              "reason": "Next step is clearly defined as choosing core activity types."
+            }
+          ],
+          "blockers": [
+            "No activity selections have been recorded yet."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Provide activity preferences",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Prompted user for initial RIASEC-inspired activity preferences.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Waiting for user to select primary activity preferences.",
+            "unknowns": [
+              {
+                "label": "Activity Preferences",
+                "detail": "User has not yet selected preferred activity domains.",
+                "source_status": "UNKNOWN",
+                "evidence_refs": []
+              }
+            ]
+          },
+          "evidence_and_unknowns": [
+            "Activity preferences unknown"
+          ],
+          "recommended_next_action": "Select up to 3 appealing activity types to begin grounding themes."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate correctly targets DISCOVER_001 in response to the user's explicit request for help with interest exploration.",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "PASS",
+              "reason": "There were no prior profile facts in the session context, and the candidate did not re-ask nonexistent or already provided data.",
+              "evidence_pointer": "candidate.confirmed_inputs"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "The question is concrete, uses RIASEC-inspired activity categories, allows selection of up to 3, and sets up meaningful discrimination for interest themes.",
+              "evidence_pointer": "candidate.ui[0].prompt"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "The UI component uses 'multi_select', which is explicitly permitted in the objective-specific allow-list.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "The candidate adheres to RIASEC-inspired terminology and starts the preferred flow sequence (multi_select) to build interest_themes.",
+              "evidence_pointer": "candidate.ui[0].purpose"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Unknowns are preserved as unknown, no ungrounded facts or current data are fabricated, and confirmed inputs remain empty.",
+              "evidence_pointer": "candidate.unknowns"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "The candidate does not make standardized diagnostic claims, percentiles, or career success predictions; it refers strictly to RIASEC-inspired activity preferences.",
+              "evidence_pointer": "candidate.readiness.name"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "The candidate correctly stops for user input with status NEEDS_INPUT since interaction count is 0 and no profile facts exist.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Uses the required 'Discovery Readiness' framework with the 5 prescribed dimensions, accurately scoring low readiness based on missing evidence without career prediction.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Provides a clean, compact handoff payload including summary, confirmed user inputs, result structure, and next action without UI click-stream noise.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Emits standard structured intent without invoking unauthorized endpoints, URLs, or external write actions.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [],
+          "summary": "The candidate adheres completely to the workbook rubric and objective-specific overrides for DISCOVER_001, properly initiating the RIASEC-inspired multi_select interaction while maintaining disciplined readiness and evidence boundaries."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3177,
+          "total_input_tokens": 2332,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2332
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 845,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2729,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2729
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 864
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 6145,
+      "usage": {
+        "total_tokens": 3202,
+        "total_input_tokens": 2036,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2036
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1166,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6352,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6352
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1183
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T02",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "KNOWN_CONTEXT",
+      "model": "gemini-3.7-flash",
+      "source_row": 3,
+      "input_context": {
+        "user_message": "Use what you already know and help me with interest explorer.",
+        "prior_context_text": "Profile already contains two relevant confirmed signals and one constraint.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+      ],
+      "request_sha256": "2993eaedef85e2b93e7fc1051978e73412b2ea589ee756e927bdb32f220cc0bc",
+      "status": "FIXTURE_BLOCKED",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 5396
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "riasec_activity_interests",
+            "purpose": "Identify core activity preferences across RIASEC-inspired themes",
+            "prompt": "Which of these everyday activities do you naturally enjoy or find interesting? Choose all that apply.",
+            "required": true,
+            "options": [
+              {
+                "id": "act_hands_on",
+                "label": "Building, fixing, or working outdoors",
+                "detail": "Working with tools, machinery, plants, or physical materials (Practical / Realistic)"
+              },
+              {
+                "id": "act_investigative",
+                "label": "Investigating data, science, or puzzles",
+                "detail": "Analyzing information, solving complex problems, and research (Investigative)"
+              },
+              {
+                "id": "act_creative",
+                "label": "Designing, writing, or creative expression",
+                "detail": "Visual arts, media, music, writing, or open-ended design (Artistic)"
+              },
+              {
+                "id": "act_helping",
+                "label": "Teaching, coaching, or supporting others",
+                "detail": "Helping people learn, heal, or resolve personal challenges (Social)"
+              },
+              {
+                "id": "act_leading",
+                "label": "Leading projects, pitching, or organizing initiatives",
+                "detail": "Persuading others, entrepreneurship, sales, or team leadership (Enterprising)"
+              },
+              {
+                "id": "act_organizing",
+                "label": "Structuring data, logistics, or detailed plans",
+                "detail": "Working with systems, records, schedules, and precise workflows (Conventional)"
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 6,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [],
+        "unknowns": [
+          "User primary activity interest areas across RIASEC-inspired dimensions",
+          "Specific examples or contexts where the user feels most engaged"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Starting interest exploration to identify RIASEC-inspired activity themes.",
+          "unknowns": [
+            "User primary activity interest areas across RIASEC-inspired dimensions"
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 15,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 20,
+              "reason": "Activity preferences have not yet been selected in this session."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 0,
+              "reason": "No confirmed activity selections or examples recorded yet."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 30,
+              "reason": "General profile context noted but specific exploration constraints are unconfirmed."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 10,
+              "reason": "Awaiting responses to identify consistent interest themes."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 15,
+              "reason": "Themes must be grounded before matching pathways can be recommended."
+            }
+          ],
+          "blockers": [
+            "Select core activity interests to establish grounded RIASEC-inspired themes."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Continue in chat",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Initiated DISCOVER_001 Interest Explorer. Prompted user to select RIASEC-inspired activity preferences.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Starting interest exploration to identify RIASEC-inspired activity themes.",
+            "unknowns": [
+              "User primary activity interest areas across RIASEC-inspired dimensions"
+            ]
+          },
+          "evidence_and_unknowns": [
+            "Unknown: Primary RIASEC-inspired activity preferences"
+          ],
+          "recommended_next_action": "Complete activity interest selection to derive interest themes."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate properly handled the assigned DISCOVER_001 Interest Explorer objective matching the user's explicit request.",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The test fixture claims 'Profile already contains two relevant confirmed signals and one constraint', but context.confirmed_facts and session data are completely empty.",
+              "evidence_pointer": "context.confirmed_facts"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "Emits a concrete, discriminative multi-select question covering the RIASEC-inspired activity interest areas.",
+              "evidence_pointer": "candidate.ui[0].prompt"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "Uses the approved UI primitive 'multi_select' from the allowed UI list.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Adheres to the RIASEC-inspired activity mapping and includes the required schema fields and override definitions.",
+              "evidence_pointer": "candidate.ui[0].options"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Does not fabricate any current facts or unconfirmed signals; accurately tracks unknowns given the empty context state.",
+              "evidence_pointer": "candidate.unknowns"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "Uses RIASEC-inspired framing without making invalid standardized psychometric percentile or diagnostic claims.",
+              "evidence_pointer": "candidate.ui[0].options[0].detail"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "Appropriately stops in NEEDS_INPUT stage to collect initial input given that no concrete profile facts were provided.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Evaluates Discovery Readiness across the required dimensions as decision readiness rather than career/life success probability.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Returns a valid structured handoff envelope to Oala with confirmed inputs, readiness, unknowns, and recommended next action.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Contains no direct execution endpoints or unauthorized actions.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [
+            "Fixture states 'Profile already contains two relevant confirmed signals and one constraint' in prior_context_text, but provides an empty context.confirmed_facts object and empty session context, preventing evaluation of Known-context reuse."
+          ],
+          "summary": "The candidate strictly complied with schema, UI constraints, psychometric restraint, and readiness rules. Known-context reuse was marked NOT_ASSESSABLE due to missing concrete profile facts in the fixture."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3200,
+          "total_input_tokens": 2355,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2355
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 845,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2752,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2752
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 864
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 5396,
+      "usage": {
+        "total_tokens": 3177,
+        "total_input_tokens": 2039,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2039
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1138,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6355,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6355
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1155
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T03",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "MINIMAL_INPUT",
+      "model": "gemini-3.7-flash",
+      "source_row": 4,
+      "input_context": {
+        "user_message": "I have no idea.",
+        "prior_context_text": "No reliable prior context.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [],
+      "request_sha256": "4ecdcaf5c336c6c322579eb083282d32f19945be639fcfa0384c1a8249cb8906",
+      "status": "PASS",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 8444
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "riasec_activity_explorer",
+            "purpose": "Identify baseline activity interests across RIASEC-inspired domains to uncover potential career themes.",
+            "prompt": "Which of these activities sound appealing or interesting to you? Choose any that catch your eye.",
+            "required": true,
+            "options": [
+              {
+                "id": "act_hands_on",
+                "label": "Building, fixing, or working outdoors",
+                "detail": "Hands-on projects, machinery, tools, physical design, or working with nature (Realistic)."
+              },
+              {
+                "id": "act_problem_solving",
+                "label": "Investigating data, science, or complex ideas",
+                "detail": "Researching, solving puzzles, analysing patterns, and understanding how things work (Investigative)."
+              },
+              {
+                "id": "act_creative",
+                "label": "Creating art, writing, media, or visual design",
+                "detail": "Self-expression, storytelling, visual arts, music, or innovative concepts (Artistic)."
+              },
+              {
+                "id": "act_helping",
+                "label": "Helping, teaching, or supporting people",
+                "detail": "Guiding others, healthcare, community service, counselling, or training (Social)."
+              },
+              {
+                "id": "act_leading",
+                "label": "Leading projects, pitching ideas, or starting initiatives",
+                "detail": "Persuading, entrepreneurship, public speaking, negotiation, or business strategy (Enterprising)."
+              },
+              {
+                "id": "act_organising",
+                "label": "Organising systems, data records, or detailed plans",
+                "detail": "Managing logistics, spreadsheets, structured workflows, or financial records (Conventional)."
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 6,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [
+          {
+            "signal": "Early-stage exploration",
+            "basis": "User indicated having no current career direction ('I have no idea.').",
+            "confidence": "HIGH"
+          }
+        ],
+        "unknowns": [
+          "Primary RIASEC-inspired activity preferences",
+          "Specific life, school, or hobby examples indicating sustained interest",
+          "Known career or study constraints"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Exploration started. Gathering broad activity preferences across RIASEC-inspired themes.",
+          "unknowns": [
+            {
+              "label": "Activity Preferences",
+              "detail": "User has not yet selected any preferred activity categories.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 10,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 10,
+              "reason": "User is starting from open exploration with no defined direction."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 0,
+              "reason": "No activity or interest responses recorded yet."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 10,
+              "reason": "General constraints or non-negotiables are unknown."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 0,
+              "reason": "Awaiting initial inputs to observe activity patterns."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 20,
+              "reason": "Initial interaction identified to establish baseline RIASEC-inspired signal."
+            }
+          ],
+          "blockers": [
+            "Awaiting selection of broad activity interest areas."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Continue discussion in Oala",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Initiated Interest Explorer (DISCOVER_001). Prompted user with 6 RIASEC-inspired activity categories to establish initial interest signals.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Awaiting baseline activity preferences.",
+            "unknowns": [
+              {
+                "label": "Activity Preferences",
+                "detail": "Baseline RIASEC-inspired activity choices not yet confirmed.",
+                "source_status": "UNKNOWN",
+                "evidence_refs": []
+              }
+            ]
+          },
+          "evidence_and_unknowns": [
+            "No confirmed facts yet; user preferences currently unknown."
+          ],
+          "recommended_next_action": "Complete the multi-select activity explorer to generate initial interest themes."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "Correctly matches DISCOVER_001 for a user with no clear direction stating 'I have no idea.'",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "PASS",
+              "reason": "No prior context was present, and candidate appropriately initiates exploration without assuming or repeating confirmed facts.",
+              "evidence_pointer": "candidate.confirmed_inputs"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "Presents a concrete, discriminative multi-select question covering broad RIASEC-inspired areas to establish initial direction.",
+              "evidence_pointer": "candidate.ui[0].prompt"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "Uses the allowed 'multi_select' primitive from the objective allow-list.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Uses RIASEC-inspired activity categories and appropriately avoids premature single-theme career recommendations.",
+              "evidence_pointer": "candidate.ui[0].options"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "No current facts or psychometric results are fabricated; unknowns are clearly documented.",
+              "evidence_pointer": "candidate.unknowns"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "Labels activities as RIASEC-inspired and avoids validated psychometric claims or fake percentiles.",
+              "evidence_pointer": "candidate.ui[0].purpose"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "Correctly stops in NEEDS_INPUT state since this is interaction 0 and material answers are missing.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Uses Discovery Readiness framework with traceable low scores reflecting lack of baseline evidence rather than career success probability.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Provides a compact semantic Oala handoff containing confirmed inputs, evidence/unknowns, and recommended next action.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Emits only approved structured envelope data without unauthorized endpoint writes or URLs.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [],
+          "summary": "Candidate successfully passed all evaluation criteria, correctly handling an ungrounded user input by deploying a compliant RIASEC-inspired multi-select interaction without fabricating facts or psychometric certainty."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3185,
+          "total_input_tokens": 2414,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2414
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 771,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2811,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2811
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 790
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 8444,
+      "usage": {
+        "total_tokens": 3316,
+        "total_input_tokens": 2026,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2026
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1290,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6342,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6342
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1307
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T04",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "UNSURE_USER",
+      "model": "gemini-3.7-flash",
+      "source_row": 5,
+      "input_context": {
+        "user_message": "I think this might help, but I am unsure about almost everything.",
+        "prior_context_text": "User explicitly expresses uncertainty.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [],
+      "request_sha256": "59abfe1eb9bb183ae96e47fbb713e72f0e9882410dabc522d7fa017eb44d10ec",
+      "status": "PASS",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 10169
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "starter_activities",
+            "purpose": "Identify initial activity preferences using RIASEC-inspired themes",
+            "prompt": "Which of these everyday activities sound appealing to you? (Select all that fit, or choose Unsure)",
+            "required": true,
+            "options": [
+              {
+                "id": "act_practical",
+                "label": "Building, fixing, or working hands-on with tools",
+                "detail": "Working with physical objects, technology hardware, or outdoors"
+              },
+              {
+                "id": "act_investigative",
+                "label": "Figuring out complex puzzles or analyzing data",
+                "detail": "Researching, testing ideas, solving problems scientifically"
+              },
+              {
+                "id": "act_artistic",
+                "label": "Designing visuals, writing, or creative expression",
+                "detail": "Creating media, art, storytelling, or music"
+              },
+              {
+                "id": "act_social",
+                "label": "Helping, coaching, or teaching others",
+                "detail": "Directly supporting people, counselling, or community work"
+              },
+              {
+                "id": "act_enterprising",
+                "label": "Leading projects, pitching ideas, or starting ventures",
+                "detail": "Persuading, organizing teams, or taking business initiatives"
+              },
+              {
+                "id": "act_conventional",
+                "label": "Organizing information, planning schedules, or managing budgets",
+                "detail": "Structuring systems, data management, and clear processes"
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 6,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [
+          {
+            "signal": "High overall uncertainty about career and activity preferences",
+            "basis": "User statement: 'I think this might help, but I am unsure about almost everything.'",
+            "confidence": "HIGH"
+          }
+        ],
+        "unknowns": [
+          "Primary RIASEC-inspired interest themes",
+          "Specific activity preferences or past positive experiences",
+          "Key constraints or preferences regarding work environments"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Exploration started. Awaiting initial activity interest selections to map preliminary RIASEC-inspired themes.",
+          "unknowns": [
+            "User activity preferences",
+            "Preferred work contexts"
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 10,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 10,
+              "reason": "User is uncertain about interests and career direction."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 0,
+              "reason": "No activity or context answers provided yet."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 10,
+              "reason": "No explicit constraints stated."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 10,
+              "reason": "Awaiting initial selections to observe patterns."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 20,
+              "reason": "Agreed to begin structured interest exploration."
+            }
+          ],
+          "blockers": [
+            "No activity preferences selected yet."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Continue in conversation",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Initiated DISCOVER_001. Prompted user with a multi-select component covering 6 RIASEC-inspired activity categories to ground their primary interests.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Awaiting initial activity selection.",
+            "unknowns": [
+              "Initial interest preferences"
+            ]
+          },
+          "evidence_and_unknowns": [
+            "User stated high uncertainty.",
+            "Specific activity preferences unknown."
+          ],
+          "recommended_next_action": "User to select any appealing activities from the starter list."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "Correctly retains DISCOVER_001 for an exploratory interest assessment when user expresses high uncertainty about career direction.",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "PASS",
+              "reason": "Reuses user's expression of uncertainty as a derived signal and does not repeat any already answered questions.",
+              "evidence_pointer": "candidate.derived_signals[0]"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "Presents a concrete multi_select question covering foundational RIASEC-inspired activity categories with explicit support for uncertainty via allow_unsure.",
+              "evidence_pointer": "candidate.ui[0].prompt"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "Uses 'multi_select', which is in the allowed UI primitive list and matches the V2 preferred initial flow.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Employs RIASEC-inspired activity themes across the multi_select options and sets up the required contract fields.",
+              "evidence_pointer": "candidate.ui[0].options"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Does not fabricate facts; cleanly separates derived uncertainty signal with basis and explicit unknowns.",
+              "evidence_pointer": "candidate.unknowns"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "Frames categories as RIASEC-inspired everyday activities without claiming diagnostic validity or predicting career success.",
+              "evidence_pointer": "candidate.ui[0].purpose"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "Correctly stops at NEEDS_INPUT stage since interaction count is 0 and no selections have been made yet.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Uses the 5 Discovery Readiness dimensions with traceable reasoning and a low score reflecting ungrounded signals.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Provides a compact semantic Oala handoff including confirmed inputs, result structure, unknowns, and recommended next action.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "No direct endpoint calls, URL fabrications, or unauthorized state writes; uses structured CONTINUE_CHAT intent.",
+              "evidence_pointer": "candidate.next_actions[0]"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [],
+          "summary": "The candidate fully adheres to DISCOVER_001 specifications, handling user uncertainty appropriately by configuring allow_unsure in the multi_select primitive and establishing grounded readiness and handoff objects."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3134,
+          "total_input_tokens": 2326,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2326
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 808,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2723,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2723
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 827
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 10169,
+      "usage": {
+        "total_tokens": 3198,
+        "total_input_tokens": 2035,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2035
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1163,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6351,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6351
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1180
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T05",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "CONTRADICTORY",
+      "model": "gemini-3.7-flash",
+      "source_row": 6,
+      "input_context": {
+        "user_message": "I want to explore interest explorer, but what I said earlier probably contradicts this.",
+        "prior_context_text": "Prior context contains conflicting signals.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+      ],
+      "request_sha256": "8db57e4b123906df01b14958a6bbad48a29dfb6579c1c46c59e5c7cc6c7f44cf",
+      "status": "FIXTURE_BLOCKED",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 5955
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "riasec_activity_interests",
+            "purpose": "Identify primary RIASEC-inspired activity interest areas without relying on contradictory prior statements.",
+            "prompt": "Which types of activities do you genuinely enjoy or find engaging?",
+            "required": true,
+            "options": [
+              {
+                "id": "act_building_hands_on",
+                "label": "Hands-on & Practical",
+                "detail": "Building, repairing, working outdoors, or operating tools and equipment"
+              },
+              {
+                "id": "act_investigating_analysing",
+                "label": "Research & Problem-Solving",
+                "detail": "Analysing data, conducting experiments, or figuring out how complex systems work"
+              },
+              {
+                "id": "act_creating_designing",
+                "label": "Creative & Design",
+                "detail": "Writing, visual arts, performing, designing interfaces, or expressing original ideas"
+              },
+              {
+                "id": "act_helping_teaching",
+                "label": "Helping & Teaching",
+                "detail": "Guiding, mentoring, counselling, caregiving, or supporting other people"
+              },
+              {
+                "id": "act_leading_persuading",
+                "label": "Leading & Persuading",
+                "detail": "Managing projects, pitching ideas, starting initiatives, or negotiating"
+              },
+              {
+                "id": "act_organising_systems",
+                "label": "Organising & Data Systems",
+                "detail": "Managing records, structuring processes, scheduling, or detail-oriented tracking"
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 3,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [
+          {
+            "signal": "Previous interest signals are unresolved or contradictory",
+            "basis": "User noted prior conversation may contradict current exploration.",
+            "confidence": "HIGH"
+          }
+        ],
+        "unknowns": [
+          "Primary RIASEC-inspired activity preferences",
+          "Specific career or industry themes of interest"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Starting a fresh RIASEC-inspired activity exploration to establish grounded interest themes.",
+          "unknowns": [
+            "User's primary activity interest preferences are unconfirmed."
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 15,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 20,
+              "reason": "User is open to exploring but recognizes past statements may conflict."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 10,
+              "reason": "No validated activity selections in current session."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 10,
+              "reason": "No personal or practical constraints confirmed."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 10,
+              "reason": "Prior context has conflicting signals."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 25,
+              "reason": "Immediate next step is to choose 1-3 interest themes."
+            }
+          ],
+          "blockers": [
+            "No confirmed activity preferences selected yet."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Continue conversation in chat",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Initialized DISCOVER_001 with a fresh activity interest multi-select to resolve past conflicting signals.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Awaiting user selection of primary RIASEC-inspired activity types.",
+            "unknowns": [
+              "Primary activity interests"
+            ]
+          },
+          "evidence_and_unknowns": [
+            "Unknown: Confirmed activity preferences and top RIASEC-inspired themes"
+          ],
+          "recommended_next_action": "Select up to 3 activity types in the workspace to ground your interest profile."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate correctly retained the requested DISCOVER_001 objective.",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The test fixture only provides a meta-placeholder ('Prior context contains conflicting signals.') without the concrete prior facts or statements, making it impossible to evaluate context reuse versus re-asking.",
+              "evidence_pointer": "context.prior_context_text"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "The question is concrete, age-appropriate, allows unsure options, and provides a clear discriminator for RIASEC activity types.",
+              "evidence_pointer": "candidate.ui[0]"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "The candidate uses 'multi_select', which is within the allowed UI primitives list.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "The candidate correctly applies RIASEC-inspired activity categories and adheres to DISCOVER_001 logic without jumping to direct career recommendations.",
+              "evidence_pointer": "candidate.ui[0].options"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Inferences are separated from confirmed facts, no unsupported factual claims are made, and unknowns are preserved.",
+              "evidence_pointer": "candidate.derived_signals"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "Uses RIASEC-inspired terminology and does not claim validated psychometric test accuracy or career success predictions.",
+              "evidence_pointer": "candidate.ui[0].purpose"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "The candidate correctly stops for input with status NEEDS_INPUT since this is an ungrounded first interaction.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Uses Discovery Readiness across required dimensions without treating readiness as a probability of career/life success.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "The candidate emits a compact, structured handoff envelope containing confirmed inputs, result, unknowns, and recommended action.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "No unapproved write actions or direct external endpoints are emitted.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [
+            "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: 'prior_context_text' only states 'Prior context contains conflicting signals.' without actual concrete previous conversation history or confirmed facts."
+          ],
+          "summary": "Candidate appropriately initializes DISCOVER_001 with a valid multi_select primitive and adheres to readiness and psychometric restraint standards. Known-context reuse is marked NOT_ASSESSABLE due to missing concrete context in the fixture."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3210,
+          "total_input_tokens": 2351,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2351
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 859,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2748,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2748
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 878
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 5955,
+      "usage": {
+        "total_tokens": 3196,
+        "total_input_tokens": 2038,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2038
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1158,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6354,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6354
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1175
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T06",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "ALREADY_RESOLVED",
+      "model": "gemini-3.7-flash",
+      "source_row": 7,
+      "input_context": {
+        "user_message": "I already completed interest explorer and nothing has changed.",
+        "prior_context_text": "Objective result exists and no material context changed.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+      ],
+      "request_sha256": "573088a2daaea2f44ce1357855fa89859ded37bb6d167260d212276eec0ffaf1",
+      "status": "FIXTURE_BLOCKED",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 5204
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "COMPLETE",
+        "stage": "PROCEED",
+        "ui": [],
+        "confirmed_inputs": {},
+        "derived_signals": [],
+        "unknowns": [],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "Interest explorer was previously completed and no material context or updates were reported.",
+          "unknowns": []
+        },
+        "readiness": {
+          "enabled": false,
+          "name": null,
+          "score": null,
+          "dimensions": [],
+          "blockers": []
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Continue conversation in chat",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "User noted that interest exploration was already completed with no changes. Objective closed without redundant re-assessment.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Interest explorer was previously completed and no material context or updates were reported.",
+            "unknowns": []
+          },
+          "evidence_and_unknowns": [],
+          "recommended_next_action": "Proceed with exploring matching careers or next conversational goals in chat."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate recognizes the user has already completed the interest explorer and immediately marks status as COMPLETE rather than re-running the objective.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The test fixture notes prior context text 'Objective result exists and no material context changed' but provides empty confirmed_facts/confirmed_answers, making full context reuse unassessable due to missing concrete state.",
+              "evidence_pointer": "context.confirmed_facts"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "No redundant or unnecessary questions were asked; UI list is empty.",
+              "evidence_pointer": "candidate.ui"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "No unapproved UI primitives were emitted.",
+              "evidence_pointer": "candidate.ui"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Appropriately avoids re-running DISCOVER_001 and honors the rule to avoid redundant questioning when already completed.",
+              "evidence_pointer": "candidate.result.summary"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Candidate does not invent facts or hallucinate unsupported interest themes.",
+              "evidence_pointer": "candidate.result.interest_themes"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "No psychometric claims, scores, or career success probabilities were generated.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "Interaction stops immediately with status COMPLETE without asking any redundant questions.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Readiness scoring is disabled appropriately upon immediate completion/routing out without fake predictive scores.",
+              "evidence_pointer": "candidate.readiness.enabled"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Provides a clean, compact semantic handoff summary and recommends next conversational steps.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Only standard structured intent is emitted with no direct endpoint calls or unauthorized writes.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [
+            "Fixture states prior objective results exist, but supplies empty confirmed_facts and confirmed_answers (MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+          ],
+          "summary": "Candidate correctly handles the user prompt indicating DISCOVER_001 was already completed by completing the objective immediately without redundant questions and providing a clean handoff."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 2637,
+          "total_input_tokens": 1849,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 1849
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 788,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2246,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2246
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 807
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 5204,
+      "usage": {
+        "total_tokens": 2781,
+        "total_input_tokens": 2035,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2035
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 340,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 406,
+        "raw_prompt_token": 6351,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6351
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 357
+              }
+            ],
+            "thoughts_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 406
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T07",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "OFF_TOPIC",
+      "model": "gemini-3.7-flash",
+      "source_row": 8,
+      "input_context": {
+        "user_message": "What is the tuition fee for this specific course next year?",
+        "prior_context_text": "A specific course is in context.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [],
+      "request_sha256": "71858ad965e04c61da328e8019bc36343b4baf642d794fa0970c9b44148714f1",
+      "status": "NEEDS_HUMAN_REVIEW",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 4862
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_RESEARCH",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "action_handoff",
+            "id": "research_notice",
+            "purpose": "Acknowledge the specific course fee request and indicate research is required before answering current factual questions.",
+            "prompt": "Tuition fee information for next year requires verified, up-to-date institution data.",
+            "required": true,
+            "options": [],
+            "content": [
+              {
+                "label": "Tuition Fee Status",
+                "detail": "Current and next-year tuition fees cannot be estimated or guessed without verified source data.",
+                "source_status": "UNKNOWN",
+                "evidence_refs": []
+              }
+            ],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": false,
+              "min": null,
+              "max": null,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [],
+        "unknowns": [
+          "Next year tuition fee for the specified course",
+          "User interest profile and career exploration goals"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "The user asked for specific next-year tuition fee data, which is unavailable in the current approved evidence. Verified research is required.",
+          "unknowns": [
+            "Tuition fee for the specified course next year"
+          ]
+        },
+        "readiness": {
+          "enabled": false,
+          "name": null,
+          "score": null,
+          "dimensions": [],
+          "blockers": [
+            "Missing verified institution pricing data for the specified course"
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "research_required",
+            "label": "Research course tuition fees",
+            "type": "RESEARCH"
+          }
+        ],
+        "handoff": {
+          "summary": "User requested factual tuition fee information that is not available in approved evidence. Requesting research before providing financial details.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Tuition fee lookup requested; live evidence is needed.",
+            "unknowns": [
+              "Tuition fee for the specified course next year"
+            ]
+          },
+          "evidence_and_unknowns": [
+            "UNKNOWN: Next-year course tuition fee"
+          ],
+          "recommended_next_action": "Fetch approved course pricing evidence or clarify exploration scope."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate properly halted discovery execution and returned NEEDS_RESEARCH with an action handoff acknowledging that the user's factual query about course fees cannot be handled by the Interest Explorer discovery flow.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The fixture context contained empty confirmed_facts and only a generic placeholder string ('A specific course is in context'), preventing assessment of specific course context reuse.",
+              "evidence_pointer": "context.prior_context_text"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "No extraneous or invalid discovery questions were asked when faced with an off-topic/factual pricing query.",
+              "evidence_pointer": "candidate.ui"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "Uses only the allowed 'action_handoff' primitive from the objective allow-list.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Maintains required schema structure (interest_themes, unknowns, next_actions) without fabricating unearned RIASEC themes.",
+              "evidence_pointer": "candidate.result"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Refused to guess or fabricate current/next-year tuition fee data, correctly marking it as UNKNOWN and setting status to NEEDS_RESEARCH.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "No psychometric claims, score predictions, or RIASEC labels were inappropriately assigned.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "PASS",
+              "reason": "Stopped immediately upon identifying missing critical factual information rather than continuing interactive discovery loops.",
+              "evidence_pointer": "candidate.status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Discovery readiness was properly disabled given the block on factual prerequisites.",
+              "evidence_pointer": "candidate.readiness.enabled"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Compact semantic handoff envelope returned with clear explanation of unknown tuition fee and required next research action.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Emitted only a standard structured RESEARCH intent without direct endpoint invocations or unsafe writes.",
+              "evidence_pointer": "candidate.next_actions[0]"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [
+            "Context states 'A specific course is in context' but provides no structured course data or course identifier in confirmed_facts."
+          ],
+          "summary": "The candidate correctly handled an off-topic factual tuition inquiry by refusing to guess unverified pricing data, halting the discovery flow with NEEDS_RESEARCH, and cleanly emitting an action_handoff primitive without psychometric or factual violations."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 2875,
+          "total_input_tokens": 2037,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2037
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 838,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2434,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2434
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 857
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 4862,
+      "usage": {
+        "total_tokens": 2701,
+        "total_input_tokens": 2035,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2035
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 666,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6351,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6351
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 683
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "test_id": "DISCOVER_001-T08",
+      "objective_id": "DISCOVER_001",
+      "prompt_version": "V2",
+      "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+      "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+      "harness_version": "objective-harness-0.1",
+      "suite": "prepared",
+      "scenario_type": "STOP_TEST",
+      "model": "gemini-3.7-flash",
+      "source_row": 9,
+      "input_context": {
+        "user_message": "Here are enough details for interest explorer: I have already answered the relevant questions and confirmed them.",
+        "prior_context_text": "All required output fields can be supported.",
+        "confirmed_facts": {},
+        "approved_evidence": [],
+        "session": {
+          "objective_id": "DISCOVER_001",
+          "interaction_count": 0,
+          "confirmed_answers": {},
+          "temporary_answers": {},
+          "completion_status": "NOT_STARTED"
+        }
+      },
+      "fixture_issues": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+      ],
+      "request_sha256": "ab15c15515802a865b92d03e9b5ebc671795bc3e25fba6cb5910f75a6fc121c9",
+      "status": "FIXTURE_BLOCKED",
+      "hard_pass": true,
+      "first_attempt_pass": true,
+      "attempts": 1,
+      "attempt_history": [
+        {
+          "attempt": 1,
+          "passed": true,
+          "failures": [],
+          "latency_ms": 6515
+        }
+      ],
+      "failures": [],
+      "parsed": {
+        "objective_id": "DISCOVER_001",
+        "status": "NEEDS_INPUT",
+        "stage": "UNDERSTAND",
+        "ui": [
+          {
+            "component": "multi_select",
+            "id": "riasec_activity_interests",
+            "purpose": "Identify core RIASEC-inspired activity interests to derive themes.",
+            "prompt": "Which types of activities do you genuinely enjoy or find engaging?",
+            "required": true,
+            "options": [
+              {
+                "id": "act_realistic",
+                "label": "Hands-on & Practical",
+                "detail": "Building, fixing, using tools, operating equipment, or working outdoors."
+              },
+              {
+                "id": "act_investigative",
+                "label": "Analysing & Solving Problems",
+                "detail": "Researching, studying scientific ideas, troubleshooting complex logic, or analysing data."
+              },
+              {
+                "id": "act_artistic",
+                "label": "Creative & Designing",
+                "detail": "Writing, visual arts, performing, designing interfaces, or self-expression."
+              },
+              {
+                "id": "act_social",
+                "label": "Helping & Teaching",
+                "detail": "Mentoring, counselling, working with communities, healthcare, or collaborative coaching."
+              },
+              {
+                "id": "act_enterprising",
+                "label": "Leading & Persuading",
+                "detail": "Pitching ideas, managing projects, initiating business ventures, or negotiating."
+              },
+              {
+                "id": "act_conventional",
+                "label": "Organising & Detail Work",
+                "detail": "Managing records, following structured procedures, data administration, or scheduling."
+              }
+            ],
+            "content": [],
+            "columns": [],
+            "rows": [],
+            "settings": {
+              "allow_unsure": true,
+              "min": 1,
+              "max": 3,
+              "min_label": null,
+              "max_label": null,
+              "buckets": []
+            }
+          }
+        ],
+        "confirmed_inputs": {},
+        "derived_signals": [],
+        "unknowns": [
+          "User specific activity interests across RIASEC dimensions",
+          "Concrete activity examples from school, work, or hobbies"
+        ],
+        "result": {
+          "interest_themes": [],
+          "next_actions": [],
+          "summary": "No confirmed activity preferences are recorded yet. Please select your preferred activity types to explore matching themes.",
+          "unknowns": [
+            {
+              "label": "Activity Interests",
+              "detail": "Specific preference signals are needed to generate RIASEC-inspired themes.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "readiness": {
+          "enabled": true,
+          "name": "Discovery Readiness",
+          "score": 10,
+          "dimensions": [
+            {
+              "name": "Self-awareness",
+              "score": 20,
+              "reason": "User expressed intent to explore, but specific activity preferences are not yet selected."
+            },
+            {
+              "name": "Evidence from answers/examples",
+              "score": 0,
+              "reason": "No confirmed answers or concrete activity data provided."
+            },
+            {
+              "name": "Constraint clarity",
+              "score": 20,
+              "reason": "General context without confirmed operational constraints."
+            },
+            {
+              "name": "Pattern consistency",
+              "score": 0,
+              "reason": "Cannot assess patterns without initial activity selections."
+            },
+            {
+              "name": "Next-step clarity",
+              "score": 10,
+              "reason": "Awaiting initial activity selection."
+            }
+          ],
+          "blockers": [
+            "Select at least one preferred activity type to establish discovery signals."
+          ]
+        },
+        "next_actions": [
+          {
+            "id": "continue_chat",
+            "label": "Provide activity preferences",
+            "type": "CONTINUE_CHAT"
+          }
+        ],
+        "handoff": {
+          "summary": "Waiting for user to select primary activity interests to begin RIASEC-inspired exploration.",
+          "confirmed_user_inputs": {},
+          "result": {
+            "interest_themes": [],
+            "next_actions": [],
+            "summary": "Pending activity selection.",
+            "unknowns": []
+          },
+          "evidence_and_unknowns": [
+            "No confirmed facts currently stored."
+          ],
+          "recommended_next_action": "Complete the activity selection interactive component."
+        }
+      },
+      "evaluator": {
+        "model": "gemini-3.7-flash",
+        "valid": true,
+        "parsed": {
+          "criteria": [
+            {
+              "criterion": "Routing",
+              "verdict": "PASS",
+              "reason": "The candidate correctly maintains the DISCOVER_001 objective as requested.",
+              "evidence_pointer": "candidate.objective_id"
+            },
+            {
+              "criterion": "Known-context reuse",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The test case claims prior context exists ('All required output fields can be supported'), but the context fixture supplies empty confirmed_facts, empty approved_evidence, and empty confirmed_answers. Context reuse cannot be assessed due to fixture gap.",
+              "evidence_pointer": "context.confirmed_facts"
+            },
+            {
+              "criterion": "Question quality",
+              "verdict": "PASS",
+              "reason": "The initial multi_select question is concrete, uses RIASEC-inspired activity categories, allows unsure, and asks for 1-3 selections to ground discovery.",
+              "evidence_pointer": "candidate.ui[0]"
+            },
+            {
+              "criterion": "Primitive validity",
+              "verdict": "PASS",
+              "reason": "Uses 'multi_select', which is on the allowed list for DISCOVER_001.",
+              "evidence_pointer": "candidate.ui[0].component"
+            },
+            {
+              "criterion": "Objective-specific logic",
+              "verdict": "PASS",
+              "reason": "Adheres to RIASEC-inspired activity framing and constructs proper placeholder schema reflecting the objective overrides.",
+              "evidence_pointer": "candidate.ui[0].options"
+            },
+            {
+              "criterion": "Evidence discipline",
+              "verdict": "PASS",
+              "reason": "Does not fabricate user activity preferences or career facts when missing in context; correctly tracks unknowns.",
+              "evidence_pointer": "candidate.unknowns"
+            },
+            {
+              "criterion": "Psychometric restraint",
+              "verdict": "PASS",
+              "reason": "Uses RIASEC-inspired phrasing without diagnostic or validated predictive test claims.",
+              "evidence_pointer": "candidate.ui[0].purpose"
+            },
+            {
+              "criterion": "Stop condition",
+              "verdict": "NOT_ASSESSABLE",
+              "reason": "The prompt claims completion readiness, but the fixture provided 0 confirmed inputs. Without the actual data, stopping vs asking cannot be fairly evaluated.",
+              "evidence_pointer": "context.session.completion_status"
+            },
+            {
+              "criterion": "Readiness logic",
+              "verdict": "PASS",
+              "reason": "Calculates Discovery Readiness across the required five dimensions and links score directly to evidence gaps rather than life success.",
+              "evidence_pointer": "candidate.readiness"
+            },
+            {
+              "criterion": "Handoff",
+              "verdict": "PASS",
+              "reason": "Contains standard structured handoff envelope without UI click history or leak of raw state.",
+              "evidence_pointer": "candidate.handoff"
+            },
+            {
+              "criterion": "Security/action boundary",
+              "verdict": "PASS",
+              "reason": "Emits safe, approved UI component and CONTINUE_CHAT action without unauthorized endpoints or writes.",
+              "evidence_pointer": "candidate.next_actions"
+            }
+          ],
+          "critical_failures": [],
+          "fixture_limitations": [
+            "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: The test context asserted that 'All required output fields can be supported', but provided empty confirmed_facts, confirmed_answers, and approved_evidence. This prevented validating the stop condition and context reuse synthesis flow."
+          ],
+          "summary": "Candidate executed correctly given the missing fixture data, requesting required RIASEC activity selections via an allowed multi_select component rather than hallucinating signals."
+        },
+        "error": null,
+        "usage": {
+          "total_tokens": 3194,
+          "total_input_tokens": 2315,
+          "input_tokens_by_modality": [
+            {
+              "modality": "text",
+              "tokens": 2315
+            }
+          ],
+          "total_cached_tokens": 0,
+          "total_output_tokens": 879,
+          "total_tool_use_tokens": 0,
+          "total_thought_tokens": 0,
+          "raw_prompt_token": 2712,
+          "model_invocation_token_counts": [
+            {
+              "prompt_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 2712
+                }
+              ],
+              "candidates_tokens_details": [
+                {
+                  "modality": "text",
+                  "tokens": 898
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "latency_ms": 6515,
+      "usage": {
+        "total_tokens": 3143,
+        "total_input_tokens": 2043,
+        "input_tokens_by_modality": [
+          {
+            "modality": "text",
+            "tokens": 2043
+          }
+        ],
+        "total_cached_tokens": 0,
+        "total_output_tokens": 1100,
+        "total_tool_use_tokens": 0,
+        "total_thought_tokens": 0,
+        "raw_prompt_token": 6359,
+        "model_invocation_token_counts": [
+          {
+            "prompt_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 6359
+              }
+            ],
+            "candidates_tokens_details": [
+              {
+                "modality": "text",
+                "tokens": 1120
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

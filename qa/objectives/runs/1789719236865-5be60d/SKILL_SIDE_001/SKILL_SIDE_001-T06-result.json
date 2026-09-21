@@ -1,0 +1,230 @@
+{
+  "test_id": "SKILL_SIDE_001-T06",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 317,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "e553383b262fd73e09555b75ba9183de43abe5d27d87aa620ca5bb865d4d4d58",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6813
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target role, course, or capability area is not specified",
+      "Current demonstrated skills are not provided"
+    ],
+    "result": {
+      "skill_gaps": [],
+      "unknowns": [
+        "No target role or current skills identified"
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "The user's request is unrelated to Skill Gap analysis. No skill gap assessment was conducted.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Skill gap analysis was not performed because no target role, course, or capability focus was requested."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: target role, qualification, or skill focus"
+      ],
+      "recommended_next_action": "Continue conversation in general chat to address the user's prompt."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the prompt is completely unrelated to Skill Gap analysis and correctly performs a no-action completion/abstention handing off back to general chat.",
+          "evidence_pointer": "candidate.handoff.summary"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No existing facts were available, and none were re-asked or fabricated.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No questions were asked because the planner completed immediately on off-topic input.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No UI primitives were emitted (empty list), respecting the allow-list without invalid custom components.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Output preserves the contract structure with empty/unknown results appropriate for an abstained skill gap objective.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No facts, proficiency levels, or skills were invented; unknowns were cleanly marked.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or capability scores were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction stopped immediately with status COMPLETE without asking redundant questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled appropriately with no invalid life-success predictions.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Candidate returns a clean, compact semantic handoff back to Oala indicating why no assessment was performed.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Contains only approved structured intent (CONTINUE_CHAT) with no unsafe direct endpoints or policy breaches.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly handled an off-topic user request ('Write me a short birthday poem') by abstaining from running the Skill Gap objective, omitting UI components, and handing off cleanly back to chat."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2620,
+      "total_input_tokens": 1872,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1872
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 748,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2269,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2269
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 767
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6813,
+  "usage": {
+    "total_tokens": 2719,
+    "total_input_tokens": 2133,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2133
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 355,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 231,
+    "raw_prompt_token": 5595,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5595
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 375
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 231
+          }
+        ]
+      }
+    ]
+  }
+}

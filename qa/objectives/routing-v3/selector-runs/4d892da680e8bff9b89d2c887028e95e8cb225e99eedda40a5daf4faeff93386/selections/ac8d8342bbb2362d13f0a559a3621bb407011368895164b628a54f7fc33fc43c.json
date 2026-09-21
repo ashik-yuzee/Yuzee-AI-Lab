@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_DECIDE_004",
+  "reason": "Compare the employment conditions, compensation, and key factors of your two concrete job offers side by side.",
+  "disposition": "AUTO_OPEN",
+  "selectionId": "122f4d99-5f65-4564-b783-be953f8d6cc2",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8754392893066346,
+  "margin": 0.05619726005162551,
+  "userConfidence": null,
+  "createdAt": 1789733810180
+}

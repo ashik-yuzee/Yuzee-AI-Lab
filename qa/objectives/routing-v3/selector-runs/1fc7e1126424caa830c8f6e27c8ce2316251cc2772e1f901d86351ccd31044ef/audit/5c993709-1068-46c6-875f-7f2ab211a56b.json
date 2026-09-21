@@ -1,0 +1,460 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "DISCOVER_001",
+      "score": 0.8975683296974154,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7251656941138196,
+      "contextScore": 0.8975683296974154
+    },
+    {
+      "id": "SCHOOL_006",
+      "score": 0.7754872248807515,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7558393875488445,
+      "contextScore": 0.7754872248807515
+    },
+    {
+      "id": "DISCOVER_003",
+      "score": 0.7772692857717058,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7772692857717058,
+      "contextScore": 0.746840091492981
+    },
+    {
+      "id": "GOAL_002",
+      "score": 0.7914724533475316,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6608560954522984,
+      "contextScore": 0.7914724533475316
+    },
+    {
+      "id": "IND_DISCOVER_002",
+      "score": 0.7577049941399199,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6772237347316157,
+      "contextScore": 0.7577049941399199
+    },
+    {
+      "id": "JOB_DISCOVER_007",
+      "score": 0.7511076274232288,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.691137469382431,
+      "contextScore": 0.7511076274232288
+    },
+    {
+      "id": "SCHOOL_007",
+      "score": 0.7426990858611272,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7049754297101325,
+      "contextScore": 0.7426990858611272
+    },
+    {
+      "id": "DISCOVER_007",
+      "score": 0.7446633618053247,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6915856354676851,
+      "contextScore": 0.7446633618053247
+    },
+    {
+      "id": "RECOVERY_004",
+      "score": 0.720095093931968,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.720095093931968
+    },
+    {
+      "id": "PROFILE_001",
+      "score": 0.7196605551160068,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7196605551160068
+    },
+    {
+      "id": "SCHOOL_004",
+      "score": 0.7114428456957652,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7114428456957652
+    },
+    {
+      "id": "JOB_COMPARE_004",
+      "score": 0.7042024924081558,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7042024924081558
+    },
+    {
+      "id": "DISCOVER_008",
+      "score": 0.6733570360456673,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6733570360456673
+    },
+    {
+      "id": "PROFILE_003",
+      "score": 0.672001850623808,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.672001850623808
+    },
+    {
+      "id": "EXP_002",
+      "score": 0.6677081070244956,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6677081070244956
+    },
+    {
+      "id": "CAREER_SIDE_004",
+      "score": 0.7884489331959799,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7884489331959799
+    },
+    {
+      "id": "CAREER_SIDE_006",
+      "score": 0.6627106036854065,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6627106036854065
+    },
+    {
+      "id": "GOAL_003",
+      "score": 0.7847162568312733,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7847162568312733
+    },
+    {
+      "id": "SCHOOL_001",
+      "score": 0.6623083566042625,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6623083566042625
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "cant figer out wat i enjoy or wat sort of wrk wud suit me",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Explore interests and suitable types of activities before selecting work.",
+      "confirmed_facts": [],
+      "possible_need": "Explore interests and suitable types of activities before selecting work.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Explore interests and suitable types of activities before selecting work."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "DISCOVER_001",
+        "button_label": "What am I interested in?",
+        "outcome": "Explore RIASEC-style activity interests and translate them into career/industry themes.",
+        "when_to_use": "Serve when user has no clear career direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Interest Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Explore unknown interests. Do not substitute saving an already established interest profile or choosing school subjects.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_006",
+        "button_label": "Use what I enjoy",
+        "outcome": "Identify which activities within subjects are actually enjoyable and connect them to paths.",
+        "when_to_use": "Serve when student wants subject choice based on enjoyment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Enjoy: Identify which activities within subjects are actually enjoyable and connect them to paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DISCOVER_003",
+        "button_label": "Explore my personality",
+        "outcome": "Explore work preferences such as people/solitude, practical/abstract, logic/values, structure/flexibility and uncertainty response.",
+        "when_to_use": "Serve when user wants a 16personalities-like experience for work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Work Personality' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Work Personality: Explore work preferences such as people/solitude, practical/abstract, logic/values, structure/flexibility and uncertainty response. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "GOAL_002",
+        "button_label": "Picture my future",
+        "outcome": "Explore preferred people/ideas/things balance, environment, autonomy, structure, travel and study/earning trade-offs.",
+        "when_to_use": "Serve when user cannot name careers but can imagine a future lifestyle.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Future Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Future Me: Explore preferred people/ideas/things balance, environment, autonomy, structure, travel and study/earning trade-offs. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "IND_DISCOVER_002",
+        "button_label": "Where could my interests take me?",
+        "outcome": "Map interests to multiple sectors instead of one obvious career.",
+        "when_to_use": "Serve when user has interests but not industry knowledge.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries From My Interests: Map interests to multiple sectors instead of one obvious career. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_007",
+        "button_label": "Show me something different",
+        "outcome": "Surface adjacent and surprising occupations that still have defensible links to the profile.",
+        "when_to_use": "Serve when user is stuck on obvious occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs I Might Not Have Considered' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs I Might Not Have Considered: Surface adjacent and surprising occupations that still have defensible links to the profile. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_007",
+        "button_label": "I like it but I am not good at it",
+        "outcome": "Separate interest from current performance and explore support, foundations and risk before dropping the subject.",
+        "when_to_use": "Serve when student enjoys a subject but current marks are weak.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Interest vs Ability' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Interest vs Ability: Separate interest from current performance and explore support, foundations and risk before dropping the subject. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DISCOVER_007",
+        "button_label": "What do I enjoy doing in subjects?",
+        "outcome": "Separate the subject label from the activities within it, such as experiments, explaining, analysis or design.",
+        "when_to_use": "Serve when user names school subjects but not the activities they enjoy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Actually Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Actually Enjoy: Separate the subject label from the activities within it, such as experiments, explaining, analysis or design. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "RECOVERY_004",
+        "button_label": "I want something completely different",
+        "outcome": "Reset matching around the new goal and avoid anchoring on old subject/career assumptions.",
+        "when_to_use": "Serve when student changes direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Changed My Mind' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Changed My Mind: Reset matching around the new goal and avoid anchoring on old subject/career assumptions. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PROFILE_001",
+        "button_label": "My interests",
+        "outcome": "Save a structured interest profile from explicit user responses.",
+        "when_to_use": "Serve when user wants to build their profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Interests: Save a structured interest profile from explicit user responses. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_004",
+        "button_label": "I do not know what I want yet",
+        "outcome": "Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects.",
+        "when_to_use": "Serve when student is undecided and fears closing doors.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Options Open' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Keep My Options Open: Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_004",
+        "button_label": "Which fits my lifestyle?",
+        "outcome": "Compare hours, flexibility, location, travel, physical demands and people contact.",
+        "when_to_use": "Serve when user has work-condition constraints.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Fits My Lifestyle?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Fits My Lifestyle?: Compare hours, flexibility, location, travel, physical demands and people contact. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DISCOVER_008",
+        "button_label": "What should I avoid?",
+        "outcome": "Capture negative preferences such as shift work, public speaking, long study, physical work, heavy maths or constant customer contact.",
+        "when_to_use": "Serve when user can describe dislikes more easily than goals.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Things I Never Want' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Things I Never Want: Capture negative preferences such as shift work, public speaking, long study, physical work, heavy maths or constant customer contact. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "PROFILE_003",
+        "button_label": "My work personality",
+        "outcome": "Save a supporting work-personality profile, not a deterministic type-to-career mapping.",
+        "when_to_use": "Serve when user wants a work-preference profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Personality' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Personality: Save a supporting work-personality profile, not a deterministic type-to-career mapping. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "EXP_002",
+        "button_label": "What experience am I missing?",
+        "outcome": "Compare target role experience requirements with demonstrated experience.",
+        "when_to_use": "Serve when user has skills but not the experience employers expect.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Experience Gap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Experience Gap: Compare target role experience requirements with demonstrated experience. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career target, current experience, availability, location, skill gaps",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CAREER_SIDE_004",
+        "button_label": "Show careers like this",
+        "outcome": "Find adjacent occupations sharing tasks, skills or purpose.",
+        "when_to_use": "Serve when user likes one career but wants alternatives.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Similar Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Similar Careers: Find adjacent occupations sharing tasks, skills or purpose. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career idea, profile, work preferences, available occupational evidence",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CAREER_SIDE_006",
+        "button_label": "What might not fit me?",
+        "outcome": "Identify likely friction points between the user and the occupation and label unknowns clearly.",
+        "when_to_use": "Serve when user needs disconfirming evidence, not only positive matching.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Fit Challenges' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Fit Challenges: Identify likely friction points between the user and the occupation and label unknowns clearly. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career idea, profile, work preferences, available occupational evidence",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "GOAL_003",
+        "button_label": "Find career themes",
+        "outcome": "Combine recurring interests, values, activities and preferences into a small set of career themes.",
+        "when_to_use": "Serve when user has scattered interests that need organizing.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Themes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Themes: Combine recurring interests, values, activities and preferences into a small set of career themes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_001",
+        "button_label": "Help me choose my subjects",
+        "outcome": "Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation.",
+        "when_to_use": "Serve when student is selecting subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Help Me Choose My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Help Me Choose My Subjects: Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 3971,
+      "total_input_tokens": 3902,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3902
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 69,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4316,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4316
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 86
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:20Z",
+    "updated": "2026-09-18T12:16:20Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TGTzqiuoeatSWKNFnx2LcVTm6maS0yQt71CAB/1dQXZy23/8rUFUO/u42r+1djD99b/O2c5NtqXZny7w1fRrYkLkI4dPSi9FcXiRtwPPHBykdS1jdBeDdiwiZVghDShtbx5VVYiMF",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"OPTIONAL\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"DISCOVER_001\",\n  \"reason\": \"Explore broad activity interests to help identify which career paths and tasks naturally suit you.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "OPTIONAL",
+    "decision": "SUGGEST",
+    "objective_id": "DISCOVER_001",
+    "reason": "Explore broad activity interests to help identify which career paths and tasks naturally suit you.",
+    "disposition": "SUGGEST",
+    "selectionId": "3934bfb2-6953-4557-9f14-cfb65f3c4f3a",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.8975683296974154,
+    "margin": 0.1220811048166639,
+    "userConfidence": null,
+    "createdAt": 1789733780426
+  }
+}

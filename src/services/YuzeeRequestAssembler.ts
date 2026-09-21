@@ -1,7 +1,7 @@
 /**
  * Yuzee Request Assembler & Protocol v1.3 Builder
  * Responsible for:
- * - Loading and verifying immutable Yuzee Quiz Prompt v1.7 and Response Schema v1.3
+ * - Loading and verifying versioned Yuzee Quiz Prompt v1.8 and Response Schema v1.3
  * - Strict single-system-instruction enforcement (system instruction is NEVER copied into contents)
  * - Strict single-user-message enforcement
  * - Provider structured-output schema enforcement for Node.js @google/genai
@@ -70,13 +70,13 @@ export class YuzeeRequestAssembler {
   }
 
   private loadAuthoritativeAssets(): void {
-    this.experienceRules = fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/clear-guidance.md'), 'utf-8') + '\n' + fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/learning-depth.md'), 'utf-8');
+    this.experienceRules = fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/activity-context.md'), 'utf-8') + '\n' + fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/clear-guidance.md'), 'utf-8') + '\n' + fs.readFileSync(path.resolve(process.cwd(), 'src/prompts/learning-depth.md'), 'utf-8');
     const promptPath = path.resolve(process.cwd(), QUIZ_PROMPT_PATH);
     const schemaPath = path.resolve(process.cwd(), 'src/protocol/v1.3/Yuzee_Response_Schema_v1.3.json');
 
     if (fs.existsSync(promptPath)) {
       const buf = fs.readFileSync(promptPath);
-      this.promptContent = buf.toString('utf-8') + '\n' + this.experienceRules;
+      this.promptContent = buf.toString('utf-8');
       this.promptBytes = Buffer.byteLength(this.promptContent);
       this.promptHash = crypto.createHash('sha256').update(this.promptContent).digest('hex');
     } else {

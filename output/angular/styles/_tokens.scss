@@ -1,0 +1,62 @@
+// =============================================================
+// Oala Design Tokens — Angular / Bootstrap implementation
+// Import this file globally in angular.json > styles
+// =============================================================
+
+// ── Accent colour (runtime-overridable via JS) ─────────────
+:root {
+  --accent:        #7244c6;
+  --accent-hover:  color-mix(in srgb, var(--accent) 83%, black);
+  --accent-5:      color-mix(in srgb, var(--accent)  5%, white);
+  --accent-8:      color-mix(in srgb, var(--accent)  8%, white);
+  --accent-light:  color-mix(in srgb, var(--accent) 12%, white);
+  --accent-30:     color-mix(in srgb, var(--accent) 30%, transparent);
+  --accent-40:     color-mix(in srgb, var(--accent) 40%, transparent);
+  --accent-70:     color-mix(in srgb, var(--accent) 70%, transparent);
+  --accent-border: color-mix(in srgb, var(--accent) 35%, white);
+  --bubble-bg:     #ede5fc;
+  --bubble-text:   color-mix(in srgb, var(--accent) 65%, #000);
+}
+
+// ── SCSS vars (reference these inside component styles) ────
+$font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+            'Helvetica Neue', Arial, sans-serif;
+$font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono',
+            'Droid Sans Mono', monospace;
+
+$text-primary:   #2c333d;
+$text-heading:   #27364a;
+$text-dark:      #0d0d0d;
+$text-muted:     #718096;
+$text-faint:     #8a929d;
+
+$border-default: #e2e8f0;
+$border-sidebar: #e6e9ee;
+$border-panel:   #e0e6ef;
+$border-card:    #dfe6ef;
+
+$body-bg:        #F9FAFB;
+$chat-bg:        #ffffff;
+$sidebar-bg:     #ffffff;
+$sidebar-list:   #f7f8fa;
+
+// ── Learning tone palette (AQF levels) ────────────────────
+// Each entry: (ink, background, edge)
+// Applied as [data-learning-tone="levelN"] attributes on DOM elements.
+
+[data-learning-tone="level1"]    { --course-ink: #166534; --course-bg: #f0fdf4; --course-edge: #86efac; }
+[data-learning-tone="level2"]    { --course-ink: #155e75; --course-bg: #ecfeff; --course-edge: #67e8f9; }
+[data-learning-tone="level3"],
+[data-learning-tone="unit"]      { --course-ink: #0e7490; --course-bg: #e0f7fa; --course-edge: #38bdf8; }
+[data-learning-tone="level4"]    { --course-ink: #1d4ed8; --course-bg: #eff6ff; --course-edge: #93c5fd; }
+[data-learning-tone="level5"]    { --course-ink: #4338ca; --course-bg: #eef2ff; --course-edge: #a5b4fc; }
+[data-learning-tone="level6"]    { --course-ink: #6d28d9; --course-bg: #f5f3ff; --course-edge: #c4b5fd; }
+[data-learning-tone="level7"]    { --course-ink: #7e22ce; --course-bg: #faf5ff; --course-edge: #d8b4fe; }
+[data-learning-tone="level8"],
+[data-learning-tone="crosslevel"]{ --course-ink: #86198f; --course-bg: #fdf4ff; --course-edge: #e879f9; }
+[data-learning-tone="level9"]    { --course-ink: #9d174d; --course-bg: #fdf2f8; --course-edge: #f9a8d4; }
+[data-learning-tone="level10"]   { --course-ink: #991b1b; --course-bg: #fff1f2; --course-edge: #fca5a5; }
+[data-learning-tone="micro"]     { --course-ink: #92400e; --course-bg: #fffbeb; --course-edge: #fcd34d; }
+[data-learning-tone="short"]     { --course-ink: #3f3f46; --course-bg: #fafafa; --course-edge: #a1a1aa; }
+[data-learning-tone="industry"]  { --course-ink: #1e3a5f; --course-bg: #f0f4ff; --course-edge: #93b4e0; }
+[data-learning-tone="route"]     { --course-ink: #374151; --course-bg: #f9fafb; --course-edge: #9ca3af; }

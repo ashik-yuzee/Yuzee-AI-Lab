@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "NONE",
+  "decision": "NONE",
+  "objective_id": "",
+  "reason": "The user is asking an off-topic cooking question, so no education or career counselling objective is appropriate.",
+  "disposition": "NONE",
+  "selectionId": "c6b2b532-9486-466f-b885-7549f4687bec",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": null,
+  "margin": -0.037300273898940306,
+  "userConfidence": null,
+  "createdAt": 1789733822885
+}

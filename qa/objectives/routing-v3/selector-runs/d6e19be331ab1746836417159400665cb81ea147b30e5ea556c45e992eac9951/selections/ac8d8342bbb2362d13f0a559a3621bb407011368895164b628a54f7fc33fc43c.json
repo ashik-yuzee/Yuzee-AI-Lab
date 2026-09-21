@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "NONE",
+  "decision": "NONE",
+  "objective_id": "",
+  "reason": "The user explicitly asked to defer comparing offers and only wants a quick explanation in chat.",
+  "disposition": "NONE",
+  "selectionId": "ae7543df-728c-48d0-8ca9-c90fa9484dbb",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": null,
+  "margin": 0.0805940413411943,
+  "userConfidence": null,
+  "createdAt": 1789733820266
+}

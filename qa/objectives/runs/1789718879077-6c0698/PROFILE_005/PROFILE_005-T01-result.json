@@ -1,0 +1,328 @@
+{
+  "test_id": "PROFILE_005-T01",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 502,
+  "input_context": {
+    "user_message": "I want help with my skills.",
+    "prior_context_text": "No prior objective result.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "baebe1ec1cf03930725394a1b163e1d017ee6c85128aee10e603d2be2ddd65ac",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "MISSING_INPUT_CONTROL",
+          "detail": "Needs input without a primary control"
+        }
+      ],
+      "latency_ms": 5874
+    }
+  ],
+  "failures": [
+    {
+      "code": "MISSING_INPUT_CONTROL",
+      "detail": "Needs input without a primary control"
+    }
+  ],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skill_matrix_init",
+        "purpose": "Identify and classify initial key skills and strengths to establish a baseline capability profile.",
+        "prompt": "Select or add the key skills and areas you have experience in, and indicate your confidence or evidence level.",
+        "required": true,
+        "options": [
+          {
+            "id": "problem_solving",
+            "label": "Problem Solving & Analysis",
+            "detail": "Breaking down complex issues, troubleshooting, logical reasoning"
+          },
+          {
+            "id": "written_communication",
+            "label": "Written Communication",
+            "detail": "Reports, documentation, articles, or formal writing"
+          },
+          {
+            "id": "verbal_communication",
+            "label": "Verbal Communication & Presentation",
+            "detail": "Public speaking, stakeholder engagement, facilitating meetings"
+          },
+          {
+            "id": "project_coordination",
+            "label": "Project Planning & Coordination",
+            "detail": "Organising tasks, tracking milestones, managing schedules"
+          },
+          {
+            "id": "data_analysis",
+            "label": "Data Analysis & Spreadsheets",
+            "detail": "Working with data, Excel/Sheets, interpreting numbers and trends"
+          },
+          {
+            "id": "technical_coding",
+            "label": "Coding / Software Development",
+            "detail": "Writing code, scripting, building digital tools or apps"
+          },
+          {
+            "id": "customer_support",
+            "label": "Customer / Client Service",
+            "detail": "Supporting clients, conflict resolution, active listening"
+          },
+          {
+            "id": "creative_design",
+            "label": "Visual Design & Content Creation",
+            "detail": "Graphic design, video editing, UI layout, creative media"
+          }
+        ],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Category",
+          "Default Evidence Status"
+        ],
+        "rows": [
+          {
+            "label": "Problem Solving & Analysis",
+            "cells": [
+              "Problem Solving",
+              "Cognitive / Analytical",
+              "SELF_REPORTED"
+            ]
+          },
+          {
+            "label": "Written Communication",
+            "cells": [
+              "Communication",
+              "Interpersonal",
+              "SELF_REPORTED"
+            ]
+          },
+          {
+            "label": "Project Planning & Coordination",
+            "cells": [
+              "Organisation",
+              "Operational",
+              "SELF_REPORTED"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 5,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User is initiating skill inventory capture",
+        "basis": "User message: 'I want help with my skills.' with no prior facts recorded.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific skills possessed by the user",
+      "Evidence status and proficiency for user skills",
+      "Context/freshness of skill application"
+    ],
+    "result": {
+      "summary": "Starting skill inventory capture. Missing user input on specific skills, evidence sources, and self-reported proficiency levels."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Discuss my skills with Oala",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated PROFILE_005 skill matrix to capture initial skill selections, self-reported proficiency, and evidence status.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial skill selections from user."
+      },
+      "evidence_and_unknowns": [
+        "No confirmed skills or evidence references provided yet."
+      ],
+      "recommended_next_action": "Complete the skill matrix selection to establish your capability profile baseline."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets PROFILE_005 (My Skills) for the user prompt asking for help with skills.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There was no prior context provided, and the candidate appropriately recognized that facts need to be gathered from scratch without re-asking nonexistent prior answers.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The prompt and options within the skill matrix component are concrete, clear, and relevant to initiating a skill inventory.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate strictly uses the allowed V2 primitive `skill_matrix` from the allow-list [skill_matrix | evidence_panel | profile_editor | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The UI and derived structure align directly with the V2 override requirements for PROFILE_005, initiating the first step of the preferred flow (`skill_matrix`).",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent any unverified skills or attributes, marking current unknown aspects explicitly under unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic claims, career prediction scores, or fake psychometric measurements are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Status correctly set to NEEDS_INPUT at interaction 0 since user input is needed to build the skills profile.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "The candidate adheres to the V2 readiness policy: `NONE. This is a skill inventory/persistence objective, not a skill-readiness score.` with readiness explicitly disabled.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff to Oala is provided including summary, inputs, unknowns, and recommended action without leaking raw click history.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No illegal endpoints, URLs, or autonomous unsafe state writes are performed.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate response fully complies with all V2 objective overrides and rubric criteria for PROFILE_005, correctly presenting the skill_matrix primitive with appropriate readiness handling and evidence discipline."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3176,
+      "total_input_tokens": 2336,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2336
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 840,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2733,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2733
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 859
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5874,
+  "usage": {
+    "total_tokens": 3140,
+    "total_input_tokens": 2093,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2093
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1047,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7326,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7326
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1065
+          }
+        ]
+      }
+    ]
+  }
+}

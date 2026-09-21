@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "SCHOOL_011",
+  "reason": "This tool examines how dropping chemistry impacts prerequisites and future course entry options.",
+  "disposition": "NONE",
+  "selectionId": "2764b76b-d811-46e6-b750-b604961ba74f",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.777630844757239,
+  "margin": -0.048507763069080334,
+  "userConfidence": null,
+  "createdAt": 1789733807310
+}

@@ -1,0 +1,228 @@
+{
+  "test_id": "PROFILE_005-T06",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 507,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "494fdc97446035db629233fc8fb3b4291dc2428cabaf71a29753232375124b4c",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 3974
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User has not provided skills or capability information for PROFILE_005."
+    ],
+    "result": {
+      "disputed": [],
+      "next_actions": [],
+      "profile_update_candidate": null,
+      "skills_profile": [],
+      "summary": "The user's message is unrelated to creating or managing a skills profile. No skills data was supplied or modified."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User prompt was unrelated to PROFILE_005 (requested a birthday poem). Objective closed without changes to skills profile.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "disputed": [],
+        "next_actions": [],
+        "profile_update_candidate": null,
+        "skills_profile": [],
+        "summary": "No skill profile updates required."
+      },
+      "evidence_and_unknowns": [
+        "No skill inputs available."
+      ],
+      "recommended_next_action": "continue_chat"
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognized that the user prompt ('Write me a short birthday poem.') was unrelated to PROFILE_005 and gracefully abstained/completed with no skill changes and routed back to chat.",
+          "evidence_pointer": "candidate.handoff.summary"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context had no prior skills data and the candidate did not re-ask or invent any.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No extraneous or inappropriate questions were asked given the off-topic request.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid UI primitives were emitted.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate adhered to the V2 output contract schema (skills_profile, disputed, profile_update_candidate, next_actions) without inventing skills.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded skills, proficiencies, or external facts were fabricated.",
+          "evidence_pointer": "candidate.result.skills_profile"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career predictions, or diagnostic tests were presented.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction stopped immediately upon receiving the unrelated prompt rather than forcing discovery questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Adhered to the mandatory override policy: readiness policy is NONE (enabled: false).",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact and clean semantic handoff returned indicating objective closed without action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emitted only approved structured next actions without unauthorized writes or direct endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly handled an off-topic user request ('Write me a short birthday poem.') by completing the objective with no modifications to the user's skill profile and handing back control to Oala/chat, strictly observing all schema and override constraints."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2722,
+      "total_input_tokens": 1952,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1952
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 770,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2349,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2349
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 789
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 3974,
+  "usage": {
+    "total_tokens": 2483,
+    "total_input_tokens": 2095,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2095
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 388,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7328,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7328
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 409
+          }
+        ]
+      }
+    ]
+  }
+}

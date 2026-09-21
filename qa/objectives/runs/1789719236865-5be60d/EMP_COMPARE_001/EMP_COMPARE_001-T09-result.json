@@ -1,0 +1,247 @@
+{
+  "test_id": "EMP_COMPARE_001-T09",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "EVIDENCE_GATE",
+  "model": "gemini-3.7-flash",
+  "source_row": 3090,
+  "input_context": {
+    "user_message": "Use current real-world information where it matters for Compare Employers.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "4f7a98ed7d49013b08d7af4a107c73298f8c4a42a51aff4b7c9b6419048af8f2",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 3944
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_employers_roles",
+        "purpose": "Identify which employers and specific roles or programs the user wants to compare.",
+        "prompt": "Which employers and specific roles or graduate programs would you like to compare?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 2,
+          "max": 4,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employers to compare",
+      "Specific roles or program types",
+      "Candidate location and work arrangement constraints",
+      "Candidate core priorities (development, pay, culture, mobility)"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Awaiting employer and role selections to initiate structured comparison."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employers or roles specified for comparison"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation in Oala",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user to specify two or more employers and roles to begin comparison.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Comparison workspace initialized. Waiting for employer and role inputs."
+      },
+      "evidence_and_unknowns": [
+        "Unknown target employers and roles"
+      ],
+      "recommended_next_action": "Specify target employers and roles/programs to compare."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the targeted EMP_COMPARE_001 objective accurately.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Prior context was empty, and the candidate did not hallucinate or re-ask nonexistent context.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The entity_picker asks a concrete, decision-critical question to identify the employers and roles to compare.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits 'entity_picker', which is explicitly permitted in the V2 allow-list for EMP_COMPARE_001.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly identifies the missing inputs necessary for EMP_COMPARE_001 (employers, roles, constraints, priorities) and does not output an unearned comparison.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded or current facts were invented; correctly flags missing info as unknowns and sets status to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career success predictions, or fake diagnostic scores are generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops at interaction 0 with NEEDS_INPUT because required initial options are missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled (enabled: false) and correctly identifies the blocker that no options are specified.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, compact semantic handoff payload conforming to the envelope requirements.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT next action without executing unauthorized tools or external writes.",
+          "evidence_pointer": "candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly adhered to all schema requirements and objective rules for EMP_COMPARE_001, properly requesting target employers via an approved V2 primitive without hallucinating facts or readiness scores."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3043,
+      "total_input_tokens": 2245,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2245
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 798,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2642,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2642
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 817
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 3944,
+  "usage": {
+    "total_tokens": 2823,
+    "total_input_tokens": 2286,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2286
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 537,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7293,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7293
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 557
+          }
+        ]
+      }
+    ]
+  }
+}

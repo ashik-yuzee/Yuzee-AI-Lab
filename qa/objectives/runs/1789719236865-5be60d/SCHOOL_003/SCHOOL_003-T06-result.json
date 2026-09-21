@@ -1,0 +1,227 @@
+{
+  "test_id": "SCHOOL_003-T06",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 587,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "0959b00fa11d2e8494e9e5bcf5eee6960c7ed997841e0a78e371ab6771703e3f",
+  "status": "NEEDS_HUMAN_REVIEW",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5312
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SCHOOL_003",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "alternative_routes": [],
+      "course_subject_requirements": null,
+      "next_actions": [],
+      "summary": "Objective closed with no action because the user request is unrelated to tertiary courses or subject prerequisites."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Return to chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "The user message was unrelated to subject selection or prerequisite checking. Objective SCHOOL_003 closed with no action taken.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No subject requirement analysis performed."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Handle user request in general conversation."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The objective was already pre-selected by the test harness fixture, so objective selection / routing cannot be evaluated for the planner model directly.",
+          "evidence_pointer": "context.session.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No existing context facts were re-asked or ignored.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No irrelevant or generic questions were asked; the model recognized the off-topic prompt and emitted no UI question primitives.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits an empty UI array and valid structured properties, avoiding any invalid or forbidden UI primitives.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The model appropriately handles an unrelated user request by closing the objective with no action taken rather than forcing prerequisite analysis.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported or fabricated current prerequisite facts were hallucinated.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or success-probability scores were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The model stopped immediately with COMPLETE/no-action status instead of engaging in an unnecessary multi-turn flow.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is disabled appropriately with no fabricated readiness scores.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff is returned clearly instructing Oala to handle the unrelated user request in general conversation.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Only standard structured intent is returned; no direct endpoints, fabricated URLs, or autonomous unauthorized write actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Routing objective selection was pre-determined by the fixture."
+      ],
+      "summary": "The candidate correctly executed a documented no-action completion/handoff back to general conversation when given an off-topic user request, respecting all safety, schema, and evidence constraints."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2816,
+      "total_input_tokens": 2038,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2038
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 778,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2435,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2435
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 797
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5312,
+  "usage": {
+    "total_tokens": 3028,
+    "total_input_tokens": 2270,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2270
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 314,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 444,
+    "raw_prompt_token": 6694,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6694
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 334
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 444
+          }
+        ]
+      }
+    ]
+  }
+}

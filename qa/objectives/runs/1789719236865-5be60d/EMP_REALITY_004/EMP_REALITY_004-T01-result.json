@@ -1,0 +1,252 @@
+{
+  "test_id": "EMP_REALITY_004-T01",
+  "objective_id": "EMP_REALITY_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "41c2515e448dfb7df2d3ac07353da113210ebaead53a34f01e6d7ebaa57d1d40",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 2942,
+  "input_context": {
+    "user_message": "I want to use Pay & Employment Type. I have a clear target and enough context. Produce the useful result without unnecessary questions.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_REALITY_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "CLAIMED_CONTEXT_NOT_SUPPLIED"
+  ],
+  "request_sha256": "abe283f3a8046b14f9171f3296f761a1fb434bf4db733c7ed0023730d83d9ac0",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4448
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_REALITY_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_role_employer",
+        "purpose": "Identify the target employer, role title, and work location to evaluate pay components and employment terms.",
+        "prompt": "Enter the employer name and role title you want to evaluate pay and employment terms for:",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employer name",
+      "Target role title",
+      "Jurisdiction / work location",
+      "Employment type (e.g. full-time, part-time, casual, contractor)",
+      "Base pay amount and period",
+      "Award or enterprise agreement classification"
+    ],
+    "result": {
+      "pay_employment_profile": null,
+      "summary": "Target employer, role, location, and employment terms are required before pay components or legal classifications can be evaluated."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Missing target employer and role information"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide role and employer details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user for target employer, role, and location details to establish base pay and employment terms.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial target employer and role identification."
+      },
+      "evidence_and_unknowns": [
+        "Employer, role title, pay rates, and employment terms currently unknown."
+      ],
+      "recommended_next_action": "Specify the employer, role title, and pay rate or job offer details."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly retained EMP_REALITY_004 matching the user request.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture states the user claims enough context ('CLAIMED_CONTEXT_NOT_SUPPLIED'), but prior_context_text is 'None' and confirmed_facts is empty. Reuse cannot be assessed due to the fixture limitation.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question asks for the target employer and role title, which is the foundational piece of missing information needed to evaluate pay components.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses only 'entity_picker', which is explicitly permitted in the V2 allow-list [entity_picker | constraint_builder | comparison_grid | evidence_panel | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate correctly aligns its unknowns and outcome targets with pay and employment terms without guessing unverified legal minimums or net pay.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No pay rates, awards, or employer facts were invented; missing inputs were properly marked as unknown and status set to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career suitability predictions, or fake trait scores were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The planner accurately recognizes that missing critical inputs require NEEDS_INPUT rather than hallucinating completion.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blocker specified ('Missing target employer and role information') rather than fabricating a readiness percentage score without data.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff structure is present and includes summary, confirmed inputs, evidence and unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, external URL invocations, or autonomous writes are emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "User prompt claimed to have a clear target and enough context, but fixture supplied empty confirmed_facts and prior_context ('CLAIMED_CONTEXT_NOT_SUPPLIED')."
+      ],
+      "summary": "Candidate correctly handled the empty context under EMP_REALITY_004, selecting a valid V2 primitive (entity_picker), requesting missing target role details, preserving unknowns without hallucination, and adhering to strict schema and evidence discipline."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3203,
+      "total_input_tokens": 2303,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2303
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 900,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2700,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2700
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 919
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4448,
+  "usage": {
+    "total_tokens": 2848,
+    "total_input_tokens": 2265,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2265
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 583,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7013,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7013
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 600
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -10,6 +10,12 @@ The Token Lab runs the same career guidance AI as production, but exposes every 
 - `server.ts` — Node.js/Express (port 3000) — the running system. Actually calls Gemini, receives real `usageMetadata`.
 - `spring-backend/` — Spring Boot 3.4.3 + Spring AI 1.0.0 GA (port 8080) — same architecture in Java.
 
+## Documentation
+
+Full developer documentation — architecture, request lifecycle, every endpoint, the
+frontend state model, and the invariants that must not be broken — is in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
 ## Setup
 
 ### Node backend (required for the UI)

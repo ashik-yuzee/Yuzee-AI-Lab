@@ -1,3 +1,4 @@
+import {reviewFailureMessage} from '../services/ReviewRetry';
 import {selectedTopic} from '../routing/skillSuggestions';
 import {acceptedResponse} from '../ux/responsePresentation';
 import {needsQuery} from '../routing/turnNeeds';
@@ -84,8 +85,6 @@ interface TokenLabContextType {
   setSidebarOpen: (open: boolean) => void;
   isProfileOpen: boolean;
   setProfileOpen: (open: boolean) => void;
-  isMiniPathwayOpen: boolean;
-  setMiniPathwayOpen: (open: boolean) => void;
   userProfile: { id: string; text: string; category?: string; addedAt: number }[];
   setUserProfile: (facts: { id: string; text: string; category?: string; addedAt: number }[]) => void;
   userLocation: string;
@@ -111,7 +110,7 @@ interface TokenLabContextType {
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
-  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[]; skillChoice?: import("../routing/skillSuggestions").SkillChoice }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
+  sendMessage: (input: string | UserEvent | { message: string; userQuestionAnswers: any[]; skillChoice?: import("../routing/skillSuggestions").SkillChoice; objectiveResultId?:string; objectiveResultRevision?:number; objectiveTransfer?:{sessionId:string;label:string;revision:number} }, attachments?: Array<{ mimeType: string; data: string }>) => Promise<boolean>;
   stopStreaming: () => void;
   submitFeedback: (messageId: string, type: QualityFeedbackType, comment?: string) => Promise<void>;
   resetMemory: () => Promise<void>;
@@ -120,7 +119,6 @@ interface TokenLabContextType {
   inspectTurnTelemetry: (telemetry: any) => void;
   localStorageStats: { bytes: number; conversationCount: number; storageAvailable: boolean };
   clearLocalData: () => void;
-  exportConversation: (format: 'markdown' | 'json') => void;
 }
 
 const TokenLabContext = createContext<TokenLabContextType | null>(null);
@@ -201,7 +199,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [isExportOpen, setExportOpen] = useState<boolean>(false);
   const [isSidebarOpen, setSidebarOpen] = useState<boolean>(() => window.innerWidth >= 1024);
   const [isProfileOpen, setProfileOpen] = useState<boolean>(false);
-  const [isMiniPathwayOpen, setMiniPathwayOpen] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<{ id: string; text: string; category?: string; addedAt: number }[]>(() => {
     try { return JSON.parse(localStorage.getItem("yuzee_user_profile") || "[]"); } catch { return []; }
   });
@@ -405,9 +402,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const updated = { ...currentConversation, ...updates, updatedAt: Date.now() };
     setCurrentConversation(updated);
     setConversations((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
-    await api.updateConversation(updated.id, updates).catch(() => {
-      // Server may not know about this conversation yet (e.g. restoring from localStorage after restart).
-    });
+    await api.updateConversation(updated.id, updates);
   };
 
   const applyOptimizationMode = (mode: OptimizationMode) => {
@@ -591,6 +586,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       role: "user",
       content: textMessage,
       userEvent: userEventPayload || undefined,
+      objectiveTransfer: typeof input==='object'?input.objectiveTransfer:undefined,
       createdAt: Date.now(),
     };
 
@@ -673,6 +669,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       activeConv.id,
       {
         message: textMessage,
+        objectiveResultId: typeof input==='object'?input.objectiveResultId:undefined,
+        objectiveResultRevision: typeof input==='object'?input.objectiveResultRevision:undefined,
         mode: activeConv.mode,
         microToolSelection,
         topicSelection,
@@ -853,7 +851,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
               msgs[msgs.length - 1] = {
                 ...last,
                 content: accumulatedContent || last.content,
-                error: "I couldn’t prepare a clear response. Please try again. Your answer has been kept.",
+                error: reviewFailureMessage(data.reviewFailureCode),
                 errorCode: "INVALID_RESPONSE",
                 schemaValid: false,
                 semanticValid: false,
@@ -972,36 +970,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setSharedSettings(updated);
   };
 
-  const exportConversation = (format: 'markdown' | 'json') => {
-    const conv = currentConversation;
-    if (!conv) return;
-    let content: string;
-    let filename: string;
-    let mime: string;
-    if (format === 'json') {
-      content = JSON.stringify(conv, null, 2);
-      filename = `${conv.title || 'conversation'}.json`;
-      mime = 'application/json';
-    } else {
-      const lines: string[] = [`# ${conv.title || 'Conversation'}`, ''];
-      for (const msg of conv.messages) {
-        const role = msg.role === 'user' ? '**You**' : '**Oala**';
-        lines.push(`### ${role}`);
-        if (msg.routing?.toolId) lines.push(`*Tool: ${msg.routing.toolId}*`);
-        lines.push(msg.content || '');
-        lines.push('');
-      }
-      content = lines.join('\n');
-      filename = `${conv.title || 'conversation'}.md`;
-      mime = 'text/markdown';
-    }
-    const blob = new Blob([content], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = filename; a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return (
     <TokenLabContext.Provider
       value={{
@@ -1043,8 +1011,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         setSidebarOpen,
         isProfileOpen,
         setProfileOpen,
-        isMiniPathwayOpen,
-        setMiniPathwayOpen,
         userProfile,
         setUserProfile,
         userLocation,
@@ -1077,7 +1043,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         inspectTurnTelemetry,
         localStorageStats,
         clearLocalData,
-        exportConversation,
       }}
     >
       {children}

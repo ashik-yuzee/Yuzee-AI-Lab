@@ -1,0 +1,30 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_COMPARE_001",
+  "reason": "Compare the core tasks, required skills, and daily work environments of engineering and marketing side by side.",
+  "disposition": "AUTO_OPEN",
+  "selectionId": "5c11077e-e613-45ac-a4e0-4765d2614676",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v4-context",
+  "selectedSimilarity": 0.8884570685669777,
+  "selectedRank": 1,
+  "retrievalSources": [
+    "user",
+    "context"
+  ],
+  "margin": null,
+  "userConfidence": {
+    "score": 30,
+    "band": "low",
+    "evidence_strength": "weak",
+    "trend": "unknown",
+    "reason_codes": [
+      "EXPLICIT_UNCERTAINTY",
+      "CRITERIA_UNCLEAR",
+      "ROUTE_UNRESOLVED"
+    ]
+  },
+  "createdAt": 1789734225997
+}

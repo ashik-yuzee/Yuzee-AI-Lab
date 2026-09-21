@@ -1,3 +1,4 @@
+import {objectiveShortlist,type ObjectiveMatch} from '../objectives/routing';
 import type {RoutingHistory} from '../routing/conversationQuery';
 import {validBgeReady} from '../routing/bgeContract';
 import {RUNTIME_ROUTER_MODELS,ROUTER_MODEL_KEY,DEFAULT_ROUTER_MODEL,routerModel,type RouterModelId} from '../routing/models';
@@ -8,20 +9,41 @@ import {abstain,chooseRoute,routingInput,type RoutingDecision,type RoutingFlow} 
 export type RouterStatus='idle'|'loading'|'ready'|'unavailable';
 let status:RouterStatus='idle';
 let selectedModel:RouterModelId=DEFAULT_ROUTER_MODEL;
-// Migrate saved L6/L12 choices without loading a legacy model.
-try{localStorage.setItem(ROUTER_MODEL_KEY,DEFAULT_ROUTER_MODEL);}catch{/* Storage can be disabled. */}
+const CF_MODEL_ID='cloudflare/llama-3.1-8b-fast';
+const isCFModel=()=>selectedModel===CF_MODEL_ID;
+async function cfRoute(task:'route'|'needs',text:string):Promise<any>{
+ try{
+  const r=await fetch('/api/routing/llm',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({task,text})});
+  if(!r.ok)return null;
+  const d=await r.json();
+  return d?.result??null;
+ }catch{return null;}
+}
+// Migrate saved L6/L12 choices to default; preserve BGE and Cloudflare selections.
+try{
+ const saved=localStorage.getItem(ROUTER_MODEL_KEY);
+ if(saved&&RUNTIME_ROUTER_MODELS.some(m=>m.id===saved)){selectedModel=saved as RouterModelId;}
+ else{localStorage.setItem(ROUTER_MODEL_KEY,DEFAULT_ROUTER_MODEL);}
+ if(selectedModel===CF_MODEL_ID)setStatus('ready');
+}catch{/* Storage can be disabled. */}
 export const getRouterModel=()=>selectedModel;
 export function setRouterModel(id:string):boolean {
  if(!RUNTIME_ROUTER_MODELS.some(m=>m.id===id))return false;
  if(selectedModel===id&&(status==='loading'||status==='ready'))return true;
  selectedModel=id as RouterModelId;
  try{localStorage.setItem(ROUTER_MODEL_KEY,id);}catch{/* The in-memory choice still works. */}
+ if(id===CF_MODEL_ID){
+  clearTimeout(warmupTimer);worker?.terminate();worker=null;
+  setStatus('ready'); // Server-side model — always ready once selected
+  return true;
+ }
  unavailable();startWarmup();return true;
 }
 let worker:Worker|null=null;
 let warmupTimer:ReturnType<typeof setTimeout>|undefined;
 let nextId=0;
 const listeners=new Set<(status:RouterStatus)=>void>();
+const objectivePending=new Map<string,{finish:(matches:ObjectiveMatch[])=>void}>();
 const suggestPending=new Map<string,{finish:(review:SkillReview)=>void}>();
 const needPending=new Map<string,{finish:(hint:NeedHint)=>void}>();
 const pending=new Map<string,{flow:RoutingFlow;finish:(decision:RoutingDecision)=>void}>();
@@ -30,6 +52,7 @@ export const getRouterStatus=()=>status;
 export function onRouterStatus(callback:(status:RouterStatus)=>void){listeners.add(callback);callback(status);return()=>{listeners.delete(callback);};}
 function setStatus(value:RouterStatus){status=value;listeners.forEach(cb=>cb(value));}
 function unavailable(){
+ for(const {finish} of [...objectivePending.values()])finish([]);
  clearTimeout(warmupTimer);worker?.terminate();worker=null;setStatus('unavailable');
  for(const {finish} of [...suggestPending.values()])finish(noSkills('unavailable'));
  for(const {finish} of [...pending.values()])finish(abstain('unavailable'));
@@ -38,6 +61,7 @@ function unavailable(){
 }
 export function startWarmup(){
  if(status==='loading'||status==='ready')return;
+ if(isCFModel()){setStatus('ready');return;}
  if(typeof Worker==='undefined'){setStatus('unavailable');return;}
  setStatus('loading');
  try{
@@ -47,6 +71,8 @@ export function startWarmup(){
    if(worker!==source)return;
    const m=event.data;
    if(m?.type==='ready'){if(!validBgeReady(m)){unavailable();return;}clearTimeout(warmupTimer);setStatus('ready');}
+   else if(m?.type==='objectives-result')objectivePending.get(m.id)?.finish(objectiveShortlist(Array.isArray(m.candidates)?m.candidates:[]));
+   else if(objectivePending.has(m?.id)&&['abstained','error'].includes(m?.type))objectivePending.get(m.id)?.finish([]);
    else if(m?.type==='pathway-result')pathwayPending.get(m.id)?.finish(choosePathwayHint(Array.isArray(m.candidates)?m.candidates:[],selectedModel));
    else if(pathwayPending.has(m?.id)&&['abstained','error'].includes(m?.type))pathwayPending.get(m.id)?.finish({status:'abstained',reason:m.type==='error'?'inference-failed':'token-budget'});
    else if(m?.type==='unavailable')unavailable();
@@ -67,6 +93,12 @@ export function startWarmup(){
 export function routeMessage(text:string,{signal,structuredAnswer=false,timeoutMs=1500,topic=false,history=[]}:{signal?:AbortSignal;structuredAnswer?:boolean;timeoutMs?:number;topic?:boolean;history?:RoutingHistory}={}):Promise<RoutingDecision>{
  if(signal?.aborted)return Promise.resolve(abstain('cancelled'));
  const input=routingInput(text,history,structuredAnswer);if(input.skip)return Promise.resolve(abstain(input.skip));
+ if(isCFModel()){
+  return cfRoute(topic?'route':'route',text).then(r=>{
+   if(!r?.toolId)return abstain('no-match');
+   return {status:'selected' as const,toolId:r.toolId,score:r.score??0,reason:r.reason??'cf-llm',version:'cf-llm-v1',modelId:CF_MODEL_ID};
+  }).catch(()=>abstain('inference-failed'));
+ }
  if(status!=='ready'||!worker){if(status==='idle')startWarmup();return Promise.resolve(abstain('not-ready'));}
  const id=String(++nextId),started=performance.now();
  return new Promise(resolve=>{
@@ -87,6 +119,12 @@ export function assessMessageNeeds(text:string,{signal,timeoutMs=1000}:{signal?:
  const fallback=(reason:string):NeedHint=>({status:'abstained',reason});
  if(signal?.aborted)return Promise.resolve(fallback('cancelled'));
  if(!text.trim()||text.length>1800)return Promise.resolve(fallback('input-length'));
+ if(isCFModel()){
+  return cfRoute('needs',text).then(r=>{
+   if(!r?.kind)return fallback('no-match');
+   return {status:'selected' as const,kind:r.kind,score:r.score??0,reason:r.reason??'cf-llm',modelId:CF_MODEL_ID};
+  }).catch(()=>fallback('inference-failed'));
+ }
  if(status!=='ready'||!worker){if(status==='idle')startWarmup();return Promise.resolve(fallback('not-ready'));}
  const id='needs-'+String(++nextId);
  return new Promise(resolve=>{
@@ -111,6 +149,19 @@ export function reviewResponseSkills(text:string,{signal,timeoutMs=20000}:{signa
   const finish=(result:SkillReview)=>{if(!suggestPending.has(id))return;clearTimeout(timer);signal?.removeEventListener('abort',onAbort);suggestPending.delete(id);resolve(result);};
   suggestPending.set(id,{finish});signal?.addEventListener('abort',onAbort,{once:true});
   try{worker!.postMessage({type:'suggest',id,text});}catch{finish(noSkills('unavailable'));unavailable();}
+ });
+}
+
+/** Lazy 316-catalogue retrieval using the same pinned BGE instance. */
+export function retrieveObjectives(text:string,signal?:AbortSignal):Promise<ObjectiveMatch[]>{
+ if(signal?.aborted||status!=='ready'||!worker||text.length>30000)return Promise.resolve([]);
+ const id='objectives-'+String(++nextId);
+ return new Promise(resolve=>{
+  const cancel=()=>{worker?.postMessage({type:'cancel',id});finish([]);};
+  const timer=setTimeout(cancel,90000);
+  const finish=(matches:ObjectiveMatch[])=>{if(!objectivePending.has(id))return;clearTimeout(timer);signal?.removeEventListener('abort',cancel);objectivePending.delete(id);resolve(matches);};
+  objectivePending.set(id,{finish});signal?.addEventListener('abort',cancel,{once:true});
+  worker!.postMessage({type:'objectives',id,text});
  });
 }
 

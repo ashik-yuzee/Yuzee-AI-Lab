@@ -1,0 +1,458 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.7401708693107619,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7401708693107619,
+      "contextScore": 0.6973400563415636
+    },
+    {
+      "id": "JOB_DISCOVER_008",
+      "score": 0.7577907494348889,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7577907494348889,
+      "contextScore": 0.6723974937499169
+    },
+    {
+      "id": "RECOVERY_005",
+      "score": 0.7094373597803567,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7094373597803567,
+      "contextScore": 0.6596049406833407
+    },
+    {
+      "id": "SCHOOL_037",
+      "score": 0.7006977768373328,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7006977768373328,
+      "contextScore": 0.6612858936970818
+    },
+    {
+      "id": "SCHOOL_014",
+      "score": 0.6968511100680215,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6968511100680215,
+      "contextScore": 0.6475387050581723
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.6935681699001062,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6935681699001062,
+      "contextScore": 0.650759895131712
+    },
+    {
+      "id": "SCHOOL_023",
+      "score": 0.6910269791549071,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6910269791549071,
+      "contextScore": 0.6490459597711132
+    },
+    {
+      "id": "PATH_012",
+      "score": 0.721849220228748,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.721849220228748
+    },
+    {
+      "id": "EMP_ENTRY_005",
+      "score": 0.7177262472575786,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7177262472575786
+    },
+    {
+      "id": "STUDY_002",
+      "score": 0.7117197512284192,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7117197512284192
+    },
+    {
+      "id": "JOB_COMPARE_006",
+      "score": 0.7093689329840717,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7093689329840717
+    },
+    {
+      "id": "IND_COMPARE_005",
+      "score": 0.7076104676022661,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7076104676022661
+    },
+    {
+      "id": "EMP_JOB_005",
+      "score": 0.7065772602721432,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7065772602721432
+    },
+    {
+      "id": "JOB_DISCOVER_003",
+      "score": 0.700332769832946,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.700332769832946
+    },
+    {
+      "id": "CHANGE_001",
+      "score": 0.6975822454564042,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6975822454564042
+    },
+    {
+      "id": "EMP_SAFE_001",
+      "score": 0.6960633269580709,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6960633269580709
+    },
+    {
+      "id": "STUDY_008",
+      "score": 0.6965803474838947,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6965803474838947
+    },
+    {
+      "id": "EMP_SAFE_002",
+      "score": 0.6874033344916586,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6874033344916586
+    },
+    {
+      "id": "SCHOOL_036",
+      "score": 0.6794425161166808,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6794425161166808
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I don't want to study nursing. Can you compare the two employment offers I already have?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Compare actual job offers; nursing study is explicitly rejected.",
+      "confirmed_facts": [],
+      "possible_need": "Compare actual job offers; nursing study is explicitly rejected.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Compare actual job offers; nursing study is explicitly rejected."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "outcome": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_use": "Serve when user has multiple opportunities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Two concrete job offers, not a comparison of broad careers or employer reputations.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_008",
+        "button_label": "Find jobs I can reach faster",
+        "outcome": "Compare roles reachable via no new qualification, short course, microcredential, certificate, diploma or degree.",
+        "when_to_use": "Serve when user wants shorter entry routes.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs With Less Study' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs With Less Study: Compare roles reachable via no new qualification, short course, microcredential, certificate, diploma or degree. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_005",
+        "button_label": "Find another route",
+        "outcome": "Compare lower-cost providers, staged study, VET, local study, funding and work+study alternatives.",
+        "when_to_use": "Serve when cost blocks preferred option.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Preferred Course Too Expensive' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Preferred Course Too Expensive: Compare lower-cost providers, staged study, VET, local study, funding and work+study alternatives. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_037",
+        "button_label": "Will I get a job after this course?",
+        "outcome": "Separate course outcomes, relevant entry roles, extra experience/skills, local demand and uncertainty.",
+        "when_to_use": "Serve when student assumes qualification automatically guarantees work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course to Employment Reality Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course to Employment Reality Check: Separate course outcomes, relevant entry roles, extra experience/skills, local demand and uncertainty. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_014",
+        "button_label": "Am I ready, not just eligible?",
+        "outcome": "Separate formal eligibility from academic readiness, interest, study-style fit and life constraints.",
+        "when_to_use": "Serve when student meets entry rules but may not be prepared for study.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Ready vs Eligible' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Ready vs Eligible: Separate formal eligibility from academic readiness, interest, study-style fit and life constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_023",
+        "button_label": "TAFE or university - what actually changes?",
+        "outcome": "Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status.",
+        "when_to_use": "Serve when student equates prestige with outcome.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Outcomes, Not Prestige' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Outcomes, Not Prestige: Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PATH_012",
+        "button_label": "University vs TAFE vs apprenticeship",
+        "outcome": "Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner.",
+        "when_to_use": "Serve when student is choosing between pathway families.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Pathway Types' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Pathway Types: Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_ENTRY_005",
+        "button_label": "Can I study and work here?",
+        "outcome": "Find cadetship/scholarship/employment programs and explain study/work commitments.",
+        "when_to_use": "Serve when student wants combined study/employment pathways.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cadetship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cadetship: Find cadetship/scholarship/employment programs and explain study/work commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "STUDY_002",
+        "button_label": "Do I need a degree?",
+        "outcome": "Compare degree, diploma, certificate, apprenticeship, short course, microcredential, work+study and self-directed routes where appropriate.",
+        "when_to_use": "Serve when user assumes a degree is always required.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Degree or Another Route?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Degree or Another Route?: Compare degree, diploma, certificate, apprenticeship, short course, microcredential, work+study and self-directed routes where appropriate. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_006",
+        "button_label": "Which keeps more future options open?",
+        "outcome": "Compare skill transferability, industries, adjacent roles and further-study flexibility.",
+        "when_to_use": "Serve when young user fears choosing too narrowly.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Keeps More Future Options Open?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Keeps More Future Options Open?: Compare skill transferability, industries, adjacent roles and further-study flexibility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_COMPARE_005",
+        "button_label": "Which gives me more career options?",
+        "outcome": "Compare job-family breadth, transferable skills and cross-industry mobility.",
+        "when_to_use": "Serve when user wants breadth and mobility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Gives Me More Career Options?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Gives Me More Career Options?: Compare job-family breadth, transferable skills and cross-industry mobility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_JOB_005",
+        "button_label": "What could I do here with my degree?",
+        "outcome": "Map course capabilities to company roles while distinguishing direct vs additional-skill paths.",
+        "when_to_use": "Serve when user wants employer-specific qualification outcomes.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Roles for My Course' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Roles for My Course: Map course capabilities to company roles while distinguishing direct vs additional-skill paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, job postings, organization structure, user course/skills",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_003",
+        "button_label": "What jobs could my course lead to?",
+        "outcome": "Show direct entry, adjacent, extra-skill, extra-experience and longer-term roles.",
+        "when_to_use": "Serve when user wants employment options from a qualification.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Course' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Course: Show direct entry, adjacent, extra-skill, extra-experience and longer-term roles. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CHANGE_001",
+        "button_label": "Help me change careers",
+        "outcome": "Identify current state, possible destination, what to keep, what to escape and constraints.",
+        "when_to_use": "Serve when user wants a different career but has not framed the change.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Explorer: Identify current state, possible destination, what to keep, what to escape and constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_SAFE_001",
+        "button_label": "Check this opportunity",
+        "outcome": "Check legal entity, company domain/contact consistency, role existence and suspicious payment/sensitive-data requests.",
+        "when_to_use": "Serve when user encounters unfamiliar employer/opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Employer or Job Legitimate?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Assess employer or offer legitimacy with evidence; do not claim verified legitimacy without checks.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "STUDY_008",
+        "button_label": "Is the extra study worth it?",
+        "outcome": "Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims.",
+        "when_to_use": "Serve when user is balancing cost/time against likely benefit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cost vs Outcome' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cost vs Outcome: Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_SAFE_002",
+        "button_label": "Does anything look wrong?",
+        "outcome": "Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials.",
+        "when_to_use": "Serve when user receives suspicious offer/process.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Offer Red Flags' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Job Offer Red Flags: Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_036",
+        "button_label": "Is this career actually in demand?",
+        "outcome": "Use current occupational demand, vacancies, region and growth evidence without treating demand as a career recommendation.",
+        "when_to_use": "Serve when student wants labour-market evidence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Demand Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Job Demand Check: Use current occupational demand, vacancies, region and growth evidence without treating demand as a career recommendation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4111,
+      "total_input_tokens": 4038,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4038
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 73,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4457,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4457
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 89
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:17:12Z",
+    "updated": "2026-09-18T12:17:12Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0THkxb4qyvnaadasMwiD154/cEo74o7etccTnxGjGnpr27Dzc/cUB6hkgJM5fa9MdytaHtTSNPOkH/8A+YBwGzh56PBP4D02t0jfuvDHWcbLoeZ2nGw4FwqUwcXDLkLtu2545HASAg",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"JOB_DECIDE_004\",\n  \"reason\": \"Compare your two actual employment offers across key criteria like salary, flexibility, learning, and growth.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "JOB_DECIDE_004",
+    "reason": "Compare your two actual employment offers across key criteria like salary, flexibility, learning, and growth.",
+    "disposition": "SUGGEST",
+    "selectionId": "9e514f0c-0c9a-494b-ba5a-653182e03891",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.7401708693107619,
+    "margin": -0.017619880124126963,
+    "userConfidence": null,
+    "createdAt": 1789733832848
+  }
+}

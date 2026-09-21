@@ -1,0 +1,33 @@
+<!-- GuidanceList — cards (unordered) or timeline steps (ordered) -->
+
+<!-- Unordered card list -->
+<ul *ngIf="!ordered; else timeline" class="guidance-list">
+  <li *ngFor="let item of items"
+      class="guidance-card"
+      [attr.data-learning-tone]="item.type || item.level">
+    <div *ngIf="item.icon" class="guidance-card-icon" aria-hidden="true">
+      <ion-icon [name]="item.icon"></ion-icon>
+    </div>
+    <div class="guidance-card-body">
+      <p class="guidance-card-title">{{ item.title }}</p>
+      <p *ngIf="item.description" class="guidance-card-desc">{{ item.description }}</p>
+      <div *ngIf="item.meta?.length" class="guidance-card-meta">
+        <span *ngFor="let tag of item.meta">{{ tag }}</span>
+      </div>
+    </div>
+  </li>
+</ul>
+
+<!-- Ordered timeline -->
+<ng-template #timeline>
+  <ol class="guidance-timeline">
+    <li *ngFor="let item of items; let i = index" class="guidance-step">
+      <div class="guidance-step-number" aria-hidden="true">{{ i + 1 }}</div>
+      <div class="guidance-step-body">
+        <p class="guidance-step-title">{{ item.title }}</p>
+        <p *ngIf="item.description" class="guidance-step-desc">{{ item.description }}</p>
+        <span *ngIf="item.badge" class="guidance-step-badge">{{ item.badge }}</span>
+      </div>
+    </li>
+  </ol>
+</ng-template>

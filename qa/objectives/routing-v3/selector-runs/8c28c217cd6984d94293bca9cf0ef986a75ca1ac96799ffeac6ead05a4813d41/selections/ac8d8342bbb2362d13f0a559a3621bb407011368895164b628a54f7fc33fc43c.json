@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "DISCOVER_001",
+  "reason": "Explore everyday activities and tasks you enjoy to uncover interest themes and potential career directions.",
+  "disposition": "SUGGEST",
+  "selectionId": "9d6c8446-6cda-4c62-bf3e-a51566c2ffcb",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.9294257469957107,
+  "margin": -0.1440401246596612,
+  "userConfidence": null,
+  "createdAt": 1789733759473
+}

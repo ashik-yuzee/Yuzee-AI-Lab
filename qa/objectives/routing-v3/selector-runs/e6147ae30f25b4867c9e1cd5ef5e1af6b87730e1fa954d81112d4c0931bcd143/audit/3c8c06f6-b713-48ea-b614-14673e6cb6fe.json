@@ -1,0 +1,482 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "EMP_SAFE_001",
+      "score": 0.7377450882097655,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7377450882097655,
+      "contextScore": 0.69716045149487
+    },
+    {
+      "id": "JOB_DECIDE_003",
+      "score": 0.6846446116620261,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6846446116620261,
+      "contextScore": 0.681700463177637
+    },
+    {
+      "id": "EMP_SKILL_004",
+      "score": 0.6865174555059144,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6865174555059144,
+      "contextScore": 0.6754389807791609
+    },
+    {
+      "id": "EMP_STABILITY_002",
+      "score": 0.7103218806028684,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6565517105740653,
+      "contextScore": 0.7103218806028684
+    },
+    {
+      "id": "EMP_HIRING_001",
+      "score": 0.6874424704438072,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6692484683653106,
+      "contextScore": 0.6874424704438072
+    },
+    {
+      "id": "VACANCY_004",
+      "score": 0.7261549109508779,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6544804645447262,
+      "contextScore": 0.7261549109508779
+    },
+    {
+      "id": "EMP_SAFE_002",
+      "score": 0.6894824699745677,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6682538635318792,
+      "contextScore": 0.6894824699745677
+    },
+    {
+      "id": "SCHOOL_033",
+      "score": 0.6722205526776148,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6722205526776148,
+      "contextScore": 0.6706522976124133
+    },
+    {
+      "id": "EXP_001",
+      "score": 0.6719046462216138,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.663996129724163,
+      "contextScore": 0.6719046462216138
+    },
+    {
+      "id": "EMP_SKILL_001",
+      "score": 0.6671110017040857,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6513163207375815,
+      "contextScore": 0.6671110017040857
+    },
+    {
+      "id": "IND_PATH_007",
+      "score": 0.7020582737678963,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7020582737678963
+    },
+    {
+      "id": "SCHOOL_014",
+      "score": 0.6700756434820886,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6700756434820886
+    },
+    {
+      "id": "EMP_ENTRY_001",
+      "score": 0.667013847612773,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.667013847612773
+    },
+    {
+      "id": "FIRST_JOB_001",
+      "score": 0.6604113198790948,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6604113198790948
+    },
+    {
+      "id": "SCHOOL_032",
+      "score": 0.6585785224628147,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6585785224628147
+    },
+    {
+      "id": "EMP_FIT_001",
+      "score": 0.6573754022706098,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6573754022706098
+    },
+    {
+      "id": "GAP_001",
+      "score": 0.7165081183528779,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7165081183528779
+    },
+    {
+      "id": "DECIDE_005",
+      "score": 0.6563577983819499,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6563577983819499
+    },
+    {
+      "id": "GAP_006",
+      "score": 0.6547759484772938,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6547759484772938
+    },
+    {
+      "id": "EVIDENCE_004",
+      "score": 0.7086960703589421,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7086960703589421
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "The hiring agent says I must buy a starter kit before I can get an interview. Is this legitimate?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Assess recruitment legitimacy and warning signs; no verification has occurred.",
+      "confirmed_facts": [],
+      "possible_need": "Assess recruitment legitimacy and warning signs; no verification has occurred.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Assess recruitment legitimacy and warning signs; no verification has occurred."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "EMP_SAFE_001",
+        "button_label": "Check this opportunity",
+        "outcome": "Check legal entity, company domain/contact consistency, role existence and suspicious payment/sensitive-data requests.",
+        "when_to_use": "Serve when user encounters unfamiliar employer/opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Employer or Job Legitimate?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Assess employer or offer legitimacy with evidence; do not claim verified legitimacy without checks.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DECIDE_003",
+        "button_label": "What should I find out before applying?",
+        "outcome": "Generate a focused evidence checklist around team, work, progression, pay, location and requirements.",
+        "when_to_use": "Serve when user has a role but lacks key decision information.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Should I Find Out Before Applying?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Should I Find Out Before Applying?: Generate a focused evidence checklist around team, work, progression, pay, location and requirements. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_SKILL_004",
+        "button_label": "What do their employees study?",
+        "outcome": "Identify qualification/discipline patterns in employer hiring without implying exclusivity.",
+        "when_to_use": "Serve when user wants study-to-employer alignment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Qualifications They Hire' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Qualifications They Hire: Identify qualification/discipline patterns in employer hiring without implying exclusivity. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer job ads/public evidence, occupation requirements and user profile",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_STABILITY_002",
+        "button_label": "Verify this employer",
+        "outcome": "Verify legal entity/registration, website/contact consistency and licences where appropriate.",
+        "when_to_use": "Serve when user encounters unknown employer/job ad.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This a Real Company?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Is This a Real Company?: Verify legal entity/registration, website/contact consistency and licences where appropriate. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Company registration/public records, hiring/business signals and industry context",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_HIRING_001",
+        "button_label": "Are they hiring?",
+        "outcome": "Review active vacancies, trend, job families, locations and graduate hiring signals.",
+        "when_to_use": "Serve when user wants current employer demand.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Hiring Signals' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Hiring Signals: Review active vacancies, trend, job families, locations and graduate hiring signals. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current/recent employer vacancies, locations, teams and recruitment signals",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "VACANCY_004",
+        "button_label": "What would stop me getting this job?",
+        "outcome": "Identify missing mandatory criteria, skill depth, experience or evidence likely to affect candidacy.",
+        "when_to_use": "Serve when user wants blockers for a vacancy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Am I Missing?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Am I Missing?: Identify missing mandatory criteria, skill depth, experience or evidence likely to affect candidacy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Specific job advertisement plus user profile/evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_SAFE_002",
+        "button_label": "Does anything look wrong?",
+        "outcome": "Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials.",
+        "when_to_use": "Serve when user receives suspicious offer/process.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Offer Red Flags' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Job Offer Red Flags: Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_033",
+        "button_label": "I need something for my resume",
+        "outcome": "Turn school, projects, clubs, volunteering and casual work into evidence of skills.",
+        "when_to_use": "Serve when student lacks employer-visible evidence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Build My First Evidence' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Build My First Evidence: Turn school, projects, clubs, volunteering and casual work into evidence of skills. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EXP_001",
+        "button_label": "How can I test this career first?",
+        "outcome": "Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview.",
+        "when_to_use": "Serve when user is interested but has little real exposure.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Try Before I Commit' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Try Before I Commit: Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career target, current experience, availability, location, skill gaps",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_SKILL_001",
+        "button_label": "What skills do they hire for?",
+        "outcome": "Analyze current/recent vacancies for repeated skills, tools, qualifications, experience and soft-skill signals.",
+        "when_to_use": "Serve when user wants employer-specific capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills This Company Wants' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills This Company Wants: Analyze current/recent vacancies for repeated skills, tools, qualifications, experience and soft-skill signals. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer job ads/public evidence, occupation requirements and user profile",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_PATH_007",
+        "button_label": "Could I test this industry first?",
+        "outcome": "Suggest short course, project, work experience or microcredential for exploration/skill testing.",
+        "when_to_use": "Serve when user wants low-commitment exposure.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Short Learning Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Short Learning Routes: Suggest short course, project, work experience or microcredential for exploration/skill testing. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_014",
+        "button_label": "Am I ready, not just eligible?",
+        "outcome": "Separate formal eligibility from academic readiness, interest, study-style fit and life constraints.",
+        "when_to_use": "Serve when student meets entry rules but may not be prepared for study.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Ready vs Eligible' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Ready vs Eligible: Separate formal eligibility from academic readiness, interest, study-style fit and life constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_ENTRY_001",
+        "button_label": "Does this company have a graduate program?",
+        "outcome": "Explain program structure, rotations, eligible degrees, duration, locations, application timing, entry and destinations.",
+        "when_to_use": "Serve when graduate is researching structured entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Graduate Program' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Graduate Program: Explain program structure, rotations, eligible degrees, duration, locations, application timing, entry and destinations. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "FIRST_JOB_001",
+        "button_label": "Find my first job",
+        "outcome": "Find realistic entry/casual roles compatible with age, schedule, location, transport and current experience.",
+        "when_to_use": "Serve when user has little/no experience.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Jobs Can I Get Now?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Jobs Can I Get Now?: Find realistic entry/casual roles compatible with age, schedule, location, transport and current experience. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Age/eligibility, study schedule, location, transport, experience, career goal",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_032",
+        "button_label": "How do I get experience?",
+        "outcome": "Suggest age/eligibility-appropriate work experience, volunteering, projects, shadowing or school programs.",
+        "when_to_use": "Serve when student has no work exposure.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Get My First Experience' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Get My First Experience: Suggest age/eligibility-appropriate work experience, volunteering, projects, shadowing or school programs. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_FIT_001",
+        "button_label": "Does this employer fit me?",
+        "outcome": "Compare role, skill, industry interest, location, company size, work style, flexibility, growth and values.",
+        "when_to_use": "Serve when user wants employer-person fit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Would I Fit Here?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Would I Fit Here?: Compare role, skill, industry interest, location, company size, work style, flexibility, growth and values. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer evidence plus user role/skill/industry/location/work-value preferences",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "GAP_001",
+        "button_label": "What am I missing?",
+        "outcome": "Compare required capabilities to demonstrated/self-reported evidence and distinguish missing from unknown.",
+        "when_to_use": "Serve when user has a target job and wants a gap analysis.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Me to This Job' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Me to This Job: Compare required capabilities to demonstrated/self-reported evidence and distinguish missing from unknown. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role requirements, user skill evidence, experience, qualifications",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "DECIDE_005",
+        "button_label": "Stress-test my choice",
+        "outcome": "Test cost, work hours, failed first preference, relocation, goal change and other constraints.",
+        "when_to_use": "Serve when user wants to know whether a choice remains workable under changed conditions.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Option Stress Test' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Option Stress Test: Test cost, work hours, failed first preference, relocation, goal change and other constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Options under consideration, user priorities, constraints, unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "GAP_006",
+        "button_label": "Do I need another qualification?",
+        "outcome": "Determine whether the barrier is skill, credential, licence, experience, portfolio, network or location.",
+        "when_to_use": "Serve when user assumes formal study is the solution.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Qualification Gap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Qualification Gap: Determine whether the barrier is skill, credential, licence, experience, portfolio, network or location. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role requirements, user skill evidence, experience, qualifications",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EVIDENCE_004",
+        "button_label": "Can my resume prove this?",
+        "outcome": "Compare claimed capabilities with actual CV/profile examples and identify unsupported claims.",
+        "when_to_use": "Serve when user lists skills without supporting evidence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Resume Evidence Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Resume Evidence Check: Compare claimed capabilities with actual CV/profile examples and identify unsupported claims. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, target role, existing experiences, portfolio/CV evidence",
+        "needs_live_data": "No"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4229,
+      "total_input_tokens": 4153,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4153
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 76,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4582,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4582
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 92
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:34Z",
+    "updated": "2026-09-18T12:16:34Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0T16X62ulHIzMbdFjaToqYlpGG8hj+PxiKhjrw/PsOQWq1O04RYyJUBIRtYHYYl/Uw57wiYXwSCDObryMcigR5U87PH1KypjpbUdOwDvRxymmnH5yYgTC8dJPag7ctCyOTNva4ZDR6",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"OPTIONAL\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"EMP_SAFE_002\",\n  \"reason\": \"Identify red flags and evaluate upfront payment requests in the hiring process to help you confirm whether this opportunity is legitimate.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "OPTIONAL",
+    "decision": "SUGGEST",
+    "objective_id": "EMP_SAFE_002",
+    "reason": "Identify red flags and evaluate upfront payment requests in the hiring process to help you confirm whether this opportunity is legitimate.",
+    "disposition": "SUGGEST",
+    "selectionId": "3ffa5c7c-13fe-4326-b850-1d85b3f1ee63",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.6894824699745677,
+    "margin": 0.05310047654773942,
+    "userConfidence": null,
+    "createdAt": 1789733794924
+  }
+}

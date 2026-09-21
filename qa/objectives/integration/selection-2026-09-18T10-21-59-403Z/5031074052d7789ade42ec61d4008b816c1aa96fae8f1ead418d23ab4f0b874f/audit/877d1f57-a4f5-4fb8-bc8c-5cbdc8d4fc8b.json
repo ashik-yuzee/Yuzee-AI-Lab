@@ -1,0 +1,261 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval2",
+  "candidates": [
+    {
+      "id": "SCHOOL_006",
+      "score": 0.7676545952742702
+    },
+    {
+      "id": "PROFILE_001",
+      "score": 0.7293983794024833
+    },
+    {
+      "id": "IND_DISCOVER_002",
+      "score": 0.7128745751719472
+    },
+    {
+      "id": "DISCOVER_007",
+      "score": 0.7125856586426302
+    },
+    {
+      "id": "SCHOOL_004",
+      "score": 0.7028567132790217
+    },
+    {
+      "id": "DISCOVER_003",
+      "score": 0.6953148579667566
+    },
+    {
+      "id": "GOAL_002",
+      "score": 0.690585241171018
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I have never really thought about which activities I enjoy. Could we work that out first?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "response": "We can begin with the activities you enjoy before choosing a career direction.",
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "SCHOOL_006",
+        "button_label": "Use what I enjoy",
+        "topic_name": "Subjects I Enjoy",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Identify which activities within subjects are actually enjoyable and connect them to paths.",
+        "when_to_serve": "Serve when student wants subject choice based on enjoyment. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "key_output": "Subject options with reasons, prerequisite effects, workload and options preserved",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "card_sort",
+          "multi_select",
+          "scenario_test",
+          "entity_picker",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "PROFILE_001",
+        "button_label": "My interests",
+        "topic_name": "My Interests",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Save a structured interest profile from explicit user responses.",
+        "when_to_serve": "Serve when user wants to build their profile. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Quiz/tool result from the corresponding profile dimension",
+        "key_output": "A reusable profile dimension available to future matching and explanation",
+        "needs_live_data": "No",
+        "max_interactions": 3,
+        "allowed_primitives": [
+          "profile_editor",
+          "evidence_panel",
+          "multi_select",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "IND_DISCOVER_002",
+        "button_label": "Where could my interests take me?",
+        "topic_name": "Industries From My Interests",
+        "primary_category": "Industry Intelligence",
+        "clear_purpose": "Map interests to multiple sectors instead of one obvious career.",
+        "when_to_serve": "Serve when user has interests but not industry knowledge. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "key_output": "Industries worth exploring with reasons and adjacent/surprising possibilities",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "multi_select",
+          "hierarchy_explorer",
+          "evidence_panel",
+          "comparison_grid",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "DISCOVER_007",
+        "button_label": "What do I enjoy doing in subjects?",
+        "topic_name": "Subjects I Actually Enjoy",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Separate the subject label from the activities within it, such as experiments, explaining, analysis or design.",
+        "when_to_serve": "Serve when user names school subjects but not the activities they enjoy. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Actually Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "User answers, interests, preferences, examples from school/work/life",
+        "key_output": "A compact profile signal with explanations and suggested next exploration",
+        "needs_live_data": "No",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "multi_select",
+          "card_sort",
+          "scenario_test",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SCHOOL_004",
+        "button_label": "I do not know what I want yet",
+        "topic_name": "Keep My Options Open",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects.",
+        "when_to_serve": "Serve when student is undecided and fears closing doors. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Options Open' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "key_output": "Subject options with reasons, prerequisite effects, workload and options preserved",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "multi_select",
+          "comparison_grid",
+          "pathway_builder",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "DISCOVER_003",
+        "button_label": "Explore my personality",
+        "topic_name": "Work Personality",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Explore work preferences such as people/solitude, practical/abstract, logic/values, structure/flexibility and uncertainty response.",
+        "when_to_serve": "Serve when user wants a 16personalities-like experience for work. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Work Personality' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "User answers, interests, preferences, examples from school/work/life",
+        "key_output": "A compact profile signal with explanations and suggested next exploration",
+        "needs_live_data": "No",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "spectrum",
+          "scenario_test",
+          "multi_select",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "GOAL_002",
+        "button_label": "Picture my future",
+        "topic_name": "Future Me",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Explore preferred people/ideas/things balance, environment, autonomy, structure, travel and study/earning trade-offs.",
+        "when_to_serve": "Serve when user cannot name careers but can imagine a future lifestyle. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Future Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "key_output": "Goal-clarity state, themes and a smaller set of directions to explore",
+        "needs_live_data": "No",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "spectrum",
+          "ranking",
+          "constraint_builder",
+          "scenario_test",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 2147,
+      "total_input_tokens": 1854,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1854
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 25,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 268,
+      "raw_prompt_token": 2074,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2074
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 41
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 268
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T10:22:11Z",
+    "updated": "2026-09-18T10:22:11Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EpgKCpUKAWkUfROXmknk0+6JUkz8fwKzyfwVgCcrdsmq+BY42CqHsF5REfvPyTOiw01N9FRGJflx63Xazxw0h1dX8L/Tbpf4uHGtN9aFXULhfcOZZ/qL011lQcXnjBSnE6/3aRjm7wzSkoX1GlR3B2BJk2P7kO/lQmPzHiRsZxO0xM+jFADu6Av5/LgtplzhXAALHnYwSMqkdOoUPYgD0JX0IiRu6a9z8tm8abfabhPo0v4YZVoxyVWyKtWASloVdaAQqDnUlPGjK9ikEpEFrLIGEKvXmsaNdEcJ3qz19M6s6hPT6RoZnhFayUWro4XTYLdVh4AVTtvQeIYykQQToS6jDOIQQl/VRfnebGMcUvvPNmC1kL8r5yf8LCdnp0zWTaICqAUFkCPsjDGomP72gn+n0xE0lWjLasE1FdWbpT4eOSM6hErrb5u1D/SjGiJOn+41W8isufwErVq1VGtLSJ2Rg2hla/wVTm4NDxKWz0768jX27YTlnmhjghLQpa4eWu909TlAUJIJeqvQw2kyeQJsDSBT8bEgnaJoIRIr0/oXKYUPhXDzVJQq5F+zE3YVYdtIKaLxErEu0vTWY+u5vxfcHqcB3pjjgK9BGZOVMCPvNN5mW9Lt9Ug0c9Lh/T4qzXw+TN2OyR/2nfdU/NhwRGuHZI2c41MQzsSUpjHmkt9ErLitvheihektX5fh8/Edfh2vKOKr1bNKleFwxUnOphZtD9XaPCkEn6gq3TU7Hr2xLuCQDFir2zL5RZbS8zlnP3PPgNxwaOq9Y3Jrjy/OsEoKNiqVm16FveINvsnSefGNTern5aR0F2vjpjxYqC+oY45pSZ7OVLAak1Y2AfdYuENWZLXIVP+ANKlxBgXUBBGimLODTZUTWkh6NQtIy7QjksUY3fAOePuw89C4WrTyy8YqLnmRJ7fL+luL/nB64qzySh4b+eP+8q8VEMryqCujg5ZXs3+jxbBEwE0xNzSULJHCWcT7quMcBqY6uVPzFpjZ8Zc8dMLoqaNF04QEm6hOi1EdBgKeCKF2GvOwGvvyKnwhKJg/94qaqX9Wr38X8KPkVNsG/PNnPvPCW1cbIaczh35OgTJuht5000DNB8jD1hdCwvBOOq+0luPQgQ4Pxsp6j7WrQSA0SnN0dvNd3t/z8/dmTPGISPbbeUFzWZ/zQSqCUzbmbIxp1HcBOkZlQvvWjazkfZKKcIifIQX+pzXMBHT1roRU/G00W0WgKOmYsYDZ+9r3TQFy9Dt06BhpCGO/Jy+sdU/CWO65LPIK820G4re2XjtO7YkRTwjoeJcNb9ekPBgiTmjuvA+Q1puk2Yqz+tylBCpMV8zuCXCynODzhSgl5zmhr2w3xSad9hRo9170Gl49SDqOalKCs42NCSHm30qYeTaEhUhtPkuVay54SaBxeRCVTLGagEIFCKGf20ZQt3gijnZfQ7S8+th6hSNHOZxlYZh89D4WhXVWp0WgkvJsNOUM9BFpoj8BYGlb7jMikXO5k8lXh5QYNFwBbl1eOnsm77qmzuzIirjyarGAhqFxcfxgvgVIIVIcZqYmeDj8kBPvtnZIcYGvNGGnI75syuklLp4+ApQLDQcyxM0hxI1cEBaDRiUJ6MWpsJWRY4mzsfaa5mH30oO1jPT481lpeSwpdSa6C3OG/olSDkf5tfpAh1R2JVh+2+po1ySBrsTT1rK8HgSz34RR8jxXXdhmyt7+KiyyFHr5o0PW5HF4EKf3ukWp/Do7zxo=",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"decision\": \"NONE\",\n  \"objective_id\": \"\",\n  \"reason\": \"\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "decision": "NONE",
+    "objective_id": "",
+    "reason": ""
+  }
+}

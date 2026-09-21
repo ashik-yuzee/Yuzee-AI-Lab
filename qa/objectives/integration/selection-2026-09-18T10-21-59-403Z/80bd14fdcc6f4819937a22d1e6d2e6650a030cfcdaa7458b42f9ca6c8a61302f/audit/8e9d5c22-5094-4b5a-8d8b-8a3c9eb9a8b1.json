@@ -1,0 +1,290 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval2",
+  "candidates": [
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.8523197715739486
+    },
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.763896074071454
+    },
+    {
+      "id": "JOB_COMPARE_001",
+      "score": 0.7626006297607637
+    },
+    {
+      "id": "JOB_COMPARE_002",
+      "score": 0.7447100501304827
+    },
+    {
+      "id": "VACANCY_003",
+      "score": 0.7402607800047086
+    },
+    {
+      "id": "EMP_SKILL_002",
+      "score": 0.7395649108192911
+    },
+    {
+      "id": "PROFILE_002",
+      "score": 0.7333757192411309
+    },
+    {
+      "id": "EMP_ENTRY_004",
+      "score": 0.7294331513616273
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I have two written employment offers. One pays more but the other has better training. Help me weigh them up.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "response": "Salary and training are both relevant. A structured comparison can make the trade-offs clearer.",
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "topic_name": "Compare Offer or Role",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_serve": "Serve when user has multiple opportunities. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Job choice, motives, priorities, evidence and unknowns",
+        "key_output": "Decision rationale, risks and research questions",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "ranking",
+          "comparison_grid",
+          "tradeoff_matrix",
+          "evidence_panel",
+          "readiness_scorecard",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "topic_name": "Better for My Career Goal",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_serve": "Serve when user wants employer comparison against a specific goal. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "key_output": "Comparison across roles, skills, programs, growth, conditions and user-specific goal",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "comparison_grid",
+          "tradeoff_matrix",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "JOB_COMPARE_001",
+        "button_label": "Compare these jobs",
+        "topic_name": "Compare Jobs",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare tasks, skills, entry, education, environment, pay, demand, location, progression, flexibility, AI exposure and fit.",
+        "when_to_serve": "Serve when user has multiple occupations in mind. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "key_output": "Side-by-side trade-offs across job content, entry, skills, conditions and user fit",
+        "needs_live_data": "Often",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "constraint_builder",
+          "comparison_grid",
+          "tradeoff_matrix",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "JOB_COMPARE_002",
+        "button_label": "Which uses what I already know?",
+        "topic_name": "Which Job Uses More of My Skills?",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare skill overlap with each occupation and identify where evidence is strongest.",
+        "when_to_serve": "Serve when user wants to maximize existing capabilities. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Job Uses More of My Skills?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "key_output": "Side-by-side trade-offs across job content, entry, skills, conditions and user fit",
+        "needs_live_data": "Often",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "skill_matrix",
+          "evidence_panel",
+          "entity_picker",
+          "comparison_grid",
+          "tradeoff_matrix",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "VACANCY_003",
+        "button_label": "How well do I match this job?",
+        "topic_name": "Do I Match?",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare requirements with evidence in the profile/CV and surface unknowns.",
+        "when_to_serve": "Serve when user wants fit to a specific vacancy. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Do I Match?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Specific job advertisement plus user profile/evidence",
+        "key_output": "Plain-language requirements, match/gaps and targeted next actions",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "evidence_panel",
+          "comparison_grid",
+          "readiness_scorecard",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_SKILL_002",
+        "button_label": "What should I learn for this employer?",
+        "topic_name": "Company-Specific Skills",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Distinguish occupation-general skills from employer-specific tools/capabilities and prioritize gaps.",
+        "when_to_serve": "Serve when user targets one employer. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Company-Specific Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer job ads/public evidence, occupation requirements and user profile",
+        "key_output": "Employer-specific capability, tools and qualification signals with evidence labels",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "comparison_grid",
+          "ranking",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "PROFILE_002",
+        "button_label": "My work values",
+        "topic_name": "My Work Values",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Save a structured work-values profile.",
+        "when_to_serve": "Serve when user wants to define what matters at work. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'My Work Values' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Quiz/tool result from the corresponding profile dimension",
+        "key_output": "A reusable profile dimension available to future matching and explanation",
+        "needs_live_data": "No",
+        "max_interactions": 4,
+        "allowed_primitives": [
+          "evidence_panel",
+          "profile_editor",
+          "ranking",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_ENTRY_004",
+        "button_label": "Can I train with this employer?",
+        "topic_name": "Apprenticeship",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Find employer apprenticeships/traineeships and relevant occupation/qualification paths.",
+        "when_to_serve": "Serve when student wants apprenticeship opportunities at an employer. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "key_output": "Verified student/graduate entry routes and requirements",
+        "needs_live_data": "Yes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "timeline",
+          "evidence_panel",
+          "pathway_builder",
+          "action_handoff"
+        ],
+        "available": true
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 2234,
+      "total_input_tokens": 2116,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2116
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 58,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 60,
+      "raw_prompt_token": 2355,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2355
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 75
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 60
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T10:22:05Z",
+    "updated": "2026-09-18T10:22:05Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EoIDCv8CAWkUfROsXj1yF5Zmh0OlObCH6784cYrmigZSgpAS8QtMcHQ0NB7gAGGnBICvgyFkm7HydGSwVCOPKmxt+GH5FwtFvIBm6nQX66JHPCqJePmowHqPVpyZxtvoeZOxZ0qYAjlAZfP1twN0SZzCeaaBnaeMPShZB2iO6skEhZ4A07KWuEZ5enlstsKEppEPsgwfUndkDSqmHqRtVtzldTDJY8MaPvho3+2T6ZjtoBM7myH3FYKRlEZa+FEr/gX4JCS8O+CTNAOpuMMk197XbB0XrWthLe5ZW9ivKlXTRSSguft1WltjU0b+ItDXQyfHjgqjhTJ2gg/E6uZkv+QjBk/ELg123sRI5764gGhNMigE2AwIUS95YYQ9aswh3LKDkqDoRC+1cUvn7/LewGLZ8zjOmrMmFqXHdoB/rQKGpDNVX3fa0IFLQWs4JDPh4jArSd0huuZ/qfQ87p7m+om6mOl9FnWFu2aqJa7TgN3hFpPY0Cfhp1YNcnc/PIxGCpf/7zA=",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"JOB_DECIDE_004\",\n  \"reason\": \"Structured comparison of your two job offers across salary, training, and career progression will clarify the trade-offs.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "decision": "SUGGEST",
+    "objective_id": "JOB_DECIDE_004",
+    "reason": "Structured comparison of your two job offers across salary, training, and career progression will clarify the trade-offs."
+  }
+}

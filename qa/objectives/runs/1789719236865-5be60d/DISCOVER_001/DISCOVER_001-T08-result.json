@@ -1,0 +1,289 @@
+{
+  "test_id": "DISCOVER_001-T08",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 9,
+  "input_context": {
+    "user_message": "Here are enough details for interest explorer: I have already answered the relevant questions and confirmed them.",
+    "prior_context_text": "All required output fields can be supported.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "5f8087013bd22424553a0f17842a8662c2651d6276035a19b75563e65c3426d5",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5992
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "riasec_activity_picker",
+        "purpose": "Identify primary RIASEC-inspired activity preferences.",
+        "prompt": "Which types of activities do you genuinely enjoy or feel curious about? Select all that apply.",
+        "required": true,
+        "options": [
+          {
+            "id": "act_realistic",
+            "label": "Building & Hands-on",
+            "detail": "Working with tools, machinery, outdoors, plants, animals, or physical construction."
+          },
+          {
+            "id": "act_investigative",
+            "label": "Solving & Analysing",
+            "detail": "Researching, working with data, conducting experiments, or solving complex abstract problems."
+          },
+          {
+            "id": "act_artistic",
+            "label": "Designing & Expressing",
+            "detail": "Creating visual art, writing, performing, media production, or unstructured creative work."
+          },
+          {
+            "id": "act_social",
+            "label": "Helping & Teaching",
+            "detail": "Counselling, coaching, instructing, healthcare support, or community engagement."
+          },
+          {
+            "id": "act_enterprising",
+            "label": "Leading & Persuading",
+            "detail": "Starting projects, public speaking, pitching ideas, business strategy, or sales."
+          },
+          {
+            "id": "act_conventional",
+            "label": "Organising & Structuring",
+            "detail": "Managing records, optimising systems, quality assurance, budgeting, or precision tasks."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 6,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Specific activity preferences across RIASEC dimensions",
+      "Real-world examples or past experiences supporting interest themes"
+    ],
+    "result": {
+      "interest_themes": [],
+      "next_actions": [],
+      "summary": "Pending activity selection to identify RIASEC-inspired interest themes.",
+      "unknowns": [
+        "Activity preferences not yet indicated"
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Activity preferences not yet provided"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user for core activity interests across RIASEC dimensions.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial activity selection."
+      },
+      "evidence_and_unknowns": [
+        "No confirmed interest activity signals recorded yet."
+      ],
+      "recommended_next_action": "Complete the activity selection to generate grounded interest themes."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate properly retains objective DISCOVER_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims prior context exists to support immediate synthesis, but the fixture supplies empty confirmed_facts and empty confirmed_answers.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The generated multi_select question is concrete, structured around RIASEC categories, and allows selection with unsure options.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The component 'multi_select' is explicitly within the allow-list for DISCOVER_001.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate sets up RIASEC-inspired activity categories aligned with the objective requirements.",
+          "evidence_pointer": "candidate.ui[0].options"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent unconfirmed facts or unsupported themes when context is empty.",
+          "evidence_pointer": "candidate.result.interest_themes"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "The candidate avoids making standardized test percentile claims or career success predictions.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Cannot assess whether the candidate should have stopped/synthesized immediately because the fixture provided no factual answers to ground synthesis.",
+          "evidence_pointer": "context.session.confirmed_answers"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness correctly remains disabled/null with blockers clearly articulated rather than fabricating predictive readiness.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Structured handoff envelope is completely populated with confirmed inputs, evidence/unknowns, and next action recommendations.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No illegal writes, arbitrary endpoints, or autonomous actions are triggered.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: Test setup asserts 'All required output fields can be supported' and user says details are confirmed, but context.confirmed_facts and context.session.confirmed_answers are completely empty."
+      ],
+      "summary": "Evaluation completed with two criteria marked NOT_ASSESSABLE due to fixture limitations regarding missing concrete facts in the context. All assessable criteria passed."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2984,
+      "total_input_tokens": 2156,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2156
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 828,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2553,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2553
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 846
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5992,
+  "usage": {
+    "total_tokens": 3327,
+    "total_input_tokens": 2130,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2130
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 828,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 369,
+    "raw_prompt_token": 5361,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5361
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 844
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 369
+          }
+        ]
+      }
+    ]
+  }
+}

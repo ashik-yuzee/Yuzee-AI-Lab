@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "EMP_SAFE_002",
+  "reason": "Identify common recruitment red flags and evaluate whether upfront payment requests indicate a fraudulent job offer.",
+  "disposition": "SUGGEST",
+  "selectionId": "6bc4b713-387d-4674-8b82-624e919fbf28",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7748480793614567,
+  "margin": 0.09212692774975484,
+  "userConfidence": null,
+  "createdAt": 1789733817779
+}

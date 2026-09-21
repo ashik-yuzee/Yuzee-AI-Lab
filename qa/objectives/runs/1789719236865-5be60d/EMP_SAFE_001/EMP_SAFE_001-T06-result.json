@@ -1,0 +1,325 @@
+{
+  "test_id": "EMP_SAFE_001-T06",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 3127,
+  "input_context": {
+    "user_message": "The objective for Is This Employer or Job Legitimate? is already fully supported by confirmed information.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "f9f31dad0a638745b9948ec62b38aae24d2bcbe40631d0409489692b18178392",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "READINESS_POLICY",
+          "detail": "Job-Legitimacy Verification Readiness. COMPLETE only when employer identity and the specific opportunity/contact are separated. Any confirmed critical payment/credential red flag can force HIGH_RISK_STOP; unresolved identity mismatch forces VERIFY_BEFORE_CONTINUING. No numeric scam score."
+        }
+      ],
+      "latency_ms": 5725
+    }
+  ],
+  "failures": [
+    {
+      "code": "READINESS_POLICY",
+      "detail": "Job-Legitimacy Verification Readiness. COMPLETE only when employer identity and the specific opportunity/contact are separated. Any confirmed critical payment/credential red flag can force HIGH_RISK_STOP; unresolved identity mismatch forces VERIFY_BEFORE_CONTINUING. No numeric scam score."
+    }
+  ],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "short_answer",
+        "id": "employer_job_details",
+        "purpose": "Capture the employer name, official website, or job link to verify legitimacy.",
+        "prompt": "Which employer or job posting would you like to verify? (Provide company name, role title, or contact details)",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employer legal entity or company name",
+      "Job post or offer details",
+      "Recruiter contact domain and communication channel"
+    ],
+    "result": {
+      "job_legitimacy_check": {
+        "employer_identity": {
+          "status": "INSUFFICIENT_EVIDENCE",
+          "evidence": []
+        },
+        "opportunity_identity": {
+          "status": "INSUFFICIENT_EVIDENCE",
+          "official_role_evidence": []
+        },
+        "contact_channel_checks": [],
+        "process_checks": [],
+        "red_flags": [],
+        "sensitive_data_or_payment_requests": [],
+        "overall_status": "INSUFFICIENT_EVIDENCE",
+        "safe_next_actions": [
+          {
+            "label": "Provide Employer Information",
+            "detail": "Enter the employer name, job listing URL, or recruiter email address to begin verification checks.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "unknowns": [
+          {
+            "label": "Employer Identity",
+            "detail": "No employer name or registration details provided.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "next_actions": [
+        {
+          "label": "Share Employer / Job Details",
+          "detail": "Provide details of the position or message to initiate deterministic safety checks.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "No employer, job ad, or communication details have been provided yet to verify legitimacy."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Job-Legitimacy Verification Readiness",
+      "score": 0,
+      "dimensions": [
+        {
+          "name": "Identity/legitimacy evidence",
+          "score": 0,
+          "reason": "Missing employer entity information."
+        },
+        {
+          "name": "Claim consistency",
+          "score": 0,
+          "reason": "Missing job posting or offer specifications."
+        },
+        {
+          "name": "Risk flags",
+          "score": 0,
+          "reason": "Process and contact channels have not been checked."
+        },
+        {
+          "name": "Critical unknowns",
+          "score": 0,
+          "reason": "Key employer and role facts are unknown."
+        },
+        {
+          "name": "Safe next action",
+          "score": 0,
+          "reason": "Awaiting initial details before recommending proceeding or stopping."
+        }
+      ],
+      "blockers": [
+        "No employer or role details provided."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting employer and opportunity details to perform legitimacy and red-flag checks.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Verification checks cannot proceed without employer or job posting data."
+      },
+      "evidence_and_unknowns": [
+        "Employer identity unknown",
+        "Contact channel unknown",
+        "Job offer parameters unknown"
+      ],
+      "recommended_next_action": "Enter the employer name, role link, or communication text to verify legitimacy."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Appropriately retained the requested objective EMP_SAFE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test prompt meta-claims that facts were confirmed, but context.confirmed_facts is empty and prior_context_text is None, creating a fixture defect.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The asked question is short, concrete, and directly solicits the required missing entity/posting information.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Used 'short_answer', which is in the allowed UI primitive list for this objective.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Conforms to the V2 output contract for job_legitimacy_check and sets status correctly to INSUFFICIENT_EVIDENCE.",
+          "evidence_pointer": "candidate.result.job_legitimacy_check.overall_status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Correctly marked unknown facts as unknown without fabricating details or claiming unverified facts.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Does not emit fake psychological/career scores or probability claims.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture states prior support exists, but provided an empty context payload; the candidate stopped with NEEDS_INPUT instead of fabricating output, which is the correct handling of an empty fixture.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Properly grounded the readiness dimensions on the actual missing data rather than an arbitrary scam probability score.",
+          "evidence_pointer": "candidate.readiness.dimensions"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Emits structured handoff with summary, result, and evidence/unknowns appropriately.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Does not perform autonomous out-of-boundary actions or invoke direct endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Test assertion claims the objective was already fully supported, but context provided confirmed_facts={} and prior_context_text='None' (fixture issue: MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+      ],
+      "summary": "The candidate handled empty input safely by asking for missing target details with valid primitives and setting appropriate INSUFFICIENT_EVIDENCE statuses rather than hallucinating facts."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3395,
+      "total_input_tokens": 2671,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2671
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 724,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3068,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3068
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 742
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5725,
+  "usage": {
+    "total_tokens": 3438,
+    "total_input_tokens": 2366,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2366
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1072,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7683,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7683
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1089
+          }
+        ]
+      }
+    ]
+  }
+}

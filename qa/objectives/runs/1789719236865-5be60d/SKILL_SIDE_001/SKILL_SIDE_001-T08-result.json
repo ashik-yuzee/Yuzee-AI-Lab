@@ -1,0 +1,254 @@
+{
+  "test_id": "SKILL_SIDE_001-T08",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "EVIDENCE_GATE",
+  "model": "gemini-3.7-flash",
+  "source_row": 319,
+  "input_context": {
+    "user_message": "Use current real-world information where it matters for skill gap.",
+    "prior_context_text": "No current source data is loaded.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "f666313794b68ede66db60e7350094b5a9a5eb78b38315f16ede0c969413f52c",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 9236
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_role_picker",
+        "purpose": "Identify the target role or course to evaluate required skills against.",
+        "prompt": "Which target role or course would you like to assess for skill gaps?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "target_role_or_course",
+      "user_demonstrated_skills"
+    ],
+    "result": {
+      "summary": "Target role or course is required before evaluating capability gaps.",
+      "unknowns": [
+        "target_role_or_course",
+        "user_demonstrated_skills"
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target role or course has not been specified."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation to provide target role or course",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting target role or course selection to initiate skill gap analysis.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No target role or course selected yet."
+      },
+      "evidence_and_unknowns": [
+        "Target role/course is unknown",
+        "User current skills are unknown"
+      ],
+      "recommended_next_action": "Select or enter a target role or course to benchmark requirements."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate operates within the pre-routed SKILL_SIDE_001 objective as requested.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Prior context was empty; no confirmed facts were re-asked unnecessarily.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Asks for the single highest-impact missing input (target role/course) to anchor skill gap assessment.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'entity_picker', which is on the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly focuses on establishing the target role/course benchmark required for skill gap analysis and handles unknowns properly.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Does not fabricate any live source data or skills; preserves unknowns and marks NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychological constructs or success probabilities were claimed.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Properly pauses with NEEDS_INPUT given the missing target role/course required for the objective.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is disabled appropriately with clear blocker identification.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Handoff structure contains clean summary, unknowns, and recommended next action for Oala.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard structured continuation action without direct endpoints or policy breaches.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "Candidate strictly adheres to V2 UI primitive constraints and evidence discipline, properly identifying that a target role or course is required before conducting a skill gap analysis."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2736,
+      "total_input_tokens": 1999,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1999
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 737,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2396,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2396
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 756
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 9236,
+  "usage": {
+    "total_tokens": 3676,
+    "total_input_tokens": 2139,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2139
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 536,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 1001,
+    "raw_prompt_token": 5601,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5601
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 554
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1001
+          }
+        ]
+      }
+    ]
+  }
+}

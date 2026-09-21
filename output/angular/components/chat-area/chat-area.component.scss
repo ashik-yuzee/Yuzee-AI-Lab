@@ -1,0 +1,135 @@
+@import '../../styles/tokens';
+
+.chat-area { background: #fff; }
+
+.chat-scroll { scroll-behavior: smooth; }
+
+.chat-inner {
+  max-width: 740px;
+  width: 100%;
+}
+
+// ── Empty state ───────────────────────────────────────────
+.chat-empty-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-8);
+  color: var(--accent);
+  ion-icon { font-size: 26px; }
+}
+
+.chat-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text-heading;
+}
+
+.chat-empty-sub {
+  font-size: 14px;
+  color: $text-muted;
+  margin: 0;
+}
+
+.starter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 10px;
+  text-align: left;
+}
+
+.starter-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid #e0e6ef;
+  border-radius: 12px;
+  background: #fafbfe;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: $text-heading;
+  text-align: left;
+  transition: border-color .15s, background .15s;
+
+  ion-icon { color: var(--accent); font-size: 18px; flex-shrink: 0; }
+
+  &:hover { border-color: var(--accent-border); background: var(--accent-8); }
+  &:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+}
+
+// ── Turn divider ──────────────────────────────────────────
+.turn-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 12px;
+
+  &::before, &::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #f0f3f7;
+  }
+
+  span {
+    font-size: 11px;
+    color: #9fafc0;
+    white-space: nowrap;
+  }
+}
+
+// ── User bubble ───────────────────────────────────────────
+.user-bubble {
+  max-width: 85%;
+  background: var(--bubble-bg, #ede5fc);
+  color: var(--bubble-text, #4a2ea0);
+  border-radius: 18px 18px 6px 18px;
+  padding: 10px 14px;
+  font-size: 15px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.user-bubble-text { white-space: pre-wrap; }
+
+// ── Oala label ────────────────────────────────────────────
+.oala-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: .03em;
+}
+
+// ── Telemetry footer ──────────────────────────────────────
+.telemetry-footer { padding-top: 8px; }
+
+.model-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: #f0f4f8;
+  color: #52606d;
+  border: 1px solid #e0e6ef;
+
+  &--pro   { background: linear-gradient(90deg,#ede5fc,#fdf4ff); color: #7244c6; border-color: #d8b4fe; }
+  &--flash { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+  &--gpt   { background: #f0fdf4; color: #15803d; border-color: #86efac; }
+}
+
+.telemetry-stat {
+  font-size: 11.5px;
+  color: #9fafc0;
+}
+
+// ── Error ─────────────────────────────────────────────────
+.chat-error { border-radius: 10px; font-size: 14px; }
+
+// ── Mini pathway offer anchor ─────────────────────────────
+.mini-pathway-offer-anchor { min-height: 0; }

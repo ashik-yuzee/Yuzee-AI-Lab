@@ -1,0 +1,262 @@
+{
+  "test_id": "SKILL_SIDE_001-T07",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 318,
+  "input_context": {
+    "user_message": "You already have every input needed for skill gap. Give me the result now.",
+    "prior_context_text": "Required inputs/output evidence are sufficient.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "a97fd1613ea58e0fb8d131fac0ccd6d7830a218b9b8214277293fc03309a9b2a",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6053
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_role_or_course",
+        "purpose": "Identify the target role or course to evaluate capability requirements against.",
+        "prompt": "Which target role or course would you like to map your skills against?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target role or course",
+      "Current demonstrated skills and proficiency levels"
+    ],
+    "result": {
+      "skill_gaps": [],
+      "summary": "Target role or course has not been specified. Please specify your target to generate a capability gap analysis.",
+      "unknowns": [
+        {
+          "label": "Target Role or Course",
+          "detail": "A specific role or study pathway is required to establish benchmark skill requirements.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target role or course is not confirmed."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user to specify their target role or course before running skill gap analysis.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting target role or course input."
+      },
+      "evidence_and_unknowns": [
+        "Target role/course is currently unknown."
+      ],
+      "recommended_next_action": "User selects or enters target role or course."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate remained on the assigned objective SKILL_SIDE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test prompt asserts all inputs are present, but the context fixture provides an empty confirmed_facts dictionary ({}), omitting concrete target roles, skills, and evidence.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The emitted entity_picker asks directly for the missing target role or course required to establish capability gaps, allowing unsure.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate used 'entity_picker', which is explicitly permitted in the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate correctly identified that a target role/course is necessary to establish capability benchmarks and did not fabricate a fake skill matrix without target inputs.",
+          "evidence_pointer": "candidate.result.unknowns[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate refrained from inventing target skills, user proficiency, or prerequisites in the absence of data, marking them explicitly as UNKNOWN.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic, life success, or psychological trait claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture claims prior context is sufficient for completion but supplies empty data, making synthesis impossible without hallucination. Thus, stopping vs asking cannot be fairly evaluated against a real context.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/blocked with the blocker noting that the target role or course is not confirmed, avoiding any fabricated success probability.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The candidate emits a clean semantic handoff envelope with summary, confirmed inputs, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emitted actions are standard structured CONTINUE_CHAT actions with no autonomous write actions or unapproved endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: The user prompt and prior_context_text claim all necessary inputs exist, but confirmed_facts, approved_evidence, and confirmed_answers are completely empty ({}), preventing completion synthesis."
+      ],
+      "summary": "The candidate correctly handled an incomplete fixture state by requesting the foundational missing input (target role/course) using an approved V2 primitive rather than hallucinating skill gap data. Context reuse and stop condition are marked NOT_ASSESSABLE due to fixture limitations."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2949,
+      "total_input_tokens": 2031,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2031
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 918,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2428,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2428
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 937
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6053,
+  "usage": {
+    "total_tokens": 3323,
+    "total_input_tokens": 2143,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2143
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 573,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 607,
+    "raw_prompt_token": 5605,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5605
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 590
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 607
+          }
+        ]
+      }
+    ]
+  }
+}

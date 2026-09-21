@@ -1,0 +1,842 @@
+[
+  {
+    "id": "interests-new",
+    "context": {
+      "current_goal": "Identify natural interests and enjoyable daily tasks to build career clarity.",
+      "confirmed_facts": [
+        "Nothing jumps out when people ask about my dream job."
+      ],
+      "possible_need": "Explore day-to-day task preferences and reflection exercises to discover working styles.",
+      "missing_information": [
+        "Specific activities, hobbies, subjects, or tasks the user enjoys or dislikes.",
+        "Current education or employment background."
+      ],
+      "relevant_question": "Think about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+      "user_constraints": []
+    },
+    "raw": {
+      "schema_version": "1.3",
+      "current_mode": "A_CONVERSATION",
+      "response_intent": "EXPLORE_OPTIONS",
+      "content_blocks": [
+        {
+          "id": "b1",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "It is completely normal not to have a dream job in mind. Thinking about specific job titles can feel overwhelming when nothing immediately stands out.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b2",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "A much more practical way to start is by looking at small, everyday activities rather than entire careers. When you break your day down into types of tasks, you can often spot useful clues about what feels satisfying and what drains you.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b3",
+          "type": "list",
+          "level": "none",
+          "variant": "default",
+          "title": "Everyday Clues to Notice",
+          "text": "Here are a few different types of tasks to reflect on:",
+          "items": [
+            {
+              "id": "i1",
+              "title": "Solving structured problems",
+              "text": "Troubleshooting something broken, organising messy information, working with numbers, or following clear step-by-step logic.",
+              "value": "",
+              "status": "neutral"
+            },
+            {
+              "id": "i2",
+              "title": "Working with people directly",
+              "text": "Explaining ideas, helping someone solve a personal issue, collaborating in a team, or listening and guiding.",
+              "value": "",
+              "status": "neutral"
+            },
+            {
+              "id": "i3",
+              "title": "Creating or communicating",
+              "text": "Writing, designing, making something visual, telling stories, or presenting concepts clearly.",
+              "value": "",
+              "status": "neutral"
+            },
+            {
+              "id": "i4",
+              "title": "Hands-on and physical tasks",
+              "text": "Building, moving, using tools, being outdoors, or seeing concrete physical results from your effort.",
+              "value": "",
+              "status": "neutral"
+            }
+          ],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b4",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "You do not need to choose one of these categories right now. Identifying even one specific moment when a task felt engaging or effortless is enough to start finding patterns.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        }
+      ],
+      "interaction": {
+        "kind": "question",
+        "input_type": "text",
+        "question_id": "q_discovery_enjoyed_task",
+        "question": "Think about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+        "options": [],
+        "allow_other_input": false,
+        "other_input_label": "",
+        "fields": [],
+        "recommended_actions": []
+      },
+      "service_trigger": {
+        "service_intent_detected": false,
+        "primary_requested_service": "PATHWAY_RMO",
+        "confidence": "HIGH",
+        "reason": "User is seeking career exploration and guidance to identify core interests and strengths.",
+        "trigger_now": false,
+        "needs_more_clarity": false,
+        "actions": []
+      },
+      "rmo_readiness": {
+        "readiness": "NOT_READY",
+        "ready_to_generate": false,
+        "missing_inputs": [],
+        "verification_required": false
+      },
+      "state": {
+        "active_response_mode": "Standard",
+        "effective_response_mode": "Standard",
+        "mode_source": "default",
+        "safety_override_applied": false,
+        "user_confidence": {
+          "score": 30,
+          "band": "low",
+          "evidence_strength": "weak",
+          "trend": "unknown",
+          "reason_codes": [
+            "EXPLICIT_UNCERTAINTY",
+            "CRITERIA_UNCLEAR",
+            "ROUTE_UNRESOLVED"
+          ]
+        },
+        "progress": {
+          "explained": true,
+          "failed_attempts": 0,
+          "loop_count_same_issue": 0,
+          "security_breach_count": 0,
+          "active_security_penalty": null
+        },
+        "activity_context": {
+          "current_goal": "Identify natural interests and enjoyable daily tasks to build career clarity.",
+          "confirmed_facts": [
+            "Nothing jumps out when people ask about my dream job."
+          ],
+          "possible_need": "Explore day-to-day task preferences and reflection exercises to discover working styles.",
+          "missing_information": [
+            "Specific activities, hobbies, subjects, or tasks the user enjoys or dislikes.",
+            "Current education or employment background."
+          ],
+          "relevant_question": "Think about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+          "user_constraints": []
+        }
+      },
+      "followups": {
+        "enabled": false,
+        "cancel_on_user_message": true,
+        "topic_lock": false,
+        "topic_key": "",
+        "triggers": []
+      }
+    },
+    "usage": {
+      "promptTokenCount": 40891,
+      "candidatesTokenCount": 1411,
+      "totalTokenCount": 42302,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 40891
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "valid": true
+  },
+  {
+    "id": "careers-new",
+    "context": {
+      "current_goal": "Compare engineering and marketing to understand daily work and required skills.",
+      "confirmed_facts": [
+        "Can you put engineering and marketing next to each other so I understand what the work and skills are like?"
+      ],
+      "possible_need": "Explore personal strengths, task preferences, and suitable pathway options across technical and commercial disciplines.",
+      "missing_information": [
+        "User's past project experiences and enjoyed subjects",
+        "Preferred work style and problem-solving orientation"
+      ],
+      "relevant_question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+      "user_constraints": []
+    },
+    "raw": {
+      "schema_version": "1.3",
+      "current_mode": "A_CONVERSATION",
+      "response_intent": "COMPARE",
+      "content_blocks": [
+        {
+          "id": "b1",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "Engineering and marketing solve very different problems, but both are central to how products and services reach the real world. Putting them side by side helps clarify what you would actually do day-to-day and what kind of thinking each role relies on.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b2",
+          "type": "comparison",
+          "level": "none",
+          "variant": "default",
+          "title": "Engineering vs Marketing",
+          "text": "A direct comparison of daily responsibilities, required skills, and core focus areas.",
+          "items": [],
+          "columns": [
+            {
+              "key": "dimension",
+              "label": "Area"
+            },
+            {
+              "key": "engineering",
+              "label": "Engineering"
+            },
+            {
+              "key": "marketing",
+              "label": "Marketing"
+            }
+          ],
+          "rows": [
+            {
+              "id": "r1",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Core Purpose"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Designing, building, testing, and maintaining functional systems, structures, software, or physical products."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Understanding audience needs, communicating value, generating demand, and connecting offerings with customers."
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Day-to-Day Work"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Technical problem solving, modelling or coding, reviewing specifications, quality testing, and debugging failures."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Audience research, campaign planning, content creation, channel analysis, and testing messaging performance."
+                }
+              ]
+            },
+            {
+              "id": "r3",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Core Skills & Mindset"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Structured logic, technical numeracy, systems thinking, precision, and adherence to safety or architectural constraints."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Commercial awareness, customer empathy, persuasive communication, creative positioning, and data interpretation."
+                }
+              ]
+            },
+            {
+              "id": "r4",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Typical Entry Paths"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Usually requires formal accredited degree or technical diploma pathways with defined math/science prerequisites."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Flexible entry through business/communication study, targeted digital portfolios, or direct entry-level experience."
+                }
+              ]
+            },
+            {
+              "id": "r5",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Common Trade-offs"
+                },
+                {
+                  "key": "engineering",
+                  "value": "High technical rigor and longer training paths, but clear professional pathways and technical demand."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Fast-evolving tools and less structured early career progression, but high creative and commercial flexibility."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "interaction": {
+        "kind": "question",
+        "input_type": "text",
+        "question_id": "q_eng_mkt_pref",
+        "question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+        "options": [],
+        "allow_other_input": false,
+        "other_input_label": "",
+        "fields": [],
+        "recommended_actions": []
+      },
+      "service_trigger": {
+        "service_intent_detected": false,
+        "primary_requested_service": "PATHWAY_RMO",
+        "confidence": "HIGH",
+        "reason": "User is actively exploring and comparing two major discipline areas to clarify career direction.",
+        "trigger_now": false,
+        "needs_more_clarity": false,
+        "actions": []
+      },
+      "rmo_readiness": {
+        "readiness": "NOT_READY",
+        "ready_to_generate": false,
+        "missing_inputs": [],
+        "verification_required": false
+      },
+      "state": {
+        "active_response_mode": "Standard",
+        "effective_response_mode": "Standard",
+        "mode_source": "default",
+        "safety_override_applied": false,
+        "user_confidence": {
+          "score": 30,
+          "band": "low",
+          "evidence_strength": "weak",
+          "trend": "unknown",
+          "reason_codes": [
+            "EXPLICIT_UNCERTAINTY",
+            "CRITERIA_UNCLEAR",
+            "ROUTE_UNRESOLVED"
+          ]
+        },
+        "progress": {
+          "explained": true,
+          "failed_attempts": 0,
+          "loop_count_same_issue": 0,
+          "security_breach_count": 0,
+          "active_security_penalty": null
+        },
+        "activity_context": {
+          "current_goal": "Compare engineering and marketing to understand daily work and required skills.",
+          "confirmed_facts": [
+            "Can you put engineering and marketing next to each other so I understand what the work and skills are like?"
+          ],
+          "possible_need": "Explore personal strengths, task preferences, and suitable pathway options across technical and commercial disciplines.",
+          "missing_information": [
+            "User's past project experiences and enjoyed subjects",
+            "Preferred work style and problem-solving orientation"
+          ],
+          "relevant_question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+          "user_constraints": []
+        }
+      },
+      "followups": {
+        "enabled": false,
+        "cancel_on_user_message": true,
+        "topic_lock": false,
+        "topic_key": "",
+        "triggers": []
+      }
+    },
+    "usage": {
+      "promptTokenCount": 40890,
+      "candidatesTokenCount": 1662,
+      "totalTokenCount": 42552,
+      "cachedContentTokenCount": 36618,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 40890
+        }
+      ],
+      "cacheTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 36618
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "valid": true
+  },
+  {
+    "id": "short-context",
+    "context": {
+      "current_goal": "Understand preference between coding tasks and user observation activities to guide career pathway choices.",
+      "confirmed_facts": [
+        "I like writing code and watching how people use an app.",
+        "both, honestly"
+      ],
+      "possible_need": "Help the user distinguish day-to-day work tasks across front-end engineering, product design, and technical product management.",
+      "missing_information": [
+        "Specific coding languages or frameworks used",
+        "Experience level with user research or usability testing",
+        "Current education or employment stage"
+      ],
+      "relevant_question": "When building or testing something, do you get more satisfaction from solving code logic or refining the user experience?",
+      "user_constraints": []
+    },
+    "raw": {
+      "schema_version": "1.3",
+      "current_mode": "A_CONVERSATION",
+      "response_intent": "EXPLORE_OPTIONS",
+      "content_blocks": [
+        {
+          "id": "b1",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "Enjoying both the build and the user experience is actually a very practical combination. It means you do not have to force a choice between purely technical work and human-centred design right away.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b2",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "Several roles sit directly at that intersection, though they balance the daily work differently:",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b3",
+          "type": "list",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "",
+          "items": [
+            {
+              "id": "i1",
+              "title": "Front-End or UI Engineering",
+              "text": "Writing code for interfaces, layout, and responsiveness while paying close attention to user interactions, transitions, and accessibility.",
+              "value": "",
+              "status": "neutral"
+            },
+            {
+              "id": "i2",
+              "title": "Product Design / UX Prototyping",
+              "text": "Observing user behaviour, testing interfaces, and building interactive prototypes, with coding used as an exploratory tool rather than production infrastructure.",
+              "value": "",
+              "status": "neutral"
+            },
+            {
+              "id": "i3",
+              "title": "Technical Product Management",
+              "text": "Understanding how software is architected while focusing heavily on user feedback, feature priorities, and solving real user friction.",
+              "value": "",
+              "status": "neutral"
+            }
+          ],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b4",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "To help narrow down which side energises you more in practice, think about where you find yourself spending time when you work on a project.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        }
+      ],
+      "interaction": {
+        "kind": "question",
+        "input_type": "text",
+        "question_id": "q_task_energy_distinction",
+        "question": "When you're building or testing something, do you get more satisfaction from getting the logic and code working smoothly, or from tweaking the interface and observing how a person interacts with it?",
+        "options": [],
+        "allow_other_input": false,
+        "other_input_label": "",
+        "fields": [],
+        "recommended_actions": []
+      },
+      "service_trigger": {
+        "service_intent_detected": false,
+        "primary_requested_service": "PATHWAY_RMO",
+        "confidence": "HIGH",
+        "reason": "User is actively exploring career and role fit at the intersection of coding and user research.",
+        "trigger_now": false,
+        "needs_more_clarity": false,
+        "actions": []
+      },
+      "rmo_readiness": {
+        "readiness": "NOT_READY",
+        "ready_to_generate": false,
+        "missing_inputs": [],
+        "verification_required": false
+      },
+      "state": {
+        "active_response_mode": "Standard",
+        "effective_response_mode": "Standard",
+        "mode_source": "default",
+        "safety_override_applied": false,
+        "user_confidence": {
+          "score": 35,
+          "band": "low",
+          "evidence_strength": "weak",
+          "trend": "unknown",
+          "reason_codes": [
+            "EXPLICIT_UNCERTAINTY",
+            "CRITERIA_UNCLEAR",
+            "ROUTE_UNRESOLVED",
+            "ACTION_EXPLORING"
+          ]
+        },
+        "progress": {
+          "explained": true,
+          "failed_attempts": 0,
+          "loop_count_same_issue": 0,
+          "security_breach_count": 0,
+          "active_security_penalty": null
+        },
+        "activity_context": {
+          "current_goal": "Understand preference between coding tasks and user observation activities to guide career pathway choices.",
+          "confirmed_facts": [
+            "I like writing code and watching how people use an app.",
+            "both, honestly"
+          ],
+          "possible_need": "Help the user distinguish day-to-day work tasks across front-end engineering, product design, and technical product management.",
+          "missing_information": [
+            "Specific coding languages or frameworks used",
+            "Experience level with user research or usability testing",
+            "Current education or employment stage"
+          ],
+          "relevant_question": "When building or testing something, do you get more satisfaction from solving code logic or refining the user experience?",
+          "user_constraints": []
+        }
+      },
+      "followups": {
+        "enabled": false,
+        "cancel_on_user_message": true,
+        "topic_lock": false,
+        "topic_key": "",
+        "triggers": []
+      }
+    },
+    "usage": {
+      "promptTokenCount": 40905,
+      "candidatesTokenCount": 1348,
+      "totalTokenCount": 42253,
+      "cachedContentTokenCount": 36619,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 40905
+        }
+      ],
+      "cacheTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 36619
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "valid": true
+  },
+  {
+    "id": "optout",
+    "context": {
+      "current_goal": "Understand the difference between engineering and marketing in chat without opening external activities.",
+      "confirmed_facts": [
+        "Do not open any activities. Just explain the difference between engineering and marketing here."
+      ],
+      "possible_need": "Help the user explore which field aligns better with their strengths and interests once they review the comparison.",
+      "missing_information": [
+        "User's specific interests, strengths, and background",
+        "Whether they are exploring study or a career transition"
+      ],
+      "relevant_question": "",
+      "user_constraints": [
+        "Stay in chat; do not open activities"
+      ]
+    },
+    "raw": {
+      "schema_version": "1.3",
+      "current_mode": "B_DELIVERY",
+      "response_intent": "COMPARE",
+      "content_blocks": [
+        {
+          "id": "b1",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "Engineering and marketing focus on very different parts of building and delivering solutions. In simple terms, engineering is centered on designing, testing, and solving technical problems to create things that work reliably. Marketing is focused on understanding people, communicating value, and connecting those products or services to the audiences that need them.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        },
+        {
+          "id": "b2",
+          "type": "comparison",
+          "level": "none",
+          "variant": "default",
+          "title": "Core Differences",
+          "text": "Here is how the two fields compare across everyday responsibilities, core skills, and typical study routes:",
+          "items": [],
+          "columns": [
+            {
+              "key": "dimension",
+              "label": "Dimension"
+            },
+            {
+              "key": "engineering",
+              "label": "Engineering"
+            },
+            {
+              "key": "marketing",
+              "label": "Marketing"
+            }
+          ],
+          "rows": [
+            {
+              "id": "r1",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Primary Focus"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Technical problem-solving, product functionality, structural design, and systems performance."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Customer research, market positioning, audience engagement, and communication strategy."
+                }
+              ]
+            },
+            {
+              "id": "r2",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Day-to-Day Tasks"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Modelling, drafting technical specifications, coding, running tests, diagnosing system faults, and optimising performance."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Campaign planning, writing content, analysing customer metrics, conducting interviews, and coordinating promotions."
+                }
+              ]
+            },
+            {
+              "id": "r3",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Key Capabilities"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Applied mathematics, physics or logic, structured analysis, and technical tools."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Audience empathy, commercial awareness, creative communication, and data interpretation."
+                }
+              ]
+            },
+            {
+              "id": "r4",
+              "cells": [
+                {
+                  "key": "dimension",
+                  "value": "Common Entry Routes"
+                },
+                {
+                  "key": "engineering",
+                  "value": "Usually requires a structured engineering qualification or technical technical degree for professional roles."
+                },
+                {
+                  "key": "marketing",
+                  "value": "Can be entered via marketing or business degrees, communications courses, or hands-on portfolio/entry-level experience."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b3",
+          "type": "text",
+          "level": "none",
+          "variant": "default",
+          "title": "",
+          "text": "If you are weighing both paths, think about the problems you naturally enjoy tackling. Someone leaning toward engineering usually enjoys dissecting how things function and designing technical fixes, whereas someone drawn to marketing often enjoys exploring why people make choices and finding compelling ways to share ideas.",
+          "items": [],
+          "columns": [],
+          "rows": []
+        }
+      ],
+      "interaction": {
+        "kind": "none",
+        "input_type": "none",
+        "question_id": "",
+        "question": "",
+        "options": [],
+        "allow_other_input": false,
+        "other_input_label": "",
+        "fields": [],
+        "recommended_actions": [
+          {
+            "id": "rq1",
+            "label": "Explore engineering pathways",
+            "message": "What kind of study or entry pathways exist for engineering?"
+          },
+          {
+            "id": "rq2",
+            "label": "Explore marketing pathways",
+            "message": "What are the common pathways to get started in marketing?"
+          }
+        ]
+      },
+      "service_trigger": {
+        "service_intent_detected": false,
+        "primary_requested_service": "PATHWAY_RMO",
+        "confidence": "HIGH",
+        "reason": "User is comparing two distinct career fields without an explicit service request.",
+        "trigger_now": false,
+        "needs_more_clarity": false,
+        "actions": []
+      },
+      "rmo_readiness": {
+        "readiness": "NOT_READY",
+        "ready_to_generate": false,
+        "missing_inputs": [],
+        "verification_required": false
+      },
+      "state": {
+        "active_response_mode": "Standard",
+        "effective_response_mode": "Standard",
+        "mode_source": "default",
+        "safety_override_applied": false,
+        "user_confidence": {
+          "score": 30,
+          "band": "low",
+          "evidence_strength": "weak",
+          "trend": "unknown",
+          "reason_codes": [
+            "EXPLICIT_UNCERTAINTY",
+            "CRITERIA_UNCLEAR",
+            "ROUTE_UNRESOLVED"
+          ]
+        },
+        "progress": {
+          "explained": true,
+          "failed_attempts": 0,
+          "loop_count_same_issue": 0,
+          "security_breach_count": 0,
+          "active_security_penalty": null
+        },
+        "activity_context": {
+          "current_goal": "Understand the difference between engineering and marketing in chat without opening external activities.",
+          "confirmed_facts": [
+            "Do not open any activities. Just explain the difference between engineering and marketing here."
+          ],
+          "possible_need": "Help the user explore which field aligns better with their strengths and interests once they review the comparison.",
+          "missing_information": [
+            "User's specific interests, strengths, and background",
+            "Whether they are exploring study or a career transition"
+          ],
+          "relevant_question": "",
+          "user_constraints": [
+            "Stay in chat; do not open activities"
+          ]
+        }
+      },
+      "followups": {
+        "enabled": false,
+        "cancel_on_user_message": true,
+        "topic_lock": false,
+        "topic_key": "",
+        "triggers": []
+      }
+    },
+    "usage": {
+      "promptTokenCount": 40885,
+      "candidatesTokenCount": 1678,
+      "totalTokenCount": 42563,
+      "cachedContentTokenCount": 36617,
+      "promptTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 40885
+        }
+      ],
+      "cacheTokensDetails": [
+        {
+          "modality": "TEXT",
+          "tokenCount": 36617
+        }
+      ],
+      "serviceTier": "standard"
+    },
+    "valid": true
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "SKILL_SIDE_001",
+  "reason": "Compare your spreadsheet experience against junior data analyst requirements to see what skills you have and what you need to learn next.",
+  "disposition": "SUGGEST",
+  "selectionId": "4e71bf96-b98e-4d1c-a2e5-f60fac293a97",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7775927756058556,
+  "margin": 0.02168268370240889,
+  "userConfidence": null,
+  "createdAt": 1789733763859
+}

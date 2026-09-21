@@ -1,0 +1,312 @@
+// =============================================================
+// GuidanceList — cards, timelines, flow steps
+// Mirrors the React GuidanceList component rendering
+// =============================================================
+@import 'tokens';
+
+// ── Card list (unordered) ─────────────────────────────────
+.guidance-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guidance-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--course-edge, $border-card);
+  border-radius: 12px;
+  background: var(--course-bg, #fff);
+  color: var(--course-ink, $text-heading);
+  overflow-wrap: anywhere;
+  transition: border-color .15s, background .15s;
+
+  &:hover { border-color: color-mix(in srgb, var(--course-edge, $border-card) 80%, #000); }
+}
+
+.guidance-card-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--course-edge, #{$border-card}) 25%, transparent);
+  color: var(--course-ink, $text-heading);
+  flex-shrink: 0;
+
+  ion-icon,
+  svg { font-size: 18px; }
+}
+
+.guidance-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guidance-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: var(--course-ink, $text-heading);
+  margin: 0 0 4px;
+}
+
+.guidance-card-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: color-mix(in srgb, var(--course-ink, #{$text-muted}) 75%, #000);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.guidance-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+
+  > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 500;
+    background: color-mix(in srgb, var(--course-edge, #{$border-card}) 30%, white);
+    color: var(--course-ink, $text-muted);
+    border: 1px solid var(--course-edge, $border-card);
+  }
+}
+
+// ── Timeline (ordered) ────────────────────────────────────
+.guidance-timeline {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  // Connecting backbone line
+  &::before {
+    content: "";
+    position: absolute;
+    left: 17px; // half of 36px icon width
+    top: 18px;  // half of first circle
+    bottom: 18px;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      var(--course-edge, #{$border-card}) 0%,
+      var(--course-edge, #{$border-card}) 80%,
+      transparent 100%
+    );
+  }
+}
+
+.guidance-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 6px 0 18px;
+  position: relative;
+
+  &:last-child { padding-bottom: 0; }
+}
+
+.guidance-step-number {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 100%);
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent);
+  position: relative;
+  z-index: 1;
+
+  // Override when learning tone present
+  [data-learning-tone] & {
+    background: linear-gradient(135deg, var(--course-ink) 0%, var(--course-edge) 100%);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--course-ink) 20%, transparent);
+  }
+}
+
+.guidance-step-body {
+  flex: 1;
+  min-width: 0;
+  padding-top: 6px; // align with circle centre
+}
+
+.guidance-step-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  color: $text-heading;
+  margin: 0 0 4px;
+}
+
+.guidance-step-desc {
+  font-size: 13px;
+  line-height: 1.65;
+  color: $text-muted;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+// Optional pill badge on a step
+.guidance-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 7px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 500;
+  background: var(--accent-8);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+// ── Scorecard grid ────────────────────────────────────────
+// Used by [data-output-type="scorecard"]
+.guidance-scorecard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guidance-score-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border: 1px solid $border-card;
+  border-radius: 12px;
+  background: #fafbfe;
+}
+
+.guidance-score-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+.guidance-score-value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: $text-heading;
+}
+
+.guidance-score-desc {
+  font-size: 12px;
+  line-height: 1.55;
+  color: $text-muted;
+}
+
+// ── Progress / skill bars ─────────────────────────────────
+.guidance-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guidance-progress-item { }
+
+.guidance-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 13px;
+}
+
+.guidance-progress-name { font-weight: 600; color: $text-heading; }
+.guidance-progress-pct  { font-weight: 600; color: var(--accent); }
+
+.guidance-progress-bar-track {
+  height: 8px;
+  background: var(--accent-8);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.guidance-progress-bar-fill {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, #a78bfa 100%);
+  border-radius: 9999px;
+  transform-origin: left;
+  transition: transform .6s ease;
+}
+
+// ── Pathway map (visual funnel/chart) ─────────────────────
+.guidance-pathway-map {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guidance-pathway-node {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 1px solid var(--course-edge, $border-card);
+  border-radius: 10px;
+  background: var(--course-bg, #fafbfe);
+  color: var(--course-ink, $text-heading);
+  font-size: 14px;
+  font-weight: 500;
+
+  &--connector {
+    border: none;
+    background: none;
+    padding: 2px 14px;
+    font-size: 16px;
+    color: $text-muted;
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────
+@media (max-width: 576px) {
+  .guidance-card { padding: 12px; gap: 10px; }
+  .guidance-card-icon { width: 30px; height: 30px; border-radius: 8px; ion-icon, svg { font-size: 15px; } }
+  .guidance-card-title { font-size: 14px; }
+
+  .guidance-timeline::before { left: 14px; }
+  .guidance-step-number { width: 30px; height: 30px; font-size: 12px; }
+  .guidance-step-body { padding-top: 4px; }
+
+  .guidance-score-value { font-size: 24px; }
+}
+
+// ── Reduced motion ────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .guidance-progress-bar-fill { transition: none; }
+}

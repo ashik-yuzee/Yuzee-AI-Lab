@@ -1,3 +1,6 @@
+import {ObjectiveProvider,useObjectives} from './objectives/ObjectiveContext';
+import {ObjectiveWorkspace} from './objectives/ObjectiveWorkspace';
+import {ObjectiveToolbar} from './objectives/ObjectiveSuggestions';
 import React, { useState, useEffect } from "react";
 import { TokenLabProvider, useTokenLab } from "./context/TokenLabContext";
 import { Navbar } from "./components/Navbar";
@@ -33,6 +36,7 @@ function AppLoadingScreen() {
 
 function AuthedApp({ onOpenRenderer }: { onOpenRenderer: () => void }) {
   const { isLoading } = useTokenLab();
+  const objectives=useObjectives();
 
   if (isLoading) return <AppLoadingScreen />;
 
@@ -44,11 +48,13 @@ function AuthedApp({ onOpenRenderer }: { onOpenRenderer: () => void }) {
       <div className="flex-1 min-h-0 flex overflow-clip relative" data-workspace-shell>
         <Sidebar />
         <main className="flex-1 min-h-0 flex flex-col min-w-0 bg-white relative">
+          <ObjectiveToolbar />
           <ChatArea />
         </main>
         <TokenInspector />
         <PathwayWhiteboard />
-        <MiniPathwayExperience />
+        {!objectives.enabled&&<MiniPathwayExperience />}
+        <ObjectiveWorkspace />
       </div>
       <AdvancedLabModal />
       <UserProfileModal />
@@ -170,7 +176,7 @@ export default function App() {
 
   return (
     <TokenLabProvider>
-      <AuthedApp onOpenRenderer={() => setPage('renderer')} />
+      <ObjectiveProvider><AuthedApp onOpenRenderer={() => setPage('renderer')} /></ObjectiveProvider>
     </TokenLabProvider>
   );
 }

@@ -11,10 +11,12 @@ import {
   Network,
   FileJson,
   Wrench,
-  Map,
+  Bot,
 } from "lucide-react";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
 import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
+import { RUNTIME_ROUTER_MODELS, ROUTER_MODEL_KEY, DEFAULT_ROUTER_MODEL } from "../routing/models";
+import { setRouterModel, getRouterModel } from "../services/MicroToolRouter";
 
 
 export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRenderer }) => {
@@ -30,8 +32,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     setTokenInspectorOpen,
     isWhiteboardOpen,
     setWhiteboardOpen,
-    isMiniPathwayOpen,
-    setMiniPathwayOpen,
     setSettingsOpen,
     setProfileOpen,
     userProfile,
@@ -46,6 +46,17 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
   const displayMode = localMode ?? currentMode;
   // Reset local override when switching conversations
   useEffect(() => { setLocalMode(null); }, [currentConversation?.id]);
+
+  const [routerModelId, setRouterModelId] = useState<string>(
+    () => { try { return localStorage.getItem(ROUTER_MODEL_KEY) ?? DEFAULT_ROUTER_MODEL; } catch { return DEFAULT_ROUTER_MODEL; } }
+  );
+  const routerModelOptions: AppleSelectOption[] = RUNTIME_ROUTER_MODELS.map(m => ({
+    value: m.id,
+    label: m.label,
+    description: m.description,
+    badge: m.id.startsWith('cloudflare/') ? 'Server' : 'Local',
+    badgeColor: m.id.startsWith('cloudflare/') ? 'amber' : 'emerald',
+  }));
 
   // Server-driven model registry
   const availableList = capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS;
@@ -145,6 +156,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
         >
           <Menu className="w-5 h-5" />
         </button>
+        <div id="saved-pathways-control" />
 
       </div>
 
@@ -172,6 +184,17 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           showSearchThreshold={10}
         />
 
+        <AppleSelect
+          id="select-router-model"
+          value={routerModelId}
+          options={routerModelOptions}
+          onChange={(id) => { setRouterModel(id); setRouterModelId(id); }}
+          leadingIcon={Bot}
+          compact
+          popoverWidth="w-72"
+          showSearchThreshold={10}
+        />
+
         <button
           id="btn-pathway"
           onClick={() => { setWhiteboardOpen(!isWhiteboardOpen); if (!isWhiteboardOpen) setTokenInspectorOpen(false); }}
@@ -184,20 +207,6 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
         >
           <Network className="w-3.5 h-3.5 text-violet-600" />
           <span>Pathway</span>
-        </button>
-
-        <button
-          id="btn-mini-pathway"
-          onClick={() => { if (!isMiniPathwayOpen) { setSidebarOpen(false); setWhiteboardOpen(false); setTokenInspectorOpen(false); } setMiniPathwayOpen(!isMiniPathwayOpen); }}
-          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium border transition-colors shadow-2xs cursor-pointer ${
-            isMiniPathwayOpen
-              ? "bg-violet-50 border-violet-300 text-violet-800 font-semibold"
-              : "bg-white border-violet-200 text-violet-700 hover:bg-violet-50 hover:border-violet-300"
-          }`}
-          title={isMiniPathwayOpen ? "Close mini pathway" : "Open mini pathway"}
-        >
-          <Map className="w-3.5 h-3.5 text-violet-600" />
-          <span>Mini pathway</span>
         </button>
 
         <button

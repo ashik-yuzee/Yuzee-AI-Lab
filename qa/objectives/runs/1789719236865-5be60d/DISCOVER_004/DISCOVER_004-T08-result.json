@@ -1,0 +1,263 @@
+{
+  "test_id": "DISCOVER_004-T08",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 33,
+  "input_context": {
+    "user_message": "Here are enough details for big five snapshot: I have already answered the relevant questions and confirmed them.",
+    "prior_context_text": "All required output fields can be supported.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "6858787d545fe85b0c9bf1658402809790172de439593e2ccea3f78e2346d311",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4168
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "work_approach_scenario",
+        "purpose": "Gather concrete behavioural tendencies across collaboration and problem-solving styles.",
+        "prompt": "When faced with an open-ended project deadline in a team, which approach best describes your natural tendency?",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_structured_collaborative",
+            "label": "Structured & Collaborative",
+            "detail": "Set a clear timeline, coordinate frequently with teammates, and follow a detailed plan."
+          },
+          {
+            "id": "opt_flexible_independent",
+            "label": "Flexible & Independent",
+            "detail": "Explore novel approaches on your own, adapting as new ideas emerge."
+          },
+          {
+            "id": "opt_focused_execution",
+            "label": "Direct & Goal-Focused",
+            "detail": "Focus immediately on the core deliverable, handling pressure by prioritising key tasks."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User behavioural tendencies across Big Five work-relevant dimensions"
+    ],
+    "result": {
+      "personality_tendencies": [],
+      "summary": "Pending initial behavioural response to explore personality tendencies in work contexts without psychometric scoring."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No grounded responses provided yet for personality tendency mapping."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in Chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Needs initial behavioural response to map qualitative personality tendencies.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No tendencies mapped yet."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Work-behaviour preferences and tendencies"
+      ],
+      "recommended_next_action": "Select a preferred scenario approach to begin the tendency snapshot."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the targeted objective DISCOVER_004.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims prior context exists to support immediate synthesis, but the fixture provided empty confirmed_facts and empty confirmed_answers, making reuse verification unassessable.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The emitted scenario question is concrete, discriminative, and offers meaningful behavioural distinctions with an unsure setting.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits 'scenario_test', which is in the V2 allowed UI primitive list for this objective.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The emitted scenario test and unknowns explicitly focus on behavioural tendencies across work contexts aligned with Big Five Snapshot overrides.",
+          "evidence_pointer": "candidate.ui[0].purpose"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The model appropriately separates unknowns and avoids inventing unsupported facts or scores.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric percentiles, scores, or diagnostic traits are generated.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test expected immediate synthesis based on claimed answers, but actual context provided no answers or grounded signals, preventing assessment of the stop condition.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled with blockers identified, avoiding fake career/success prediction scores.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean semantic handoff object is returned with confirmed inputs, result summary, unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoints, policy violations, or unsafe writes are emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE: The test claimed enough details were confirmed and all required outputs supported, but provided empty confirmed_facts and empty confirmed_answers in the context fixture."
+      ],
+      "summary": "The candidate performed validly according to schema, primitive constraints, and psychometric restraint given the empty fixture inputs. Stop condition and context reuse are marked NOT_ASSESSABLE due to missing concrete state in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2893,
+      "total_input_tokens": 2052,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2052
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 841,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2449,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2449
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 859
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4168,
+  "usage": {
+    "total_tokens": 2778,
+    "total_input_tokens": 2126,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2126
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 652,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5215,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5215
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 672
+          }
+        ]
+      }
+    ]
+  }
+}

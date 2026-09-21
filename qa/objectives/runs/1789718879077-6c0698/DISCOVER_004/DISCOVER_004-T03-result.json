@@ -1,0 +1,268 @@
+{
+  "test_id": "DISCOVER_004-T03",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "MINIMAL_INPUT",
+  "model": "gemini-3.7-flash",
+  "source_row": 28,
+  "input_context": {
+    "user_message": "I have no idea.",
+    "prior_context_text": "No reliable prior context.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "ea02643c40310dccde5b7ce2616c323d905b1f0294e6c77bc1c9b1d69d5b73b2",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5448
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "team_project_style",
+        "purpose": "Gather an initial qualitative signal on work collaboration and structure preferences.",
+        "prompt": "When starting a new group project or team task, which approach feels most natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "plan_structure",
+            "label": "Organise the plan and steps",
+            "detail": "Break down deadlines, outline tasks, and establish a clear routine early on."
+          },
+          {
+            "id": "brainstorm_ideas",
+            "label": "Explore ideas and possibilities",
+            "detail": "Focus on creative concepts, experiment with approaches, and keep options flexible."
+          },
+          {
+            "id": "connect_align",
+            "label": "Coordinate and support the team",
+            "detail": "Make sure everyone is comfortable, communicate frequently, and help resolve friction."
+          },
+          {
+            "id": "solo_execution",
+            "label": "Focus deeply on an assigned piece",
+            "detail": "Take a specific part of the work and complete it thoroughly with minimal back-and-forth."
+          },
+          {
+            "id": "unsure",
+            "label": "It depends / Not sure",
+            "detail": "My preference changes significantly depending on the topic and the people involved."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Work style tendencies across broad personality dimensions (collaboration, structure, novelty, stress response)"
+    ],
+    "result": {
+      "summary": "Starting personality tendencies exploration; gathering initial behavioral scenario response."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Awaiting user input on work style scenario"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue personality exploration",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted the user with a realistic team scenario to begin capturing qualitative work tendencies.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Initial interaction presented."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: baseline personality and work-tendency preferences"
+      ],
+      "recommended_next_action": "Complete the initial scenario test to establish qualitative tendencies."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate operates within the assigned DISCOVER_004 objective without improper rerouting.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There was no prior context available, and the candidate appropriately recognized that no facts were known yet.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asked a single, concrete, discriminative scenario test question suitable for eliciting work style preferences with an unsure option.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate used 'scenario_test', which is explicitly permitted in the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate aligns with the Big Five Snapshot / Personality Tendencies exploration objective by framing the initial scenario around broad work behavior styles.",
+          "evidence_pointer": "candidate.ui[0].purpose"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded facts or premature inferences were claimed, correctly noting work style tendencies as unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "The candidate did not fabricate trait scores, percentiles, or psychometric claims from zero data.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate correctly set status to NEEDS_INPUT at interaction count 0 since information is required to establish qualitative tendencies.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with score null and properly lists blockers while awaiting user input.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff is provided with summary, evidence_and_unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "The candidate emitted only approved structured intent (CONTINUE_CHAT) with no unsafe writes or endpoint fabrications.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate cleanly adheres to all prompt, rubric, and objective-specific guidelines, presenting a valid single scenario_test question without inventing psychometric scores or claims."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2856,
+      "total_input_tokens": 2066,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2066
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 790,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2463,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2463
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 809
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5448,
+  "usage": {
+    "total_tokens": 2764,
+    "total_input_tokens": 2021,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2021
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 743,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6046,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6046
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 760
+          }
+        ]
+      }
+    ]
+  }
+}

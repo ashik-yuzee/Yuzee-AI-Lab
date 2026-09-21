@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_DECIDE_004",
+  "reason": "Compare your two actual employment offers across key criteria like salary, flexibility, learning, and growth.",
+  "disposition": "SUGGEST",
+  "selectionId": "9e514f0c-0c9a-494b-ba5a-653182e03891",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7401708693107619,
+  "margin": -0.017619880124126963,
+  "userConfidence": null,
+  "createdAt": 1789733832848
+}

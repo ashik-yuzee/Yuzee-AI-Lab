@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "DISCOVER_001",
+  "reason": "Explore how your interest in both coding and observing user behavior connects to broader activity themes and career paths.",
+  "disposition": "SUGGEST",
+  "selectionId": "387aa332-f7a3-4f5b-9480-af4dffb8b444",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7481792344853385,
+  "margin": 0.05413900640027003,
+  "userConfidence": null,
+  "createdAt": 1789733787280
+}

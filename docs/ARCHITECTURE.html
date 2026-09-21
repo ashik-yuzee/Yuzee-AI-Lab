@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Token Lab Architecture</title>
+<meta name="description" content="Architecture, request lifecycle, API surface and invariants for the Yuzee AI Token Lab.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+  --text: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --sky: #0284c7;
+  --sky-bright: #0ea5e9;
+  --navy: #0c2d6b;
+  --emerald: #059669;
+  --amber: #b45309;
+  --red: #dc2626;
+  --code-bg: #f1f5f9;
+  --code-text: #0f172a;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 8px 24px -16px rgba(15, 23, 42, .18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1220;
+    --surface: #131c2e;
+    --surface-2: #0f1828;
+    --border: #273449;
+    --border-strong: #3a4a63;
+    --text: #e6edf6;
+    --text-secondary: #9fb0c6;
+    --text-muted: #6b7f99;
+    --sky: #38bdf8;
+    --sky-bright: #7dd3fc;
+    --navy: #bfdbfe;
+    --emerald: #34d399;
+    --amber: #fbbf24;
+    --red: #f87171;
+    --code-bg: #0b1424;
+    --code-text: #d7e3f2;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -16px rgba(0, 0, 0, .6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b1220;
+  --surface: #131c2e;
+  --surface-2: #0f1828;
+  --border: #273449;
+  --border-strong: #3a4a63;
+  --text: #e6edf6;
+  --text-secondary: #9fb0c6;
+  --text-muted: #6b7f99;
+  --sky: #38bdf8;
+  --sky-bright: #7dd3fc;
+  --navy: #bfdbfe;
+  --emerald: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --code-bg: #0b1424;
+  --code-text: #d7e3f2;
+  --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px -16px rgba(0, 0, 0, .6);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+code, pre, .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+.wrap { max-width: 980px; margin: 0 auto; padding-block: 40px 96px; padding-left: 20px; padding-right: 20px; }
+
+/* Cover */
+.cover {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 44px 40px 34px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sky-bright) 0%, #6366f1 55%, var(--emerald) 100%);
+}
+.cover-eyebrow {
+  font-size: 11px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--sky); margin-bottom: 14px;
+}
+.cover h1 {
+  font-size: clamp(26px, 4.6vw, 34px); font-weight: 800; line-height: 1.18;
+  letter-spacing: -.02em; margin: 0 0 12px; text-wrap: balance;
+}
+.cover p { color: var(--text-secondary); max-width: 64ch; margin: 0 0 10px; }
+.cover p:last-of-type { margin-bottom: 0; }
+.cover code { background: var(--code-bg); }
+
+.cover-meta {
+  display: flex; flex-wrap: wrap; gap: 28px;
+  border-top: 1px solid var(--border); margin-top: 24px; padding-top: 18px;
+}
+.cover-meta div { font-size: 12.5px; color: var(--text); font-variant-numeric: tabular-nums; }
+.cover-meta strong {
+  display: block; font-size: 10.5px; font-weight: 600; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px;
+}
+
+/* Contents */
+.toc {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 24px 28px; margin-bottom: 28px; box-shadow: var(--shadow);
+}
+.toc h2 {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--text-muted); margin: 0 0 14px;
+}
+.toc ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 36px; }
+.toc li { break-inside: avoid; margin-bottom: 3px; }
+.toc a {
+  display: flex; gap: 10px; align-items: baseline; padding: 3px 0;
+  font-size: 13.5px; color: var(--text); text-decoration: none; border-radius: 4px;
+}
+.toc a:hover { color: var(--sky); }
+.toc-num {
+  flex: none; width: 1.6em; text-align: right;
+  font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--text-muted);
+}
+
+/* Sections */
+.section {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 30px 34px; margin-bottom: 20px; scroll-margin-top: 20px;
+  box-shadow: var(--shadow);
+}
+.section-title {
+  display: flex; align-items: baseline; gap: 12px;
+  font-size: 19px; font-weight: 700; letter-spacing: -.01em;
+  margin: 0 0 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);
+  text-wrap: balance;
+}
+.sec-num {
+  flex: none; font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+  color: var(--sky); background: color-mix(in srgb, var(--sky) 11%, transparent);
+  border-radius: 6px; padding: 2px 8px;
+}
+.anchor {
+  margin-left: auto; color: var(--text-muted); text-decoration: none;
+  font-size: 14px; opacity: 0; transition: opacity .12s;
+}
+.section:hover .anchor, .anchor:focus-visible { opacity: 1; }
+
+h3 { font-size: 15.5px; font-weight: 700; margin: 26px 0 10px; letter-spacing: -.005em; }
+h4 {
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em;
+  color: var(--text-secondary); margin: 20px 0 8px;
+}
+.section > :first-child { margin-top: 0; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 14px; padding-left: 22px; }
+li { margin-bottom: 5px; }
+li > ul, li > ol { margin-top: 5px; margin-bottom: 4px; }
+strong { font-weight: 650; }
+a { color: var(--sky); }
+
+/* Code */
+code {
+  font-size: .875em; background: var(--code-bg); color: var(--code-text);
+  padding: .12em .38em; border-radius: 4px;
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+}
+.code-wrap { overflow-x: auto; margin: 0 0 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--code-bg); }
+pre { margin: 0; padding: 16px 18px; }
+pre code {
+  background: none; border: none; padding: 0; font-size: 12.5px; line-height: 1.62;
+  white-space: pre; color: var(--code-text);
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto; margin: 0 0 18px;
+  border: 1px solid var(--border); border-radius: 10px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th {
+  background: var(--surface-2); text-align: left; font-weight: 650;
+  font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--text-secondary); padding: 10px 14px;
+  border-bottom: 1px solid var(--border-strong); white-space: nowrap;
+}
+td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: var(--surface-2); }
+td code { white-space: nowrap; }
+
+/* The ordered list in "Invariants" is the rule set — give it weight. */
+[id$="invariants-do-not-break-these"] ol { counter-reset: inv; list-style: none; padding-left: 0; }
+[id$="invariants-do-not-break-these"] ol > li {
+  counter-increment: inv; position: relative;
+  padding: 10px 14px 10px 46px; margin-bottom: 6px;
+  border-left: 2px solid var(--amber); border-radius: 0 8px 8px 0;
+  background: color-mix(in srgb, var(--amber) 7%, transparent);
+}
+[id$="invariants-do-not-break-these"] ol > li::before {
+  content: counter(inv); position: absolute; left: 14px; top: 10px;
+  font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: var(--amber);
+}
+
+footer {
+  margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border);
+  font-size: 12px; color: var(--text-muted);
+  display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+footer a { color: var(--text-muted); }
+
+:where(a, summary):focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; border-radius: 3px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+
+@media (max-width: 720px) {
+  .wrap { padding-block: 24px 64px; }
+  .cover { padding: 30px 22px 26px; }
+  .section { padding: 24px 20px; border-radius: 10px; }
+  .toc { padding: 20px; }
+  .toc ul { columns: 1; }
+  .cover-meta { gap: 18px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="cover">
+<p class="cover-eyebrow">Developer documentation</p>
+<h1>Yuzee AI Token Lab — Full System Documentation</h1>
+<p>Everything a new developer needs to read the code: what each layer does, how a request
+flows end to end, and which invariants must not be broken.</p>
+<p>Companion docs: <code>README.md</code> (quick start), <code>HANDOVER/AI_HANDOVER.md</code> (acceptance criteria),
+and the topic docs in <code>docs/</code> (BGE calibration, counselling prompt updates, warehouse design).</p>
+<div class="cover-meta">
+<div><strong>Backend</strong>Node · Express · @google/genai</div>
+<div><strong>Frontend</strong>React 19 · Vite · Tailwind v4</div>
+<div><strong>Protocol</strong>Yuzee Response v1.3</div>
+<div><strong>Sections</strong>18</div>
+</div>
+</header>
+
+<nav class="toc" aria-label="Contents">
+<h2>Contents</h2>
+<ul>
+<li><a href="#1-what-this-application-is"><span class="toc-num">1</span>What this application is</a></li>
+<li><a href="#2-technology-stack"><span class="toc-num">2</span>Technology stack</a></li>
+<li><a href="#3-repository-map"><span class="toc-num">3</span>Repository map</a></li>
+<li><a href="#4-running-it"><span class="toc-num">4</span>Running it</a></li>
+<li><a href="#5-the-chat-request-lifecycle-end-to-end"><span class="toc-num">5</span>The chat request lifecycle (end to end)</a></li>
+<li><a href="#6-request-assembly-yuzeerequestassembler"><span class="toc-num">6</span>Request assembly — YuzeeRequestAssembler</a></li>
+<li><a href="#7-memory-and-context-strategies-tokenbudgetmemorymanager"><span class="toc-num">7</span>Memory and context strategies — TokenBudgetMemoryManager</a></li>
+<li><a href="#8-protocol-v13-and-validation"><span class="toc-num">8</span>Protocol v1.3 and validation</a></li>
+<li><a href="#9-token-accounting-and-telemetry"><span class="toc-num">9</span>Token accounting and telemetry</a></li>
+<li><a href="#10-backend-http-api-reference"><span class="toc-num">10</span>Backend HTTP API reference</a></li>
+<li><a href="#11-backend-subsystems"><span class="toc-num">11</span>Backend subsystems</a></li>
+<li><a href="#12-local-semantic-routing-bge-srcrouting-srcworkers"><span class="toc-num">12</span>Local semantic routing (BGE) — src/routing/ + src/workers/</a></li>
+<li><a href="#13-frontend"><span class="toc-num">13</span>Frontend</a></li>
+<li><a href="#14-data-and-persistence"><span class="toc-num">14</span>Data and persistence</a></li>
+<li><a href="#15-deployment"><span class="toc-num">15</span>Deployment</a></li>
+<li><a href="#16-spring-backend"><span class="toc-num">16</span>Spring backend</a></li>
+<li><a href="#17-invariants-do-not-break-these"><span class="toc-num">17</span>Invariants — do not break these</a></li>
+<li><a href="#18-where-to-start-reading"><span class="toc-num">18</span>Where to start reading</a></li>
+</ul>
+</nav>
+
+<section class="section" id="1-what-this-application-is">
+<h2 class="section-title"><span class="sec-num">1</span><span>What this application is</span><a class="anchor" href="#1-what-this-application-is" aria-label="Link to this section">#</a></h2>
+<p>A career-counselling chat product (<strong>Oala</strong>) plus a <strong>token telemetry laboratory</strong> wrapped
+around it. It runs the same Gemini-powered counselling AI as production, but exposes every
+internal signal production hides: prompt token counts, cache hit rates, thinking budgets,
+context assembly per strategy, compaction break-even maths, validation results, and latency
+timelines.</p>
+<p>Three things are happening at once in every turn:</p>
+<ol>
+<li><strong>A counselling conversation.</strong> Gemini answers under a versioned system prompt and must
+return a single JSON object conforming to <strong>Response Protocol v1.3</strong>.</li>
+<li><strong>A context-engineering experiment.</strong> The server decides what history, memory and
+retrieved data enter the prompt, under a token budget, using a selectable strategy.</li>
+<li><strong>A measurement harness.</strong> Real <code>usageMetadata</code> from the provider is recorded per turn,
+logged to NDJSON and optionally PostgreSQL, and surfaced in the UI.</li>
+</ol>
+<p>Two backends implement the same design:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Backend</th>
+<th>Path</th>
+<th>Port</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Node.js / Express / TypeScript</td>
+<td><code>server.ts</code></td>
+<td>3000</td>
+<td>The running system. Serves the React UI and all APIs.</td>
+</tr>
+<tr>
+<td>Spring Boot 3.4 + Spring AI</td>
+<td><code>spring-backend/</code></td>
+<td>8080</td>
+<td>Standalone Java reference of the same architecture. Not used by the UI.</td>
+</tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="section" id="2-technology-stack">
+<h2 class="section-title"><span class="sec-num">2</span><span>Technology stack</span><a class="anchor" href="#2-technology-stack" aria-label="Link to this section">#</a></h2>
+<p><strong>Frontend</strong> — React 19, TypeScript, Vite 6, Tailwind CSS v4, <code>lucide-react</code> icons,
+<code>react-markdown</code> + <code>remark-gfm</code>, <code>motion</code>. Runs an ONNX embedding model in a Web Worker via
+<code>@huggingface/transformers</code>.</p>
+<p><strong>Backend</strong> — Node 22+, Express 4, <code>@google/genai</code> (Gemini SDK), <code>ajv</code> (JSON Schema),
+<code>pg</code> (optional PostgreSQL), <code>tsx</code> for dev, <code>esbuild</code> to bundle <code>dist/server.cjs</code> for production.</p>
+<p><strong>Storage</strong> — in-memory <code>Map</code> is the hot store; JSON files under <code>data/</code> are the default
+durable store; PostgreSQL is optional and takes over when <code>DATABASE_URL</code> is set. A SQLite
+catalogue (the &quot;warehouse&quot;) is read out-of-process by a forked worker.</p>
+</section>
+
+<section class="section" id="3-repository-map">
+<h2 class="section-title"><span class="sec-num">3</span><span>Repository map</span><a class="anchor" href="#3-repository-map" aria-label="Link to this section">#</a></h2>
+<div class="code-wrap"><pre><code>server.ts                      Entire Node backend (~2500 lines): routes + chat pipeline
+api/index.ts                   Vercel serverless entry — requires dist/server.cjs
+index.html                     Vite HTML entry
+vite.config.ts                 Build + dev proxy (/api -&gt; :3000)
+vercel.json / render.yaml      Deployment configs
+tsconfig.json                  noEmit type-check config
+
+src/
+  main.tsx                     React root; monkey-patches fetch to inject the auth token
+  App.tsx                      Auth gate, page switch, provider tree, modal mounting
+  index.css                    Tailwind entry + CSS custom properties (--accent etc.)
+  types.ts                     Shared frontend types (Conversation, ChatMessage, ...)
+  shared-settings.ts           Deployment-wide settings persisted to data/shared-settings.json
+
+  context/TokenLabContext.tsx  Single global React store: conversations, streaming, telemetry, modals
+
+  services/                    Backend + frontend service layer
+    api.ts                       Frontend HTTP/SSE client
+    YuzeeRequestAssembler.ts     Builds the Gemini request (system instruction, contents, config)
+    TokenBudgetMemoryManager.ts  Context strategies, turn grouping, token-budget eviction
+    MultiTurnRequestBuilder.ts   Converts memory into Gemini Content[] role turns
+    SystemPromptCacheManager.ts  Gemini explicit context cache per model
+    db.ts                        PostgreSQL schema/queries with local-JSON fallback
+    LocalConversationStore.ts    Atomic JSON file store used by several subsystems
+    MicroToolRouter.ts           Frontend facade over the embedding Web Worker
+    TeachingAnswerReview.ts      Second-pass review of explanation blocks
+    ReviewRetry.ts               Bounded retry wrapper with audit trail
+    ProviderRecovery.ts          One-shot provider stream retry
+    HelpEvidence.ts              Student-loan/help evidence guard
+
+  protocol/
+    validator.ts                 3-layer validation (Ajv schema -&gt; semantics -&gt; trusted actions)
+    securityOverride.ts          Server-authoritative security state
+    presentationDefaults.ts      Fills presentation fields the model omitted
+    v1.3/                        Canonical protocol TS type, JSON Schema, counsellor prompts
+    v1.4/                        Next protocol revision (types + schema, validated but not default)
+
+  routing/                     Local semantic routing (BGE embeddings, in-browser)
+    models.ts, policy.ts, bge*.ts, skillSuggestions.ts, turnNeeds.ts, learningDepth.ts,
+    skillInputs.ts, tokenBudget.ts, EmbeddingQueue.ts, microtools.json, bgeCalibration.json
+  workers/embedder.worker.ts   The Web Worker that runs the ONNX encoder
+
+  prompts/                     Instruction fragments concatenated into the system prompt
+  objectives/                  &quot;Workspace&quot; activities (316 catalogue) — service, routing, UI
+  warehouse/                   Approved course/career/job catalogue retrieval + UI
+  miniPathway/                 Optional generated mini career pathway
+  research/                    &quot;Explore more&quot; grounded detail research
+  orchestration/               Shared conversation context, question ownership, action registry
+  oala/                        @Oala mention handling and service knowledge
+  ux/                          Presentation helpers, stream progress copy, bypass copy
+  components/                  All React UI
+  data/models.ts               Gemini model registry + cost calculation
+
+spring-backend/                Java reference implementation (60 classes)
+tests/                         Node test files (tsx loader, assert-based)
+scripts/                       Calibration, audit, build-check and evaluation scripts
+qa/                            Objective workbook registry, schema compiler, harness
+data/                          Runtime state (gitignored): conversations, logs, stats
+docs/                          This file and topic-specific design notes
+</code></pre></div>
+</section>
+
+<section class="section" id="4-running-it">
+<h2 class="section-title"><span class="sec-num">4</span><span>Running it</span><a class="anchor" href="#4-running-it" aria-label="Link to this section">#</a></h2>
+<h3>Prerequisites</h3>
+<p>Node 22+ (Node 26 used for the last clean check), npm 11+. Java 21 + Maven only for the
+Spring backend.</p>
+<h3>Setup</h3>
+<div class="code-wrap"><pre><code class="language-bash">npm install
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">cp .env.example .env
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run dev
+</code></pre></div>
+<p><code>npm run dev</code> runs Express <strong>and</strong> Vite in middleware mode from the same process, so port
+3000 serves both the API and the UI with HMR. The Vite dev-server proxy block in
+<code>vite.config.ts</code> only matters if you run <code>vite</code> standalone.</p>
+<p>Default login is <code>yuzeeadmin</code> / <code>yuzeeadmin@2026</code> unless <code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code>
+are set.</p>
+<h3>Environment variables</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Required</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GEMINI_API_KEY</code></td>
+<td>Yes for live mode</td>
+<td>All Gemini calls. Without it, chat returns an <code>AUTH_ERROR</code> SSE event.</td>
+</tr>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td>No</td>
+<td>PostgreSQL. When unset, everything persists to <code>data/*.json</code>.</td>
+</tr>
+<tr>
+<td><code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code></td>
+<td>No</td>
+<td>Login credentials.</td>
+</tr>
+<tr>
+<td><code>AUTH_SECRET</code></td>
+<td>No</td>
+<td>HMAC secret for the stateless auth token.</td>
+</tr>
+<tr>
+<td><code>CLOUDFLARE_ACCOUNT_ID</code> / <code>CLOUDFLARE_API_TOKEN</code></td>
+<td>No</td>
+<td>Enables the Llama-3.1-8b server-side routing model option.</td>
+</tr>
+<tr>
+<td><code>YUZEE_WAREHOUSE_DB</code></td>
+<td>No</td>
+<td>Path to the SQLite catalogue. Defaults to <code>~/.yuzee-monitor/training_gov.db</code>.</td>
+</tr>
+<tr>
+<td><code>PORT</code></td>
+<td>No</td>
+<td>Default 3000.</td>
+</tr>
+<tr>
+<td><code>NODE_ENV</code></td>
+<td>No</td>
+<td><code>production</code> switches from Vite middleware to static <code>dist/public</code>.</td>
+</tr>
+<tr>
+<td><code>VERCEL</code></td>
+<td>No</td>
+<td>Set by Vercel. Suppresses <code>app.listen</code> and shortens the response timeout to 8.5 s.</td>
+</tr>
+<tr>
+<td><code>SKIP_BGE_CONTRACT</code></td>
+<td>No</td>
+<td>Skips the BGE contract check during build (model files are gitignored).</td>
+</tr>
+<tr>
+<td><code>DISABLE_HMR</code></td>
+<td>No</td>
+<td>Disables Vite HMR and file watching.</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Build and production</h3>
+<div class="code-wrap"><pre><code class="language-bash">npm run build
+</code></pre></div>
+<p>Build order: quiz-prompt check → BGE contract check → objective catalogue checks →
+<code>tsc --noEmit</code> → <code>vite build</code> (to <code>dist/public</code>) → <code>esbuild server.ts</code> (to <code>dist/server.cjs</code>)
+→ copy the warehouse <code>.cjs</code> workers into <code>dist/</code>. The build is deliberately gated: it fails
+if the quiz prompt, BGE routing artifact or objective catalogue are out of sync with their
+generators.</p>
+<div class="code-wrap"><pre><code class="language-bash">npm start
+</code></pre></div>
+<h3>Test scripts</h3>
+<p>Tests are plain Node scripts using <code>assert</code>, run through the <code>tsx</code> loader — no test framework.</p>
+<div class="code-wrap"><pre><code class="language-bash">npm run lint
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:ux
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:routing
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:bge
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:mini-pathway
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:warehouse
+</code></pre></div>
+<div class="code-wrap"><pre><code class="language-bash">npm run test:objectives
+</code></pre></div>
+<p>Slower jobs: <code>npm run eval:bge</code> (held-out evaluation, downloads the model) and
+<code>npm run calibrate:bge</code> (regenerates <code>bgeCalibration.json</code>).</p>
+</section>
+
+<section class="section" id="5-the-chat-request-lifecycle-end-to-end">
+<h2 class="section-title"><span class="sec-num">5</span><span>The chat request lifecycle (end to end)</span><a class="anchor" href="#5-the-chat-request-lifecycle-end-to-end" aria-label="Link to this section">#</a></h2>
+<p>This is the single most important flow. Endpoint:
+<code>POST /api/conversations/:id/messages</code> — <code>server.ts:1607</code>.</p>
+<h3>5.1 Browser side, before the request</h3>
+<p><code>TokenLabContext.sendMessage()</code> (<code>src/context/TokenLabContext.tsx:517</code>):</p>
+<ol>
+<li><strong>Send lock.</strong> <code>sendLockRef</code> plus <code>isStreaming</code> prevent concurrent turns.</li>
+<li><strong>Normalise input.</strong> Input is either a plain string, a <code>UserEvent</code> (an option click, form
+submit, ranked choice), or a <code>{message, userQuestionAnswers}</code> clarification payload. A
+readable chat-bubble label is synthesised for structured events.</li>
+<li><strong>Contradiction pre-flight.</strong> If the user has unresolved profile contradictions and the
+message is longer than 20 characters, <code>POST /api/pre-check</code> runs first. If it returns
+clarification questions, the message is <em>deferred</em> — no user bubble is added — and the
+clarification modal opens. This is fail-safe: any error proceeds normally.</li>
+<li><strong>Optimistic messages.</strong> A user message and an empty streaming assistant message are
+pushed into state immediately.</li>
+<li><strong>Local context.</strong> Date, timezone, saved location, and up to 8 relevance-scored profile
+facts are collected. Likes/dislikes are always included; general facts are keyword-scored
+against the message.</li>
+<li><strong>Local semantic routing</strong> (all optional, all abstain-safe):
+<ul>
+<li><code>assessMessageNeeds()</code> classifies the turn as <code>answer</code> / <code>clarify</code> / <code>research</code>.</li>
+<li>If the user selected a topic from the previous question, <code>routeMessage(topic, {topic:true})</code>.</li>
+<li>If the message starts with <code>@Oala</code>, <code>routeMessage()</code> picks at most one micro-tool skill.</li>
+</ul>
+</li>
+<li><strong><code>api.streamChatMessage()</code></strong> POSTs the whole payload and parses the SSE response.</li>
+</ol>
+<h3>5.2 Server side</h3>
+<p>Step by step through the handler:</p>
+<ol>
+<li><strong>Conversation resolution.</strong> Loaded from the in-memory <code>Map</code>, or created on the fly with
+request-body defaults.</li>
+<li><strong>Objective workspace result transfer</strong> (optional). If <code>objectiveResultId</code> is present, the
+saved workspace result is loaded, revision-checked (409 on mismatch), de-duplicated against
+prior transfers, and injected as untrusted supplementary context.</li>
+<li><strong>Shared conversation context.</strong> <code>sharedConversationContext()</code> builds a bounded, versioned
+read model of user contributions (chat statements, workspace answers, corrections) —
+ranked by recency, correction priority and keyword overlap, capped at 16 entries.</li>
+<li><strong>Workspace coordination.</strong> <code>workspaceQuestionOwner()</code> decides whether chat or an open
+workspace owns the next question, so the user is never asked the same thing twice.</li>
+<li><strong>Warehouse retrieval.</strong> <code>warehouseService.retrieve()</code> runs a Gemini query planner, then a
+bounded SQLite lookup in a forked child process (8 s timeout). Returns courses, providers,
+careers, industries, jobs, skills and regional signals — or <code>NOT_NEEDED</code>.</li>
+<li><strong>Research reference.</strong> If the message cites a saved research answer UUID, that answer's
+facts, gaps, evidence and sources are attached.</li>
+<li><strong>Context prefix assembly.</strong> All of the above plus date/location/user facts are joined into
+a single bracketed prefix and prepended to the user message:
+<code>[Date: ... · WAREHOUSE_DATA: {...} · User facts: ...]\n&lt;message&gt;</code>. Every injected block is
+explicitly labelled as <strong>data, not instructions</strong> — this is the prompt-injection boundary.</li>
+<li><strong>UserEvent validation.</strong> <code>validateUserEventAgainstActiveInteraction()</code> checks the submitted
+event against the server's trusted <code>activeInteraction</code>. A mismatch is a hard 400 — the
+browser cannot invent an option id.</li>
+<li><strong>Strategy resolution.</strong> Precedence: mode presets (<code>SAVE_TOKENS</code> / <code>FULL_CONTEXT</code>) override
+request body, which overrides shared settings, which override the conversation record.</li>
+<li><strong>Memory assembly.</strong> <code>memoryManager.assembleMemory()</code> — see §7.</li>
+<li><strong>Model allowlist.</strong> A model not in <code>GEMINI_MODELS</code> with <code>selectable:true</code> is a 400.</li>
+<li><strong>Turn needs, routing, help evidence, clarity guidance.</strong> Server-side rules re-derive or
+re-validate the browser's advisory hints; the browser's thresholds are never trusted.</li>
+<li><strong>Request assembly.</strong> <code>YuzeeRequestAssembler.assembleRequest()</code> — see §6.</li>
+<li><strong>Explicit cache lookup.</strong> <code>SystemPromptCacheManager.getCacheForModel()</code> returns a
+<code>cachedContents/...</code> name when warm; the system instruction is then omitted from the request
+and served from cache at roughly 75 % lower input cost.</li>
+<li><strong>SSE headers flushed.</strong> The <code>start</code> event carries <code>messageId</code>, <code>aiRequestId</code>, thinking
+level, routing decision, preflight needs, and token budgets.</li>
+<li><strong>Timeout guard.</strong> 8.5 s on Vercel, 90 s elsewhere. On fire it emits a clean <code>error</code> event
+and aborts the provider — never a silent socket drop.</li>
+<li><strong>Bypass path.</strong> Greetings, farewells, idle chatter and basic @Oala service questions are
+answered locally from <code>makeBypassResponse()</code> at <strong>zero provider tokens</strong>. A message is only
+bypassed when there is no prior assistant turn and no active question.</li>
+<li><strong>Provider stream.</strong> <code>generateContentStream</code> with abort signal and <code>includeThoughts</code> on
+3.x/2.5 models. Each chunk is split by <code>splitGeminiStreamChunk()</code> so <em>thought summaries
+never reach the client</em> — they only flip the status phase to <code>thinking</code>. Text chunks are
+emitted as <code>delta</code> events.</li>
+<li><strong>JSON recovery.</strong> Flash-Lite sometimes wraps JSON in markdown fences; these are stripped
+and parsing retried.</li>
+<li><strong>Teaching review</strong> (conditional). When the response contains substantive teaching content,
+a second bounded Gemini call re-checks the explanation blocks against the context. It may
+rewrite <code>content_blocks</code> only — never <code>interaction</code> or <code>service</code> state. Usage from both
+calls is combined. Failure withholds the answer with a retry message.</li>
+<li><strong>Help-evidence guard.</strong> An answer asserting outdated student-loan repayment rules is
+withheld outright.</li>
+<li><strong>Server-authoritative security state.</strong> <code>normaliseSecurityFields()</code> coerces the model's
+nullable output; <code>computeNextSecurityState()</code> derives breach count and penalty <strong>without
+reading model output</strong>; <code>applyServerSecurityState()</code> writes them back. The model cannot
+clear its own penalty.</li>
+<li><strong>3-layer validation.</strong> <code>validateProtocol()</code> — see §8.</li>
+<li><strong>Render gate.</strong> <code>canRender</code> requires: no teaching-review error, no <code>MAX_TOKENS</code>
+truncation, valid JSON, and <code>protocolAccepted</code>. Only then do <code>validation</code>,
+<code>protocol_response</code> and <code>structured</code> events fire. Otherwise a
+<code>protocol_validation_error</code> event is sent and <strong>the response never enters conversation
+history</strong> — a rejected answer cannot poison the next turn's context.</li>
+<li><strong><code>activeInteraction</code> update.</strong> Only updated when the protocol is fully accepted.</li>
+<li><strong>Telemetry computation.</strong> Timeline (pre-provider latency, TTFT, generation duration,
+validation duration, total), token accounting (see §9), context breakdown, request trace.</li>
+<li><strong>Persistence.</strong> User and assistant messages are appended to the conversation, saved to the
+store, and fire-and-forget logged to PostgreSQL and <code>data/token-log.ndjson</code>.</li>
+<li><strong><code>usage</code> then <code>done</code> events.</strong></li>
+<li><strong>Async post-response compaction.</strong> Evicted turns are summarised by
+<code>gemini-3.5-flash-lite</code> <em>after</em> the response is closed — zero latency impact — and the
+resulting summary is stored for the next turn.</li>
+</ol>
+<h3>5.3 SSE event contract</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Payload</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>start</code></td>
+<td>ids, thinking level, routing, preflight, budgets</td>
+<td>Turn accepted</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>{phase}</code></td>
+<td><code>routing</code>/<code>waiting</code>/<code>thinking</code>/<code>receiving</code>/<code>retrying</code>/<code>reviewing</code>/<code>checking</code></td>
+</tr>
+<tr>
+<td><code>compaction</code></td>
+<td><code>CompactionMetrics</code></td>
+<td>Turns were evicted this request</td>
+</tr>
+<tr>
+<td><code>delta</code></td>
+<td>string</td>
+<td>Raw JSON text chunk</td>
+</tr>
+<tr>
+<td><code>validation</code></td>
+<td>schema/semantic/accepted, errors, warnings, hashes</td>
+<td>Response passed</td>
+</tr>
+<tr>
+<td><code>protocol_response</code> / <code>structured</code></td>
+<td>the parsed v1.3 object</td>
+<td>Renderable answer</td>
+</tr>
+<tr>
+<td><code>protocol_validation_error</code></td>
+<td>errors, finishReason, reviewFailureCode</td>
+<td>Answer withheld</td>
+</tr>
+<tr>
+<td><code>usage</code></td>
+<td>usage, model, contextMetrics, compactionMetrics, timeline</td>
+<td>Telemetry</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td><code>{error, errorCode}</code></td>
+<td>Terminal failure</td>
+</tr>
+<tr>
+<td><code>done</code></td>
+<td><code>{aiRequestId}</code></td>
+<td>Stream complete</td>
+</tr>
+</tbody>
+</table></div>
+<p>Error codes: <code>AUTH_ERROR</code>, <code>QUOTA_EXHAUSTED</code>, <code>RATE_LIMIT</code>, <code>PROVIDER_BUSY</code>,
+<code>PROVIDER_ERROR</code>, <code>RESPONSE_TIMEOUT</code>, <code>VALIDATION_ERROR</code>, <code>INTERNAL_ERROR</code>, plus client-side
+<code>NETWORK_ERROR</code>, <code>INVALID_RESPONSE</code>, <code>INCOMPLETE_RESPONSE</code>.</p>
+</section>
+
+<section class="section" id="6-request-assembly-yuzeerequestassembler">
+<h2 class="section-title"><span class="sec-num">6</span><span>Request assembly — YuzeeRequestAssembler</span><a class="anchor" href="#6-request-assembly-yuzeerequestassembler" aria-label="Link to this section">#</a></h2>
+<p>A singleton (<code>getInstance()</code>) that owns the authoritative prompt and schema.</p>
+<p><strong>On construction it loads and hashes:</strong></p>
+<ul>
+<li><code>src/protocol/v1.3/Yuzee_Quiz_Counsellor_Training_v1.11.md</code> — the counsellor system prompt
+(path and version come from <code>src/prompts/quizPrompt.ts</code>).</li>
+<li><code>src/protocol/v1.3/Yuzee_Response_Schema_v1.3.json</code> — the response schema.</li>
+<li><code>src/prompts/activity-context.md</code> + <code>clear-guidance.md</code> + <code>learning-depth.md</code> — experience
+rules appended when a custom system prompt is in use.</li>
+</ul>
+<p>SHA-256 hashes of both are exposed as <code>promptHash</code> / <code>schemaHash</code> and travel with every
+response for traceability. <code>reload()</code> re-reads from disk (admin-only endpoint).</p>
+<p><strong><code>assembleRequest()</code> produces:</strong></p>
+<ol>
+<li><strong>System instruction</strong> — the prompt file, or a custom prompt plus experience rules, plus an
+optional <code>oalaInstruction</code>. It is <em>never</em> copied into <code>contents</code>.</li>
+<li><strong>Dynamic context</strong>, in stable-prefix order: structured memory capsule → previous
+conversation summary → recent dialogue turns. This ordering is deliberate: the stable parts
+come first so Gemini's implicit prefix cache hits as often as possible.</li>
+<li><strong>Current user input</strong> — raw text for plain messages, or a <code>USER_EVENT:</code> JSON block for
+structured interactions. Plain text is sent raw on purpose: wrapping it in <code>USER_EVENT</code>
+made the model treat the turn as a UI continuation and suppress discovery content.</li>
+<li><strong>Micro-tool instruction</strong> appended after the user input — the optional routed skill's
+<code>mini_prompt</code>, needs instruction, help evidence, clarity guidance, warehouse rules and
+objective continuation, joined with blank lines.</li>
+<li><strong><code>contents</code></strong> — either a single concatenated string, or (when <code>useMultiTurn</code>, the default
+from the client) a proper <code>Content[]</code> of alternating <code>user</code>/<code>model</code> roles built by
+<code>MultiTurnRequestBuilder</code>.</li>
+<li><strong><code>geminiConfig</code></strong> — <code>maxOutputTokens</code> (65536), optional <code>temperature</code>/<code>topP</code>, thinking
+config, and — only when <code>useStructuredOutput</code> is on — <code>responseMimeType: 'application/json'</code>
+plus the sanitised response schema.</li>
+</ol>
+<p><strong>Schema sanitisation.</strong> Gemini's <code>responseSchema</code> is a proto-defined subset of JSON Schema.
+<code>sanitizeSchemaForGemini()</code> whitelists <code>type, description, format, nullable, enum, properties, required, items, anyOf</code> and drops everything else. Integer/number enums are dropped entirely.
+When <code>&quot;&quot;</code> was a valid enum value it is removed and the field marked <code>nullable</code> — which is why
+the server must later coerce nulls back to canonical defaults. The Ajv copy used for
+validation is untouched.</p>
+<p><strong>Thinking resolution.</strong> <code>resolveThinkingConfig()</code> maps a level to a numeric budget
+(<code>minimal:0, low:128, medium:512, high:1024</code> — capped at 128 on Flash-Lite). <code>adaptive</code> uses a
+zero-latency local keyword classifier: comparison/planning words → medium, career/guidance
+words → low-or-medium, greetings and very short inputs → minimal. The level is then clamped to
+what the model registry says the model supports (Gemini 3.7 Flash has no <code>minimal</code>). Budget 0
+omits <code>thinkingConfig</code> entirely — sending <code>thinkingBudget: 0</code> is an <code>INVALID_ARGUMENT</code>.
+Gemini 3.x uses <code>thinkingLevel</code> strings; 2.5 uses <code>thinkingBudget</code> integers; the mechanism
+comes from <code>ModelCapabilityInfo.thinkingMechanism</code>.</p>
+<p><strong><code>classifyUserMessage()</code></strong> returns <code>greeting</code> / <code>farewell</code> / <code>idle</code> / <code>rubbish</code> / <code>career</code>.
+It short-circuits to <code>career</code> whenever there is an ongoing conversation or an active question —
+it is a bypass classifier, not the semantic router, and must never gate understanding. Only
+empty or symbol-only input counts as <code>rubbish</code>; acronyms, numbers and non-Latin text are all
+routed to Gemini.</p>
+</section>
+
+<section class="section" id="7-memory-and-context-strategies-tokenbudgetmemorymanager">
+<h2 class="section-title"><span class="sec-num">7</span><span>Memory and context strategies — TokenBudgetMemoryManager</span><a class="anchor" href="#7-memory-and-context-strategies-tokenbudgetmemorymanager" aria-label="Link to this section">#</a></h2>
+<p><strong>Token estimation.</strong> <code>estimateTokens()</code> is a local approximation:
+<code>ceil(chars × 0.26 + words × 0.15)</code>. Exact counts come from <code>ai.models.countTokens</code> and are
+cached separately from estimates in two bounded LRU maps — an estimate never masquerades as an
+exact count, and the <code>sources</code> field in every telemetry payload says which was used.</p>
+<p><strong>Turn grouping.</strong> <code>groupIntoTurns()</code> pairs each user message with its assistant reply into an
+atomic <code>DialogueTurn</code>. Eviction is whole-turn — you never get a user question in context with
+its answer missing. <strong>Rejected assistant responses are dropped from the turn</strong>, so an invalid
+answer contributes only the user's question to future context.</p>
+<p><strong>Assistant compaction for context.</strong> <code>formatAssistantMessageForContext()</code> converts stored
+Protocol v1.3 JSON into compact plain text (<code>[Mode: ... | Intent: ...]</code> plus headings, block
+text, list items and the question asked). Raw protocol JSON is never re-fed into context.</p>
+<p><strong>The four strategies:</strong></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BASELINE</code></td>
+<td>Keep every turn verbatim. No eviction, no summary. The control condition.</td>
+</tr>
+<tr>
+<td><code>SUMMARY_RECENT</code></td>
+<td>Newest-first fill under the token budget and turn count; evicted turns become a summary.</td>
+</tr>
+<tr>
+<td><code>ADAPTIVE_HYBRID</code> (default)</td>
+<td>Same eviction loop, but paired with the structured memory capsule and a real LLM summary produced asynchronously after each turn.</td>
+</tr>
+<tr>
+<td><code>SEMANTIC_EVIDENCE</code></td>
+<td>3-turn recency anchor is always kept, then remaining budget is filled with keyword-relevance-scored historical turns (stop-word-filtered, sqrt-dampened), merged and re-sorted chronologically.</td>
+</tr>
+</tbody>
+</table></div>
+<p>The most recent turn is guaranteed to survive even if it alone exceeds the budget — otherwise
+the model would have no conversational context at all.</p>
+<p><strong>Compaction economics.</strong> Every eviction produces <code>CompactionMetrics</code>: source tokens, summary
+tokens, tokens removed, compaction input/output cost, net savings per turn, and
+<strong>break-even turns</strong> (<code>cost / savings</code>). These are marked <code>isSimulated: true</code> when derived from
+the model rather than from a real summariser call. The real summariser is
+<code>summarizeEvictedTurns()</code> in <code>server.ts</code>, which runs post-response on <code>gemini-3.5-flash-lite</code>
+and produces structured bullets (Goal / Background / Constraints / Decisions / Progress / Open),
+omitting any field without explicit evidence.</p>
+</section>
+
+<section class="section" id="8-protocol-v13-and-validation">
+<h2 class="section-title"><span class="sec-num">8</span><span>Protocol v1.3 and validation</span><a class="anchor" href="#8-protocol-v13-and-validation" aria-label="Link to this section">#</a></h2>
+<h3>The envelope</h3>
+<p>Every accepted response is one JSON object (<code>src/protocol/v1.3/Yuzee_Response_Protocol_v1.3.ts</code>):</p>
+<div class="code-wrap"><pre><code class="language-ts">{
+  schema_version: &quot;1.3&quot;,
+  current_mode: &quot;A_CONVERSATION&quot; | &quot;B_DELIVERY&quot; | &quot;S_SERVICE_HANDOFF&quot; | ...,
+  response_intent: &quot;ACTION_PLAN&quot; | &quot;GENERAL_DELIVERY&quot; | &quot;SOCRATIC_DIRECTION&quot; | ...,
+  content_blocks: YuzeeContentBlock[],   // the visible answer
+  interaction:    YuzeeInteraction,      // question / handoff / none
+  service_trigger:{...},                 // service intent + registered actions
+  rmo_readiness:  {...},                 // readiness + missing inputs
+  state:          {...},                 // response mode, confidence, progress, security
+  followups:      {...}                  // optional timed follow-up triggers
+}
+</code></pre></div>
+<p><strong>Block types:</strong> <code>heading, text, list, steps, table, comparison, callout, key_value, cards, timeline, flow, pathway_map, scorecard, chart, progress, checklist</code>. Each carries
+<code>id, type, level, variant, title, text, items[], columns[], rows[]</code> and an optional <code>data</code>
+object for v1.4 extensions.</p>
+<h3><code>validateProtocol()</code> — three layers</h3>
+<p><strong>Layer 1 — schema.</strong> Ajv compiled against <code>Yuzee_Response_Schema_v1.3.json</code>, plus explicit
+envelope assertions (<code>schema_version === &quot;1.3&quot;</code>, <code>content_blocks</code> is an array, the five
+required objects exist). Schema failure short-circuits; semantics are not evaluated.</p>
+<p><strong>Layer 2 — semantic invariants.</strong> These encode the counselling contract:</p>
+<ul>
+<li><strong>Rule #10</strong> — the first content block must be <code>type:&quot;text&quot;</code>, <code>level:&quot;none&quot;</code>, <code>title:&quot;&quot;</code>.
+The answer always opens with plain prose, never a heading.</li>
+<li><code>ranked_select</code> requires 3–6 options.</li>
+<li><code>recommended_actions</code> must be empty when <code>interaction.kind</code> is <code>question</code> or <code>handoff</code> —
+you cannot offer an action while blocking on an answer.</li>
+<li>Confidence consistency: <code>score === -1</code> forces <code>band:&quot;unknown&quot;</code> and
+<code>evidence_strength:&quot;none&quot;</code>; otherwise 0–39 → <code>low</code>, 40–69 → <code>medium</code>, 70–100 → <code>high</code>.</li>
+<li>Display invariants via <code>validateDisplayInvariants()</code>.</li>
+<li>A security penalty with zero breaches is a <strong>warning</strong>, not an error — the content still renders.</li>
+</ul>
+<p><strong>Layer 3 — trusted actions.</strong> Any <code>action_id</code> not present in <code>TRUSTED_SERVICE_ACTIONS</code>
+(<code>src/orchestration/serviceActions.ts</code>) produces a security warning. The model cannot invent
+executable actions.</p>
+<p><code>protocolAccepted = schemaValid &amp;&amp; semanticValid</code>. Warnings never block rendering; errors always do.</p>
+<p><strong>v1.4</strong> (<code>validateProtocolV14</code>) adds <code>rmo_readiness</code> as a required envelope member and extra
+rules for the new block types — duplicate <code>flow</code> node ids, dangling edge endpoints, duplicate
+<code>pathway_map</code> lane ids. It is validated but is not the default wire format.</p>
+<h3>Security override</h3>
+<p><code>src/protocol/securityOverride.ts</code> is the reason the model cannot escalate its own privileges:</p>
+<ul>
+<li><code>normaliseSecurityFields()</code> — coerces the nulls Gemini's nullable schema permits back to
+canonical defaults.</li>
+<li><code>computeNextSecurityState(currentCount, authoritativeBreachDelta = 0)</code> — <strong>never reads model
+output</strong>. Breach count changes only on explicit server events.</li>
+<li><code>applyServerSecurityState()</code> — writes the server's values over whatever the model claimed.</li>
+</ul>
+<h3>Service action execution</h3>
+<p><code>POST /api/conversations/:id/actions/:actionId/execute</code> deliberately never executes anything.
+Unregistered actions → 400. Registered but not connected in the lab → a truthful &quot;not
+connected&quot; response. Registered and connected → <strong>501</strong>, because connectivity metadata is not
+evidence of a completed provider operation. No fake success is ever reported.</p>
+</section>
+
+<section class="section" id="9-token-accounting-and-telemetry">
+<h2 class="section-title"><span class="sec-num">9</span><span>Token accounting and telemetry</span><a class="anchor" href="#9-token-accounting-and-telemetry" aria-label="Link to this section">#</a></h2>
+<h3>Per-turn usage</h3>
+<p>Extracted from Gemini's <code>usageMetadata</code>, with explicit provenance:</p>
+<ul>
+<li><code>inputTokens</code> — <code>promptTokenCount</code> (gross: cached + uncached).</li>
+<li><code>outputTokens</code> — <code>candidatesTokenCount</code>.</li>
+<li><code>thinkingTokens</code> — <code>thinkingTokenCount</code>/<code>thoughtsTokenCount</code> when explicit, otherwise derived
+as <code>total − prompt − candidates</code> when positive, otherwise <code>null</code>.</li>
+<li><code>cachedTokens</code> — <code>cachedContentTokenCount</code>, reported <strong>only</strong> when non-null and non-zero.</li>
+<li><code>uncachedInputTokens = inputTokens − cachedTokens</code>.</li>
+<li><code>totalTokens = uncachedInput + output + thinking</code>. The provider's <code>totalTokenCount</code> is
+deliberately <strong>not</strong> used, because it counts cached tokens in the input sum and would
+overstate quota consumption.</li>
+</ul>
+<p>Every number carries a <code>sources</code> entry: <code>provider</code> / <code>estimate</code> / <code>countTokens</code> / <code>simulated</code> /
+<code>bypass</code> / <code>unavailable</code>. Nothing is presented as measured when it was guessed.</p>
+<h3>Timeline</h3>
+<p><code>requestReceivedAt</code>, <code>preProviderLatencyMs</code>, <code>conversationLoadMs</code>, <code>userEventValidationMs</code>,
+<code>memoryAssemblyMs</code>, <code>requestAssemblyMs</code>, <code>providerTtftMs</code>, <code>providerGenerationDurationMs</code>,
+<code>validationDurationMs</code>, <code>totalLatencyMs</code>. The clock starts on line 1 of the handler, so
+pre-provider work is honestly attributed.</p>
+<h3>Aggregates</h3>
+<ul>
+<li><strong>Session stats</strong> — cumulative counters in memory, mirrored to <code>data/session-stats.json</code> and
+rehydrated from PostgreSQL on boot. Derived: cache hit ratio, net savings percentage against
+an estimated baseline, averages per turn. Resettable.</li>
+<li><strong>Utility stats / whiteboard stats</strong> — separate counters for the cheap helper models so
+helper spend never contaminates chat telemetry.</li>
+<li><strong><code>data/token-log.ndjson</code></strong> — append-only, one JSON line per provider call, never truncated.
+Used for daily cost and the log viewer.</li>
+<li><strong>Lifetime stats</strong> — non-resettable all-time totals from PostgreSQL.</li>
+<li><strong>Daily cost warnings</strong> — the client polls <code>/api/tokens/daily-cost</code> after each turn and warns
+once each at $1/$5/$10, then on every turn above $15.</li>
+</ul>
+<p>Costs come from <code>calcTurnCost()</code> in <code>src/data/models.ts</code> using per-model
+<code>inputPricePerMToken</code> / <code>outputPricePerMToken</code> / <code>cachedReadPricePerMToken</code>.</p>
+</section>
+
+<section class="section" id="10-backend-http-api-reference">
+<h2 class="section-title"><span class="sec-num">10</span><span>Backend HTTP API reference</span><a class="anchor" href="#10-backend-http-api-reference" aria-label="Link to this section">#</a></h2>
+<p>Everything under <code>/api</code> requires <code>Authorization: Bearer &lt;token&gt;</code> except <code>/api/auth/*</code> and
+<code>/api/db-status</code>. Auth is a stateless HMAC-SHA256 of <code>username:password</code> keyed by
+<code>AUTH_SECRET</code>, so tokens survive restarts and there is no session store. Rate limits are
+per-IP, per-limit-bucket, 1-minute windows, in memory.</p>
+<h3>Auth and health</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/auth/login</code></td>
+<td>Returns <code>{token}</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/auth/logout</code></td>
+<td>Client-side clear only</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/auth/check</code></td>
+<td>Returns <code>{authenticated}</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/db-status</code></td>
+<td>DB enabled + ping</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Config and protocol</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/config/capabilities</code></td>
+<td>Model registry, defaults, feature flags</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/protocol/info</code></td>
+<td>Prompt/schema versions and hashes</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/system-prompt</code></td>
+<td>Prompt content, hash, bytes, filename</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/system-prompt/reload</code></td>
+<td>Admin only; re-reads from disk</td>
+</tr>
+<tr>
+<td>GET/PUT</td>
+<td><code>/api/shared-settings</code></td>
+<td>Deployment-wide prompt mode + retention defaults</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/shared-settings/reset-prompt</code></td>
+<td>Back to the default prompt</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Conversations</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/conversations</code></td>
+<td>—</td>
+<td>DB-backed when available, merged with in-flight</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations</code></td>
+<td>—</td>
+<td>Creates; in-memory store capped at 500 (LRU by <code>updatedAt</code>)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/load-demo</code></td>
+<td>—</td>
+<td>Seeds the cybersecurity demo conversation</td>
+</tr>
+<tr>
+<td>GET/PUT/DELETE</td>
+<td><code>/api/conversations/:id</code></td>
+<td>—</td>
+<td>PUT filters the body to an allowlist of fields</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/restore</code></td>
+<td>—</td>
+<td>Rehydrates from a localStorage backup after a restart</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/messages</code></td>
+<td>20/min</td>
+<td><strong>The chat pipeline (SSE)</strong></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/generate-title</code></td>
+<td>10/min</td>
+<td>4–6 word title from the first exchange</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/feedback</code></td>
+<td>—</td>
+<td>Per-message quality feedback</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/reset-memory</code></td>
+<td>—</td>
+<td>Clears summary and compaction history</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/actions/:actionId/execute</code></td>
+<td>—</td>
+<td>Registry check only; never executes</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Telemetry</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/tokens/count</code></td>
+<td>Pre-flight breakdown; <code>fastEstimate:true</code> for local estimation while typing</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/tokens/session-stats</code></td>
+<td>Cumulative session counters + derived ratios</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/tokens/session-reset</code></td>
+<td>Zeroes session counters</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/tokens/utility-stats</code></td>
+<td>Whiteboard + utility model spend</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/tokens/log</code></td>
+<td>Last 500 NDJSON entries</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/tokens/lifetime-stats</code></td>
+<td>All-time totals</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/tokens/daily-cost</code></td>
+<td>DB first, NDJSON fallback</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/benchmark</code></td>
+<td>10/min. Modelled estimate or live Gemini per strategy</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Helper models (all Flash-Lite, all fail-safe)</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Rate</th>
+<th>Returns on failure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/extract-profile-facts</code></td>
+<td>30/min</td>
+<td><code>{facts: []}</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/detect-contradictions</code></td>
+<td>20/min</td>
+<td><code>{contradictions: []}</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/pre-check</code></td>
+<td>30/min</td>
+<td><code>{needsClarification: false}</code></td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/routing/llm</code></td>
+<td>30/min</td>
+<td>503 when Cloudflare is unconfigured</td>
+</tr>
+</tbody>
+</table></div>
+<h3>Pathway whiteboard</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Rate</th>
+<th>Model</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>POST</td>
+<td><code>/api/pathway/generate</code></td>
+<td>20/min</td>
+<td><code>gemini-3.7-flash</code> — full phased roadmap graph</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/pathway/recommend</code></td>
+<td>30/min</td>
+<td>Flash-Lite — 3 next-step suggestions</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/pathway/explain</code></td>
+<td>30/min</td>
+<td><code>gemini-3.7-flash</code> — per-node Q&amp;A</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/pathway/stats</code></td>
+<td>—</td>
+<td>Whiteboard token counters</td>
+</tr>
+</tbody>
+</table></div>
+<p>The generator supports four styles — <code>structured</code>, <code>project-driven</code>, <code>fast-track</code>,
+<code>self-paced</code> — each with its own pacing, resource policy and phase count, and returns
+<code>{nodes, edges}</code> with typed nodes (<code>goal, phase, course, skill, project, resume, apply, milestone</code>).</p>
+<h3>Subsystems</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Rate</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/warehouse/status</code></td>
+<td>—</td>
+<td>Worker state and scope</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/objectives/catalogue</code></td>
+<td>—</td>
+<td>316 catalogue with per-objective availability</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/conversations/:id/objectives</code></td>
+<td>—</td>
+<td>Saved workspace sessions</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/conversations/:id/objectives/:operation</code></td>
+<td>12/min</td>
+<td><code>select</code>/<code>start</code>/<code>dismiss</code>/<code>course-focus</code>/<code>correct</code>/<code>answer</code>, 100 s timeout</td>
+</tr>
+<tr>
+<td>GET/POST</td>
+<td><code>/api/conversations/:id/mini-pathway</code></td>
+<td>6/min</td>
+<td>SSE, 120 s timeout</td>
+</tr>
+<tr>
+<td>GET/POST</td>
+<td><code>/api/conversations/:id/details</code></td>
+<td>6/min</td>
+<td>SSE research; 409 if one is already running</td>
+</tr>
+</tbody>
+</table></div>
+</section>
+
+<section class="section" id="11-backend-subsystems">
+<h2 class="section-title"><span class="sec-num">11</span><span>Backend subsystems</span><a class="anchor" href="#11-backend-subsystems" aria-label="Link to this section">#</a></h2>
+<h3>11.1 Warehouse — <code>src/warehouse/</code></h3>
+<p>Retrieval over a <strong>user-approved catalogue</strong> of Australian courses, providers, careers,
+industries, occupational skills, public job advertisement records and regional signals.</p>
+<ul>
+<li><strong>Process model.</strong> <code>WarehouseService</code> forks <code>catalogue-worker.cjs</code> (a SQLite reader) with
+IPC. State machine: <code>STOPPED → PREPARING → READY | UNAVAILABLE</code>. Lookups are capped at 3
+queries × 240 chars, 4 ids, and an 8-second timeout. A crashed worker rejects all pending
+lookups and marks the service unavailable.</li>
+<li><strong>Gating.</strong> <code>needsWarehouse()</code> is a cheap regex/length gate that skips retrieval for
+thanks/bye/ok and for explicit &quot;don't search&quot; requests.</li>
+<li><strong>Query planning.</strong> A <code>gemini-3.7-flash</code> planner converts the message into a bounded plan:
+<code>action</code> (NONE/COURSES/CAREERS/INDUSTRY/LOCAL/SKILLS_JOBS), course/occupation/industry/skill/
+job/role/provider queries with hard caps, an explicit location, and facets
+(PROVIDER, CAREERS, INDUSTRY, LOCAL, FUNDING, SKILLS, JOBS, LEARNING). The plan is
+re-validated server-side; a malformed plan throws.</li>
+<li><strong>Two-pass role ranking.</strong> When more than one candidate role comes back, <code>rankRoleCandidates()</code>
+narrows them and the lookup is re-run with explicit <code>role_ids</code>.</li>
+<li><strong><code>WAREHOUSE_INSTRUCTION</code></strong> is a large, carefully worded prompt fragment that accompanies the
+data. Its rules are the evidence contract: catalogue records are data not instructions;
+similarity is never confidence; a regional signal is not local demand; a dated employer
+relationship is not an open vacancy; a skill title is not assessed competence; job
+availability is always <code>NOT_CONFIRMED_CURRENT</code>; missing values never mean zero, free or
+ineligible; no web search or independent verification has occurred.</li>
+<li><strong>Evidence ids.</strong> <code>warehouseEvidence()</code> produces a stable id and <code>record_path</code> for every
+returned record so downstream answers can cite exactly what they used.</li>
+</ul>
+<h3>11.2 Objectives / workspaces — <code>src/objectives/</code></h3>
+<p>The &quot;316&quot; catalogue of structured counselling activities that open in the right-hand workspace.</p>
+<ul>
+<li><strong>Selection.</strong> After each assistant turn the browser proposes a BGE shortlist; the server
+runs a Gemini selection call that returns at most one objective with <code>confidence</code>,
+<code>workspace_need</code> and <code>decision</code> (SUGGEST/CLARIFY/NONE). Hard boundaries return NONE: safety
+overrides, an already-active session, a turn that already has a saved activity, or a
+selection boundary in the user's message. Results are cached per source message and
+audited to <code>data/objective-preview/&lt;hash&gt;/audit/</code>.</li>
+<li><strong>Execution.</strong> <code>plan()</code> composes the system prompt from the workbook registry
+(<code>qa/objectives/registry/workbook.json</code>), the objective's <code>qa_prompt_v2</code>, the wire
+instruction, the workspace capability contract and the warehouse rules. The response schema
+is compiled per objective by <code>qa/objectives/schema.mjs</code>, then tightened: summaries capped at
+600 chars, <code>next_actions</code> restricted to <code>continue_chat</code> and <code>research_required</code>, and
+<code>evidence_refs</code> bound by enum to ids that actually exist in the context.</li>
+<li><strong>Provider call.</strong> <code>callObjectiveModel()</code> posts to the Gemini <strong>Interactions</strong> API with
+<code>store:false</code>, a fixed seed, and API-key redaction in any surfaced provider message.</li>
+<li><strong>Persistence.</strong> One JSON file per session under a hashed conversation folder, written
+atomically via temp-file + rename with <code>0600</code> permissions.</li>
+<li><strong>Handoff.</strong> A completed workspace result can be transferred into chat exactly once
+(<code>markHandedOff</code>), guarded by revision checks and an in-flight transfer set.</li>
+</ul>
+<h3>11.3 Mini pathway — <code>src/miniPathway/</code></h3>
+<p>An optional short career pathway generated after a qualifying turn, streamed block by block.</p>
+<p><code>decideMiniPathway()</code> combines three signals: the accepted response, a BGE pathway relevance
+hint (calibrated, versioned), and the model's own <code>user_confidence.score</code>. Below the threshold
+of 40 and not already helped → <code>automatic</code>; otherwise <code>offer</code>; boundaries → <code>none</code>.
+<code>validateMiniPathwayOutput()</code> enforces that the pathway is <code>B_DELIVERY</code> with <strong>no question,
+no recommended actions, no service trigger, no followups</strong> — it must not hijack the conversation.</p>
+<h3>11.4 Detail research — <code>src/research/</code></h3>
+<p>&quot;Explore more&quot;: a grounded, separate specialist that answers one scoped follow-up question
+about a course, career or study option using Google Search grounding.</p>
+<ul>
+<li>Requires a parent assistant message whose protocol validated.</li>
+<li>One concurrent research per conversation (409 otherwise), 120 s timeout, SSE progress.</li>
+<li>15-minute cache keyed on parent message, target, question, study year and location.</li>
+<li>Status is one of <code>answered</code> / <code>partial</code> / <code>no_evidence</code> / <code>needs_clarification</code>. Every fact
+cites evidence ids and is labelled <code>source_backed</code> (the excerpt supports it — <em>not</em>
+independently verified), <code>inference</code>, or <code>benchmark</code>.</li>
+<li>Provider errors are never surfaced raw; only an allowlisted set of safe messages passes
+through, because raw errors can contain request credentials.</li>
+</ul>
+<h3>11.5 Orchestration — <code>src/orchestration/</code></h3>
+<ul>
+<li><code>sharedContext.ts</code> — the versioned read model of user contributions described in §5.2.
+It explicitly refuses to promote model inference to fact; every entry is
+<code>evidence_status: USER_REPORTED</code>, <code>scope: CONVERSATION_ONLY</code>.</li>
+<li><code>questionOwner.ts</code> — decides whether chat or a visible workspace owns the next question.</li>
+<li><code>serviceActions.ts</code> — the trusted action registry (<code>TRUSTED_SERVICE_ACTIONS</code>).</li>
+<li><code>workspacePresence.ts</code> — which workspace the browser currently shows, re-validated server-side.</li>
+</ul>
+<h3>11.6 @Oala — <code>src/oala/</code></h3>
+<p><code>parseOalaMention()</code> only activates on an explicit leading <code>@oala</code> (quoted mentions, email
+addresses and older turns do not count). When active, the server reads the Yuzee service list
+out of the prompt, builds an Oala instruction listing only enabled and connected action ids,
+and — for simple service questions — answers locally via <code>oalaBasicAnswer()</code> at zero provider
+cost.</p>
+<h3>11.7 Teaching review and provider recovery</h3>
+<ul>
+<li><code>TeachingAnswerReview.ts</code> — <code>shouldReviewTeaching()</code> decides whether a second pass is
+warranted; <code>applyReviewedBlocks()</code> merges only <code>content_blocks</code>; <code>combineGenerationUsage()</code>
+sums usage across both calls so telemetry stays honest.</li>
+<li><code>ReviewRetry.ts</code> — bounded retry with a <code>ReviewAudit</code> (<code>attempts</code>, <code>failures[]</code>) attached to
+the validation result and logged.</li>
+<li><code>ProviderRecovery.ts</code> — one retry of the provider stream, surfacing a <code>retrying</code> status to
+the user. SDK-level retries are disabled (<code>retryOptions:{attempts:1}</code>) so a 503 cannot hide
+behind a silent internal retry until timeout.</li>
+</ul>
+</section>
+
+<section class="section" id="12-local-semantic-routing-bge-srcrouting-srcworkers">
+<h2 class="section-title"><span class="sec-num">12</span><span>Local semantic routing (BGE) — src/routing/ + src/workers/</span><a class="anchor" href="#12-local-semantic-routing-bge-srcrouting-srcworkers" aria-label="Link to this section">#</a></h2>
+<p>Routing runs <strong>in the browser</strong>, in a Web Worker, on a pinned quantised ONNX model. Gemini
+still writes every answer; routing only picks an optional topical focus.</p>
+<p><strong>Model.</strong> <code>Xenova/bge-small-en-v1.5</code>, revision pinned in <code>src/routing/models.ts</code>, <code>q8</code> dtype,
+CLS pooling, 512-token budget, 384 dimensions, single WASM thread. <code>all-MiniLM-L6/L12</code> remain
+in the registry for offline comparison scripts only. A Cloudflare Workers AI Llama-3.1-8b
+option routes server-side via <code>/api/routing/llm</code> instead.</p>
+<p><strong>Contract enforcement.</strong> <code>bgeContract.ts</code> validates the ready handshake field by field
+(model id, revision, token budget, pooling, dimensions, dtype, artifact, release) and
+<code>checkedBgeVector()</code> rejects any embedding that is the wrong length, non-finite or not
+L2-normalised to within 0.002. A mismatch marks the router unavailable rather than silently
+degrading. <code>npm run check:bge-contract</code> gates the build.</p>
+<p><strong>Worker tasks</strong> (<code>embedder.worker.ts</code>), all priority-queued through <code>EmbeddingQueue</code> with
+cooperative <code>yield</code> between batches so interactive routing preempts background work:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Purpose</th>
+<th>Timeout</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>route</code></td>
+<td>Pick one micro-tool skill for an <code>@Oala</code> message</td>
+<td>1500 ms</td>
+</tr>
+<tr>
+<td><code>topic</code></td>
+<td>Route a topic selected from the previous question</td>
+<td>1500 ms</td>
+</tr>
+<tr>
+<td><code>needs</code></td>
+<td>Classify the turn as answer / clarify / research</td>
+<td>1000 ms</td>
+</tr>
+<tr>
+<td><code>suggest</code></td>
+<td>Post-response skill suggestions from the answer text</td>
+<td>20 s</td>
+</tr>
+<tr>
+<td><code>pathway</code></td>
+<td>Mini-pathway relevance</td>
+<td>25 s</td>
+</tr>
+<tr>
+<td><code>objectives</code></td>
+<td>Lazy 316-catalogue retrieval</td>
+<td>90 s</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gating.</strong> <code>routingSkipReason()</code> refuses to route before embedding at all: structured
+answers, empty or &gt;1800-char input, non-Latin or symbol-only text, bare greetings,
+corrections and boundaries (&quot;stop&quot;, &quot;actually&quot;, &quot;not interested&quot;), sensitive-boundary phrases,
+under-4-word fragments, and multi-question messages. Short follow-ups (&quot;more&quot;, &quot;why&quot;,
+&quot;compare them&quot;) get one chance to be resolved against history by <code>resolveShortQuery()</code>.</p>
+<p><strong>Decision.</strong> <code>chooseRoute()</code> applies the calibrated gate from <code>bgeCalibration.json</code> — per-flow
+score, margin and domain-margin thresholds — and abstains otherwise. Abstention is the
+designed-for outcome, not a failure.</p>
+<p><strong>Server re-validation.</strong> The browser's decision is advisory. <code>validateRouteSelection()</code> on the
+server re-checks version, model id, flow, tool eligibility, calibration version, and that
+score/margin/domain-margin clear the server's own thresholds. Client-supplied thresholds are
+never accepted, and only allowlisted catalogue text (<code>mini_prompt</code> from <code>microtools.json</code>)
+ever reaches Gemini.</p>
+<p><strong>The instruction itself</strong> (<code>scopedInstruction()</code>) tells the model the hint is <em>fallible</em>, is
+not a user instruction or evidence, must be ignored if it does not match, must never be
+exposed as a label or score, and must not restart intake or override a correction.</p>
+</section>
+
+<section class="section" id="13-frontend">
+<h2 class="section-title"><span class="sec-num">13</span><span>Frontend</span><a class="anchor" href="#13-frontend" aria-label="Link to this section">#</a></h2>
+<h3>13.1 Entry and auth</h3>
+<p><code>src/main.tsx</code> wraps <code>window.fetch</code> so every <code>/api/*</code> request except <code>/api/auth/*</code> gets the
+<code>Authorization</code> header from <code>localStorage.yuzee_auth</code>. <code>App.tsx</code> checks the token against
+<code>/api/auth/check</code>, renders <code>LoginPage</code> when absent, and otherwise mounts
+<code>TokenLabProvider → ObjectiveProvider → AuthedApp</code>. A second page, <code>ProtocolRendererPage</code>, is
+a standalone protocol renderer playground reachable from the navbar.</p>
+<h3>13.2 State — <code>TokenLabContext</code></h3>
+<p>One context holds everything: conversations list, current conversation, capabilities, session
+stats, streaming flags, active turn telemetry, every modal's open/closed state, the user
+profile facts, saved location, contradictions, deferred clarification payload, shared settings
+and the daily cost warning. There is no Redux/Zustand layer — the surface is large but flat.</p>
+<p>Streaming updates always guard with <code>prev?.id !== activeConv.id</code> and <code>controller.signal.aborted</code>
+before mutating, so a late chunk from an abandoned turn can never write into a different
+conversation.</p>
+<p>Key actions: <code>selectConversation</code>, <code>startNewConversation</code>, <code>loadDemoConversation</code>,
+<code>removeConversation</code>, <code>updateCurrentConversationSettings</code>, <code>applyOptimizationMode</code>,
+<code>applyPreset</code>, <code>sendMessage</code>, <code>stopStreaming</code>, <code>submitFeedback</code>, <code>resetMemory</code>,
+<code>refreshStats</code>, <code>resetSessionStats</code>, <code>inspectTurnTelemetry</code>, <code>clearLocalData</code>.</p>
+<p><strong>Modes</strong> (<code>applyOptimizationMode</code>): <code>AUTO</code>, <code>SAVE_TOKENS</code>, <code>FULL_CONTEXT</code>, <code>VANILLA</code>,
+<code>MICRO_PROMPT</code>, <code>ADVANCED</code>.
+<strong>Presets</strong> (<code>applyPreset</code>): <code>MAX_QUALITY</code>, <code>BALANCED</code>, <code>MAX_SAVINGS</code>, <code>VANILLA</code>, <code>ADVANCED</code>.
+Both write strategy, thinking level, context budget, retained turns and response mode together.</p>
+<h3>13.3 Streaming client</h3>
+<p><code>api.streamChatMessage()</code> is a hand-written SSE parser, not <code>EventSource</code>, because the request
+is a POST with a JSON body. Details that matter:</p>
+<ul>
+<li><code>currentEvent</code> persists <strong>across chunk boundaries</strong> — an event name and its data line can
+arrive in different network chunks.</li>
+<li>A blank line dispatches and resets the event type, per the SSE spec.</li>
+<li>The initial <code>fetch</code> retries twice (500 ms, 1000 ms) on transient network errors only.</li>
+<li>The returned function aborts the request; a caller-supplied signal is forwarded into the
+internal controller.</li>
+<li><code>onDone</code> is idempotent.</li>
+</ul>
+<h3>13.4 Component map</h3>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Navbar</code></td>
+<td>Model picker, router-model selector, pathway toggle, lab tools, profile, settings, cost chip, telemetry toggle</td>
+</tr>
+<tr>
+<td><code>Sidebar</code></td>
+<td>Conversation list, new/demo conversation, overall telemetry</td>
+</tr>
+<tr>
+<td><code>ChatArea</code></td>
+<td>Message list, turn dividers, per-message actions (copy, raw JSON, speak, retry), skill suggestions, objective suggestions, research offers, cost warnings</td>
+</tr>
+<tr>
+<td><code>Composer</code></td>
+<td>Textarea with draft persistence, <code>@Oala</code> mention affordance, attachments, speech-to-text, send/stop</td>
+</tr>
+<tr>
+<td><code>ProtocolV13Renderer</code></td>
+<td>Renders all 16 block types with a defensive <code>default</code> branch for unknown types</td>
+</tr>
+<tr>
+<td><code>ProtocolInteraction</code></td>
+<td>Renders questions, options, ranked select, field forms and handoffs</td>
+</tr>
+<tr>
+<td><code>TokenInspector</code></td>
+<td>Right-hand live telemetry panel</td>
+</tr>
+<tr>
+<td><code>AdvancedLabModal</code></td>
+<td>The lab workbench: context, memory, strategy, protocol and raw diagnostics tabs</td>
+</tr>
+<tr>
+<td><code>ContextInspectorModal</code></td>
+<td>Included/excluded context sections with token counts and previews</td>
+</tr>
+<tr>
+<td><code>MemoryTimelineModal</code></td>
+<td>Compaction history and break-even maths</td>
+</tr>
+<tr>
+<td><code>BenchmarkModal</code></td>
+<td>Strategy comparison, modelled or live</td>
+</tr>
+<tr>
+<td><code>AnalyticsDashboardModal</code></td>
+<td>Session/lifetime aggregates</td>
+</tr>
+<tr>
+<td><code>CareerContextModal</code></td>
+<td>Edit the structured memory capsule</td>
+</tr>
+<tr>
+<td><code>UserProfileModal</code></td>
+<td>Learned profile facts, likes/dislikes, contradictions</td>
+</tr>
+<tr>
+<td><code>ClarificationQuestionsModal</code> / <code>Card</code></td>
+<td>Contradiction resolution flow</td>
+</tr>
+<tr>
+<td><code>SettingsModal</code></td>
+<td>Shared settings, system prompt, storage, API status</td>
+</tr>
+<tr>
+<td><code>ExportModal</code></td>
+<td>Conversation export</td>
+</tr>
+<tr>
+<td><code>PathwayWhiteboard</code></td>
+<td>The full pathway canvas (largest component)</td>
+</tr>
+<tr>
+<td><code>MiniPathwayExperience</code> / <code>Streaming</code></td>
+<td>Mini pathway drawer and its streaming blocks</td>
+</tr>
+<tr>
+<td><code>SkillSuggestions</code></td>
+<td>Post-response skill offers from the local router</td>
+</tr>
+<tr>
+<td><code>MicroRouterStatus</code> / <code>ModelLoadingIndicator</code></td>
+<td>Embedding model load state</td>
+</tr>
+<tr>
+<td><code>GuidanceList</code>, <code>MoreDetails</code>, <code>ResearchAnswerCard</code>, <code>ChatStreamingStatus</code>, <code>ChatTurnDivider</code></td>
+<td>Supporting UI</td>
+</tr>
+<tr>
+<td><code>objectives/*</code></td>
+<td>Workspace shell, primitive renderer, suggestions toolbar, history, result</td>
+</tr>
+<tr>
+<td><code>warehouse/*</code></td>
+<td>Course cards, provider comparison, skills explorer, local area guide</td>
+</tr>
+<tr>
+<td><code>ui/Apple*</code></td>
+<td>Shared control primitives (toggle, slider, select, segmented control, confirm dialog)</td>
+</tr>
+</tbody>
+</table></div>
+<h3>13.5 Presentation safety</h3>
+<p><code>src/ux/responsePresentation.ts::acceptedResponse()</code> is the single gate the UI uses before
+rendering anything. A message renders only if it parses, validates and was not marked
+invalid — the same rule the server applies before storing it. <code>readableMarkdown.ts</code> and
+<code>responseToReadableText()</code> produce copy/speech text from the structured blocks rather than
+from raw JSON.</p>
+</section>
+
+<section class="section" id="14-data-and-persistence">
+<h2 class="section-title"><span class="sec-num">14</span><span>Data and persistence</span><a class="anchor" href="#14-data-and-persistence" aria-label="Link to this section">#</a></h2>
+<h3>Layers</h3>
+<ol>
+<li><strong>In-memory <code>Map&lt;string, ConversationItem&gt;</code></strong> — the hot path. Capped at 500; the
+least-recently-updated conversation is evicted on overflow.</li>
+<li><strong><code>data/</code> JSON files</strong> — the default durable layer, always active:
+<ul>
+<li><code>conversations.json</code> — full conversations (via <code>LocalConversationStore</code>)</li>
+<li><code>session-stats.json</code> — cumulative counters</li>
+<li><code>token-log.ndjson</code> — append-only per-call usage log</li>
+<li><code>shared-settings.json</code> — deployment-wide settings</li>
+<li><code>detail-research.json</code>, <code>mini-pathways.json</code> — subsystem results</li>
+<li><code>objective-preview/&lt;hash&gt;/</code> — workspace sessions, selections and audits</li>
+<li><code>warehouse/catalogue.sqlite</code> — the built catalogue index</li>
+</ul>
+</li>
+<li><strong>PostgreSQL</strong> — optional, activated by <code>DATABASE_URL</code>.</li>
+</ol>
+<p><code>LocalConversationStore</code> serialises all writes through a promise chain and writes
+temp-file + <code>rename</code> for atomicity. A read error other than <code>ENOENT</code> <strong>throws</strong> rather than
+returning <code>[]</code> — it will never overwrite unreadable history with an empty list.</p>
+<h3>PostgreSQL schema</h3>
+<ul>
+<li><strong><code>conversations</code></strong> — settings, career context (JSONB), summary, compaction history,
+active interaction, and a 30-day <code>expires_at</code>.</li>
+<li><strong><code>messages</code></strong> — role, content, structured response, user event, telemetry, feedback, with
+<code>ON DELETE CASCADE</code>.</li>
+<li><strong><code>conversation_logs</code></strong> — append-only per-turn audit: ip, model, token counts, cost, latency,
+finish reason, truncated input/output, error code, and whiteboard flag. <strong>Never pruned.</strong></li>
+</ul>
+<p>Indexes cover ip+time, conversation id, updated/expiry, and message ordering. <code>MIGRATION_SQLS</code>
+are idempotent <code>ADD COLUMN IF NOT EXISTS</code> statements run on every startup.</p>
+<p>Background jobs when the DB is enabled: <code>pruneExpired()</code> every 6 hours, <code>keepAlive()</code> every
+hour (Supabase free tier auto-pauses idle projects). Both intervals are <code>unref()</code>'d.</p>
+<p>Connection details: pool max 5, 30 s idle, 5 s connect timeout, <code>ssl.rejectUnauthorized:false</code>,
+and <code>dns.setDefaultResultOrder('ipv4first')</code> at module load because Render's free tier cannot
+route IPv6 while Supabase resolves to both.</p>
+</section>
+
+<section class="section" id="15-deployment">
+<h2 class="section-title"><span class="sec-num">15</span><span>Deployment</span><a class="anchor" href="#15-deployment" aria-label="Link to this section">#</a></h2>
+<p><strong>Render</strong> (<code>render.yaml</code>) — <code>npm install &amp;&amp; SKIP_BGE_CONTRACT=1 npm run build</code>, started with
+<code>node dist/server.cjs</code>. The BGE contract check is skipped because the model files are
+gitignored.</p>
+<p><strong>Vercel</strong> (<code>vercel.json</code>) — static output from <code>dist/public</code>; all <code>/api/*</code> rewrites hit
+<code>api/index.ts</code>, which <code>require</code>s the pre-bundled <code>dist/server.cjs</code>. The bundle is required
+because <code>@vercel/node</code> transpiles but does not bundle transitive imports, leaving
+extensionless ESM paths unresolvable at runtime. <code>maxDuration</code> is 300 s, but the handler still
+self-limits to 8.5 s when <code>process.env.VERCEL</code> is set so the Hobby-tier 10 s kill produces an
+informative error rather than a dropped socket.</p>
+<p><strong>Local production</strong> — <code>npm run build</code> then <code>npm start</code>.</p>
+</section>
+
+<section class="section" id="16-spring-backend">
+<h2 class="section-title"><span class="sec-num">16</span><span>Spring backend</span><a class="anchor" href="#16-spring-backend" aria-label="Link to this section">#</a></h2>
+<p><code>spring-backend/</code> is a 60-class Java 21 / Spring Boot 3.4 / Spring AI 1.0 GA implementation of
+the same architecture. It is a standalone reference; the React UI does not talk to it.</p>
+<p>Controllers mirror the Node routes: <code>/api/config/capabilities</code>, <code>/api/protocol/{info,schema,prompt}</code>,
+<code>/api/conversations</code> (CRUD, feedback, reset-memory), <code>/api/conversations/{id}/messages</code>
+(SSE via <code>TEXT_EVENT_STREAM_VALUE</code>), <code>/api/tokens/{count,session-stats,session-reset}</code>,
+<code>/api/benchmark</code>.</p>
+<p>Services mirror the Node services: <code>ContextAssembler</code>, <code>TokenBudgetMemoryManager</code>,
+<code>ConversationCompactor</code>, <code>GeminiChatService</code>, <code>TokenCountService</code>, <code>UsageAccumulator</code>,
+<code>YuzeeSchemaValidator</code>, <code>YuzeeSemanticValidator</code>, <code>YuzeeProtocolRegistry</code>, <code>TextQualityFilter</code>.</p>
+<p>It additionally carries a <code>service/semantic/</code> package that the Node backend does not have:
+<code>SemanticEpisodeSegmenter</code>, <code>AdaptiveMemoryRetriever</code>, <code>MemoryQueryPlanner</code>,
+<code>LexicalSemanticSimilarityService</code> and <code>SemanticEvidenceContextBuilder</code> — the research
+implementation behind the <code>SEMANTIC_EVIDENCE</code> strategy, tuned by the
+<code>yuzee.token-lab.semantic-memory</code> block in <code>application.yml</code> (episode token/turn soft caps,
+boundary threshold, evidence token cap). Extraction is disabled by default.</p>
+<p>Run with <code>mvn spring-boot:run</code> and <code>GEMINI_API_KEY</code> in the environment. Actuator exposes
+health, info and metrics.</p>
+</section>
+
+<section class="section" id="17-invariants-do-not-break-these">
+<h2 class="section-title"><span class="sec-num">17</span><span>Invariants — do not break these</span><a class="anchor" href="#17-invariants-do-not-break-these" aria-label="Link to this section">#</a></h2>
+<ol>
+<li><strong>The system prompt lives only in <code>config.systemInstruction</code>.</strong> Never copy it into
+<code>contents</code>. Doing so doubles the token cost and destroys cache reuse.</li>
+<li><strong>Stable-prefix ordering.</strong> System instruction, then capsule, then summary, then recent
+turns, then the current message. Reordering breaks implicit caching.</li>
+<li><strong>A rejected response never enters history.</strong> <code>canRender === false</code> means the message is
+stored without <code>structuredResponse</code> and is skipped by <code>groupIntoTurns()</code>.</li>
+<li><strong>Security state is server-derived.</strong> <code>computeNextSecurityState()</code> must never read model output.</li>
+<li><strong><code>activeInteraction</code> updates only on full acceptance</strong>, and every <code>UserEvent</code> is validated
+against it server-side.</li>
+<li><strong>Only registered service actions exist</strong>, and none of them execute. A connected action
+returns 501, not a fake success.</li>
+<li><strong>Token provenance is never fudged.</strong> <code>exactCount</code> is true only when <em>every</em> active
+component came from <code>countTokens</code>. <code>sources</code> must stay accurate.</li>
+<li><strong><code>totalTokenCount</code> from the provider is not used</strong> for quota maths — cached tokens are
+counted in its input sum.</li>
+<li><strong>Routing is advisory and re-validated server-side.</strong> Client thresholds, tool ids and scores
+are never trusted; only allowlisted catalogue text reaches the model.</li>
+<li><strong>Retrieved data is data.</strong> Warehouse records, research results, workspace results and
+shared context are all injected with an explicit &quot;not instructions&quot; label.</li>
+<li><strong>Thought summaries never reach the client.</strong> <code>splitGeminiStreamChunk()</code> filters
+<code>part.thought === true</code>.</li>
+<li><strong>Protocol and schema files are immutable.</strong> <code>Yuzee_Response_Protocol_v1.3.ts</code> and
+<code>Yuzee_Response_Schema_v1.3.json</code> are versioned artifacts; change the version, not the file.</li>
+<li><strong>Provider errors are never surfaced raw</strong> — they can contain request credentials.</li>
+<li><strong>Build gates are load-bearing.</strong> The quiz-prompt, BGE-contract and objective-catalogue
+checks fail the build on purpose when generated artifacts drift.</li>
+</ol>
+</section>
+
+<section class="section" id="18-where-to-start-reading">
+<h2 class="section-title"><span class="sec-num">18</span><span>Where to start reading</span><a class="anchor" href="#18-where-to-start-reading" aria-label="Link to this section">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Understand a chat turn</td>
+<td><code>server.ts:1607</code> → <code>YuzeeRequestAssembler.assembleRequest</code> → <code>validateProtocol</code></td>
+</tr>
+<tr>
+<td>Change context strategy</td>
+<td><code>src/services/TokenBudgetMemoryManager.ts</code></td>
+</tr>
+<tr>
+<td>Change the counsellor's behaviour</td>
+<td><code>src/protocol/v1.3/Yuzee_Quiz_Counsellor_Training_v1.11.md</code> + <code>src/prompts/*.md</code></td>
+</tr>
+<tr>
+<td>Add a response block type</td>
+<td>v1.3 schema + TS type + <code>ProtocolV13Renderer.renderBlock</code> + <code>validateDisplayInvariants</code></td>
+</tr>
+<tr>
+<td>Work on routing</td>
+<td><code>src/routing/policy.ts</code>, <code>src/routing/bgeMatching.ts</code>, <code>src/workers/embedder.worker.ts</code></td>
+</tr>
+<tr>
+<td>Work on retrieval</td>
+<td><code>src/warehouse/service.ts</code> and <code>WAREHOUSE_INSTRUCTION</code></td>
+</tr>
+<tr>
+<td>Work on the UI shell</td>
+<td><code>src/App.tsx</code> → <code>src/context/TokenLabContext.tsx</code> → <code>src/components/ChatArea.tsx</code></td>
+</tr>
+<tr>
+<td>Understand telemetry</td>
+<td><code>server.ts</code> lines ~2200–2350 and <code>src/data/models.ts</code></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+
+<footer>
+<span>Generated from <code>docs/ARCHITECTURE.md</code> — edit the markdown, then run <code>node scripts/build-architecture-html.mjs</code>.</span>
+<a href="#">Back to top</a>
+</footer>
+</div>
+</body>
+</html>

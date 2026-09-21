@@ -1,0 +1,283 @@
+{
+  "test_id": "EMP_SAFE_001-T05",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 3126,
+  "input_context": {
+    "user_message": "For Is This Employer or Job Legitimate?, two pieces of information conflict. One source says one thing and another says something else.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "59417f71de9692b567f6d3299636dbf3257e8175e4a0d5620073630d27895800",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5121
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "conflict_notice",
+        "purpose": "Explain the importance of resolving contradictory employer details before evaluating safety.",
+        "prompt": "Reviewing source conflict",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Conflicting Information Detected",
+            "detail": "When evaluating employer legitimacy, conflicting details regarding the organization name, contact domain, or job offer structure require clarification to prevent security risks.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "short_answer",
+        "id": "conflict_details_input",
+        "purpose": "Capture the specific conflicting employer names, domains, or offer claims to perform verification.",
+        "prompt": "What specific details conflict (such as the company name, website domain, job title, or contact method)?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Source contradiction reported",
+        "basis": "User noted two conflicting pieces of information regarding the employer or opportunity.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific conflicting details (employer name, domain, email, role, or offer terms)",
+      "Official legal entity identity",
+      "Verified careers communication channel"
+    ],
+    "result": {
+      "job_legitimacy_check": null,
+      "next_actions": [],
+      "summary": "Legitimacy check paused due to conflicting source information. Awaiting specific details regarding the discrepancy."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Unresolved contradictory employer or opportunity information"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide conflict details in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "The legitimacy check requires user input to resolve conflicting facts about the employer or job posting.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting specific details on contradictory information before proceeding with verification."
+      },
+      "evidence_and_unknowns": [
+        "UNKNOWN: Specific conflicting claims or data points",
+        "UNKNOWN: Employer entity and contact domain"
+      ],
+      "recommended_next_action": "Clarify the exact conflicting details provided by the two sources."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets the specified objective EMP_SAFE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Prior context was empty ('None'); context reuse cannot be evaluated due to fixture limitations.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The short_answer question specifically asks for the exact conflicting details (domain, role, company name), which directly determines the verification path.",
+          "evidence_pointer": "candidate.ui[1].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Both UI components used ('evidence_panel' and 'short_answer') are within the allowed UI primitive list.",
+          "evidence_pointer": "candidate.ui[0].component, candidate.ui[1].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Surfaces the conflict, pauses premature evaluation, and asks for specific conflicting identity/contact vectors as required by EMP_SAFE_001 logic.",
+          "evidence_pointer": "candidate.ui[0].content[0].detail"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No factual claims are invented; unknowns are explicitly preserved without guessing.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No numeric scam scores, hiring probability, or pseudo-psychometric assessments are generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stops and returns NEEDS_INPUT appropriately when critical details are missing/conflicted.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blockers identifying the unresolved contradictory information.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff payload is provided with confirmed inputs, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Follows safe next-action boundaries, performs no unauthorized writes or endpoint invocations, and treats user message strictly as data.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Prior context is empty ('None') with MISSING_CONCRETE_STATE_OR_EVIDENCE, making Known-context reuse not assessable."
+      ],
+      "summary": "The candidate correctly handles the abstract conflict prompt by pausing synthesis, asking for the specific conflicting details via valid UI primitives, and properly preserving unknowns without hallucination or premature scoring."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3396,
+      "total_input_tokens": 2558,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2558
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 838,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2955,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2955
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 857
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5121,
+  "usage": {
+    "total_tokens": 3203,
+    "total_input_tokens": 2373,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2373
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 830,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7690,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7690
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 847
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,476 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.8921287226445077,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.8517155783161054,
+      "contextScore": 0.8921287226445077
+    },
+    {
+      "id": "IND_COMPARE_005",
+      "score": 0.7890896487623301,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7844209799002335,
+      "contextScore": 0.7890896487623301
+    },
+    {
+      "id": "EMP_COMPARE_001",
+      "score": 0.7645872284808468,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7386224308758461,
+      "contextScore": 0.7645872284808468
+    },
+    {
+      "id": "JOB_COMPARE_006",
+      "score": 0.7550013464080582,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7550013464080582,
+      "contextScore": 0.7290108335086131
+    },
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.746954308280941,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.746954308280941,
+      "contextScore": 0.737326935716161
+    },
+    {
+      "id": "SCHOOL_023",
+      "score": 0.7509754276357652,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7307332447457087,
+      "contextScore": 0.7509754276357652
+    },
+    {
+      "id": "EMP_FIT_001",
+      "score": 0.7473472613335922,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7327823360674914,
+      "contextScore": 0.7473472613335922
+    },
+    {
+      "id": "CHANGE_005",
+      "score": 0.7741003450397461,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7741003450397461
+    },
+    {
+      "id": "IND_COMPARE_002",
+      "score": 0.7560498729323897,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7560498729323897
+    },
+    {
+      "id": "EMP_DISCOVER_002",
+      "score": 0.7513474157644925,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7513474157644925
+    },
+    {
+      "id": "CHANGE_001",
+      "score": 0.750627145797877,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.750627145797877
+    },
+    {
+      "id": "CURRENT_JOB_005",
+      "score": 0.7484133784384669,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7484133784384669
+    },
+    {
+      "id": "CURRENT_JOB_002",
+      "score": 0.7398867118340963,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7398867118340963
+    },
+    {
+      "id": "IND_SKILL_003",
+      "score": 0.7349270735324682,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7349270735324682
+    },
+    {
+      "id": "CHANGE_004",
+      "score": 0.7348151970223944,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7348151970223944
+    },
+    {
+      "id": "IND_DISCOVER_007",
+      "score": 0.734016438984935,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.734016438984935
+    },
+    {
+      "id": "JOB_DISCOVER_010",
+      "score": 0.7337260337814173,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7337260337814173
+    },
+    {
+      "id": "JOB_COMPARE_001",
+      "score": 0.7867477603771504,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7867477603771504
+    },
+    {
+      "id": "EMP_COMPARE_004",
+      "score": 0.7695441404090038,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7695441404090038
+    },
+    {
+      "id": "EXP_001",
+      "score": 0.7288373018272966,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7288373018272966
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "Two companies have offered me jobs. One has more money, the other gives me a mentor and shorter travel. Help me lay out the trade-offs.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Compare two concrete employment offers across pay, learning and commute.",
+      "confirmed_facts": [],
+      "possible_need": "Compare two concrete employment offers across pay, learning and commute.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Compare two concrete employment offers across pay, learning and commute."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "outcome": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_use": "Serve when user has multiple opportunities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Two concrete job offers, not a comparison of broad careers or employer reputations.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_COMPARE_005",
+        "button_label": "Which gives me more career options?",
+        "outcome": "Compare job-family breadth, transferable skills and cross-industry mobility.",
+        "when_to_use": "Serve when user wants breadth and mobility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Gives Me More Career Options?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Gives Me More Career Options?: Compare job-family breadth, transferable skills and cross-industry mobility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_COMPARE_001",
+        "button_label": "Compare these companies",
+        "outcome": "Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit.",
+        "when_to_use": "Serve when user is choosing where to apply/work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Employers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Employers: Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_COMPARE_006",
+        "button_label": "Which keeps more future options open?",
+        "outcome": "Compare skill transferability, industries, adjacent roles and further-study flexibility.",
+        "when_to_use": "Serve when young user fears choosing too narrowly.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Keeps More Future Options Open?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Keeps More Future Options Open?: Compare skill transferability, industries, adjacent roles and further-study flexibility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "outcome": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_use": "Serve when user wants employer comparison against a specific goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Better for My Career Goal: Compare how each employer could build the capabilities/experience needed for the user target. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_023",
+        "button_label": "TAFE or university - what actually changes?",
+        "outcome": "Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status.",
+        "when_to_use": "Serve when student equates prestige with outcome.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Outcomes, Not Prestige' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Outcomes, Not Prestige: Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_FIT_001",
+        "button_label": "Does this employer fit me?",
+        "outcome": "Compare role, skill, industry interest, location, company size, work style, flexibility, growth and values.",
+        "when_to_use": "Serve when user wants employer-person fit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Would I Fit Here?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Would I Fit Here?: Compare role, skill, industry interest, location, company size, work style, flexibility, growth and values. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer evidence plus user role/skill/industry/location/work-value preferences",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CHANGE_005",
+        "button_label": "Find changes without starting over",
+        "outcome": "Find transitions that reuse valuable experience and reduce the likelihood of restarting at entry level.",
+        "when_to_use": "Serve when user needs to protect income while changing careers.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Salary' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Keep My Salary: Find transitions that reuse valuable experience and reduce the likelihood of restarting at entry level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_COMPARE_002",
+        "button_label": "Which has more jobs for me?",
+        "outcome": "Compare relevant occupations/vacancies by user profile and region rather than total industry size alone.",
+        "when_to_use": "Serve when user prioritizes accessible opportunities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Has More Jobs for Me?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Has More Jobs for Me?: Compare relevant occupations/vacancies by user profile and region rather than total industry size alone. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_002",
+        "button_label": "Who hires people in this job?",
+        "outcome": "Find employers across industries that hire the occupation.",
+        "when_to_use": "Serve when user knows an occupation but not employer landscape.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Companies Hiring My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Companies Hiring My Career: Find employers across industries that hire the occupation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CHANGE_001",
+        "button_label": "Help me change careers",
+        "outcome": "Identify current state, possible destination, what to keep, what to escape and constraints.",
+        "when_to_use": "Serve when user wants a different career but has not framed the change.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Explorer: Identify current state, possible destination, what to keep, what to escape and constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CURRENT_JOB_005",
+        "button_label": "What skills would make me more useful?",
+        "outcome": "Use role demand, company needs, adjacent/scarce skills and transferability to prioritize development.",
+        "when_to_use": "Serve when user wants higher leverage in their role/company.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Become More Valuable' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Become More Valuable: Use role demand, company needs, adjacent/scarce skills and transferability to prioritize development. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CURRENT_JOB_002",
+        "button_label": "What do I need for the next level?",
+        "outcome": "Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope.",
+        "when_to_use": "Serve when user wants promotion.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills for Promotion' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills for Promotion: Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_SKILL_003",
+        "button_label": "Which skills open multiple jobs?",
+        "outcome": "Identify transferable capabilities that connect several occupations within the industry.",
+        "when_to_use": "Serve when user wants broad career flexibility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills Shared Across Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills Shared Across Jobs: Identify transferable capabilities that connect several occupations within the industry. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry workforce/occupation evidence, skills taxonomy, vacancy/shortage signals",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CHANGE_004",
+        "button_label": "How big is this change?",
+        "outcome": "Separate transferable capability, new skills, credentials, experience gap and likely entry level.",
+        "when_to_use": "Serve when user wants to understand transition effort.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Difficulty' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Difficulty: Separate transferable capability, new skills, credentials, experience gap and likely entry level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_DISCOVER_007",
+        "button_label": "What is growing where I live?",
+        "outcome": "Combine regional industry employment/growth, occupations and employers.",
+        "when_to_use": "Serve when user wants location-specific industry opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries Growing Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries Growing Near Me: Combine regional industry employment/growth, occupations and employers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_010",
+        "button_label": "What jobs are actually available around me?",
+        "outcome": "Combine occupational fit with current local vacancies, industry presence and transport/location.",
+        "when_to_use": "Serve when user needs local demand and realistic vacancies.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs Near Me: Combine occupational fit with current local vacancies, industry presence and transport/location. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_001",
+        "button_label": "Compare these jobs",
+        "outcome": "Compare tasks, skills, entry, education, environment, pay, demand, location, progression, flexibility, AI exposure and fit.",
+        "when_to_use": "Serve when user has multiple occupations in mind.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Compare occupations or roles; use JOB_DECIDE_004 for two actual employment offers with concrete terms.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_COMPARE_004",
+        "button_label": "Large employer or small employer?",
+        "outcome": "Compare structure, responsibility breadth, specialization, learning, mobility and process.",
+        "when_to_use": "Serve when user is choosing employer size.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Large Employer vs Small Employer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Large Employer vs Small Employer: Compare structure, responsibility breadth, specialization, learning, mobility and process. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EXP_001",
+        "button_label": "How can I test this career first?",
+        "outcome": "Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview.",
+        "when_to_use": "Serve when user is interested but has little real exposure.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Try Before I Commit' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Try Before I Commit: Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career target, current experience, availability, location, skill gaps",
+        "needs_live_data": "Often"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4257,
+      "total_input_tokens": 4179,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4179
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 78,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4620,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4620
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 94
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:11Z",
+    "updated": "2026-09-18T12:16:11Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TyfYG98XwYq9qQlA5gedGWjEyvzqj30mtKFgbZ+sYd+vel6WjC3kOitCpPgKSbt+5FAKtIA9LiTOaT9H4InNnvz9/5T0G9p9MmZqZUx9MFJVqjZnIHjJ0zTp83gj6WcBvGONZcXb3",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"JOB_DECIDE_004\",\n  \"reason\": \"Compare your two concrete job offers side-by-side across salary, mentoring, commute, and career trade-offs.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "JOB_DECIDE_004",
+    "reason": "Compare your two concrete job offers side-by-side across salary, mentoring, commute, and career trade-offs.",
+    "disposition": "AUTO_OPEN",
+    "selectionId": "6f61c543-da71-4903-897f-60a2af888fa0",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.8921287226445077,
+    "margin": 0.10303907388217759,
+    "userConfidence": null,
+    "createdAt": 1789733771044
+  }
+}

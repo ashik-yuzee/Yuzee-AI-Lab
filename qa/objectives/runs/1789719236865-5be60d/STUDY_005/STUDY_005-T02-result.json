@@ -1,0 +1,261 @@
+{
+  "test_id": "STUDY_005-T02",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 213,
+  "input_context": {
+    "user_message": "Use what you already know and help me with what will i actually learn?.",
+    "prior_context_text": "Relevant confirmed profile/context facts already exist.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "4a7bd7f1008751ce5ca6000e6eb60597e7b703f479a30ea485cd8696a2d51b16",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4577
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_selection",
+        "purpose": "Identify the exact course or syllabus structure to unpack into concrete capabilities and skills.",
+        "prompt": "Which course or study route would you like to unpack into specific skills and learning depth?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User wants to understand actual capabilities taught rather than just course titles",
+        "basis": "User requested assistance with 'what will i actually learn?'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target course, program, or syllabus to evaluate"
+    ],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "unknowns": [
+        {
+          "label": "Target Course Syllabus",
+          "detail": "No course or program has been specified yet.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course identifier or syllabus needed to map capabilities"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Specify Target Course",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompting user to specify the target course or curriculum to unpack capabilities and learning depth.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting target course selection before mapping curriculum to skills and assessment evidence."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Specific course or study route"
+      ],
+      "recommended_next_action": "Select or input the target course to analyze."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correct objective STUDY_005 maintained for the request 'what will i actually learn?'.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims relevant confirmed facts exist ('Relevant confirmed profile/context facts already exist.') but `context.confirmed_facts` is completely empty ({}), making context reuse unassessable due to fixture gap.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks a single, material question via entity_picker to identify the course/syllabus to unpack.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'entity_picker', which is permitted under STUDY_005 V2 allowed UI primitives.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly prepares for mapping curriculum to capabilities/skills, identifying the course syllabus as the primary unknown.",
+          "evidence_pointer": "candidate.ui[0].purpose"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No hallucinated courses, outcomes, or current facts; cleanly lists the target course as an unknown.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, life-success predictions, or fake diagnostic scores made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops with NEEDS_INPUT given missing critical prerequisite input (the course itself).",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is appropriately disabled/null with blockers clearly identified.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff provided with confirmed inputs, result summary, and unknowns.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No forbidden direct API actions or endpoints emitted; safe interaction flow.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Test fixture claims prior context exists ('Relevant confirmed profile/context facts already exist.') but provides empty confirmed_facts, preventing assessment of context reuse."
+      ],
+      "summary": "The candidate properly handles the cold start for STUDY_005 by asking for the missing target course using an approved primitive, while maintaining evidence discipline and proper schema handoff. Known-context reuse was marked NOT_ASSESSABLE due to missing concrete facts in the fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2925,
+      "total_input_tokens": 2084,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2084
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 841,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2481,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2481
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 860
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4577,
+  "usage": {
+    "total_tokens": 2787,
+    "total_input_tokens": 2179,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2179
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 608,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5850,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5850
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 625
+          }
+        ]
+      }
+    ]
+  }
+}

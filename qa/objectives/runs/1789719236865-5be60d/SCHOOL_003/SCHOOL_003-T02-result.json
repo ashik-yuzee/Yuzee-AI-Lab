@@ -1,0 +1,265 @@
+{
+  "test_id": "SCHOOL_003-T02",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 583,
+  "input_context": {
+    "user_message": "Use what you already know and help me with subjects for my course.",
+    "prior_context_text": "Relevant confirmed profile/context facts already exist.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "baa301572d091e8fb45c019f3b3e5436af7e3f2ec7ec064dc21deb573ee78295",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4584
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SCHOOL_003",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_provider_picker",
+        "purpose": "Identify the exact tertiary course and provider to look up verified subject prerequisites.",
+        "prompt": "Which specific course and university or tertiary provider are you targeting?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Seeking subject requirements for tertiary study",
+        "basis": "User requested subject planning guidance for their course.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target course name",
+      "Target provider / institution",
+      "Relevant campus or intake year",
+      "Current senior subjects or study state"
+    ],
+    "result": {
+      "alternative_routes": [],
+      "course_subject_requirements": null,
+      "next_actions": [
+        {
+          "label": "Specify target course and institution",
+          "detail": "Prerequisite classifications depend strictly on the specific institution and degree.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "To accurately verify mandatory prerequisites, assumed knowledge, and recommended subjects, the specific course and provider must be identified."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course and provider are unknown"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Course and Provider",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting target course and institution details from the user to verify exact subject prerequisites.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Exact subject classification requires identifying the specific course and provider."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: target course and provider"
+      ],
+      "recommended_next_action": "Prompt user for target course and university name."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly addresses the selected objective SCHOOL_003 without invalid routing deviation.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test prompt asserts prior confirmed profile/context facts exist, but the fixture's confirmed_facts and session data are empty ({}), preventing evaluation of context reuse.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks a single, concrete, high-impact question asking for target course and provider to look up exact requirements.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate strictly uses the 'entity_picker' primitive which is within the allowed V2 primitive list [entity_picker, evidence_panel, comparison_grid, pathway_builder, action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Per the V2 mandatory override, when the target provider/course is not known, the planner appropriately asks for the minimum entity needed for an exact prerequisite check.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No live prerequisites were fabricated; unverified fields are kept in unknowns and status is set to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic or success-probability claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Since required inputs are missing, the candidate stops with status NEEDS_INPUT rather than hallucinating completed course_subject_requirements.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is kept disabled/scored null with blockers identified because target course and provider are missing, conforming to the policy.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean semantic handoff object is returned containing summary, confirmed inputs, unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits only approved structured intent (CONTINUE_CHAT) with no direct external endpoint executions or state mutations.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture states 'Relevant confirmed profile/context facts already exist.' in prior_context_text but provides an empty context.confirmed_facts object, making Known-context reuse unassessable."
+      ],
+      "summary": "The candidate strictly adheres to V2 overrides by requesting the target course/provider using an approved primitive (entity_picker) and sets status to NEEDS_INPUT without hallucinating prerequisites. Known-context reuse is marked NOT_ASSESSABLE due to empty fixture context."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3172,
+      "total_input_tokens": 2268,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2268
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 904,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2665,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2665
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 923
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4584,
+  "usage": {
+    "total_tokens": 2927,
+    "total_input_tokens": 2279,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2279
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 648,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6703,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6703
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 665
+          }
+        ]
+      }
+    ]
+  }
+}

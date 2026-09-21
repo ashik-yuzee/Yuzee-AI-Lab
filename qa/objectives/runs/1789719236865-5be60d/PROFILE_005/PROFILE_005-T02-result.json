@@ -1,0 +1,276 @@
+{
+  "test_id": "PROFILE_005-T02",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 503,
+  "input_context": {
+    "user_message": "Use what you already know and help me with my skills.",
+    "prior_context_text": "Relevant confirmed profile/context facts already exist.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "426a69f1cc5a0a83d239dc68bf33b61a1598a901a32384f871060df5bfd8913e",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4509
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_inventory_input",
+        "purpose": "Capture and categorize your key skills and their evidence status",
+        "prompt": "Select or add the skills you want to record in your profile, noting your current experience level.",
+        "required": true,
+        "options": [
+          {
+            "id": "problem_solving",
+            "label": "Problem Solving",
+            "detail": "Analyzing complex issues and finding practical solutions"
+          },
+          {
+            "id": "communication",
+            "label": "Written & Verbal Communication",
+            "detail": "Presenting ideas clearly to different audiences"
+          },
+          {
+            "id": "teamwork",
+            "label": "Collaboration & Teamwork",
+            "detail": "Working productively within diverse groups and teams"
+          },
+          {
+            "id": "project_management",
+            "label": "Organization & Planning",
+            "detail": "Structuring tasks, managing deadlines, and executing goals"
+          }
+        ],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Status",
+          "Source"
+        ],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "user_confirmed_skills",
+      "skill_evidence_levels"
+    ],
+    "result": {
+      "summary": "Skills inventory pending user input to capture verified capabilities and evidence levels."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Skills Information",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted the user to select and evidence their initial skills profile.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial skill selections and evidence levels."
+      },
+      "evidence_and_unknowns": [
+        "No confirmed skills or evidence records exist yet."
+      ],
+      "recommended_next_action": "Select key skills and provide evidence context to build the capability profile."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets PROFILE_005 (My Skills) matching the objective request.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture claims 'Relevant confirmed profile/context facts already exist.' but provided empty confirmed_facts ({}) and confirmed_answers ({}), meaning context reuse cannot be assessed due to a fixture gap.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question is concrete, uses a structured skill_matrix with options, and directly serves skill inventory capture.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses 'skill_matrix', which is in the V2 allowed UI primitives list [skill_matrix | evidence_panel | profile_editor | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly initializes skill matrix capture with relevant columns and structured options tailored to PROFILE_005.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Candidate did not invent unverified user skills or external facts, explicitly tracking missing skills in unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or career prediction claims were made.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stopped with NEEDS_INPUT appropriately since zero skills or answers are present in the context.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Correctly follows the V2 override (readiness_policy: NONE) by setting readiness.enabled to false with null scores.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, compact Oala handoff containing summary, confirmed inputs, unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT action intent without direct endpoint calls or unauthorized writes.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture asserts that relevant confirmed profile/context facts exist, but context.confirmed_facts and context.session.confirmed_answers are empty."
+      ],
+      "summary": "Candidate adhered to all V2 constraints, primitive limits, readiness policy overrides, and safety rules. Context reuse was marked NOT_ASSESSABLE due to missing concrete facts in the fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2968,
+      "total_input_tokens": 2122,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2122
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 846,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2519,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2519
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 865
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4509,
+  "usage": {
+    "total_tokens": 2987,
+    "total_input_tokens": 2189,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2189
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 652,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 146,
+    "raw_prompt_token": 5874,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5874
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 669
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 146
+          }
+        ]
+      }
+    ]
+  }
+}

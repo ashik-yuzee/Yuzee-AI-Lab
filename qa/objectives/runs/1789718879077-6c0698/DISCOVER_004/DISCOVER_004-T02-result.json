@@ -1,0 +1,275 @@
+{
+  "test_id": "DISCOVER_004-T02",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 27,
+  "input_context": {
+    "user_message": "Use what you already know and help me with big five snapshot.",
+    "prior_context_text": "Profile already contains two relevant confirmed signals and one constraint.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "da500ba2c78d8d5d33c2ea009fdb316b65a5054ba8cc7d7225005230ce4a9f99",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 17440
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "work_approach_scenario",
+        "purpose": "Identify work tendencies in handling unstructured tasks and collaboration",
+        "prompt": "Imagine you are assigned a brand-new project with a flexible brief and an upcoming deadline. How do you naturally prefer to approach it?",
+        "required": true,
+        "options": [
+          {
+            "id": "structured_planning",
+            "label": "Build a structured plan first",
+            "detail": "Break down milestones, define scope, and establish organized checkpoints before diving in."
+          },
+          {
+            "id": "exploratory_action",
+            "label": "Explore ideas and adapt as you go",
+            "detail": "Start experimenting right away, generate varied concepts, and adjust the direction dynamically."
+          },
+          {
+            "id": "collaborative_alignment",
+            "label": "Coordinate closely with team members",
+            "detail": "Discuss responsibilities, bounce ideas off peers, and work in active sync with others."
+          },
+          {
+            "id": "independent_focus",
+            "label": "Focus deeply on independent execution",
+            "detail": "Work autonomously in a quiet setting to produce initial core deliverables before checking in."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Work style and collaboration preferences",
+      "Approach to ambiguity and planning structure"
+    ],
+    "result": {
+      "summary": "Starting personality tendencies snapshot to explore work-related behavioral preferences qualitatively without psychometric scoring."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Initial scenario response needed to ground behavioral tendencies."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated personality tendencies snapshot with a realistic workplace scenario to explore planning and collaboration preferences.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial scenario choice to map qualitative work tendencies."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Natural approach to planning vs. open exploration",
+        "Unknown: Preference for collaborative vs. autonomous work environments"
+      ],
+      "recommended_next_action": "Complete the work scenario selection to identify qualitative tendencies."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the requested DISCOVER_004 objective directly without switching or hallucinating an unrelated objective.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture claims 'Profile already contains two relevant confirmed signals and one constraint', but context.confirmed_facts is an empty object `{}` and no specific prior facts are provided in the environment.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The scenario_test prompt offers a realistic, concrete workplace dilemma with distinct discriminative options that map to work behavior.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI component emitted is `scenario_test`, which is valid in the standard primitive set and explicitly allowed in the V2 objective override list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate aligns with DISCOVER_004 overrides by focusing qualitatively on work tendencies rather than generic discovery.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent facts or present unsupported claims; missing dimensions are properly marked under unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No percentile scores, diagnostic claims, or pseudo-scientific personality types are emitted; readiness score is disabled pending qualitative input.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Since this is interaction 0 with zero confirmed inputs, the candidate correctly asks a single clarifying scenario question under NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is kept disabled with clear blockers rather than fabricating arbitrary readiness numbers or life predictions.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object contains a structured semantic summary, explicit unknowns, and recommended next action without raw UI/click traces.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Next action only specifies standard CONTINUE_CHAT intent without direct endpoint calls or autonomous writes.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture claims prior confirmed signals and constraints exist, but context.confirmed_facts is empty (`{}`), making Known-context reuse unassessable."
+      ],
+      "summary": "The candidate complies with all schema, psychometric restraint, and primitive rules for DISCOVER_004. Context reuse cannot be assessed due to empty confirmed_facts in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2975,
+      "total_input_tokens": 2107,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2107
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 868,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2504,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2504
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 887
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 17440,
+  "usage": {
+    "total_tokens": 2912,
+    "total_input_tokens": 2035,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2035
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 734,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 143,
+    "raw_prompt_token": 6060,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6060
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 749
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 143
+          }
+        ]
+      }
+    ]
+  }
+}

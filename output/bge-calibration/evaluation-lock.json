@@ -1,0 +1,31 @@
+{
+  "date": "2026-09-18T07:56:07.811Z",
+  "profile": {
+    "version": "bge-calibrated-v1",
+    "modelId": "Xenova/bge-small-en-v1.5",
+    "contentVersion": "bge-skills-v1",
+    "route": {
+      "score": 0.65,
+      "margin": 0.05,
+      "domainMargin": 0.1
+    },
+    "topic": {
+      "score": 0.65,
+      "margin": 0.05,
+      "domainMargin": 0.1
+    },
+    "suggestion": {
+      "score": 0.65,
+      "margin": 0.05,
+      "domainMargin": 0.12
+    }
+  },
+  "hashes": {
+    "src/routing/bgeCalibration.json": "02457376b6804167176a2668e02cc782da90731e3e8efd6c7123e814bc9bdf79",
+    "src/routing/bgeSkillContent.json": "1d723bd5274b635bedcdae029a8f60545ed24cc668dd3c033b4997d2fc7131b5",
+    "src/routing/bgeDomain.ts": "4a58987da808d917865daba121ee38aff282cbab9b41089a70c2db205a54e3b8",
+    "tests/fixtures/bge-heldout-skills.txt": "0c3ca8bf65b3e2ac77bdfeb326e94437f8f9f6b44f16e1ae7dd44ee4ddbdd5b0",
+    "tests/fixtures/bge-calibration-extra.ts": "69fab8814510f5fab57c489b307dbf3d9b8b27c680832ab353b67d504bb7095b"
+  },
+  "method": "Freeze prior to first evaluation. Same-author synthetic held-out examples, no independent human validation. No tuning on held-out results. Baseline indexes and .48/.06 policy compared on the same new cases. Strict exact-ID route scoring; suggestion alternatives explicitly labelled before evaluation."
+}

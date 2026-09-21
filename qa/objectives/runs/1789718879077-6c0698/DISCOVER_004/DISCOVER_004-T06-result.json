@@ -1,0 +1,232 @@
+{
+  "test_id": "DISCOVER_004-T06",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 31,
+  "input_context": {
+    "user_message": "I already completed big five snapshot and nothing has changed.",
+    "prior_context_text": "Objective result exists and no material context changed.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "ecfb8f2e593167d54674713416e6b32a74afc0af5fbfdfabcbdb5a57b82d8ae0",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 8895
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "limitations": [],
+      "next_actions": [],
+      "personality_tendencies": [],
+      "summary": "The personality tendencies snapshot was previously completed and no updates or new context were requested."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "No re-assessment requested; existing tendencies profile remains unchanged.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "limitations": [],
+        "next_actions": [],
+        "personality_tendencies": [],
+        "summary": "The personality tendencies snapshot was previously completed and no updates or new context were requested."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Continue with next steps or explore related work environments in conversation."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the prompt states Big Five Snapshot was already completed with nothing changed, correctly sets status to COMPLETE without re-running redundant questions, and routes cleanly.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims prior objective results exist in context but omits the actual prior Big Five results and profile data (fixture gap MISSING_CONCRETE_STATE_OR_EVIDENCE).",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No unnecessary questions were emitted when user stated completion.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid UI primitives were emitted (empty list).",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly follows the no-action completion contract without inventing unvalidated psychometric traits.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsourced current facts or hallucinations were introduced.",
+          "evidence_pointer": "candidate.handoff.evidence_and_unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "The candidate adheres strictly to restraint rules by emitting no artificial trait percentiles, scores, or career predictions.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Candidate halts immediately upon recognizing that the objective is already completed.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled appropriately given that no new psychometric measurement or scoring took place.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Semantic handoff contains summary, result, next recommended action, and structured fields back to Oala.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No endpoints, code execution, or unauthorized external actions were triggered.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture noted MISSING_CONCRETE_STATE_OR_EVIDENCE: prior objective results were asserted in text but not provided in confirmed_facts or session data."
+      ],
+      "summary": "The candidate handled the already-completed user state correctly, cleanly halting without asking redundant questions or fabricating psychometric data. Known-context reuse is marked NOT_ASSESSABLE due to missing prior state in the fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2656,
+      "total_input_tokens": 1847,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1847
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 809,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2244,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2244
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 828
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 8895,
+  "usage": {
+    "total_tokens": 2487,
+    "total_input_tokens": 2031,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2031
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 336,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 120,
+    "raw_prompt_token": 6056,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6056
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 352
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 120
+          }
+        ]
+      }
+    ]
+  }
+}

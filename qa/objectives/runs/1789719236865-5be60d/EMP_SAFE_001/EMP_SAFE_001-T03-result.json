@@ -1,0 +1,249 @@
+{
+  "test_id": "EMP_SAFE_001-T03",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "MINIMAL_INPUT",
+  "model": "gemini-3.7-flash",
+  "source_row": 3124,
+  "input_context": {
+    "user_message": "Help me with Is This Employer or Job Legitimate?.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "c5a291c4bdeeee229c70c4f182fb220ad035ca7e0dcee64ccf72f4068d4737ea",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4734
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "short_answer",
+        "id": "employer_job_details",
+        "purpose": "Capture the employer name, website, and job posting or message details to verify legitimacy.",
+        "prompt": "What is the employer's name, website domain, and the role title or contact method (e.g. email domain, messaging platform)?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "LEGAL_ENTITY_OR_OFFICIAL_EMPLOYER",
+      "OFFICIAL_DOMAIN_OR_CAREERS_CHANNEL",
+      "SPECIFIC_ROLE_OR_REQUISITION",
+      "RECRUITER_CONTACT_CHANNEL",
+      "PROCESS_AND_PAYMENT_REQUESTS"
+    ],
+    "result": {
+      "job_legitimacy_check": null,
+      "next_actions": [],
+      "summary": "Please provide details about the employer, job post, or contact channel to evaluate legitimacy and check for red flags."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Awaiting employer name and opportunity details for verification."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated employer and job legitimacy verification; requested basic employer name, role, and contact channel details.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial employer or job listing information."
+      },
+      "evidence_and_unknowns": [
+        "Employer identity unknown",
+        "Job post and contact channel unknown"
+      ],
+      "recommended_next_action": "Provide the employer name, official domain, and role details."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned EMP_SAFE_001 objective.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There was no prior context provided, and the candidate correctly treated all context as empty without hallucinating prior data.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks a single concrete question targeting the primary missing information (employer name, website, role/contact channel).",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'short_answer', which is explicitly permitted in the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The unknowns accurately reflect the objective-specific override requirements (legal entity, official domain, role requisition, recruiter channel, payment requests).",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded claims or invented facts were introduced; status is correctly set to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric, scam score, or hiring probability claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops at interaction 0 with NEEDS_INPUT given the absence of any employer/job details.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is appropriately disabled and identifies the missing input blocker without outputting a numeric scam score.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Structured handoff payload includes summary, unknowns, and recommended next action cleanly.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized actions or endpoints invoked; emits standard CONTINUE_CHAT next action.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "All evaluation criteria passed. The candidate correctly identified missing information and asked an appropriate single question using an approved UI primitive while maintaining strict evidence discipline and safety boundaries."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3160,
+      "total_input_tokens": 2396,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2396
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 764,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2793,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2793
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 783
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4734,
+  "usage": {
+    "total_tokens": 2965,
+    "total_input_tokens": 2358,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2358
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 607,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7675,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7675
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 624
+          }
+        ]
+      }
+    ]
+  }
+}

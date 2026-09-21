@@ -1,0 +1,230 @@
+{
+  "test_id": "STUDY_005-T06",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 217,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "9942d458bdf34eb2d21b788d50df388249c947d0e7b0e63c657e7d4e8896d3c1",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5118
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "summary": "Objective STUDY_005 (What Will I Actually Learn?) was not activated because the user request is unrelated to course curriculum or capability breakdown.",
+      "unknowns": [
+        {
+          "label": "Target course or qualification",
+          "detail": "No course or learning pathway was specified.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Return to chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "The incoming user request is not related to course unit capability analysis. STUDY_005 closed without domain action.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No course analysis performed."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Handle the user request directly in conversational chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Candidate correctly handled the completely unrelated user message (\"Write me a short birthday poem.\") by abstaining/closing the objective immediately without forcing course analysis.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No existing context facts were re-asked or ignored.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No irrelevant or generic questions were asked.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid primitives were emitted (UI array is empty).",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Objective accurately abstains when user input does not concern unit structures or capability analysis.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded facts, salary claims, or course details were fabricated.",
+          "evidence_pointer": "candidate.result.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims or fake assessment measurements were produced.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Interaction stopped immediately with status COMPLETE upon recognizing irrelevant intent.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled (null/disabled) rather than reporting fake readiness or life success probabilities.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Handoff provides a clean summary and routes back to conversational chat via CONTINUE_CHAT.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, unsafe writes, or unauthorized external actions were emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate properly handled an off-topic user request by abstaining from STUDY_005 execution, emitting no unnecessary primitives or fabricated facts, and cleanly handing off back to general chat."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2500,
+      "total_input_tokens": 1908,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1908
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 592,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2305,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2305
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 610
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5118,
+  "usage": {
+    "total_tokens": 3024,
+    "total_input_tokens": 2169,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2169
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 358,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 497,
+    "raw_prompt_token": 5840,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5840
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 374
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 497
+          }
+        ]
+      }
+    ]
+  }
+}

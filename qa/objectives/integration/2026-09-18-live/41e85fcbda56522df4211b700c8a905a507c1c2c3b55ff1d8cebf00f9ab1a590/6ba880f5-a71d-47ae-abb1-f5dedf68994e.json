@@ -1,0 +1,155 @@
+{
+  "id": "6ba880f5-a71d-47ae-abb1-f5dedf68994e",
+  "conversationId": "live-preview-PROFILE_005",
+  "objectiveId": "PROFILE_005",
+  "label": "My skills",
+  "sourceMessageId": "u",
+  "revision": 1,
+  "interactionCount": 0,
+  "state": "ACTIVE",
+  "createdAt": 1789726376080,
+  "updatedAt": 1789726385338,
+  "plan": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_inventory_matrix",
+        "purpose": "Review current skill entries and distinct capability levels based on direct statements.",
+        "prompt": "Here is your skill record based on what you shared. Confirm or adjust these entries.",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill / Tool",
+          "Self-Reported Status",
+          "Evidence Type",
+          "Confirmed"
+        ],
+        "rows": [
+          {
+            "label": "Excel (Basic Filtering)",
+            "cells": [
+              "Excel (Filters)",
+              "Used at work",
+              "SELF_REPORTED",
+              "Pending confirmation"
+            ]
+          },
+          {
+            "label": "Excel (Pivot Tables)",
+            "cells": [
+              "Excel Pivot Tables",
+              "No experience",
+              "SELF_REPORTED",
+              "Pending confirmation"
+            ]
+          },
+          {
+            "label": "SQL",
+            "cells": [
+              "SQL",
+              "No experience",
+              "SELF_REPORTED",
+              "Pending confirmation"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "profile_editor",
+        "id": "confirm_skills_profile",
+        "purpose": "Explicitly confirm the skills to save to your reusable profile.",
+        "prompt": "Would you like to save Excel (Basic Filtering) to your profile and record Pivot Tables & SQL as not practiced?",
+        "required": true,
+        "options": [
+          {
+            "id": "confirm_save",
+            "label": "Save Excel (Filters) only",
+            "detail": "Adds Excel (Filtering) as self-reported and excludes Pivot Tables/SQL from your capability set."
+          },
+          {
+            "id": "edit_entries",
+            "label": "Edit or add more skills first",
+            "detail": "Adjust details or specify other tools before saving."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Uses spreadsheet filtering in a workplace context",
+        "basis": "Direct statement: 'I use Excel filters at work'",
+        "confidence": "HIGH"
+      },
+      {
+        "signal": "No exposure to advanced spreadsheet aggregation or relational querying",
+        "basis": "Direct statement: 'never used pivot tables or SQL'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific workplace tasks performed using Excel filters",
+      "Proficiency depth beyond basic filtering",
+      "Other tools or software utilized in your current role"
+    ],
+    "result": {
+      "summary": "Drafted 3 skill records: Excel (Filters) marked as self-reported workplace capability; Excel Pivot Tables and SQL noted as no experience. No broader role or analyst inferences made per instructions. Awaiting confirmation to save to profile dimension candidate record [PROFILE_UPDATE_CANDIDATE]. Disputed list contains items explicitly marked as not possessed: [NO_PIVOT_TABLES, NO_SQL]. Next actions include proceeding to Jobs from my skills or Skill Gap analysis once confirmed with status DEMONSTRATED or SELF_REPORTED as applicable under canonical schema definitions (e.g. SKILL_EXCEL_FILTERS, proficiency_status: BASIC, source_type: USER_STATEMENT, last_evidenced: null, user_confirmed: false). Profile dimension candidate prepared for persistence upon approval [PROFILE_UPDATE_CANDIDATE]. Completed breakdown ready for review and downstream matching workflows (e.g. SKILL_GAP, JOBS_FROM_SKILLS). All labels mapped directly without inferring analyst role context. Reusable profile dimension available to future matching and explanation upon save confirmation. All fields aligned to framework standards and constraints (proficiency_status, evidence_status, evidence_refs, source_type, last_evidenced, user_confirmed). End summary draft for profile persistence pipeline review."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Review and confirm skills",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Captured self-reported Excel filtering and recorded no experience with Pivot Tables or SQL, with strict separation and no role inference.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Prepared skill records: Excel (filtering) identified as self-reported; Pivot Tables and SQL documented as unpracticed. Pending user confirmation before profile update."
+      },
+      "evidence_and_unknowns": [
+        "Evidence: User statement regarding work tool usage.",
+        "Unknown: Detailed proficiency scope or additional workplace tools."
+      ],
+      "recommended_next_action": "Confirm the skill entries to save them to your profile dimension."
+    }
+  },
+  "context": {
+    "user_message": "I want to check the skills I have told you about: I use Excel filters at work but I have never used pivot tables or SQL. Keep those separate, and do not infer that I am a data analyst.",
+    "prior_context_text": "",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "context_limited": false
+  }
+}

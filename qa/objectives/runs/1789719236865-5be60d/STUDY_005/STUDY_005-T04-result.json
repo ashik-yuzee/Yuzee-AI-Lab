@@ -1,0 +1,264 @@
+{
+  "test_id": "STUDY_005-T04",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 215,
+  "input_context": {
+    "user_message": "I want to do what will i actually learn?, but some of my earlier information conflicts.",
+    "prior_context_text": "Prior context contains a material contradiction.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "2fe5c915217cfcb5b49472bfa2c22de6f28b248a9f822eb1d4f5ed01a6a3e908",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4998
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_selection",
+        "purpose": "Identify the specific course, qualification, or unit syllabus to translate into concrete capabilities",
+        "prompt": "Which specific course or qualification would you like to break down into practical skills?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Course breakdown requested amid conflicting context",
+        "basis": "User requested capability mapping while noting previous information contains conflicts",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target course or qualification name",
+      "Specific units or syllabus modules",
+      "Educational provider/institution"
+    ],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "unknowns": [
+        "Target course or syllabus structure"
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course syllabus has not been specified"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Specify Course",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user to specify the target course or qualification to map syllabus units into practical capabilities.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting course selection to begin capability and assessment analysis."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Target course title and curriculum outline"
+      ],
+      "recommended_next_action": "User specifies course or qualification to analyse."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correctly stayed on STUDY_005 (What Will I Actually Learn?) as requested by the user and objective context.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test harness indicates 'Prior context contains a material contradiction' but supplies empty confirmed_facts and empty confirmed_answers in the fixture.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question asks for the target course/qualification needed to translate syllabus units into capabilities, which is the direct prerequisite for this objective.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The emitted primitive 'entity_picker' is valid and within the V2 allow-list [entity_picker | hierarchy_explorer | evidence_panel | skill_matrix | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate targets identifying the syllabus/course units to analyze capabilities and practical components per STUDY_005 requirements.",
+          "evidence_pointer": "candidate.ui[0].purpose"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent syllabus or course facts without evidence, properly listing missing items as unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychological constructs, personality types, or diagnostic mastery claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stopped in stage UNDERSTAND with status NEEDS_INPUT since critical course input is missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blockers accurately citing missing target course syllabus rather than inventing a success score.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Contains a clean semantic handoff with summary, result, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT action with no direct API calls or unauthorized write operations.",
+          "evidence_pointer": "candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture claims prior context contains a material contradiction but provides an empty context state, preventing evaluation of context reuse or specific contradiction handling."
+      ],
+      "summary": "The candidate adheres to all STUDY_005 V2 constraints and primitive rules, correctly requesting missing course information via an allowed primitive without hallucinating facts."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2898,
+      "total_input_tokens": 2052,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2052
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 846,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2449,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2449
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 865
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4998,
+  "usage": {
+    "total_tokens": 2875,
+    "total_input_tokens": 2180,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2180
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 568,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 127,
+    "raw_prompt_token": 5851,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5851
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 585
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 127
+          }
+        ]
+      }
+    ]
+  }
+}

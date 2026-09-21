@@ -1,0 +1,311 @@
+{
+  "id": "a9b123c4-a836-428a-9d6a-fb897fca7ba8",
+  "conversationId": "live-preview-STUDY_005",
+  "objectiveId": "STUDY_005",
+  "label": "Show me what I will learn",
+  "sourceMessageId": "u",
+  "revision": 1,
+  "interactionCount": 0,
+  "state": "COMPLETE",
+  "createdAt": 1789726723637,
+  "updatedAt": 1789726735461,
+  "plan": {
+    "objective_id": "STUDY_005",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "hierarchy_explorer",
+        "id": "syllabus_hierarchy",
+        "purpose": "Show how foundational programming and database concepts scaffold into practical web project development.",
+        "prompt": "Review how these course units connect and build on each other.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Foundation: Intro to Programming",
+            "detail": "Teaches fundamental computational logic (variables, loops, debugging). Builds basic problem-solving and error tracing skills.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Data Layer: Databases",
+            "detail": "Teaches structured data storage, keys, relationships, and SQL querying. Enables organizing and retrieving persistent data.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Integration: Web Projects",
+            "detail": "Combines frontend structures (HTML/CSS) and interactivity (JavaScript) to create functional interfaces that can display and handle logic.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": [
+              "user_message"
+            ]
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "skill_matrix",
+        "id": "capability_breakdown",
+        "purpose": "Map curriculum topics to concrete practical capabilities and evidence depth.",
+        "prompt": "Examine what capabilities each unit introduces and what requires syllabus assessment details to verify.",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Curriculum Topic",
+          "Concrete Practical Skill",
+          "Learning Depth Status",
+          "Assessment & Workplace Evidence"
+        ],
+        "rows": [
+          {
+            "label": "Variables, Loops & Debugging",
+            "cells": [
+              "Intro to Programming",
+              "Write simple scripts, control program flow, trace and fix syntax/runtime errors",
+              "INTRODUCED",
+              "UNCLEAR: Specific grading projects, problem complexity, and tool environments are unverified."
+            ]
+          },
+          {
+            "label": "Tables, Keys & SQL",
+            "cells": [
+              "Databases",
+              "Model structured tables, relate entities with keys, write SELECT/INSERT/UPDATE queries",
+              "INTRODUCED",
+              "UNCLEAR: Practical database engine, scale of data, and indexing practices are unverified."
+            ]
+          },
+          {
+            "label": "HTML, CSS & JavaScript",
+            "cells": [
+              "Web Projects",
+              "Structure webpages, apply visual styling, add event-driven UI logic and DOM manipulation",
+              "PRACTISED",
+              "UNCLEAR: Full integration with databases or backend APIs is not detailed in the syllabus."
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "next_steps_handoff",
+        "purpose": "Provide clear paths to explore further or compare against verified provider syllabi.",
+        "prompt": "Choose your next step.",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Beginner programming learner seeking practical capability mapping from hypothetical unit names",
+        "basis": "User indicated zero coding experience and provided sample unit descriptions.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific assessment formats (e.g. portfolio project, exams, timed lab tests)",
+      "Actual toolchains or languages used (e.g. Python vs JavaScript for Intro, SQLite vs Postgres for Databases)",
+      "Whether backend API integration is taught to connect the Web Projects frontend directly to the Databases unit",
+      "Official provider requirements, prerequisites, and grading rubrics"
+    ],
+    "result": {
+      "summary": "These units build logically: Programming introduces core logic, Databases covers structured data storage, and Web Projects teaches interface building. Together, they give a solid entry-level foundation, though full full-stack integration and specific assessment formats remain unverified.",
+      "course_capabilities": [
+        {
+          "skill_or_capability": "Algorithmic Logic and Error Tracing",
+          "curriculum_basis": [
+            {
+              "label": "Introduction to Programming",
+              "detail": "Covers variables, control flow loops, and debugging techniques.",
+              "source_status": "GENERAL_GUIDANCE",
+              "evidence_refs": [
+                "user_message"
+              ]
+            }
+          ],
+          "learning_depth_status": "INTRODUCED",
+          "assessment_evidence": "Basic syntax exercises and algorithmic script writing expected; specific assessment rubrics unknown.",
+          "uncertainty": "Language choice and depth of problem complexity are unverified."
+        },
+        {
+          "skill_or_capability": "Relational Data Querying & Modelling",
+          "curriculum_basis": [
+            {
+              "label": "Databases",
+              "detail": "Covers entity tables, primary/foreign keys, and SQL queries.",
+              "source_status": "GENERAL_GUIDANCE",
+              "evidence_refs": [
+                "user_message"
+              ]
+            }
+          ],
+          "learning_depth_status": "INTRODUCED",
+          "assessment_evidence": "Writing structured queries and schema design; database administration and scale not detailed.",
+          "uncertainty": "Specific SQL dialect and database software environment are unverified."
+        },
+        {
+          "skill_or_capability": "Interactive Web Interface Construction",
+          "curriculum_basis": [
+            {
+              "label": "Web Projects",
+              "detail": "Combines HTML markup, CSS styling, and JavaScript scripting.",
+              "source_status": "GENERAL_GUIDANCE",
+              "evidence_refs": [
+                "user_message"
+              ]
+            }
+          ],
+          "learning_depth_status": "PRACTISED",
+          "assessment_evidence": "Building multi-technology frontends; project scope and assessment rubric unverified.",
+          "uncertainty": "Whether client-server communication (APIs/fetching data from the database) is included is unclear."
+        }
+      ],
+      "practical_components": [
+        {
+          "label": "Interactive UI Development",
+          "detail": "Using HTML/CSS for responsive layouts and JavaScript to handle user inputs, clicks, and page updates.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": [
+            "user_message"
+          ]
+        },
+        {
+          "label": "Data Extraction & Filtering",
+          "detail": "Writing SQL commands to create schemas, filter records, and join tables across keys.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": [
+            "user_message"
+          ]
+        }
+      ],
+      "unknowns": [
+        {
+          "label": "Curriculum Integration Depth",
+          "detail": "Unclear if Web Projects directly connects to Databases via backend server code.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": [
+            "user_message"
+          ]
+        },
+        {
+          "label": "Assessment Methods",
+          "detail": "Formal assessment breakdown (exams, projects, or lab exercises) is unverified.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": [
+            "user_message"
+          ]
+        }
+      ],
+      "next_actions": [
+        {
+          "label": "Compare Real Syllabi",
+          "detail": "Review actual provider course specifications to check project requirements and technologies.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": [
+            "user_message"
+          ]
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Course Understanding Readiness",
+      "score": 80,
+      "dimensions": [
+        {
+          "name": "Goal clarity",
+          "score": 90,
+          "reason": "Clear intention to understand unit progression and practical capabilities from scratch."
+        },
+        {
+          "name": "Requirement evidence",
+          "score": 70,
+          "reason": "Hypothetical syllabus provides high-level topics, but assessment schemes and specific tech stacks remain unknown."
+        },
+        {
+          "name": "Fit to constraints",
+          "score": 85,
+          "reason": "Curriculum sequence logically accommodates a learner with zero prior coding experience."
+        },
+        {
+          "name": "Route feasibility",
+          "score": 80,
+          "reason": "Scaffolding from core logic to databases and projects is standard and pedagogically sound."
+        },
+        {
+          "name": "Backup/next-step readiness",
+          "score": 75,
+          "reason": "Ready to examine specific course offerings or check for backend integration gaps."
+        }
+      ],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Discuss practical project examples or next steps",
+        "type": "CONTINUE_CHAT"
+      },
+      {
+        "id": "research_required",
+        "label": "Review real provider syllabus data and assessment criteria",
+        "type": "RESEARCH"
+      }
+    ],
+    "handoff": {
+      "summary": "Translated hypothetical syllabus into practical capabilities: programming logic feeds data querying and web interfaces. Detailed scaffolding, depth, and unknowns have been mapped.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "These units build logically from core logic to data storage and front-end interface development. Full full-stack integration and specific assessment formats remain unverified."
+      },
+      "evidence_and_unknowns": [
+        "Based on hypothetical user-provided unit descriptions.",
+        "Specific assessment rubrics, tools/languages, and backend integration remain unverified."
+      ],
+      "recommended_next_action": "Verify assessment rubrics and technology stacks with real course outlines if preparing for enrollment."
+    }
+  },
+  "context": {
+    "user_message": "I have a sample course syllabus: Introduction to Programming teaches variables, loops and debugging; Databases covers tables, keys and SQL; Web Projects combines HTML, CSS and JavaScript. Explain what I would actually practise and how these units build on one another. I have never coded. These are hypothetical course units, not verified provider data.",
+    "prior_context_text": "",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "context_limited": false
+  }
+}

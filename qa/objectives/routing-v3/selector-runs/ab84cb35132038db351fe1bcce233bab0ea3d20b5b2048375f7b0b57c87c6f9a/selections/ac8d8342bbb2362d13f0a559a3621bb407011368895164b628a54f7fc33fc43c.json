@@ -1,0 +1,30 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "DISCOVER_001",
+  "reason": "Explore everyday activities and interest themes to help identify the types of tasks you genuinely enjoy.",
+  "disposition": "SUGGEST",
+  "selectionId": "83f50f06-63ad-4624-83fa-5761dc9d1c7b",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v4-context",
+  "selectedSimilarity": 0.7746470443720086,
+  "selectedRank": 2,
+  "retrievalSources": [
+    "user",
+    "context"
+  ],
+  "margin": null,
+  "userConfidence": {
+    "score": 30,
+    "band": "low",
+    "evidence_strength": "weak",
+    "trend": "unknown",
+    "reason_codes": [
+      "EXPLICIT_UNCERTAINTY",
+      "CRITERIA_UNCLEAR",
+      "ROUTE_UNRESOLVED"
+    ]
+  },
+  "createdAt": 1789734222214
+}

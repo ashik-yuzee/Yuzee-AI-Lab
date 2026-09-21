@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "NONE",
+  "decision": "NONE",
+  "objective_id": "",
+  "reason": "The user indicated that their question has been answered and they have enough information, so no further activity is needed.",
+  "disposition": "NONE",
+  "selectionId": "5e2d7bcb-6421-49c0-9384-55b7e8448c03",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": null,
+  "margin": 0.04162556238367876,
+  "userConfidence": null,
+  "createdAt": 1789733830098
+}

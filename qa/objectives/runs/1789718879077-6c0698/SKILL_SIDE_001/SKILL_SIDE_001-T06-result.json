@@ -1,0 +1,241 @@
+{
+  "test_id": "SKILL_SIDE_001-T06",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 317,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "ce45cef99f37c8c2e3a2f0054fe54220d05689cc70a28b8294df49b8a0ea34b4",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.skill_gaps"
+        },
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.next_actions"
+        }
+      ],
+      "latency_ms": 4088
+    }
+  ],
+  "failures": [
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.skill_gaps"
+    },
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.next_actions"
+    }
+  ],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "summary": "No target role, course, or capability gap analysis was requested in the conversation.",
+      "unknowns": []
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Skill gap analysis was not engaged because the user query pertains to general creative writing rather than career, course, or skill evaluation.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No skill gap assessment required."
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "Respond directly to user request in chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the query ('Write me a short birthday poem.') is unrelated to SKILL_SIDE_001 and performs a deliberate no-action completion/handoff back to chat.",
+          "evidence_pointer": "candidate.handoff.summary"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No previously confirmed facts existed, and the candidate did not re-ask or invent any user facts.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No questions or UI primitives were asked or displayed for an unrelated prompt.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid primitives were emitted; empty UI list provided for no-action handoff.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly determined that no skill gap assessment was required for creative writing request.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported current facts or skills were invented.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic claims, scores, or fake psychometrics were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Execution cleanly stopped with COMPLETE status without initiating unnecessary multi-turn interactions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled since no objective analysis occurred.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Clean Oala handoff clearly returning control back to general conversation to answer the user's creative writing request.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Candidate strictly followed schema boundaries and standard CONTINUE_CHAT action with no direct writes or endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly handled an off-topic request by completing the session without asking irrelevant questions and cleanly handing off back to chat."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2575,
+      "total_input_tokens": 1837,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1837
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 738,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2234,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2234
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 757
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4088,
+  "usage": {
+    "total_tokens": 2507,
+    "total_input_tokens": 2046,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2046
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 296,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 165,
+    "raw_prompt_token": 6825,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6825
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 313
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 165
+          }
+        ]
+      }
+    ]
+  }
+}

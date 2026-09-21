@@ -1,0 +1,17 @@
+[
+  {
+    "test_id": "SUP-05",
+    "objective_id": "STUDY_005",
+    "reviewer": "Codex inspection, separate from the automated Gemini evaluator; not human certification",
+    "source_fact": "No workplace assessment is specified.",
+    "model_claim": "No workplace assessment is included.",
+    "locations": [
+      "result.summary",
+      "readiness.dimensions[1].reason",
+      "handoff.evidence_and_unknowns[0]"
+    ],
+    "issue": "Absence of information was promoted into a negative fact. The semantic evaluator did not flag this evidence error. This case already fails hard checks.",
+    "expected": "Say workplace assessment is not established by the supplied excerpt and must be checked. Do not claim its absence or score assessment transparency as confirmed.",
+    "next_test": "Add paired evidence cases: assessment explicitly absent versus assessment not mentioned. Require the evaluator to quote source and claim for this distinction."
+  }
+]

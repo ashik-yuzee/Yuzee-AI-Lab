@@ -1,0 +1,476 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "SCHOOL_028",
+      "score": 0.7884506769285982,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7198929565615797,
+      "contextScore": 0.7884506769285982
+    },
+    {
+      "id": "SCHOOL_016",
+      "score": 0.7673944739781839,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6754911855302271,
+      "contextScore": 0.7673944739781839
+    },
+    {
+      "id": "PATH_012",
+      "score": 0.7618343035240518,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6423174450667404,
+      "contextScore": 0.7618343035240518
+    },
+    {
+      "id": "PATH_006",
+      "score": 0.7331183350498187,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6465647920229896,
+      "contextScore": 0.7331183350498187
+    },
+    {
+      "id": "FIRST_JOB_002",
+      "score": 0.6989126929017452,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6642954087627927,
+      "contextScore": 0.6989126929017452
+    },
+    {
+      "id": "SCHOOL_001",
+      "score": 0.6992084798211933,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6489237879017564,
+      "contextScore": 0.6992084798211933
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.6991883688039808,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6246456199961097,
+      "contextScore": 0.6991883688039808
+    },
+    {
+      "id": "PATH_005",
+      "score": 0.6988462895194143,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6988462895194143
+    },
+    {
+      "id": "PATH_004",
+      "score": 0.6624516582227005,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6624516582227005
+    },
+    {
+      "id": "PROFILE_006",
+      "score": 0.6564992525495859,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6564992525495859
+    },
+    {
+      "id": "SCHOOL_026",
+      "score": 0.6530650563284928,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6530650563284928
+    },
+    {
+      "id": "RECOVERY_006",
+      "score": 0.6507972206084682,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6507972206084682
+    },
+    {
+      "id": "LEARN_005",
+      "score": 0.6410019788122083,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6410019788122083
+    },
+    {
+      "id": "SCHOOL_025",
+      "score": 0.6262138765371665,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6262138765371665
+    },
+    {
+      "id": "IND_PATH_004",
+      "score": 0.6245887524550191,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6245887524550191
+    },
+    {
+      "id": "PROFILE_009",
+      "score": 0.6229588576199578,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6229588576199578
+    },
+    {
+      "id": "PROFILE_007",
+      "score": 0.6205663268296779,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6205663268296779
+    },
+    {
+      "id": "EMP_WORKPLACE_003",
+      "score": 0.7162769924243058,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7162769924243058
+    },
+    {
+      "id": "JOB_DISCOVER_006",
+      "score": 0.61846736336898,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.61846736336898
+    },
+    {
+      "id": "SCHOOL_005",
+      "score": 0.6169749838793387,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6169749838793387
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I pick my little brother up every day and help Dad at home. I need school and training options that fit that responsibility.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Education choices compatible with family caring responsibilities and limited time.",
+      "confirmed_facts": [],
+      "possible_need": "Education choices compatible with family caring responsibilities and limited time.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Education choices compatible with family caring responsibilities and limited time."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "SCHOOL_028",
+        "button_label": "I have family or caring responsibilities",
+        "outcome": "Find online/hybrid, part-time, local and staged pathways compatible with responsibilities.",
+        "when_to_use": "Serve when student needs flexibility beyond paid work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Flexible Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Adapt education pathways around caring duties. Do not infer the user wants a job in healthcare or childcare.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_016",
+        "button_label": "Show my family my options",
+        "outcome": "Create a neutral summary of goal, options, subject rationale, prerequisites, alternatives, costs, risks and backup plan.",
+        "when_to_use": "Serve when student needs to discuss choices with family/guardians.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Family Options Summary' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Family Options Summary: Create a neutral summary of goal, options, subject rationale, prerequisites, alternatives, costs, risks and backup plan. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_012",
+        "button_label": "University vs TAFE vs apprenticeship",
+        "outcome": "Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner.",
+        "when_to_use": "Serve when student is choosing between pathway families.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Pathway Types' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Pathway Types: Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_006",
+        "button_label": "I need to earn money too",
+        "outcome": "Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training.",
+        "when_to_use": "Serve when student cannot afford a study-only route.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Earn While I Learn' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Earn While I Learn: Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "FIRST_JOB_002",
+        "button_label": "Find a part-time job that helps my future",
+        "outcome": "Prioritize accessible jobs that build relevant skills, exposure or evidence for the target field.",
+        "when_to_use": "Serve when student wants work aligned with long-term goals.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs That Build My Future Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs That Build My Future Career: Prioritize accessible jobs that build relevant skills, exposure or evidence for the target field. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Age/eligibility, study schedule, location, transport, experience, career goal",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_001",
+        "button_label": "Help me choose my subjects",
+        "outcome": "Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation.",
+        "when_to_use": "Serve when student is selecting subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Help Me Choose My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Help Me Choose My Subjects: Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "PATH_005",
+        "button_label": "Start while I am still at school",
+        "outcome": "Explain school, employer, RTO, training contract and how work/training fits senior schooling.",
+        "when_to_use": "Serve when student wants to begin apprenticeship/traineeship during school.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'School-Based Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for School-Based Apprenticeship: Explain school, employer, RTO, training contract and how work/training fits senior schooling. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_004",
+        "button_label": "Could I do an apprenticeship?",
+        "outcome": "Explain employment + structured training + qualification and the employer/training contract requirement.",
+        "when_to_use": "Serve when student wants paid training/work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Apprenticeship Route: Explain employment + structured training + qualification and the employer/training contract requirement. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PROFILE_006",
+        "button_label": "My subjects",
+        "outcome": "Save current/completed/planned school subjects and performance where provided.",
+        "when_to_use": "Serve when school student is planning subjects/pathways.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Subjects: Save current/completed/planned school subjects and performance where provided. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "SCHOOL_026",
+        "button_label": "I need options near home",
+        "outcome": "Prioritize local, online/hybrid, school-based and nearby work-based routes.",
+        "when_to_use": "Serve when student has location/transport constraints.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Pathways Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Pathways Near Me: Prioritize local, online/hybrid, school-based and nearby work-based routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "RECOVERY_006",
+        "button_label": "I need to stay near home",
+        "outcome": "Find local, online/hybrid, regional, VET or apprenticeship alternatives compatible with travel constraints.",
+        "when_to_use": "Serve when location blocks preferred option.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Cannot Move Away' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Cannot Move Away: Find local, online/hybrid, regional, VET or apprenticeship alternatives compatible with travel constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "LEARN_005",
+        "button_label": "Build my learning order",
+        "outcome": "Sequence foundational skills, tools, practice, projects and communication/application skills.",
+        "when_to_use": "Serve when user wants a sequenced capability plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Build My Skill Roadmap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Build My Skill Roadmap: Sequence foundational skills, tools, practice, projects and communication/application skills. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_025",
+        "button_label": "My school does not offer the VET course",
+        "outcome": "Find external RTO/TAFE/school-partnership options subject to local availability.",
+        "when_to_use": "Serve when school cannot provide desired vet/training.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Find External Training' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Find External Training: Find external RTO/TAFE/school-partnership options subject to local availability. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_PATH_004",
+        "button_label": "Can I enter through vocational study?",
+        "outcome": "Show relevant certificates/diplomas, apprenticeships/traineeships and job families.",
+        "when_to_use": "Serve when user wants applied/vocational entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'VET Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for VET Routes: Show relevant certificates/diplomas, apprenticeships/traineeships and job families. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "PROFILE_009",
+        "button_label": "My goals",
+        "outcome": "Save current goals with status such as exploring/target/changed.",
+        "when_to_use": "Serve when user has a goal or several possible goals.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Goals' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Goals: Save current goals with status such as exploring/target/changed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "PROFILE_007",
+        "button_label": "My constraints",
+        "outcome": "Capture explicit constraints used by future pathway comparisons.",
+        "when_to_use": "Serve when user has time, money, location, work or family constraints.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Constraints' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Constraints: Capture explicit constraints used by future pathway comparisons. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "EMP_WORKPLACE_003",
+        "button_label": "What support is offered?",
+        "outcome": "Show sourced parental-leave/support policies where available.",
+        "when_to_use": "Serve when user wants family-related benefits.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Parental Leave' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Parental Leave: Show sourced parental-leave/support policies where available. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer-level published workplace data and policies",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_006",
+        "button_label": "Find jobs that fit my lifestyle",
+        "outcome": "Filter and compare roles against explicit lifestyle/work-value constraints.",
+        "when_to_use": "Serve when user prioritizes salary, remote, flexibility, security or work conditions.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs That Match My Priorities' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs That Match My Priorities: Filter and compare roles against explicit lifestyle/work-value constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_005",
+        "button_label": "Use my strongest subjects",
+        "outcome": "Use grades, enjoyment, effort, consistency and feedback rather than highest grade alone.",
+        "when_to_use": "Serve when student wants choices based on current performance.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Am Good At' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Am Good At: Use grades, enjoyment, effort, consistency and feedback rather than highest grade alone. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4219,
+      "total_input_tokens": 4145,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4145
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 74,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4558,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4558
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 91
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:06Z",
+    "updated": "2026-09-18T12:16:06Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TCEk2OIR1YZqgkRUycGsy/yN39trlFc7HIQ0uciTi3Tf4SQPdK2MhY/1QHydwmaHziD5wHtWETiMECtZ3vWDlyqLtCdXohK0ehWacY6JolMpUsbyijJdLfchicxCvt6UjlHOfXcBW",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"SCHOOL_028\",\n  \"reason\": \"Explore flexible, part-time, online, and local training pathways structured around your daily family and caring responsibilities.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "SCHOOL_028",
+    "reason": "Explore flexible, part-time, online, and local training pathways structured around your daily family and caring responsibilities.",
+    "disposition": "SUGGEST",
+    "selectionId": "046f139c-e9cc-4ba1-8344-7f5580e7f50f",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.7884506769285982,
+    "margin": 0.021056202950414216,
+    "userConfidence": null,
+    "createdAt": 1789733766422
+  }
+}

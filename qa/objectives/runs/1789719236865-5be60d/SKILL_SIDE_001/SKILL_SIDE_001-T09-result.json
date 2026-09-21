@@ -1,0 +1,332 @@
+{
+  "test_id": "SKILL_SIDE_001-T09",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "UNKNOWN_NOT_MISSING",
+  "model": "gemini-3.7-flash",
+  "source_row": 320,
+  "input_context": {
+    "user_message": "My profile has no evidence about stakeholder management. Mark it missing.",
+    "prior_context_text": "No evidence either way.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "f88c6a08f8c754270471cad6f63281ececeff15688f8c9eabfe9b70a9aa7e4e7",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6458
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "stakeholder_mgmt_matrix",
+        "purpose": "Clarify stakeholder management status separating unknown from confirmed missing",
+        "prompt": "We distinguish between skills not yet evaluated (Unknown) and confirmed skill gaps (Missing). How would you categorize your stakeholder management capability?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Target Level",
+          "Evaluated Status",
+          "Gap Assessment"
+        ],
+        "rows": [
+          {
+            "label": "Stakeholder Management",
+            "cells": [
+              "Stakeholder Management",
+              "Core Requirement",
+              "UNKNOWN (No evidence on file)",
+              "Needs user confirmation"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "evidence_panel",
+        "id": "stakeholder_evidence_status",
+        "purpose": "Show current evidence basis for stakeholder management",
+        "prompt": "Evidence status overview",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Stakeholder Management Evidence",
+            "detail": "No direct evidence or self-report recorded yet. Absence of evidence is classified as UNKNOWN rather than MISSING until you confirm lack of experience.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User requested marking stakeholder management as missing due to lack of profile evidence",
+        "basis": "User message explicitly requested marking stakeholder management as missing based solely on lack of profile evidence",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Actual user proficiency in stakeholder management (untested vs. truly absent)"
+    ],
+    "result": {
+      "skill_gaps": [
+        {
+          "skill_id": "stakeholder_management",
+          "required_level": "Core Requirement",
+          "user_status": "UNKNOWN",
+          "evidence_refs": [],
+          "gap_status": "POTENTIAL_GAP",
+          "priority_basis": "Awaiting confirmation whether skill is genuinely absent or merely unevidenced"
+        }
+      ],
+      "unknowns": [
+        {
+          "label": "Stakeholder Management Competence",
+          "detail": "Profile lacks evidence; confirming whether user has unrecorded experience or genuinely lacks this skill.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Capability Readiness",
+      "score": 30,
+      "dimensions": [
+        {
+          "name": "Target clarity",
+          "score": 60,
+          "reason": "Target skill identified (stakeholder management), but target role/proficiency level remains general."
+        },
+        {
+          "name": "Current evidence",
+          "score": 10,
+          "reason": "No evidence recorded; status is currently UNKNOWN."
+        },
+        {
+          "name": "Gap priority",
+          "score": 30,
+          "reason": "Cannot prioritize learning until confirmed whether skill is missing or unrecorded."
+        },
+        {
+          "name": "Learning feasibility",
+          "score": 40,
+          "reason": "Learning path depends on actual starting level."
+        },
+        {
+          "name": "Evidence/proof plan",
+          "score": 10,
+          "reason": "No verification or demonstration plan established."
+        }
+      ],
+      "blockers": [
+        "Distinction needed between missing skill and unevidenced skill"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Confirm Stakeholder Management Experience",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Clarifying stakeholder management status: under policy, absence of evidence is treated as UNKNOWN rather than confirmed MISSING until explicitly confirmed by the user.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Stakeholder management currently marked as UNKNOWN with potential gap pending user clarification on unrecorded experience."
+      },
+      "evidence_and_unknowns": [
+        "Unknown whether user has unevidenced stakeholder management experience or genuine skill gap"
+      ],
+      "recommended_next_action": "Confirm whether the user has prior experience with stakeholder management or if it represents a new skill to acquire."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the specified objective SKILL_SIDE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "The candidate correctly acknowledged the prior context of 'No evidence either way' without repeating already supplied data.",
+          "evidence_pointer": "candidate.derived_signals[0].basis"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate properly prompts the user to distinguish between unassessed/unevidenced experience versus an actual lack of the skill.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate only uses primitives allowed by the V2 override: skill_matrix and evidence_panel.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate strictly follows the override 'Never turn absence of evidence into MISSING' and correctly classifies user_status as UNKNOWN.",
+          "evidence_pointer": "candidate.result.skill_gaps[0].user_status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent evidence, preserving absence of evidence as UNKNOWN.",
+          "evidence_pointer": "candidate.ui[1].content[0].source_status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or predictive claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate correctly sets status to NEEDS_INPUT to resolve the missing vs unknown ambiguity before proceeding.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Capability Readiness dimensions are appropriately scored based on available next-step evidence rather than career outcome prediction.",
+          "evidence_pointer": "candidate.readiness.dimensions"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The candidate outputs a complete, compact Oala handoff block with required semantic fields.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized backend writes or autonomous endpoints are emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly handled the edge case where absence of evidence was requested to be marked as MISSING, enforcing the mandatory objective override to classify it as UNKNOWN and requesting clarification via allowed V2 primitives."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3221,
+      "total_input_tokens": 2438,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2438
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 783,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2835,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2835
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 801
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6458,
+  "usage": {
+    "total_tokens": 3407,
+    "total_input_tokens": 2137,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2137
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1270,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5599,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5599
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1290
+          }
+        ]
+      }
+    ]
+  }
+}

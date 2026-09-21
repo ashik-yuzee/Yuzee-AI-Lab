@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-18",
+  "scope": "Opt-in 316 objective workspace UX",
+  "status": "browser_flow_exercised_not_production_certification",
+  "conversation": "conv-1789729952921-k0uno4",
+  "session": "04a06674-7e4f-4009-9cfe-4d3c27e6db27",
+  "objective": "JOB_DECIDE_004",
+  "route": {
+    "disposition": "AUTO_OPEN",
+    "mode": "explicit task request plus strong BGE shortlist and HIGH/REQUIRED Gemini context check",
+    "bge_rank": 3,
+    "selected_similarity": 0.7706675084484171,
+    "note": "Similarity is not a probability; final selection record retained privately."
+  },
+  "browser_checks": [
+    "automatic workspace opening without suggestion click",
+    "entered answer shown in both original chat turn and workspace",
+    "one entered answer preserved with question and timestamp",
+    "completed result automatically generated Oala continuation without a handoff click",
+    "Oala kept exact pay, training, commute and unknown progression",
+    "reopened saved activity and expanded full answer",
+    "persisted single accepted handoff after server restart",
+    "later chat reused entered details: 450 - 80 = 370 minutes, or 6h 10m weekly travel saved; no repeated input"
+  ],
+  "validation": {
+    "local_tests_passed": 42,
+    "build": "passed",
+    "execution_first_attempt": "rejected TABLE_SHAPE",
+    "execution_correction": "passed",
+    "correction_count": 1
+  },
+  "remaining": [
+    "316 routing calibration and independent real-world holdout",
+    "semantic evidence-label review",
+    "3,140-case broader execution suite",
+    "live data connectors and profile saving",
+    "richer scenario renderers and inline corrections from design reference"
+  ]
+}

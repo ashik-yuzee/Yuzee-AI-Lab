@@ -1,0 +1,6138 @@
+{
+  "date": "2026-09-18T08:05:09.632Z",
+  "method": "CPU q8. Existing 103-case corpus is development data, never a new held-out claim. Grid fit maximises correct selections with >=95% accepted precision and zero accepted negative cases. Optional suggestions calibrated separately on 16 excerpts plus negatives. Topic uses conservative route gate. No evaluation-set tuning.",
+  "corpusSha256": "e2718556d478cc2da741354aed022eddfdb3efbaf81beee380c251a9cda8ab1b",
+  "profile": {
+    "version": "bge-calibrated-v1",
+    "modelId": "Xenova/bge-small-en-v1.5",
+    "contentVersion": "bge-skills-v2",
+    "route": {
+      "score": 0.65,
+      "margin": 0.04,
+      "domainMargin": 0.06
+    },
+    "topic": {
+      "score": 0.65,
+      "margin": 0.04,
+      "domainMargin": 0.06
+    },
+    "suggestion": {
+      "score": 0.65,
+      "margin": 0.05,
+      "domainMargin": 0.12
+    }
+  },
+  "route": {
+    "selected": {
+      "gate": {
+        "score": 0.65,
+        "margin": 0.04,
+        "domainMargin": 0.06
+      },
+      "correct": 42,
+      "wrong": 2,
+      "negativeAccepted": 0,
+      "precision": 0.9545454545454546
+    },
+    "alternatives": [
+      {
+        "gate": {
+          "score": 0.65,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.625,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.6,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.575,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.55,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.525,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.5,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.475,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.45,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      },
+      {
+        "gate": {
+          "score": 0.425,
+          "margin": 0.04,
+          "domainMargin": 0.06
+        },
+        "correct": 42,
+        "wrong": 2,
+        "negativeAccepted": 0,
+        "precision": 0.9545454545454546
+      }
+    ]
+  },
+  "suggestion": {
+    "selected": {
+      "gate": {
+        "score": 0.65,
+        "margin": 0.05,
+        "domainMargin": 0.12
+      },
+      "correct": 8,
+      "wrong": 0,
+      "negativeAccepted": 0,
+      "precision": 1
+    },
+    "alternatives": [
+      {
+        "gate": {
+          "score": 0.65,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.625,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.6,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.575,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.55,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.525,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.5,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.475,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.45,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      },
+      {
+        "gate": {
+          "score": 0.425,
+          "margin": 0.05,
+          "domainMargin": 0.12
+        },
+        "correct": 8,
+        "wrong": 0,
+        "negativeAccepted": 0,
+        "precision": 1
+      }
+    ]
+  },
+  "routes": [
+    {
+      "text": "Could you unpack the explanation of photosynthesis we just read, with more detail?",
+      "allowed": [
+        "CORE_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_001",
+          "score": 0.5700058134423694
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5636250909093797
+        },
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5636115528999562
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.5629088455886221
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5788650045443751
+        }
+      ]
+    },
+    {
+      "text": "Zoom out from nursing and show me the broader healthcare field it belongs to.",
+      "allowed": [
+        "CORE_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_003",
+          "score": 0.694460448203089
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6807756471434694
+        },
+        {
+          "toolId": "INST_003",
+          "score": 0.6619789966009013
+        },
+        {
+          "toolId": "CORE_005",
+          "score": 0.6514168933157252
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6131335704497656
+        }
+      ]
+    },
+    {
+      "text": "What other subjects are connected to environmental science, and how are they linked?",
+      "allowed": [
+        "CORE_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_005",
+          "score": 0.662127343120869
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6374949757362818
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.5807594612781847
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.5572677474742673
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.532971513037846
+        }
+      ]
+    },
+    {
+      "text": "Compare volunteering, a paid internship and a personal project as ways to gain experience.",
+      "allowed": [
+        "CORE_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.7847731248850055
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.7753952310034539
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6735750322135269
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.6704638638942411
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6048771824947933
+        }
+      ]
+    },
+    {
+      "text": "I keep hearing the word accreditation. What does it mean in everyday language?",
+      "allowed": [
+        "CORE_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_007",
+          "score": 0.687684139932505
+        },
+        {
+          "toolId": "COURSE_010",
+          "score": 0.672754926841102
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.6472989470595536
+        },
+        {
+          "toolId": "SKILL_002",
+          "score": 0.6411455418199298
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.595723936563502
+        }
+      ]
+    },
+    {
+      "text": "Why should I care about this finding that jobs increasingly mention data literacy?",
+      "allowed": [
+        "CORE_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_008",
+          "score": 0.7090622174245109
+        },
+        {
+          "toolId": "JOB_006",
+          "score": 0.7079121845674516
+        },
+        {
+          "toolId": "SKILL_011",
+          "score": 0.6645280078890974
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.6636173523256501
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.54042848715172
+        }
+      ]
+    },
+    {
+      "text": "Given the options we discussed, what is the most useful single thing to do next?",
+      "allowed": [
+        "CORE_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_009",
+          "score": 0.7336967857391585
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.6379542249132387
+        },
+        {
+          "toolId": "SKILL_005",
+          "score": 0.616261971857763
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.6090245541960261
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6611949415548373
+        }
+      ]
+    },
+    {
+      "text": "Can you check whether that statement has trustworthy evidence rather than just sounding convincing?",
+      "allowed": [
+        "CORE_010"
+      ],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "CORE_010",
+          "score": 0.7498530151901526
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.6806324596670013
+        },
+        {
+          "toolId": "RPL_001",
+          "score": 0.6506797149181838
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6392902401472716
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5938276710635073
+        }
+      ]
+    },
+    {
+      "text": "Give me a detailed overview of the Diploma of Community Services at a TAFE provider.",
+      "allowed": [
+        "COURSE_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_001",
+          "score": 0.650068363393426
+        },
+        {
+          "toolId": "IND_011",
+          "score": 0.6419425451110894
+        },
+        {
+          "toolId": "INST_004",
+          "score": 0.6309319067517479
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.6253749581953507
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5795490691982845
+        }
+      ]
+    },
+    {
+      "text": "Help me decide between a nursing diploma and a nursing bachelor by comparing the courses.",
+      "allowed": [
+        "COURSE_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.7341101086686197
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.7092580040392582
+        },
+        {
+          "toolId": "COURSE_003",
+          "score": 0.6969461362727813
+        },
+        {
+          "toolId": "COURSE_016",
+          "score": 0.682027547158042
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5329237837584195
+        }
+      ]
+    },
+    {
+      "text": "What does an Australian graduate certificate mean compared with a bachelor qualification?",
+      "allowed": [
+        "COURSE_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_003",
+          "score": 0.7576707510874623
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.6699494853234935
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6541932140264178
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.6495448716798604
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4681780650215237
+        }
+      ]
+    },
+    {
+      "text": "How is this degree put together across years, core subjects, electives and prerequisites?",
+      "allowed": [
+        "COURSE_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_004",
+          "score": 0.8089482647154205
+        },
+        {
+          "toolId": "COURSE_005",
+          "score": 0.6885872917751491
+        },
+        {
+          "toolId": "COURSE_007",
+          "score": 0.6675887394468196
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6655773625548437
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5133722240345335
+        }
+      ]
+    },
+    {
+      "text": "Walk me through the subjects in this course and what I would actually learn in each.",
+      "allowed": [
+        "COURSE_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_005",
+          "score": 0.7365734894387074
+        },
+        {
+          "toolId": "COURSE_007",
+          "score": 0.7292146950491316
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6822479493258835
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.6817152944074413
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5930632153139039
+        }
+      ]
+    },
+    {
+      "text": "Which majors or specialisations can I choose inside this business degree?",
+      "allowed": [
+        "COURSE_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_006",
+          "score": 0.7777232297859246
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.7115135308326741
+        },
+        {
+          "toolId": "IND_003",
+          "score": 0.6751885120225102
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.650197332023695
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5861916138886063
+        }
+      ]
+    },
+    {
+      "text": "Map the skills taught by this cybersecurity course to the units and assessments that develop them.",
+      "allowed": [
+        "COURSE_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_004",
+          "score": 0.7530713815147279
+        },
+        {
+          "toolId": "COURSE_007",
+          "score": 0.7362478494776847
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6738618256642771
+        },
+        {
+          "toolId": "COURSE_005",
+          "score": 0.669290455390455
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.502159134192115
+        }
+      ]
+    },
+    {
+      "text": "Which occupations could this environmental science degree prepare me for?",
+      "allowed": [
+        "COURSE_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6139114251416313
+        },
+        {
+          "toolId": "CORE_005",
+          "score": 0.5869828687602556
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.585871044850727
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.5780305418527649
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5337323693147258
+        }
+      ]
+    },
+    {
+      "text": "Which companies in Melbourne might employ graduates of this logistics diploma?",
+      "allowed": [
+        "COURSE_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_011",
+          "score": 0.6327617619321121
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.6278927525827459
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.5963585775527362
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.5803038388346098
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.44440228163425277
+        }
+      ]
+    },
+    {
+      "text": "I left school in year eleven. Would I meet the entry rules for this nursing course?",
+      "allowed": [
+        "COURSE_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_010",
+          "score": 0.660992061107707
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.6482276121398991
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.639201537820938
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6389844742170212
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.52232694037459
+        }
+      ]
+    },
+    {
+      "text": "What would this course cost me, and which grants or subsidies could reduce the amount I pay?",
+      "allowed": [
+        "COURSE_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_011",
+          "score": 0.7064374646294067
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.645939238182501
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6433657421611594
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.6265527935671089
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5744540713257269
+        }
+      ]
+    },
+    {
+      "text": "What would an ordinary study week look like, including classes, homework and placements?",
+      "allowed": [
+        "COURSE_012"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_012",
+          "score": 0.7334901180913087
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.6314617122621882
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.6136807573768971
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.6107982383111918
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5729269284047314
+        }
+      ]
+    },
+    {
+      "text": "What job requirements for a junior data analyst are missing from this course curriculum?",
+      "allowed": [
+        "COURSE_013"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_013",
+          "score": 0.7333499708273521
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.6514461253724582
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.635585599088627
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.6338820545343686
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4621903873526038
+        }
+      ]
+    },
+    {
+      "text": "Does this computing course still teach current industry practices, or is the curriculum outdated?",
+      "allowed": [
+        "COURSE_014"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_014",
+          "score": 0.7996319425799983
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.7085716004733135
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.7072022131549595
+        },
+        {
+          "toolId": "INST_006",
+          "score": 0.6966844413281993
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5282219243509192
+        }
+      ]
+    },
+    {
+      "text": "The degree I wanted is too expensive. What other study pathways could reach the same goal?",
+      "allowed": [
+        "COURSE_015"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_015",
+          "score": 0.7431644102868913
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.7222550817236272
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.6785818774661515
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.6687408039489505
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5685817038545081
+        }
+      ]
+    },
+    {
+      "text": "Explain the difference between a bootcamp, short course and formal qualification as learning options.",
+      "allowed": [
+        "COURSE_016"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_016",
+          "score": 0.8059605258057373
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.7760715729192741
+        },
+        {
+          "toolId": "COURSE_003",
+          "score": 0.7390276463478919
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.7376174096327492
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5771309568513836
+        }
+      ]
+    },
+    {
+      "text": "What is included in this university microcredential, and does it carry recognised credit?",
+      "allowed": [
+        "MICRO_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "MICRO_001",
+          "score": 0.7215572757295083
+        },
+        {
+          "toolId": "COURSE_016",
+          "score": 0.6335219591723821
+        },
+        {
+          "toolId": "RPL_001",
+          "score": 0.6299749411407702
+        },
+        {
+          "toolId": "TREND_004",
+          "score": 0.6226124341674527
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5440253990472771
+        }
+      ]
+    },
+    {
+      "text": "Tell me what a career as an occupational therapist is like and who it might suit.",
+      "allowed": [
+        "CAREER_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6601837388288962
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.6544820387682653
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.6543413345297937
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.6499875852290856
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.521021186880821
+        }
+      ]
+    },
+    {
+      "text": "Explain junior, mid-level and senior positions in software engineering and how responsibility changes.",
+      "allowed": [
+        "CAREER_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_002",
+          "score": 0.7693826196528903
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.71008817628062
+        },
+        {
+          "toolId": "JOB_005",
+          "score": 0.6890056351831769
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.6881196863193567
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5680572004845171
+        }
+      ]
+    },
+    {
+      "text": "What different specialist directions can someone take within accounting as a career?",
+      "allowed": [
+        "CAREER_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_003",
+          "score": 0.7103391032042521
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.6797693663829858
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6576554550581379
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.6567034342273204
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5820550507296911
+        }
+      ]
+    },
+    {
+      "text": "I am already a nurse. What are realistic next career moves as I become more experienced?",
+      "allowed": [
+        "CAREER_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_003",
+          "score": 0.7052250756605244
+        },
+        {
+          "toolId": "CAREER_004",
+          "score": 0.6888188535869639
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.6636023123678374
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.6209439761322897
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5172807976015078
+        }
+      ]
+    },
+    {
+      "text": "I have worked in retail for ten years and want to move into IT. Map a practical career change.",
+      "allowed": [
+        "CAREER_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_005",
+          "score": 0.7103759368616847
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.6703505372540564
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6427985631944257
+        },
+        {
+          "toolId": "CAREER_004",
+          "score": 0.6346654833757951
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6136865554991356
+        }
+      ]
+    },
+    {
+      "text": "Help me understand this specific advertised customer service vacancy and what the employer is offering.",
+      "allowed": [
+        "JOB_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_001",
+          "score": 0.7944203506463507
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7129921787236179
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6889099645435358
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.6762539526065958
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5851188551041545
+        }
+      ]
+    },
+    {
+      "text": "What qualifications, licences and experience are normally required for an electrician job?",
+      "allowed": [
+        "JOB_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_008",
+          "score": 0.5930591995163927
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.5910516777158336
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.5843793495813604
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.5824792861891837
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5522633623492618
+        }
+      ]
+    },
+    {
+      "text": "Describe the tasks a pharmacy assistant performs during a typical shift.",
+      "allowed": [
+        "JOB_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_003",
+          "score": 0.7121835164648392
+        },
+        {
+          "toolId": "CAREER_001",
+          "score": 0.6731674823403597
+        },
+        {
+          "toolId": "JOB_005",
+          "score": 0.6287572170856236
+        },
+        {
+          "toolId": "JOB_008",
+          "score": 0.6244288385436513
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6014703731778827
+        }
+      ]
+    },
+    {
+      "text": "What abilities does a project coordinator need to do the job well?",
+      "allowed": [
+        "JOB_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_004",
+          "score": 0.6706651558871128
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.6611133290464943
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.6298325999952286
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6269332122179004
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.529381954406432
+        }
+      ]
+    },
+    {
+      "text": "Which software packages and technical tools do graphic designers use at work?",
+      "allowed": [
+        "JOB_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_005",
+          "score": 0.6643281370601867
+        },
+        {
+          "toolId": "TECH_001",
+          "score": 0.6540665141380695
+        },
+        {
+          "toolId": "COMP_004",
+          "score": 0.6538714459385181
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6002003437092918
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.48069914294511806
+        }
+      ]
+    },
+    {
+      "text": "What is the employment outlook for aged care workers in Queensland over the coming years?",
+      "allowed": [
+        "JOB_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_006",
+          "score": 0.6620477227397047
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.6326952367902774
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.6211658054072763
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.5944729567400024
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5123936573107992
+        }
+      ]
+    },
+    {
+      "text": "Compare demand for electricians between Perth, Adelaide and regional Victoria.",
+      "allowed": [
+        "JOB_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.7376829766075947
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.6933536361381036
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.5979537400478221
+        },
+        {
+          "toolId": "COMP_009",
+          "score": 0.5960224435373344
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.518991262617152
+        }
+      ]
+    },
+    {
+      "text": "Which tasks in a bookkeeper's working day could AI automate, and which still need a person?",
+      "allowed": [
+        "JOB_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_008",
+          "score": 0.7392957533308968
+        },
+        {
+          "toolId": "JOB_003",
+          "score": 0.637988632352548
+        },
+        {
+          "toolId": "IND_010",
+          "score": 0.6267457961397894
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.6050519872725111
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5976484380171335
+        }
+      ]
+    },
+    {
+      "text": "Explain active listening as a skill and show me what doing it well looks like.",
+      "allowed": [
+        "SKILL_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_007",
+          "score": 0.7074411904624385
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6747726471616233
+        },
+        {
+          "toolId": "COURSE_007",
+          "score": 0.6670520534776072
+        },
+        {
+          "toolId": "SKILL_002",
+          "score": 0.6572802641617488
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6093018407466423
+        }
+      ]
+    },
+    {
+      "text": "How could I tell whether my spreadsheet ability is beginner, intermediate or advanced?",
+      "allowed": [
+        "SKILL_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_002",
+          "score": 0.7123600564895827
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6563897000421499
+        },
+        {
+          "toolId": "SKILL_006",
+          "score": 0.6528951232948323
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.6514859732983717
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5509209331536502
+        }
+      ]
+    },
+    {
+      "text": "Compare the skills I already have with what a junior analyst needs and identify my gaps.",
+      "allowed": [
+        "SKILL_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_003",
+          "score": 0.756076511257688
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.7391966720194425
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.7277895614796812
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.723980823583317
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5711797428605179
+        }
+      ]
+    },
+    {
+      "text": "Which skills from caring for my family could transfer into paid community support work?",
+      "allowed": [
+        "SKILL_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_005",
+          "score": 0.7196107797399552
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.7054728971380233
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.7007230074289437
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.6696311606695484
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6596549523575562
+        }
+      ]
+    },
+    {
+      "text": "I can already use spreadsheets. Which skills should I prioritise next for an analyst role?",
+      "allowed": [
+        "SKILL_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_003",
+          "score": 0.6767244325838206
+        },
+        {
+          "toolId": "SKILL_005",
+          "score": 0.6737653085721897
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.664314944847561
+        },
+        {
+          "toolId": "CAND_001",
+          "score": 0.657454245338154
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6019920136287945
+        }
+      ]
+    },
+    {
+      "text": "Is demand for SQL skills increasing in Australian job adverts compared with last year?",
+      "allowed": [
+        "SKILL_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_006",
+          "score": 0.7154124766945861
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.7103449642455331
+        },
+        {
+          "toolId": "SKILL_006",
+          "score": 0.7008505430271188
+        },
+        {
+          "toolId": "TREND_006",
+          "score": 0.6874722905012665
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.504256689338022
+        }
+      ]
+    },
+    {
+      "text": "Are manual bookkeeping skills being replaced, or changing into different capabilities?",
+      "allowed": [
+        "SKILL_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_007",
+          "score": 0.7066326592896119
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.6592484615414663
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.6535372781705049
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.6503496459278285
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5739849308186477
+        }
+      ]
+    },
+    {
+      "text": "I am good at written communication. What adjacent skills would be natural to build on that?",
+      "allowed": [
+        "SKILL_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_008",
+          "score": 0.6954449138887222
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.663318941672852
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.6617795054023144
+        },
+        {
+          "toolId": "SKILL_002",
+          "score": 0.6594635606886923
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6477123065799981
+        }
+      ]
+    },
+    {
+      "text": "Teach me how to prioritise my work, with a worked example and something I can practise.",
+      "allowed": [
+        "SKILL_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.7366673982862957
+        },
+        {
+          "toolId": "SKILL_005",
+          "score": 0.7072644469991285
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.7043204332480876
+        },
+        {
+          "toolId": "CAND_001",
+          "score": 0.6951266619573506
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6600894919165248
+        }
+      ]
+    },
+    {
+      "text": "Which courses teach the Excel skills needed for office administration?",
+      "allowed": [
+        "SKILL_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_007",
+          "score": 0.6328330488920698
+        },
+        {
+          "toolId": "SKILL_010",
+          "score": 0.620799870193555
+        },
+        {
+          "toolId": "COURSE_016",
+          "score": 0.6188385053039611
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.6043358075240457
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5432163705616404
+        }
+      ]
+    },
+    {
+      "text": "What kinds of jobs use negotiation skills regularly?",
+      "allowed": [
+        "SKILL_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.6219482200023413
+        },
+        {
+          "toolId": "SKILL_011",
+          "score": 0.6204347044510663
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.6165674361636229
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.615001418465893
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5399629073570105
+        }
+      ]
+    },
+    {
+      "text": "Which employers in Sydney are looking for people with Python skills?",
+      "allowed": [
+        "SKILL_012"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.6117466595603904
+        },
+        {
+          "toolId": "SKILL_011",
+          "score": 0.6111288599864025
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.5874522496714948
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.5809199757854346
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4623617582090587
+        }
+      ]
+    },
+    {
+      "text": "Give me a beginner-friendly overview of the renewable energy industry.",
+      "allowed": [
+        "IND_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_002",
+          "score": 0.6333329104162313
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.6268829646852756
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6111984358902633
+        },
+        {
+          "toolId": "IND_003",
+          "score": 0.6086957156022725
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6235342785588629
+        }
+      ]
+    },
+    {
+      "text": "Break the healthcare industry down into its main subfields so I can see how it is organised.",
+      "allowed": [
+        "IND_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_002",
+          "score": 0.7230464275562338
+        },
+        {
+          "toolId": "INST_003",
+          "score": 0.6366344356476168
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6105943971439578
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.6026052207475175
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6018233437909519
+        }
+      ]
+    },
+    {
+      "text": "What specialised niches exist within the agriculture industry?",
+      "allowed": [
+        "IND_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_003",
+          "score": 0.7537152052043131
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6726638293103345
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6603324371102786
+        },
+        {
+          "toolId": "IND_004",
+          "score": 0.6565619190361542
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5646682510218484
+        }
+      ]
+    },
+    {
+      "text": "Show the main job families across the construction industry, beyond trades alone.",
+      "allowed": [
+        "IND_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_004",
+          "score": 0.7092819461366611
+        },
+        {
+          "toolId": "COMP_002",
+          "score": 0.697998194186532
+        },
+        {
+          "toolId": "TREND_001",
+          "score": 0.6189465267135129
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.6183621404064036
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5381350308117877
+        }
+      ]
+    },
+    {
+      "text": "Which companies make up the Australian logistics industry, grouped by what they do?",
+      "allowed": [
+        "IND_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_001",
+          "score": 0.6068476369860176
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.6050889688102593
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.5880580757251532
+        },
+        {
+          "toolId": "IND_011",
+          "score": 0.5863440861534592
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4620849422215366
+        }
+      ]
+    },
+    {
+      "text": "Which skills are important across the hospitality industry?",
+      "allowed": [
+        "IND_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_006",
+          "score": 0.7038406992523927
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6796361746165259
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.659310764278242
+        },
+        {
+          "toolId": "TREND_001",
+          "score": 0.6536353039550508
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5545813050249521
+        }
+      ]
+    },
+    {
+      "text": "Where are the most serious workforce shortages in Victoria's healthcare industry?",
+      "allowed": [
+        "IND_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_007",
+          "score": 0.6734750502653546
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.6321437101750627
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.6302380030132445
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6037502877330744
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.45920988637409255
+        }
+      ]
+    },
+    {
+      "text": "Compare renewable energy industry demand across Australia's states and regions.",
+      "allowed": [
+        "IND_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_008",
+          "score": 0.714652787672937
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.7115695393821551
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6231979600440402
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6095600985927756
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.524707077393767
+        }
+      ]
+    },
+    {
+      "text": "Which new technologies are changing how the mining industry operates?",
+      "allowed": [
+        "IND_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_009",
+          "score": 0.7522780288023007
+        },
+        {
+          "toolId": "TREND_002",
+          "score": 0.6835975817827136
+        },
+        {
+          "toolId": "TREND_001",
+          "score": 0.6339156628533917
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.6315636614656686
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5074951531618339
+        }
+      ]
+    },
+    {
+      "text": "How might AI change the insurance industry and the mix of human work it needs?",
+      "allowed": [
+        "IND_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_010",
+          "score": 0.7461762040612688
+        },
+        {
+          "toolId": "JOB_008",
+          "score": 0.6712643379694634
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6665662897654322
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.639532045257425
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5628336201133707
+        }
+      ]
+    },
+    {
+      "text": "Which education providers and qualifications supply graduates to the Australian cyber industry?",
+      "allowed": [
+        "IND_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_011",
+          "score": 0.6820287961480744
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.6419848459421875
+        },
+        {
+          "toolId": "INST_001",
+          "score": 0.6294665487523672
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.6145561145545548
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4309075646646093
+        }
+      ]
+    },
+    {
+      "text": "Compare future demand and available talent in Queensland construction to find the workforce gap.",
+      "allowed": [
+        "IND_012"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_012",
+          "score": 0.7719044708421183
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.7087012785702438
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.6983036432668421
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.6893983665100754
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5072470907098595
+        }
+      ]
+    },
+    {
+      "text": "Give me an overview of Atlassian as a company, including what it does and how it is organised.",
+      "allowed": [
+        "COMP_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_001",
+          "score": 0.6653638901072257
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.6494807639088209
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.645349924979278
+        },
+        {
+          "toolId": "COMP_004",
+          "score": 0.6439435138683893
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5555579024162342
+        }
+      ]
+    },
+    {
+      "text": "What kinds of roles exist at this company across its different departments?",
+      "allowed": [
+        "COMP_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_002",
+          "score": 0.7312239415517928
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.7235192729318957
+        },
+        {
+          "toolId": "IND_004",
+          "score": 0.7036713514575089
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.6917380962872474
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5644654978810705
+        }
+      ]
+    },
+    {
+      "text": "Which skills appear to matter most to this company based on its advertised roles?",
+      "allowed": [
+        "COMP_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_003",
+          "score": 0.7505510072603531
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.6977432001230313
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.6943934935904504
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.6933592904671007
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6018818519635194
+        }
+      ]
+    },
+    {
+      "text": "What technology stack does this company appear to use, based on public evidence?",
+      "allowed": [
+        "COMP_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_004",
+          "score": 0.8045906394256899
+        },
+        {
+          "toolId": "CORE_010",
+          "score": 0.6384629237978098
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.6344883986066533
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.6204473622074271
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5968961052600803
+        }
+      ]
+    },
+    {
+      "text": "Has this company's hiring activity increased or slowed over the last six months?",
+      "allowed": [
+        "COMP_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_005",
+          "score": 0.7395514322489254
+        },
+        {
+          "toolId": "TREND_006",
+          "score": 0.7288237899642913
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.6646538741253729
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.6617490188494025
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5258237241384018
+        }
+      ]
+    },
+    {
+      "text": "Which roles at this employer seem difficult to fill, and what evidence supports that?",
+      "allowed": [
+        "COMP_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_006",
+          "score": 0.8627605936748065
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.7590153800690572
+        },
+        {
+          "toolId": "IND_007",
+          "score": 0.7402035496417714
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.7333884312312571
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5503865329950737
+        }
+      ]
+    },
+    {
+      "text": "What capability needs does this company's recruitment activity suggest it is trying to address?",
+      "allowed": [
+        "COMP_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_010",
+          "score": 0.7584401910724752
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.7456105917554487
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.7380848807735786
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.7312077706644797
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5582735764092405
+        }
+      ]
+    },
+    {
+      "text": "Compare my experience with this company's advertised analyst position and explain my fit.",
+      "allowed": [
+        "COMP_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_008",
+          "score": 0.7716488047060488
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7107549165526105
+        },
+        {
+          "toolId": "JOB_001",
+          "score": 0.6919672383595241
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.6770816628449572
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6303813263917628
+        }
+      ]
+    },
+    {
+      "text": "How much local talent is available for the cloud engineers our company needs?",
+      "allowed": [
+        "COMP_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_009",
+          "score": 0.7082880229651557
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.667225109729115
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.6658963734075827
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.6528995619365323
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4896658929895581
+        }
+      ]
+    },
+    {
+      "text": "Should we train our existing team in data analysis or hire somebody who already has the skill?",
+      "allowed": [
+        "COMP_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_010",
+          "score": 0.7433163694692642
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.6950637287582575
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.6886669708361997
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.6754419580117227
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5137553411190744
+        }
+      ]
+    },
+    {
+      "text": "Build a three-month upskilling plan for our customer service team to handle digital support.",
+      "allowed": [
+        "COMP_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_011",
+          "score": 0.6758217298222755
+        },
+        {
+          "toolId": "CAND_003",
+          "score": 0.5861978784800701
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.5696064799882733
+        },
+        {
+          "toolId": "CAREER_004",
+          "score": 0.5209839058906308
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.49407873102984945
+        }
+      ]
+    },
+    {
+      "text": "Which internal roles could people in our current team move into using their existing skills?",
+      "allowed": [
+        "COMP_012"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_012",
+          "score": 0.8033761890953506
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.7594213494326489
+        },
+        {
+          "toolId": "CAREER_004",
+          "score": 0.7500164687210864
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.739007237671743
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5588235120463898
+        }
+      ]
+    },
+    {
+      "text": "Find suitable training providers for our warehouse team's safety and supervision skills.",
+      "allowed": [
+        "COMP_013"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_011",
+          "score": 0.6702009337922983
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.6683519124229134
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.6618052376125774
+        },
+        {
+          "toolId": "INST_009",
+          "score": 0.6488181269686124
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5458998191927474
+        }
+      ]
+    },
+    {
+      "text": "Design a talent pipeline to recruit and train twenty technicians over the next year.",
+      "allowed": [
+        "COMP_014"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_014",
+          "score": 0.6981715771985872
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.6933691309785235
+        },
+        {
+          "toolId": "COMP_009",
+          "score": 0.6505000721175905
+        },
+        {
+          "toolId": "CAND_003",
+          "score": 0.6277065476102485
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.49921696709027247
+        }
+      ]
+    },
+    {
+      "text": "Tell me about this university as an institution and its main areas of focus.",
+      "allowed": [
+        "INST_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_001",
+          "score": 0.6868813014822801
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6753540742448182
+        },
+        {
+          "toolId": "INST_003",
+          "score": 0.6729157616206322
+        },
+        {
+          "toolId": "COURSE_006",
+          "score": 0.6727826654839983
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5892403803620779
+        }
+      ]
+    },
+    {
+      "text": "What courses does this college offer in business and administration?",
+      "allowed": [
+        "INST_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_002",
+          "score": 0.6228506529814029
+        },
+        {
+          "toolId": "COURSE_016",
+          "score": 0.5905273432096004
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.5886196013070177
+        },
+        {
+          "toolId": "CORE_005",
+          "score": 0.5757326917328837
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4734638134015577
+        }
+      ]
+    },
+    {
+      "text": "Which engineering specialisations are offered at this university?",
+      "allowed": [
+        "INST_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_006",
+          "score": 0.6927822085006674
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6300097751167211
+        },
+        {
+          "toolId": "INST_003",
+          "score": 0.6259694636253096
+        },
+        {
+          "toolId": "IND_003",
+          "score": 0.6104437947670277
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.45675097902437956
+        }
+      ]
+    },
+    {
+      "text": "Map the skills embedded in our institution's diploma curriculum to its learning outcomes.",
+      "allowed": [
+        "INST_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_004",
+          "score": 0.8082048038529328
+        },
+        {
+          "toolId": "COURSE_007",
+          "score": 0.7513337060499428
+        },
+        {
+          "toolId": "IND_011",
+          "score": 0.7004044516643924
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.7002401515109636
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5029501579836386
+        }
+      ]
+    },
+    {
+      "text": "How well does our diploma curriculum align with the requirements of a support worker occupation?",
+      "allowed": [
+        "INST_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_013",
+          "score": 0.673262252568502
+        },
+        {
+          "toolId": "INST_005",
+          "score": 0.6716103846239633
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.6474575477245309
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.639409230767319
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5006341143698861
+        }
+      ]
+    },
+    {
+      "text": "Does our training program align with the needs of the local manufacturing industry?",
+      "allowed": [
+        "INST_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_013",
+          "score": 0.7261088954583234
+        },
+        {
+          "toolId": "COMP_011",
+          "score": 0.7237457236915649
+        },
+        {
+          "toolId": "IND_012",
+          "score": 0.7215825550745824
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.6994879502212346
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5511094966514745
+        }
+      ]
+    },
+    {
+      "text": "We identified missing practical skills in our curriculum. What changes should the program make?",
+      "allowed": [
+        "INST_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_007",
+          "score": 0.782503421561586
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.7758627555956192
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.7130387373607833
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6985145809520312
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5630229327985188
+        }
+      ]
+    },
+    {
+      "text": "Which employers would be useful partners for our college's new hospitality program?",
+      "allowed": [
+        "INST_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_008",
+          "score": 0.7195368491327009
+        },
+        {
+          "toolId": "INST_009",
+          "score": 0.6605001005310785
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.6503003885172431
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.6071426225134815
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5089962658818177
+        }
+      ]
+    },
+    {
+      "text": "Find possible work-integrated learning hosts for second-year engineering students in Melbourne.",
+      "allowed": [
+        "INST_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_009",
+          "score": 0.7437462116908262
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.6775286230504914
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.6612955309528319
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.6401796668855443
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5121523760511686
+        }
+      ]
+    },
+    {
+      "text": "Is there enough regional demand to justify introducing this new community services program?",
+      "allowed": [
+        "INST_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_010",
+          "score": 0.6509313909034887
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.6329907981589261
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.6261720395863565
+        },
+        {
+          "toolId": "COMP_009",
+          "score": 0.5988050236018438
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5299495347932925
+        }
+      ]
+    },
+    {
+      "text": "Help me turn my education, experience and strengths into a clear candidate profile.",
+      "allowed": [
+        "CAND_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAND_001",
+          "score": 0.8363104475641604
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.735041332197456
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7150174152393423
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.6871673087174529
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6307138310501424
+        }
+      ]
+    },
+    {
+      "text": "Am I ready to apply for this apprenticeship, based on the experience and qualifications I have?",
+      "allowed": [
+        "CAND_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAND_002",
+          "score": 0.7354527707950291
+        },
+        {
+          "toolId": "RPL_001",
+          "score": 0.6844190668220416
+        },
+        {
+          "toolId": "APP_001",
+          "score": 0.6820575374801123
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.670637951024755
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5485633793165683
+        }
+      ]
+    },
+    {
+      "text": "Create a plan to close the gaps from my readiness assessment before I apply for the job.",
+      "allowed": [
+        "CAND_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAND_003",
+          "score": 0.7933615839060353
+        },
+        {
+          "toolId": "CAND_002",
+          "score": 0.7205470005126136
+        },
+        {
+          "toolId": "CAND_001",
+          "score": 0.7032508155113681
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.6950828845565242
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6490120716647777
+        }
+      ]
+    },
+    {
+      "text": "What project or work sample could I create to prove my customer research skills to an employer?",
+      "allowed": [
+        "PROVE_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "PROVE_001",
+          "score": 0.7546961664617404
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.7271977544027366
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.7211913536260993
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.713248617042685
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6151387715204427
+        }
+      ]
+    },
+    {
+      "text": "How can I use evidence from years of work to seek recognition of prior learning toward a qualification?",
+      "allowed": [
+        "RPL_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "RPL_001",
+          "score": 0.8590524688000082
+        },
+        {
+          "toolId": "CORE_010",
+          "score": 0.7627241910541909
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.7536245426903433
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.739975577560818
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5735832536167184
+        }
+      ]
+    },
+    {
+      "text": "Help me find suitable work experience opportunities to practise my new IT support skills.",
+      "allowed": [
+        "EXPERIENCE_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_005",
+          "score": 0.728070361615771
+        },
+        {
+          "toolId": "SKILL_004",
+          "score": 0.7180700822251163
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.7078255213282038
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.7006514195074516
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5827944213488042
+        }
+      ]
+    },
+    {
+      "text": "Find pathways into a paid plumbing apprenticeship where I can learn while working.",
+      "allowed": [
+        "APP_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "APP_001",
+          "score": 0.742727901475655
+        },
+        {
+          "toolId": "COURSE_016",
+          "score": 0.6788154817904388
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.6495150968958368
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.6474759420265134
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5950992769576126
+        }
+      ]
+    },
+    {
+      "text": "What is Power BI, what does it do and when would someone use it?",
+      "allowed": [
+        "TECH_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_004",
+          "score": 0.5825025806812334
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5758709943201193
+        },
+        {
+          "toolId": "SKILL_011",
+          "score": 0.5748176676254598
+        },
+        {
+          "toolId": "TECH_001",
+          "score": 0.5643792728713498
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5180926281530762
+        }
+      ]
+    },
+    {
+      "text": "How has adoption of Kubernetes changed among Australian technology employers?",
+      "allowed": [
+        "TECH_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TECH_002",
+          "score": 0.6923891607036121
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.6567524323038832
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.655756431831133
+        },
+        {
+          "toolId": "IND_010",
+          "score": 0.6474379302653872
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4676876917046293
+        }
+      ]
+    },
+    {
+      "text": "Give me an overview of recent changes in Australia's labour market and the evidence behind them.",
+      "allowed": [
+        "TREND_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_007",
+          "score": 0.8229850676204286
+        },
+        {
+          "toolId": "TREND_006",
+          "score": 0.782456071439166
+        },
+        {
+          "toolId": "TREND_001",
+          "score": 0.7457483926653861
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.7445495313649495
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5437186650767613
+        }
+      ]
+    },
+    {
+      "text": "Which new roles are emerging as renewable energy technology develops?",
+      "allowed": [
+        "TREND_002"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_002",
+          "score": 0.6233713938769707
+        },
+        {
+          "toolId": "IND_003",
+          "score": 0.5918661076843257
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.5848613441111834
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.5713659076298906
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5139703407781928
+        }
+      ]
+    },
+    {
+      "text": "Which administration roles are declining or changing, and what work is taking their place?",
+      "allowed": [
+        "TREND_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_003",
+          "score": 0.7216915778686412
+        },
+        {
+          "toolId": "TREND_002",
+          "score": 0.6397332845866159
+        },
+        {
+          "toolId": "COMP_006",
+          "score": 0.6166069596209653
+        },
+        {
+          "toolId": "IND_009",
+          "score": 0.6142737544585699
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5166723718228576
+        }
+      ]
+    },
+    {
+      "text": "Are employers asking for different qualification levels than they did three years ago?",
+      "allowed": [
+        "TREND_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_004",
+          "score": 0.7342277059727885
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.7239175304482235
+        },
+        {
+          "toolId": "COURSE_003",
+          "score": 0.7169272166357162
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7120773024726574
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5258390190524564
+        }
+      ]
+    },
+    {
+      "text": "Which group of skills is rising or falling in demand across nursing jobs?",
+      "allowed": [
+        "TREND_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_006",
+          "score": 0.7163286844364855
+        },
+        {
+          "toolId": "TREND_001",
+          "score": 0.6834385641615889
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6776457606023489
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.6764981190248553
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5279074769816425
+        }
+      ]
+    },
+    {
+      "text": "How have hiring volumes in retail changed over the last year?",
+      "allowed": [
+        "TREND_006"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_006",
+          "score": 0.7618096293666641
+        },
+        {
+          "toolId": "TREND_004",
+          "score": 0.6964934283337182
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.6868825175866251
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.6824064290274411
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5263000019073123
+        }
+      ]
+    },
+    {
+      "text": "Compare pay and working-condition trends for aged care workers over the last three years.",
+      "allowed": [
+        "TREND_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_007",
+          "score": 0.7865632150240316
+        },
+        {
+          "toolId": "TREND_006",
+          "score": 0.6857123393829465
+        },
+        {
+          "toolId": "JOB_006",
+          "score": 0.6575858296374706
+        },
+        {
+          "toolId": "TREND_004",
+          "score": 0.6567946727883768
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5522146351223721
+        }
+      ]
+    },
+    {
+      "text": "Compare recent labour market trends between regional Victoria and Melbourne.",
+      "allowed": [
+        "TREND_008"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.7648710308411582
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.760505503081008
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.754945282809396
+        },
+        {
+          "toolId": "TREND_006",
+          "score": 0.7473566230150923
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5117538519836733
+        }
+      ]
+    },
+    {
+      "text": "Hello",
+      "allowed": [],
+      "skip": "conversation",
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5652416747262837
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.5187856224855066
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5141142199928802
+        },
+        {
+          "toolId": "IND_001",
+          "score": 0.5101386024428253
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6164209675552031
+        }
+      ]
+    },
+    {
+      "text": "Thanks",
+      "allowed": [],
+      "skip": "conversation",
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5619672810249692
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5412091844384763
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.524230309213046
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.5226783533265837
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6570237194137861
+        }
+      ]
+    },
+    {
+      "text": "Tell me more",
+      "allowed": [],
+      "skip": "needs-context",
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.6529115422938887
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.61233772744554
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5906942396384424
+        },
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5878240478290808
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6938780032941247
+        }
+      ]
+    },
+    {
+      "text": "Actually I have six hours, not twelve.",
+      "allowed": [],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "CAREER_002",
+          "score": 0.46695217021561325
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.4556941001468851
+        },
+        {
+          "toolId": "JOB_003",
+          "score": 0.44531203298985733
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.4409002384275345
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.533384042947688
+        }
+      ]
+    },
+    {
+      "text": "Stop suggesting courses.",
+      "allowed": [],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6397467643349014
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6212024636723164
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.6095711548767735
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.6076239081953463
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6752522892427635
+        }
+      ]
+    },
+    {
+      "text": "Do not compare anything.",
+      "allowed": [],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.5611387393396469
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5091481734555625
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.49736829138357785
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.4801325931796227
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5152101913752856
+        }
+      ]
+    },
+    {
+      "text": "I am in an emergency and need help.",
+      "allowed": [],
+      "skip": "sensitive-boundary",
+      "rank": [
+        {
+          "toolId": "CAREER_005",
+          "score": 0.5738066061186016
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5616858343624427
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5593218475498879
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5535788438476461
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6471366825865582
+        }
+      ]
+    },
+    {
+      "text": "What are the fees? Can you compare jobs too?",
+      "allowed": [],
+      "skip": "multiple-questions",
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.724259620432627
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6837272974929659
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.683504615386213
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6754606411358417
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6443022804821121
+        }
+      ]
+    },
+    {
+      "text": "Quiero cambiar de carrera y estudiar enfermería.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "MICRO_001",
+          "score": 0.6050306198386336
+        },
+        {
+          "toolId": "INST_001",
+          "score": 0.580580030198062
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.5769114324316026
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5768203708985323
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5657782833181643
+        }
+      ]
+    },
+    {
+      "text": "Give me a recipe for a chocolate cake.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5314191824851455
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5011480351081841
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.4933205139475115
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.48089026034814797
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.641787017939841
+        }
+      ]
+    },
+    {
+      "text": "Will it rain tomorrow in Melbourne?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.5164803298658911
+        },
+        {
+          "toolId": "JOB_006",
+          "score": 0.4799785971865508
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.47084260416369844
+        },
+        {
+          "toolId": "COURSE_006",
+          "score": 0.44739998747626564
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6511170920528535
+        }
+      ]
+    },
+    {
+      "text": "Who won the football match yesterday?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.4997781249718568
+        },
+        {
+          "toolId": "COMP_005",
+          "score": 0.48546613745412726
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.46993464720081274
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.4504146514916653
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5039857659093531
+        }
+      ]
+    },
+    {
+      "text": "Write a bedtime story about a dragon.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5341455882929101
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.5128355047456336
+        },
+        {
+          "toolId": "JOB_003",
+          "score": 0.5079607124655325
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.48605345250238396
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6864650021254113
+        }
+      ]
+    },
+    {
+      "text": "How do I fix a leaking tap at home?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.501646681724958
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.4889678120047668
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4560747243544719
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.4440008434848521
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5746795219992159
+        }
+      ]
+    },
+    {
+      "text": "What is the capital city of Portugal?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_005",
+          "score": 0.43155537473012856
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.42276982028148274
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.4225921057174205
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.41928879470840785
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.46599795870010924
+        }
+      ]
+    },
+    {
+      "text": "Book me a flight to Paris for next week.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_009",
+          "score": 0.508740962596544
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.4980000927592931
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.4872248772355235
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.4856834114974149
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.7278179767968236
+        }
+      ]
+    },
+    {
+      "text": "Translate this restaurant menu into French.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5524509838253003
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5179423177991819
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.49035335160872834
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.48777035130662494
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5752113551911083
+        }
+      ]
+    },
+    {
+      "text": "Why do cats sleep so much?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_012",
+          "score": 0.4197486961058971
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.3944679543256696
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.38616825690836815
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.38569570237526896
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4271095266649062
+        }
+      ]
+    },
+    {
+      "text": "What is the best way to grow tomatoes on a balcony?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5045752267198834
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4631002649063103
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.4581121064042163
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.4409785668206454
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5297340402839871
+        }
+      ]
+    },
+    {
+      "text": "Help me calculate the area of a circle.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_004",
+          "score": 0.5599206996994233
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.5572401291273652
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.5521419942625827
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.5202769414040589
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5195449404849876
+        }
+      ]
+    },
+    {
+      "text": "Suggest a soup recipe for tonight.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5363400620044751
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5217144458292706
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5127219953473894
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5053660105162462
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6984880799153228
+        }
+      ]
+    },
+    {
+      "text": "Write a poem about the ocean.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5295268755177451
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.5173005759316912
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.5127238048125685
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.5094948205201916
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6836497813806661
+        }
+      ]
+    },
+    {
+      "text": "Explain the ending of this fantasy film.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_007",
+          "score": 0.542755766532114
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.534694703070149
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5317996497980841
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.519175343367094
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5410949257141555
+        }
+      ]
+    },
+    {
+      "text": "How can I remove a coffee stain from my carpet?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.4779849260229037
+        },
+        {
+          "toolId": "INST_002",
+          "score": 0.413190335242864
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.41074557858102967
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.4105374130982469
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5280341377000805
+        }
+      ]
+    },
+    {
+      "text": "My puppy chews the furniture. What should I do?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5132410925109991
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.4384176871244327
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4310182927918452
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.4203612987714228
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5677777906184258
+        }
+      ]
+    },
+    {
+      "text": "When should I water my indoor cactus?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5150224770809725
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4828260947496067
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.48062330307264167
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.47917988399746814
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5467995900922439
+        }
+      ]
+    },
+    {
+      "text": "How do I patch a bicycle tyre?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.4860630635766108
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.4779968384886499
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.47744568568210044
+        },
+        {
+          "toolId": "JOB_005",
+          "score": 0.4767788267407065
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5221967500046697
+        }
+      ]
+    },
+    {
+      "text": "What was the result of the cricket game?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_007",
+          "score": 0.5391336334071083
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.49336079908356234
+        },
+        {
+          "toolId": "COMP_005",
+          "score": 0.4825984054083558
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.4820497222139544
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.515696207832128
+        }
+      ]
+    },
+    {
+      "text": "Which planet is closest to the sun?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.4900492178142141
+        },
+        {
+          "toolId": "INST_009",
+          "score": 0.46314313031611004
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.4413358915683616
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.4375104988191929
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.49095658456691127
+        }
+      ]
+    },
+    {
+      "text": "Will there be thunderstorms this weekend?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_014",
+          "score": 0.5035568966688122
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.46415158144727003
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4611217180520387
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.46003891081355075
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6436719395340537
+        }
+      ]
+    },
+    {
+      "text": "Plan a honeymoon in Italy.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_008",
+          "score": 0.5010288637491551
+        },
+        {
+          "toolId": "INST_008",
+          "score": 0.47389020376793856
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.47236774932200076
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.4691065104585783
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6500336052764651
+        }
+      ]
+    },
+    {
+      "text": "Which phone should I buy for taking holiday pictures?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.43863114679094545
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4306806809924726
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.41363288383607266
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.4053629887177374
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5833668854036419
+        }
+      ]
+    },
+    {
+      "text": "Should I buy shares in this bank?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_006",
+          "score": 0.5511439666933139
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.5419838869043067
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.53528312069498
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.5345052750665482
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6789372658891165
+        }
+      ]
+    },
+    {
+      "text": "Which medication should I take for this rash?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_004",
+          "score": 0.47228902277524387
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.4551216483029461
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.4468512702881607
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.4451231916587364
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5112256820403858
+        }
+      ]
+    },
+    {
+      "text": "Draft a legal threat to my landlord.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_001",
+          "score": 0.5832214257689664
+        },
+        {
+          "toolId": "COMP_006",
+          "score": 0.5434059022636596
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.540090006469398
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5346968815273392
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6012800675113618
+        }
+      ]
+    },
+    {
+      "text": "Tell me more about it.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.6106788626426306
+        },
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5947023706140118
+        },
+        {
+          "toolId": "JOB_001",
+          "score": 0.589559483754548
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.5872234290549998
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6631689734002972
+        }
+      ]
+    },
+    {
+      "text": "Choose that one for me.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5862980624758833
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5577662026930669
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.55159573847006
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.534434388378537
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6238828893405265
+        }
+      ]
+    },
+    {
+      "text": "What does the other one mean?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_007",
+          "score": 0.6119256762967574
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5950809084289616
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.5891312319699
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.5870433751984301
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.690362186093185
+        }
+      ]
+    },
+    {
+      "text": "Compare them for me please.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6932713295073792
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.6915116830769786
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6368572271385557
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.6353161682172477
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6510712358724129
+        }
+      ]
+    },
+    {
+      "text": "Explain why that would be better.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_010",
+          "score": 0.6092205121745402
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.6014634044662654
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5995461144633845
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.596395632268477
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.690340173461574
+        }
+      ]
+    },
+    {
+      "text": "Forget the study plan and stop offering suggestions.",
+      "allowed": [],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.5616771237799059
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5365013928863831
+        },
+        {
+          "toolId": "CAND_003",
+          "score": 0.5253761927541626
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5248806848498231
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6469847669895656
+        }
+      ]
+    },
+    {
+      "text": "Actually I meant I work on Saturdays.",
+      "allowed": [],
+      "skip": "correction-or-boundary",
+      "rank": [
+        {
+          "toolId": "JOB_003",
+          "score": 0.5580674353206834
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.525108201923929
+        },
+        {
+          "toolId": "CAREER_001",
+          "score": 0.49693159477507987
+        },
+        {
+          "toolId": "JOB_008",
+          "score": 0.486966033574836
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5608540303785432
+        }
+      ]
+    },
+    {
+      "text": "Thanks, that is all I needed.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_002",
+          "score": 0.49442443266170777
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.48104582426814213
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4781323647335622
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.47389672924692494
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.610035279150018
+        }
+      ]
+    },
+    {
+      "text": "I need emergency help because I might hurt myself.",
+      "allowed": [],
+      "skip": "sensitive-boundary",
+      "rank": [
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5509396834995148
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.5448414890162524
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5436055867482974
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5397562735038246
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6658628890311984
+        }
+      ]
+    }
+  ],
+  "offers": [
+    {
+      "text": "Tuition is only one part of the study budget. Placement travel, uniforms, screening and time away from paid work can also affect what you can afford.",
+      "allowed": [
+        "COURSE_011",
+        "COURSE_012"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_011",
+          "score": 0.7904879513969454
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.7051484792081836
+        },
+        {
+          "toolId": "COURSE_012",
+          "score": 0.6798091145390832
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.6742123375875854
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6123848666833122
+        }
+      ]
+    },
+    {
+      "text": "Core units are required subjects. Electives are choices within the degree. Some advanced units require an earlier subject to be passed first.",
+      "allowed": [
+        "COURSE_004",
+        "COURSE_005",
+        "CORE_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_005",
+          "score": 0.7432024026452448
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.7404409357028094
+        },
+        {
+          "toolId": "COURSE_006",
+          "score": 0.7139459825301209
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7085660521482603
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5717195699393597
+        }
+      ]
+    },
+    {
+      "text": "The degree includes laboratory classes and practical rotations. A part-time enrolment may still involve full-time placement weeks, which need checking against work and family commitments.",
+      "allowed": [
+        "COURSE_012",
+        "COURSE_004",
+        "COURSE_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_012",
+          "score": 0.7091062032497184
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.6900791175933617
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.671184392475385
+        },
+        {
+          "toolId": "INST_009",
+          "score": 0.6565176002780873
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5456203337949891
+        }
+      ]
+    },
+    {
+      "text": "Your retail examples show communication and dealing with upset customers. Those abilities may transfer into help-desk work, while troubleshooting experience still needs development.",
+      "allowed": [
+        "SKILL_004",
+        "SKILL_003",
+        "CAREER_005"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6310891860565233
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.629440399302436
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.6281166049252527
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.6265254388941331
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6425897353702147
+        }
+      ]
+    },
+    {
+      "text": "You could demonstrate spreadsheet skills with an anonymised project showing how you cleaned data, checked errors and explained a useful finding.",
+      "allowed": [
+        "PROVE_001",
+        "SKILL_002",
+        "SKILL_009"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "PROVE_001",
+          "score": 0.7265450765425852
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6275555508579599
+        },
+        {
+          "toolId": "CAND_001",
+          "score": 0.6122275444058636
+        },
+        {
+          "toolId": "COMP_007",
+          "score": 0.6027688088199079
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.550714701716643
+        }
+      ]
+    },
+    {
+      "text": "Prior learning recognition depends on matching your work evidence to the qualification outcomes. A provider decides whether that evidence earns credit.",
+      "allowed": [
+        "RPL_001",
+        "CORE_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "RPL_001",
+          "score": 0.8669519721863013
+        },
+        {
+          "toolId": "CORE_010",
+          "score": 0.7299984590501974
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.7176779638317585
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.7116173983017463
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.617544143320802
+        }
+      ]
+    },
+    {
+      "text": "Compare the actual job advertisement with examples of work you have completed. Separate requirements you can demonstrate from those still needing evidence.",
+      "allowed": [
+        "CAND_002",
+        "COMP_008",
+        "SKILL_003",
+        "JOB_002",
+        "JOB_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_002",
+          "score": 0.8436634123077511
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.7892943494502909
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.7836156841237278
+        },
+        {
+          "toolId": "JOB_001",
+          "score": 0.7669933930127532
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.656775341218725
+        }
+      ]
+    },
+    {
+      "text": "An apprenticeship combines paid work and formal learning. Employer availability, training rules and local eligibility need to be checked.",
+      "allowed": [
+        "APP_001",
+        "COURSE_016",
+        "EXPERIENCE_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "APP_001",
+          "score": 0.8068712309808996
+        },
+        {
+          "toolId": "COMP_013",
+          "score": 0.7538040583435445
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.7115835527277841
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.7053886582150339
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5993273647847096
+        }
+      ]
+    },
+    {
+      "text": "A company can build capability through internal training or recruitment. The deadline, current team skills and available supervision affect which approach is practical.",
+      "allowed": [
+        "COMP_010",
+        "COMP_011"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_010",
+          "score": 0.7864596488053799
+        },
+        {
+          "toolId": "COMP_003",
+          "score": 0.7326914568804479
+        },
+        {
+          "toolId": "COMP_012",
+          "score": 0.7305487295634101
+        },
+        {
+          "toolId": "COMP_011",
+          "score": 0.7267868632361901
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5392178074065849
+        }
+      ]
+    },
+    {
+      "text": "This curriculum teaches theory but needs more realistic practice linked to the target occupation. Assessment design should close the identified gaps.",
+      "allowed": [
+        "INST_007",
+        "INST_005",
+        "COURSE_013",
+        "INST_004"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "INST_007",
+          "score": 0.7985452624075804
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.7120625536159445
+        },
+        {
+          "toolId": "INST_005",
+          "score": 0.7089733810804324
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.7050918942072529
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5417619783693028
+        }
+      ]
+    },
+    {
+      "text": "Salary comparisons need the same occupation level, region, period and hours basis. A single job advert cannot establish a market trend.",
+      "allowed": [
+        "TREND_007",
+        "CORE_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.7349716246011687
+        },
+        {
+          "toolId": "JOB_002",
+          "score": 0.7245872424832979
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.6898936707243397
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.6883624044416161
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5917930907806529
+        }
+      ]
+    },
+    {
+      "text": "AI may automate parts of invoice entry while people still resolve unusual cases and communicate with clients. That is a change in tasks, not proof the occupation will disappear.",
+      "allowed": [
+        "JOB_008",
+        "IND_010",
+        "TREND_003",
+        "SKILL_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_008",
+          "score": 0.7510327731554055
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.6904074406799415
+        },
+        {
+          "toolId": "IND_010",
+          "score": 0.685598751131317
+        },
+        {
+          "toolId": "IND_007",
+          "score": 0.6256212472950112
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.557088453520763
+        }
+      ]
+    },
+    {
+      "text": "Before relying on this estimate, check the date, the original source and whether it covers the correct course, student category and intake.",
+      "allowed": [
+        "CORE_010",
+        "COURSE_011",
+        "COURSE_010"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_010",
+          "score": 0.7097751389381115
+        },
+        {
+          "toolId": "CORE_010",
+          "score": 0.7026734129680243
+        },
+        {
+          "toolId": "INST_010",
+          "score": 0.6664838647810832
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6613037094254143
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5579652882114546
+        }
+      ]
+    },
+    {
+      "text": "Graduate roles can lead to specialist practice or supervision. Your next career move depends on the responsibilities you want and the experience you can demonstrate.",
+      "allowed": [
+        "CAREER_004",
+        "CAREER_002",
+        "CAREER_003"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_004",
+          "score": 0.7627391446376086
+        },
+        {
+          "toolId": "COURSE_008",
+          "score": 0.7607779125681632
+        },
+        {
+          "toolId": "COURSE_013",
+          "score": 0.7402601319022557
+        },
+        {
+          "toolId": "CAREER_003",
+          "score": 0.737591987327445
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5654878464739499
+        }
+      ]
+    },
+    {
+      "text": "Kubernetes helps coordinate containers across machines. It can restart failed workloads and scale applications, but adds operational complexity.",
+      "allowed": [
+        "TECH_001",
+        "JOB_005",
+        "CORE_007"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_009",
+          "score": 0.6570944265372264
+        },
+        {
+          "toolId": "TECH_001",
+          "score": 0.6210365790346313
+        },
+        {
+          "toolId": "SKILL_012",
+          "score": 0.6166259935044999
+        },
+        {
+          "toolId": "IND_006",
+          "score": 0.6018661756630896
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5127079311054364
+        }
+      ]
+    },
+    {
+      "text": "Power BI can combine data sources and build interactive reports. Practising with a small public dataset is a useful way to learn.",
+      "allowed": [
+        "TECH_001",
+        "SKILL_009",
+        "PROVE_001"
+      ],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_008",
+          "score": 0.6472247024416393
+        },
+        {
+          "toolId": "CORE_005",
+          "score": 0.6392300815600647
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.6297554909666414
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.6248841431796348
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5726323089190464
+        }
+      ]
+    },
+    {
+      "text": "Hello",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5652416747262837
+        },
+        {
+          "toolId": "COMP_001",
+          "score": 0.5187856224855066
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5141142199928802
+        },
+        {
+          "toolId": "IND_001",
+          "score": 0.5101386024428253
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6164209675552031
+        }
+      ]
+    },
+    {
+      "text": "Thanks",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5619672810249692
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5412091844384763
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.524230309213046
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.5226783533265837
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6570237194137861
+        }
+      ]
+    },
+    {
+      "text": "Tell me more",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.6529115422938887
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.61233772744554
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5906942396384424
+        },
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5878240478290808
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6938780032941247
+        }
+      ]
+    },
+    {
+      "text": "Actually I have six hours, not twelve.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_002",
+          "score": 0.46695217021561325
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.4556941001468851
+        },
+        {
+          "toolId": "JOB_003",
+          "score": 0.44531203298985733
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.4409002384275345
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.533384042947688
+        }
+      ]
+    },
+    {
+      "text": "Stop suggesting courses.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6397467643349014
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.6212024636723164
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.6095711548767735
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.6076239081953463
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6752522892427635
+        }
+      ]
+    },
+    {
+      "text": "Do not compare anything.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.5611387393396469
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5091481734555625
+        },
+        {
+          "toolId": "SKILL_003",
+          "score": 0.49736829138357785
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.4801325931796227
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5152101913752856
+        }
+      ]
+    },
+    {
+      "text": "I am in an emergency and need help.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CAREER_005",
+          "score": 0.5738066061186016
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5616858343624427
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5593218475498879
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5535788438476461
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6471366825865582
+        }
+      ]
+    },
+    {
+      "text": "What are the fees? Can you compare jobs too?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.724259620432627
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6837272974929659
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.683504615386213
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6754606411358417
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6443022804821121
+        }
+      ]
+    },
+    {
+      "text": "Quiero cambiar de carrera y estudiar enfermería.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "MICRO_001",
+          "score": 0.6050306198386336
+        },
+        {
+          "toolId": "INST_001",
+          "score": 0.580580030198062
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.5769114324316026
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5768203708985323
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5657782833181643
+        }
+      ]
+    },
+    {
+      "text": "Give me a recipe for a chocolate cake.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5314191824851455
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5011480351081841
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.4933205139475115
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.48089026034814797
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.641787017939841
+        }
+      ]
+    },
+    {
+      "text": "Will it rain tomorrow in Melbourne?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.5164803298658911
+        },
+        {
+          "toolId": "JOB_006",
+          "score": 0.4799785971865508
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.47084260416369844
+        },
+        {
+          "toolId": "COURSE_006",
+          "score": 0.44739998747626564
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6511170920528535
+        }
+      ]
+    },
+    {
+      "text": "Who won the football match yesterday?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.4997781249718568
+        },
+        {
+          "toolId": "COMP_005",
+          "score": 0.48546613745412726
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.46993464720081274
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.4504146514916653
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5039857659093531
+        }
+      ]
+    },
+    {
+      "text": "Write a bedtime story about a dragon.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5341455882929101
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.5128355047456336
+        },
+        {
+          "toolId": "JOB_003",
+          "score": 0.5079607124655325
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.48605345250238396
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6864650021254113
+        }
+      ]
+    },
+    {
+      "text": "How do I fix a leaking tap at home?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.501646681724958
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.4889678120047668
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4560747243544719
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.4440008434848521
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5746795219992159
+        }
+      ]
+    },
+    {
+      "text": "What is the capital city of Portugal?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "IND_005",
+          "score": 0.43155537473012856
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.42276982028148274
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.4225921057174205
+        },
+        {
+          "toolId": "COURSE_009",
+          "score": 0.41928879470840785
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.46599795870010924
+        }
+      ]
+    },
+    {
+      "text": "Book me a flight to Paris for next week.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_009",
+          "score": 0.508740962596544
+        },
+        {
+          "toolId": "COURSE_002",
+          "score": 0.4980000927592931
+        },
+        {
+          "toolId": "COURSE_015",
+          "score": 0.4872248772355235
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.4856834114974149
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.7278179767968236
+        }
+      ]
+    },
+    {
+      "text": "Translate this restaurant menu into French.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5524509838253003
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5179423177991819
+        },
+        {
+          "toolId": "COURSE_004",
+          "score": 0.49035335160872834
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.48777035130662494
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5752113551911083
+        }
+      ]
+    },
+    {
+      "text": "Why do cats sleep so much?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_012",
+          "score": 0.4197486961058971
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.3944679543256696
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.38616825690836815
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.38569570237526896
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.4271095266649062
+        }
+      ]
+    },
+    {
+      "text": "What is the best way to grow tomatoes on a balcony?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5045752267198834
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4631002649063103
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.4581121064042163
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.4409785668206454
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5297340402839871
+        }
+      ]
+    },
+    {
+      "text": "Help me calculate the area of a circle.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_004",
+          "score": 0.5599206996994233
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.5572401291273652
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.5521419942625827
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.5202769414040589
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5195449404849876
+        }
+      ]
+    },
+    {
+      "text": "Suggest a soup recipe for tonight.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5363400620044751
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5217144458292706
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5127219953473894
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5053660105162462
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6984880799153228
+        }
+      ]
+    },
+    {
+      "text": "Write a poem about the ocean.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5295268755177451
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.5173005759316912
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.5127238048125685
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.5094948205201916
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6836497813806661
+        }
+      ]
+    },
+    {
+      "text": "Explain the ending of this fantasy film.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_007",
+          "score": 0.542755766532114
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.534694703070149
+        },
+        {
+          "toolId": "CORE_007",
+          "score": 0.5317996497980841
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.519175343367094
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5410949257141555
+        }
+      ]
+    },
+    {
+      "text": "How can I remove a coffee stain from my carpet?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.4779849260229037
+        },
+        {
+          "toolId": "INST_002",
+          "score": 0.413190335242864
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.41074557858102967
+        },
+        {
+          "toolId": "IND_002",
+          "score": 0.4105374130982469
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5280341377000805
+        }
+      ]
+    },
+    {
+      "text": "My puppy chews the furniture. What should I do?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5132410925109991
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.4384176871244327
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4310182927918452
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.4203612987714228
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5677777906184258
+        }
+      ]
+    },
+    {
+      "text": "When should I water my indoor cactus?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.5150224770809725
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4828260947496067
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.48062330307264167
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.47917988399746814
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5467995900922439
+        }
+      ]
+    },
+    {
+      "text": "How do I patch a bicycle tyre?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.4860630635766108
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.4779968384886499
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.47744568568210044
+        },
+        {
+          "toolId": "JOB_005",
+          "score": 0.4767788267407065
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5221967500046697
+        }
+      ]
+    },
+    {
+      "text": "What was the result of the cricket game?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_007",
+          "score": 0.5391336334071083
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.49336079908356234
+        },
+        {
+          "toolId": "COMP_005",
+          "score": 0.4825984054083558
+        },
+        {
+          "toolId": "TREND_003",
+          "score": 0.4820497222139544
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.515696207832128
+        }
+      ]
+    },
+    {
+      "text": "Which planet is closest to the sun?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_007",
+          "score": 0.4900492178142141
+        },
+        {
+          "toolId": "INST_009",
+          "score": 0.46314313031611004
+        },
+        {
+          "toolId": "IND_008",
+          "score": 0.4413358915683616
+        },
+        {
+          "toolId": "EXPERIENCE_001",
+          "score": 0.4375104988191929
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.49095658456691127
+        }
+      ]
+    },
+    {
+      "text": "Will there be thunderstorms this weekend?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_014",
+          "score": 0.5035568966688122
+        },
+        {
+          "toolId": "TREND_008",
+          "score": 0.46415158144727003
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4611217180520387
+        },
+        {
+          "toolId": "TREND_005",
+          "score": 0.46003891081355075
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6436719395340537
+        }
+      ]
+    },
+    {
+      "text": "Plan a honeymoon in Italy.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "TREND_008",
+          "score": 0.5010288637491551
+        },
+        {
+          "toolId": "INST_008",
+          "score": 0.47389020376793856
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.47236774932200076
+        },
+        {
+          "toolId": "JOB_007",
+          "score": 0.4691065104585783
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6500336052764651
+        }
+      ]
+    },
+    {
+      "text": "Which phone should I buy for taking holiday pictures?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.43863114679094545
+        },
+        {
+          "toolId": "TECH_002",
+          "score": 0.4306806809924726
+        },
+        {
+          "toolId": "MICRO_001",
+          "score": 0.41363288383607266
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.4053629887177374
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5833668854036419
+        }
+      ]
+    },
+    {
+      "text": "Should I buy shares in this bank?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_006",
+          "score": 0.5511439666933139
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.5419838869043067
+        },
+        {
+          "toolId": "COURSE_011",
+          "score": 0.53528312069498
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.5345052750665482
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6789372658891165
+        }
+      ]
+    },
+    {
+      "text": "Which medication should I take for this rash?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_004",
+          "score": 0.47228902277524387
+        },
+        {
+          "toolId": "IND_005",
+          "score": 0.4551216483029461
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.4468512702881607
+        },
+        {
+          "toolId": "COURSE_014",
+          "score": 0.4451231916587364
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5112256820403858
+        }
+      ]
+    },
+    {
+      "text": "Draft a legal threat to my landlord.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_001",
+          "score": 0.5832214257689664
+        },
+        {
+          "toolId": "COMP_006",
+          "score": 0.5434059022636596
+        },
+        {
+          "toolId": "PROVE_001",
+          "score": 0.540090006469398
+        },
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5346968815273392
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6012800675113618
+        }
+      ]
+    },
+    {
+      "text": "Tell me more about it.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_003",
+          "score": 0.6106788626426306
+        },
+        {
+          "toolId": "COURSE_001",
+          "score": 0.5947023706140118
+        },
+        {
+          "toolId": "JOB_001",
+          "score": 0.589559483754548
+        },
+        {
+          "toolId": "SKILL_007",
+          "score": 0.5872234290549998
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6631689734002972
+        }
+      ]
+    },
+    {
+      "text": "Choose that one for me.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.5862980624758833
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5577662026930669
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.55159573847006
+        },
+        {
+          "toolId": "COMP_010",
+          "score": 0.534434388378537
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6238828893405265
+        }
+      ]
+    },
+    {
+      "text": "What does the other one mean?",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_007",
+          "score": 0.6119256762967574
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5950809084289616
+        },
+        {
+          "toolId": "SKILL_001",
+          "score": 0.5891312319699
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.5870433751984301
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.690362186093185
+        }
+      ]
+    },
+    {
+      "text": "Compare them for me please.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COURSE_002",
+          "score": 0.6932713295073792
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.6915116830769786
+        },
+        {
+          "toolId": "COMP_008",
+          "score": 0.6368572271385557
+        },
+        {
+          "toolId": "CAREER_002",
+          "score": 0.6353161682172477
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6510712358724129
+        }
+      ]
+    },
+    {
+      "text": "Explain why that would be better.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "COMP_010",
+          "score": 0.6092205121745402
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.6014634044662654
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5995461144633845
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.596395632268477
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.690340173461574
+        }
+      ]
+    },
+    {
+      "text": "Forget the study plan and stop offering suggestions.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "CORE_006",
+          "score": 0.5616771237799059
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.5365013928863831
+        },
+        {
+          "toolId": "CAND_003",
+          "score": 0.5253761927541626
+        },
+        {
+          "toolId": "INST_007",
+          "score": 0.5248806848498231
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6469847669895656
+        }
+      ]
+    },
+    {
+      "text": "Actually I meant I work on Saturdays.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_003",
+          "score": 0.5580674353206834
+        },
+        {
+          "toolId": "TREND_007",
+          "score": 0.525108201923929
+        },
+        {
+          "toolId": "CAREER_001",
+          "score": 0.49693159477507987
+        },
+        {
+          "toolId": "JOB_008",
+          "score": 0.486966033574836
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.5608540303785432
+        }
+      ]
+    },
+    {
+      "text": "Thanks, that is all I needed.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "JOB_002",
+          "score": 0.49442443266170777
+        },
+        {
+          "toolId": "CORE_003",
+          "score": 0.48104582426814213
+        },
+        {
+          "toolId": "CORE_004",
+          "score": 0.4781323647335622
+        },
+        {
+          "toolId": "CORE_009",
+          "score": 0.47389672924692494
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.610035279150018
+        }
+      ]
+    },
+    {
+      "text": "I need emergency help because I might hurt myself.",
+      "allowed": [],
+      "skip": null,
+      "rank": [
+        {
+          "toolId": "SKILL_009",
+          "score": 0.5509396834995148
+        },
+        {
+          "toolId": "CAREER_005",
+          "score": 0.5448414890162524
+        },
+        {
+          "toolId": "CORE_006",
+          "score": 0.5436055867482974
+        },
+        {
+          "toolId": "CORE_008",
+          "score": 0.5397562735038246
+        },
+        {
+          "toolId": "__OUT_OF_SCOPE__",
+          "score": 0.6658628890311984
+        }
+      ]
+    }
+  ]
+}

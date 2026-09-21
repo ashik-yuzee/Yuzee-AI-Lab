@@ -1,3 +1,4 @@
+import {objectiveIndex,rankObjectivesFromVectors,mergeObjectiveRanks} from '../objectives/routing';
 import {bgeMatchingIndex,rankBge} from '../routing/bgeMatching';
 import {loadEmbeddingModel} from '../routing/loadEmbeddingModel';
 import {routerModel,DEFAULT_ROUTER_MODEL} from '../routing/models';
@@ -11,6 +12,7 @@ import type {Candidate} from '../routing/policy';
 const model=routerModel(DEFAULT_ROUTER_MODEL);
 let extractor:any;
 let skillVectors:Float32Array[]=[];
+let objectiveVectors:Float32Array[]=[];
 let needVectors:Float32Array[]=[];
 let pathwayVectors:Float32Array[]=[];
 let initPromise:Promise<void>|null=null;
@@ -52,13 +54,29 @@ self.onmessage=(event:MessageEvent)=>{
  }
  if(type==='cancel'){queue.cancel(id);return;}
  if(!(type in taskPriority)||typeof id!=='string'||typeof text!=='string')return;
- if(text.length>(type==='suggest'?30000:1800)){self.postMessage({type:'abstained',id,reason:'input-length'});return;}
+ if(text.length>(type==='suggest'||type==='objectives'?30000:1800)){self.postMessage({type:'abstained',id,reason:'input-length'});return;}
  const enqueued=performance.now();
  async function* run():AsyncGenerator<void,void,unknown>{
   const began=performance.now();
   const reply=(result:any)=>{if(queue.has(id))self.postMessage({...result,id,timing:{queueMs:began-enqueued,workMs:performance.now()-began,totalMs:performance.now()-enqueued}});};
   try{
    if(!initPromise)throw Error('Not initialized');await initPromise;
+   if(type==='objectives'){
+    // Yield between batches so ordinary chat routing can take priority.
+    while(objectiveVectors.length<objectiveIndex.length){
+     if(!queue.has(id))return;
+     const start=objectiveVectors.length;
+     objectiveVectors.push(...await index(objectiveIndex.slice(start,start+12).map(x=>x.text)));yield;
+    }
+    const fits=(s:string)=>checkEmbeddingInput(extractor.tokenizer,s,512).fits;
+    const sections=embeddingSections(text,fits);
+    // An explicit late request must not be hidden inside a long background chunk.
+    if(text.length>1200){const sentences=text.match(/[^.!?]+[.!?]*/g)||[];const tail=sentences.slice(-2).join(' ').trim();if(tail&&fits(tail))sections.push(tail);}
+    if(sections.length>40){reply({type:'abstained',reason:'token-budget'});return;}
+    const rankings=[];
+    for(const section of sections){if(!queue.has(id))return;rankings.push(rankObjectivesFromVectors(await encode(section),objectiveVectors));yield;}
+    reply({type:'objectives-result',candidates:mergeObjectiveRanks(rankings),chunks:sections.length});return;
+   }
    if(type==='suggest'){
     const sections=text.split(/\n\s*\n/).flatMap(part=>embeddingSections(part,s=>checkEmbeddingInput(extractor.tokenizer,bgeQuery(s,'suggestion'),512).fits));
     if(sections.length>96){reply({type:'abstained',reason:'token-budget'});return;}

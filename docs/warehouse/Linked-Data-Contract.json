@@ -1,0 +1,235 @@
+{
+  "version": "1.1",
+  "source_policy": "USER_APPROVED_CATALOGUE",
+  "source_access": "READ_ONLY",
+  "planner": "Gemini chooses bounded search phrases, facets and a user-stated area; the application owns SQL and joins.",
+  "activity_router": "Existing BGE retrieval and Gemini selection still choose among 316 objectives. Warehouse retrieval does not change model weights or turn similarity into confidence.",
+  "domains": [
+    {
+      "domain": "courses",
+      "sources": [
+        "live_courses"
+      ],
+      "keys": [
+        "id",
+        "national_code",
+        "course_code",
+        "institution_id"
+      ],
+      "uses": [
+        "vocational and university comparisons",
+        "learning",
+        "delivery",
+        "entry",
+        "costs",
+        "quality"
+      ]
+    },
+    {
+      "domain": "course_intelligence",
+      "sources": [
+        "live_courses.intelligence_json",
+        "live_courses.skills_json",
+        "live_courses.quality_scores_json"
+      ],
+      "uses": [
+        "practical learning",
+        "skill gaps",
+        "portfolio",
+        "entry and stretch roles",
+        "credit and progression",
+        "additional costs",
+        "professional requirements",
+        "AI readiness"
+      ],
+      "rule": "Whitelist decision-useful sections, retain claimed versus inferred roles; never treat a topic as assessed competence."
+    },
+    {
+      "domain": "providers",
+      "sources": [
+        "live_institutions",
+        "institution_campuses"
+      ],
+      "joins": [
+        "course.institution_id = provider.id",
+        "provider.rto_code = campus.rto_code"
+      ],
+      "uses": [
+        "institution identity",
+        "provider locations",
+        "student/disability/apprenticeship support"
+      ],
+      "rule": "A provider campus is not automatically the delivery location of every course. No invented travel distances."
+    },
+    {
+      "domain": "careers",
+      "sources": [
+        "course_occupation_edge",
+        "course_occupation_map",
+        "course_mapping_profile",
+        "canonical_occupation",
+        "onet_anzsco_crosswalk",
+        "onet_occupation",
+        "onet_job_skill"
+      ],
+      "joins": [
+        "national qualification code -> detailed occupation",
+        "course_id -> stored mapping",
+        "detailed occupation -> canonical group where required",
+        "ANZSCO -> highest-strength stored O*NET crosswalk"
+      ],
+      "uses": [
+        "related roles",
+        "tasks",
+        "skills",
+        "work styles"
+      ],
+      "rule": "Retain mapping method/strength and occupation-group scope. A career link does not grant qualification or licensing."
+    },
+    {
+      "domain": "industries",
+      "sources": [
+        "course_mapping_profile.industry_codes_json",
+        "dim_industry",
+        "dim_crosswalk_anzsic_anzsco"
+      ],
+      "uses": [
+        "course-sector associations",
+        "industry exploration",
+        "linked occupations"
+      ],
+      "rule": "Stored course-sector tags remain labelled as mappings. Industry expansion must not overwhelm a selected-course question with unrelated occupations."
+    },
+    {
+      "domain": "geography",
+      "sources": [
+        "region_spine",
+        "dim_location_asgs"
+      ],
+      "joins": [
+        "user suburb/state or postcode -> unambiguous region",
+        "region -> parent hierarchy"
+      ],
+      "uses": [
+        "area refinement",
+        "geographic scope"
+      ],
+      "rule": "Do not choose ambiguous matches or infer user area from the institution. Parent-region fallback keeps the parent label."
+    },
+    {
+      "domain": "market_signals",
+      "sources": [
+        "region_demand_edge",
+        "ivi_monthly_sa4",
+        "jsa_employment_projection",
+        "salm_unemployment_sa2"
+      ],
+      "joins": [
+        "occupation group + region hierarchy",
+        "occupation group + national/state projection",
+        "exact SA2 local context"
+      ],
+      "uses": [
+        "dated demand",
+        "employment outlook",
+        "area context"
+      ],
+      "rule": "Keep date, source, method and geographic scope. No national-to-local relabelling; no forecast guarantees."
+    },
+    {
+      "domain": "employers",
+      "sources": [
+        "employer_job_edge"
+      ],
+      "joins": [
+        "occupation group + user state"
+      ],
+      "uses": [
+        "dated employer-occupation signals"
+      ],
+      "rule": "Not a current vacancy feed, company-directory search, or evidence of an available job."
+    },
+    {
+      "domain": "funding",
+      "sources": [
+        "course_funding_verdict",
+        "he_provider_entitlement_v2"
+      ],
+      "joins": [
+        "provider RTO + national course code + delivery state",
+        "university institution_id"
+      ],
+      "uses": [
+        "stored course funding",
+        "provider HE arrangements"
+      ],
+      "rule": "Retain period and conditions; provider entitlement is not personal eligibility. Missing remains unknown; zero remains zero."
+    },
+    {
+      "domain": "skills_and_roles",
+      "sources": [
+        "onet_occupation",
+        "onet_job_skill",
+        "onet_anzsco_crosswalk"
+      ],
+      "uses": [
+        "skills-to-occupation exploration",
+        "tasks",
+        "skill descriptions"
+      ],
+      "rule": "Bounded candidates ranked with local BGE; user competence and eligibility remain unknown unless independently evidenced."
+    },
+    {
+      "domain": "learning_links",
+      "sources": [
+        "course_skill_edge",
+        "live_courses"
+      ],
+      "joins": [
+        "national_code -> course qualification code"
+      ],
+      "rule": "Unit codes are not assumed to be dim_skill IDs. A stored link does not prove assessment or provider delivery."
+    },
+    {
+      "domain": "public_job_records",
+      "sources": [
+        "outside_jobs"
+      ],
+      "uses": [
+        "dated examples near a user-stated area",
+        "sample-only structured skill observations"
+      ],
+      "rule": "PUBLIC active Australian records only; exclude expired records. Current availability is not confirmed. Keep geographic fallback and date explicit."
+    }
+  ],
+  "limits": {
+    "courses": 4,
+    "course_queries": 3,
+    "career_queries": 2,
+    "industry_queries": 2,
+    "careers": 6,
+    "signals": 18,
+    "role_candidates": 12,
+    "selected_roles": 3,
+    "job_sample": 40,
+    "job_cards": 6,
+    "learning_links": 8,
+    "interactive_skills": 12
+  },
+  "saved_interactions": {
+    "course_choice": "Existing versioned workspace correction; saved before model execution.",
+    "area": "Existing versioned workspace correction; retained on failure and available to next main-chat turn.",
+    "scope": "Conversation only; no warehouse or external profile writes.",
+    "roles_and_skills": "Server validates displayed IDs. HAVE is self-reported, LEARN is intention, UNSURE/missing is unknown. Save receipt before model execution; recall in next chat."
+  },
+  "not_implemented": [
+    "Full warehouse vector index",
+    "BGE retraining on warehouse entities",
+    "unrestricted SQL generation",
+    "automatic continuous index refresh",
+    "equivalent Spring retrieval adapter",
+    "Complete company search",
+    "Market-wide skill-demand ranking",
+    "Confirmed live job availability"
+  ]
+}

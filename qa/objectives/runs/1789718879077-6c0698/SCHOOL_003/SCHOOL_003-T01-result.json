@@ -1,0 +1,54 @@
+{
+  "test_id": "SCHOOL_003-T01",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 582,
+  "input_context": {
+    "user_message": "I want help with subjects for my course.",
+    "prior_context_text": "No prior objective result.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "91365af27f9922c759ad6478ea3601ce2b2ec7fcaf22c763a2ebc3d6bb2437ca",
+  "status": "API_BLOCKED",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "HTTP_400",
+          "detail": "Transport/API failure, not a prompt failure"
+        }
+      ],
+      "latency_ms": 2254
+    }
+  ],
+  "failures": [
+    {
+      "code": "HTTP_400",
+      "detail": "Transport/API failure, not a prompt failure"
+    }
+  ],
+  "parsed": null,
+  "evaluator": null,
+  "latency_ms": 2254,
+  "usage": null
+}

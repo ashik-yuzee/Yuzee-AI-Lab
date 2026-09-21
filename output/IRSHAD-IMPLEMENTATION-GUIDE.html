@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oala AI Token Lab — Implementation Guide for Irshad</title>
+<style>
+  :root {
+    --accent: #7244c6;
+    --accent-light: #ede5fc;
+    --border: #e2e8f0;
+    --muted: #5f6b7a;
+    --heading: #1a202c;
+    --body: #2d3748;
+    --bg: #ffffff;
+    --sidebar-w: 220px;
+    --code-bg: #1e2330;
+    --code-fg: #e2e8f0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--body);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Layout ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  nav.toc {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    background: #fafbfe;
+    border-right: 1px solid var(--border);
+    padding: 28px 16px;
+  }
+
+  nav.toc .toc-logo {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 20px;
+    letter-spacing: -.01em;
+  }
+
+  nav.toc ul { list-style: none; }
+  nav.toc li { margin: 2px 0; }
+  nav.toc a {
+    display: block;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: background .1s, color .1s;
+  }
+  nav.toc a:hover { background: #f0f4f8; color: var(--heading); }
+  nav.toc .toc-section { font-weight: 700; color: var(--heading); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; margin: 16px 0 4px 10px; }
+
+  main { flex: 1; min-width: 0; max-width: 860px; padding: 48px 48px 80px; }
+
+  @media (max-width: 900px) {
+    nav.toc { display: none; }
+    main { padding: 32px 20px 60px; }
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 30px; font-weight: 800; color: var(--heading); letter-spacing: -.02em; line-height: 1.2; margin-bottom: 8px; }
+  h2 { font-size: 22px; font-weight: 700; color: var(--heading); margin-top: 52px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 2px solid var(--border); }
+  h3 { font-size: 16px; font-weight: 700; color: var(--heading); margin-top: 28px; margin-bottom: 8px; }
+  h4 { font-size: 13px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-top: 20px; margin-bottom: 6px; }
+
+  p { margin-bottom: 14px; }
+  p:last-child { margin-bottom: 0; }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+  ul, ol { padding-left: 1.5em; margin-bottom: 14px; }
+  li { margin-bottom: 5px; }
+
+  strong { font-weight: 600; color: var(--heading); }
+
+  /* ── Code ── */
+  code {
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+    font-size: .83em;
+    background: var(--accent-light);
+    color: var(--accent);
+    padding: .1em .35em;
+    border-radius: 4px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border-radius: 10px;
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: 13px;
+    line-height: 1.65;
+    margin: 14px 0 20px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace;
+  }
+  pre code { background: none; color: inherit; padding: 0; font-size: 1em; }
+
+  /* ── Callout boxes ── */
+  .callout {
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+  .callout-info    { background: #ede5fc; border: 1px solid #c4b5fd; }
+  .callout-warn    { background: #fffbeb; border: 1px solid #fcd34d; }
+  .callout-success { background: #f0fdf4; border: 1px solid #86efac; }
+  .callout-danger  { background: #fff1f2; border: 1px solid #fca5a5; }
+  .callout strong  { display: block; margin-bottom: 4px; }
+  .callout-info strong    { color: #5b21b6; }
+  .callout-warn strong    { color: #92400e; }
+  .callout-success strong { color: #166534; }
+  .callout-danger strong  { color: #991b1b; }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+  thead th { background: #f8fafc; font-weight: 700; color: var(--heading); text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--border); }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* ── Step blocks ── */
+  .step-list { list-style: none; padding: 0; counter-reset: step; }
+  .step-list li {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+  .step-list li::before {
+    content: counter(step);
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-list li > div { padding-top: 4px; flex: 1; }
+
+  /* ── File tree ── */
+  .file-tree {
+    background: #f8fafc;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'SF Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    margin: 14px 0 20px;
+    color: var(--body);
+  }
+  .file-tree .dir  { color: var(--heading); font-weight: 600; }
+  .file-tree .note { color: var(--muted); font-size: 12px; }
+
+  /* ── Hero ── */
+  .hero { margin-bottom: 36px; }
+  .hero-meta { font-size: 13px; color: var(--muted); margin-top: 6px; }
+  .hero-meta span { display: inline-block; margin-right: 16px; }
+
+  /* ── Badge ── */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 2px 8px; border-radius: 6px;
+    font-size: 11.5px; font-weight: 600;
+  }
+  .badge-purple { background: var(--accent-light); color: var(--accent); }
+  .badge-green  { background: #f0fdf4; color: #166534; }
+  .badge-amber  { background: #fffbeb; color: #92400e; }
+
+  /* ── Print ── */
+  @media print {
+    nav.toc { display: none; }
+    main { max-width: 100%; padding: 20px; }
+    pre  { white-space: pre-wrap; word-break: break-all; }
+    h2   { page-break-before: always; }
+    .callout, pre, table { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- Sidebar TOC -->
+<nav class="toc">
+  <div class="toc-logo">Oala · Implementation Guide</div>
+  <div class="toc-section">Getting started</div>
+  <ul>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#zip-contents">Zip contents</a></li>
+    <li><a href="#setup">Project setup</a></li>
+  </ul>
+  <div class="toc-section">Core concepts</div>
+  <ul>
+    <li><a href="#protocol">Protocol v1.3 (JSON→UI)</a></li>
+    <li><a href="#colours">Colour system</a></li>
+    <li><a href="#aqf">AQF learning tones</a></li>
+  </ul>
+  <div class="toc-section">Components</div>
+  <ul>
+    <li><a href="#layout">App layout</a></li>
+    <li><a href="#chat-area">Chat area</a></li>
+    <li><a href="#composer">Composer</a></li>
+    <li><a href="#protocol-renderer">Protocol renderer</a></li>
+    <li><a href="#guidance-list">Guidance list</a></li>
+    <li><a href="#mini-pathway">Mini pathway panel</a></li>
+    <li><a href="#sidebar">Sidebar</a></li>
+  </ul>
+  <div class="toc-section">Services</div>
+  <ul>
+    <li><a href="#chat-service">ChatService</a></li>
+    <li><a href="#streaming-service">StreamingService</a></li>
+  </ul>
+  <div class="toc-section">Polish</div>
+  <ul>
+    <li><a href="#responsive">Responsive behaviour</a></li>
+    <li><a href="#ionic">Ionic/Capacitor notes</a></li>
+    <li><a href="#accessibility">Accessibility</a></li>
+    <li><a href="#checklist">Final checklist</a></li>
+  </ul>
+</nav>
+
+<!-- Main content -->
+<main>
+
+  <!-- Hero -->
+  <div class="hero">
+    <h1>Oala AI Token Lab<br>Angular Implementation Guide</h1>
+    <div class="hero-meta">
+      <span>For: <strong>Irshad</strong></span>
+      <span>Stack: <strong>Angular 15+ · Ionic/Capacitor · Bootstrap 5 · Java Spring Boot</strong></span>
+      <span>Reference app: <strong>Oala AI Token Lab (React/Vite)</strong></span>
+    </div>
+  </div>
+
+  <div class="callout callout-info">
+    <strong>Purpose of this document</strong>
+    The zip file you received (<code>oala-angular-reference.zip</code>) contains ready-to-use Angular
+    TypeScript components, SCSS stylesheets, and detailed documentation reverse-engineered from the
+    live Oala AI Token Lab React application. This guide tells you exactly what each file is, where
+    it goes in your project, and what order to do things in.
+  </div>
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="overview">1. Overview</h2>
+
+  <p>The Oala AI Token Lab has three major UI layers that you need to replicate:</p>
+
+  <table>
+    <thead><tr><th>Layer</th><th>What it is</th><th>Key files in zip</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Conversation UI</strong></td>
+        <td>Turn-based chat with user bubbles, Oala responses, streaming progress</td>
+        <td><code>chat-area.*</code>, <code>composer.*</code></td>
+      </tr>
+      <tr>
+        <td><strong>Protocol renderer</strong></td>
+        <td>Converts AI JSON responses into cards, timelines, tables, callouts, forms</td>
+        <td><code>protocol-renderer.*</code>, <code>guidance-list.*</code></td>
+      </tr>
+      <tr>
+        <td><strong>Mini Pathway Panel</strong></td>
+        <td>Right-side drawer that streams an AI-generated study pathway report</td>
+        <td><code>mini-pathway-panel.*</code>, <code>_mini-pathway.scss</code></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p>All three layers share a single design token system (CSS custom properties) defined in
+  <code>_tokens.scss</code> and driven by a single accent colour (<code>--accent: #7244c6</code>).
+  The accent can be changed at runtime via one JS line — the whole UI recolours automatically.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="zip-contents">2. Zip contents map</h2>
+
+  <div class="file-tree">
+    <span class="dir">oala-angular-reference.zip</span><br>
+    ├── <span class="dir">docs/</span>  <span class="note">← human-readable reference docs</span><br>
+    │   ├── 00-overview.md          <span class="note">colour tokens, typography, layout diagram</span><br>
+    │   ├── 01-json-to-ui.md        <span class="note">Protocol v1.3 JSON shape + all block types</span><br>
+    │   ├── 02-conversation-layout.md <span class="note">turn groups, bubbles, error states</span><br>
+    │   ├── 03-mini-pathway-panel.md  <span class="note">trigger logic, full CSS breakdown</span><br>
+    │   ├── 04-composer.md          <span class="note">pill input, voice, @Oala mention</span><br>
+    │   └── 05-angular-guide.md     <span class="note">complete stack mapping + inline code samples</span><br>
+    └── <span class="dir">angular/</span>  <span class="note">← copy these into your project</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">styles/</span><br>
+    │   &nbsp;&nbsp;&nbsp;├── _tokens.scss        <span class="note">CSS vars + AQF tones (import FIRST)</span><br>
+    │   &nbsp;&nbsp;&nbsp;├── _chat.scss          <span class="note">streaming, question cards, callouts</span><br>
+    │   &nbsp;&nbsp;&nbsp;├── _mini-pathway.scss  <span class="note">full panel styles</span><br>
+    │   &nbsp;&nbsp;&nbsp;├── _guidance-list.scss <span class="note">cards, timelines, progress bars</span><br>
+    │   &nbsp;&nbsp;&nbsp;└── styles.scss         <span class="note">global entry — imports all partials</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">services/</span><br>
+    │   &nbsp;&nbsp;&nbsp;├── chat.service.ts     <span class="note">state management (BehaviorSubject)</span><br>
+    │   &nbsp;&nbsp;&nbsp;└── streaming.service.ts <span class="note">fetch + ReadableStream SSE pump</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;├── <span class="dir">directives/</span><br>
+    │   &nbsp;&nbsp;&nbsp;└── auto-grow.directive.ts <span class="note">textarea auto-height</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;└── <span class="dir">components/</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── chat-area/          <span class="note">html + ts + scss</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── composer/           <span class="note">html + ts + scss</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── guidance-list/      <span class="note">html + ts</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── mini-pathway-panel/ <span class="note">html + ts</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── protocol-renderer/  <span class="note">html + ts</span><br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── sidebar/            <span class="note">html + ts + scss</span><br>
+  </div>
+
+  <div class="callout callout-warn">
+    <strong>Read the docs first</strong>
+    Before touching any code, read <code>docs/00-overview.md</code> and <code>docs/05-angular-guide.md</code>.
+    They contain the complete design intent, all CSS variable names, and Angular-specific notes.
+    The component files in <code>angular/</code> are meant to be copy-adapted, not copy-pasted blindly.
+  </div>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="setup">3. Project setup</h2>
+
+  <h3>Step 1 — Install required packages</h3>
+  <p>Everything below should already be in your production app. Verify these are present:</p>
+
+  <pre><code>npm install bootstrap@5 @ionic/angular ionicons ngx-markdown rxjs</code></pre>
+
+  <p>If <code>ngx-markdown</code> is not installed, add it. It renders the AI's prose output.
+  Alternatively, use <code>marked</code> directly and sanitise with Angular's <code>DomSanitizer</code>.</p>
+
+  <h3>Step 2 — Copy the SCSS files</h3>
+  <p>Copy the entire <code>angular/styles/</code> folder into your project's styles directory.
+  A suggested path:</p>
+
+  <pre><code>src/
+  assets/
+  styles/
+    _tokens.scss        ← copied from zip
+    _chat.scss          ← copied from zip
+    _mini-pathway.scss  ← copied from zip
+    _guidance-list.scss ← copied from zip
+    styles.scss         ← copied from zip (edit this)</code></pre>
+
+  <h3>Step 3 — Register styles in angular.json</h3>
+  <p>In <code>angular.json</code>, under <code>projects → your-app → architect → build → options → styles</code>:</p>
+
+  <pre><code>"styles": [
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+  "src/styles/styles.scss"
+]</code></pre>
+
+  <div class="callout callout-warn">
+    <strong>Order matters</strong>
+    Bootstrap must come before your <code>styles.scss</code> so your custom variables and overrides
+    take effect. If you are using SCSS Bootstrap (not the CDN CSS), import it inside
+    <code>styles.scss</code> before your component sheets.
+  </div>
+
+  <h3>Step 4 — Copy and adapt the component files</h3>
+
+  <p>Copy each component folder from <code>angular/components/</code> into your Angular project's
+  component directory. Each component is <strong>standalone</strong>
+  (<code>standalone: true</code> in the decorator), so it self-declares its imports — you do not
+  need to add it to an NgModule.</p>
+
+  <p>The <code>@import '../../styles/tokens'</code> path at the top of each component SCSS assumes
+  the file lives two levels deep under <code>src/</code>. Adjust the relative path to match your
+  project structure.</p>
+
+  <h3>Step 5 — Copy the services and directive</h3>
+
+  <pre><code>src/app/
+  services/
+    chat.service.ts       ← from zip
+    streaming.service.ts  ← from zip
+  directives/
+    auto-grow.directive.ts ← from zip</code></pre>
+
+  <p>Both services use <code>providedIn: 'root'</code>, so they are available app-wide without
+  extra registration.</p>
+
+  <h3>Step 6 — Wire the API endpoint</h3>
+  <p>The streaming service calls two endpoints. Update these to point at your Spring Boot backend:</p>
+
+  <table>
+    <thead><tr><th>Endpoint</th><th>Purpose</th><th>Default path in zip</th></tr></thead>
+    <tbody>
+      <tr><td><code>POST /api/chat</code></td><td>Main conversation SSE stream</td><td>change to your Spring URL</td></tr>
+      <tr><td><code>POST /api/mini-pathway</code></td><td>Mini pathway SSE stream</td><td>change to your Spring URL</td></tr>
+    </tbody>
+  </table>
+
+  <p>In <code>streaming.service.ts</code> and <code>mini-pathway-panel.component.ts</code>, find
+  the <code>fetch('/api/...')</code> calls and replace with your absolute API URL or use Angular's
+  <code>HttpClient</code> (see note in Section 9).</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="protocol">4. Protocol v1.3 — how JSON becomes UI</h2>
+
+  <p>Every AI response the backend sends is a structured JSON object, not raw text. The frontend
+  parses it and renders each section as a different UI component. This is the single most important
+  concept to understand.</p>
+
+  <h3>JSON shape</h3>
+  <pre><code>{
+  "version": "1.3",
+  "output_sections": [
+    { "type": "heading",  "heading": "Your pathway options" },
+    { "type": "text",     "body": "Here is a summary..." },
+    { "type": "cards",    "items": [ { "title": "Certificate III", "description": "..." } ] },
+    { "type": "timeline", "items": [ { "title": "Step 1: Enrol", "description": "..." } ] },
+    { "type": "table",    "columns": ["Course","Duration"], "rows": [["Cert III","1 year"]] },
+    { "type": "callout",  "variant": "info", "heading": "Note", "body": "..." },
+    { "type": "interaction", "question": "What is your goal?", "choices": [...] }
+  ],
+  "meta": { "model": "gemini-2.0-flash", "duration_ms": 3200 }
+}</code></pre>
+
+  <h3>Block type → Angular component mapping</h3>
+  <table>
+    <thead><tr><th>type</th><th>Rendered as</th><th>CSS class</th></tr></thead>
+    <tbody>
+      <tr><td><code>heading</code></td><td><code>&lt;h4&gt;</code> with border-image underline</td><td><code>[data-output-type="heading"]</code></td></tr>
+      <tr><td><code>text</code></td><td>Markdown prose via ngx-markdown</td><td><code>.prose-content</code></td></tr>
+      <tr><td><code>cards</code></td><td><code>app-guidance-list [ordered]="false"</code></td><td><code>.guidance-list</code></td></tr>
+      <tr><td><code>timeline</code></td><td><code>app-guidance-list [ordered]="true"</code></td><td><code>.guidance-timeline</code></td></tr>
+      <tr><td><code>flow</code></td><td>Same as timeline</td><td><code>.guidance-timeline</code></td></tr>
+      <tr><td><code>table</code></td><td>Bootstrap <code>.table</code> in scroll wrapper</td><td><code>.response-table-scroll</code></td></tr>
+      <tr><td><code>callout</code></td><td>Tinted box, variant controls colour</td><td><code>[data-output-type="callout"]</code></td></tr>
+      <tr><td><code>scorecard</code></td><td>Auto-fit grid of metric tiles</td><td><code>.guidance-scorecard</code></td></tr>
+      <tr><td><code>progress</code></td><td>Labelled bars (transform: scaleX)</td><td><code>.guidance-progress-list</code></td></tr>
+      <tr><td><code>interaction</code></td><td>Multiple-choice fieldset or textarea</td><td><code>.main-chat-question</code></td></tr>
+      <tr><td><code>pathway_map</code></td><td>Vertical node list with connectors</td><td><code>.guidance-pathway-map</code></td></tr>
+    </tbody>
+  </table>
+
+  <p>The component that does all this switching is <code>protocol-renderer.component</code>.
+  It uses <code>*ngSwitchCase</code> on <code>section.type</code>. You only need to add the
+  <code>&lt;app-protocol-renderer [response]="msg.structured"&gt;</code> tag wherever you want
+  to display an AI response.</p>
+
+  <h3>Parsing the AI response</h3>
+  <p>The backend should stream raw JSON (or JSON wrapped in a markdown code fence). The
+  <code>tryParseProtocol()</code> function in <code>streaming.service.ts</code> strips the fence
+  and parses it. If parsing fails, the component falls back to rendering the raw string as
+  markdown. <strong>Never render raw AI text as HTML without sanitisation.</strong> Use ngx-markdown
+  or Angular's <code>DomSanitizer.bypassSecurityTrustHtml()</code> only after sanitising.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="colours">5. Colour system</h2>
+
+  <p>All colours derive from a single root variable. Changing one line recolours the entire app:</p>
+
+  <pre><code>:root {
+  --accent: #7244c6;  /* ← change this to any hex colour */
+}</code></pre>
+
+  <p>All accent tints are computed via CSS <code>color-mix()</code> — supported in Chrome 111+,
+  Safari 16.2+, Firefox 113+. No polyfill needed for a modern WebView on iOS/Android.</p>
+
+  <h3>Runtime accent change (user-settable)</h3>
+  <pre><code>// In your Settings component or accent-picker
+document.documentElement.style.setProperty('--accent', '#e65c00');
+localStorage.setItem('oala-accent', '#e65c00');
+
+// On app init (e.g. in AppComponent.ngOnInit):
+const saved = localStorage.getItem('oala-accent');
+if (saved) document.documentElement.style.setProperty('--accent', saved);</code></pre>
+
+  <h3>Semantic colour tokens (from _tokens.scss)</h3>
+  <table>
+    <thead><tr><th>Variable</th><th>Value / Computed from</th><th>Used for</th></tr></thead>
+    <tbody>
+      <tr><td><code>--accent</code></td><td>#7244c6</td><td>Primary brand colour</td></tr>
+      <tr><td><code>--accent-hover</code></td><td>accent × 83% + black</td><td>Button hover</td></tr>
+      <tr><td><code>--accent-8</code></td><td>accent 8% tint</td><td>Selected card backgrounds</td></tr>
+      <tr><td><code>--accent-light</code></td><td>accent 12% tint</td><td>Hover backgrounds</td></tr>
+      <tr><td><code>--accent-border</code></td><td>accent 35% tint</td><td>Borders on tinted surfaces</td></tr>
+      <tr><td><code>--bubble-bg</code></td><td>#ede5fc (purple tint)</td><td>User chat bubble background</td></tr>
+      <tr><td><code>--bubble-text</code></td><td>accent 65% mix</td><td>User chat bubble text</td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="aqf">6. AQF learning tone system</h2>
+
+  <p>This is how course cards, timeline steps, and pathway labels get their colours. Every element
+  that represents a qualification type receives a <code>data-learning-tone</code> HTML attribute.
+  The CSS in <code>_tokens.scss</code> defines three CSS custom properties for each tone:</p>
+
+  <ul>
+    <li><code>--course-ink</code> — text colour</li>
+    <li><code>--course-bg</code> — background tint</li>
+    <li><code>--course-edge</code> — border colour</li>
+  </ul>
+
+  <p>Your Angular components apply the attribute like this:</p>
+
+  <pre><code>&lt;!-- On a card, step, or tag --&gt;
+&lt;div [attr.data-learning-tone]="item.level || item.type"&gt;
+  ...
+&lt;/div&gt;</code></pre>
+
+  <p>The CSS then automatically applies the right ink/bg/edge for that level. You never need to
+  compute colours in TypeScript.</p>
+
+  <h3>Tone values from the AI JSON</h3>
+  <table>
+    <thead><tr><th>data-learning-tone value</th><th>AQF type</th><th>Colour family</th></tr></thead>
+    <tbody>
+      <tr><td><code>level1</code></td><td>Certificate I</td><td>Green</td></tr>
+      <tr><td><code>level2</code></td><td>Certificate II</td><td>Cyan</td></tr>
+      <tr><td><code>level3</code> or <code>unit</code></td><td>Certificate III / Unit</td><td>Light blue</td></tr>
+      <tr><td><code>level4</code></td><td>Certificate IV</td><td>Blue</td></tr>
+      <tr><td><code>level5</code></td><td>Diploma</td><td>Indigo</td></tr>
+      <tr><td><code>level6</code></td><td>Advanced Diploma</td><td>Violet</td></tr>
+      <tr><td><code>level7</code></td><td>Bachelor's Degree</td><td>Purple</td></tr>
+      <tr><td><code>level8</code> or <code>crosslevel</code></td><td>Honours / Cross-level</td><td>Fuchsia</td></tr>
+      <tr><td><code>level9</code></td><td>Masters</td><td>Pink</td></tr>
+      <tr><td><code>level10</code></td><td>Doctorate</td><td>Red</td></tr>
+      <tr><td><code>micro</code></td><td>Micro-credential</td><td>Amber</td></tr>
+      <tr><td><code>short</code></td><td>Short course</td><td>Grey</td></tr>
+      <tr><td><code>industry</code></td><td>Industry cert</td><td>Navy</td></tr>
+      <tr><td><code>route</code></td><td>Alternative pathway</td><td>Warm grey</td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="layout">7. App layout shell</h2>
+
+  <p>The outer shell is a flex row. Add this to your root component template
+  (<code>app.component.html</code>):</p>
+
+  <pre><code>&lt;div class="app-layout"&gt;
+
+  &lt;!-- Mobile backdrop (visible only on small screens when sidebar open) --&gt;
+  &lt;div *ngIf="sidebarOpen" class="sidebar-backdrop" (click)="sidebarOpen = false"&gt;&lt;/div&gt;
+
+  &lt;!-- Sidebar --&gt;
+  &lt;app-sidebar [isOpen]="sidebarOpen" (closed)="sidebarOpen = false"
+               [userEmail]="userEmail"&gt;
+  &lt;/app-sidebar&gt;
+
+  &lt;!-- Main column --&gt;
+  &lt;div class="app-main"&gt;
+
+    &lt;!-- Navbar --&gt;
+    &lt;header class="app-navbar"&gt;
+      &lt;button (click)="sidebarOpen = !sidebarOpen" aria-label="Toggle sidebar"&gt;
+        &lt;ion-icon name="menu-outline"&gt;&lt;/ion-icon&gt;
+      &lt;/button&gt;
+      &lt;!-- model selector, settings, etc --&gt;
+    &lt;/header&gt;
+
+    &lt;!-- Content split: chat + optional panel --&gt;
+    &lt;div class="app-content"&gt;
+      &lt;app-chat-area class="app-chat-area"&gt;&lt;/app-chat-area&gt;
+
+      &lt;app-mini-pathway-panel
+        *ngIf="panelOpen"
+        [savedPathways]="savedPathways"
+        (panelClose)="panelOpen = false"&gt;
+      &lt;/app-mini-pathway-panel&gt;
+    &lt;/div&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+
+  <p>The CSS for <code>.app-layout</code>, <code>.app-sidebar</code>, <code>.app-main</code>,
+  and <code>.app-content</code> is all in <code>styles.scss</code> — nothing extra needed.</p>
+
+  <h3>Responsive breakpoints</h3>
+  <table>
+    <thead><tr><th>Viewport</th><th>Sidebar</th><th>Mini pathway panel</th></tr></thead>
+    <tbody>
+      <tr><td>≥ 1200px (xl)</td><td>Inline, always visible</td><td>Side-by-side with chat</td></tr>
+      <tr><td>992px–1199px (lg)</td><td>Inline</td><td>Overlays chat (position: absolute)</td></tr>
+      <tr><td>< 992px (md/sm)</td><td>Slide-in drawer (position: fixed)</td><td>Overlays full width</td></tr>
+      <tr><td>< 600px (xs)</td><td>Full-width drawer</td><td>Full-width overlay</td></tr>
+    </tbody>
+  </table>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="chat-area">8. Chat area component</h2>
+
+  <p>File: <code>components/chat-area/</code> (html + ts + scss)</p>
+
+  <h3>How it works</h3>
+  <ul>
+    <li>Subscribes to <code>ChatService.state$</code> and re-renders when state changes.</li>
+    <li>Messages are grouped into <strong>turn groups</strong>: one user message + one assistant
+    response, separated by a timestamp divider.</li>
+    <li>While streaming, a <code>.main-chat-progress</code> indicator is shown instead of the
+    completed response.</li>
+    <li>When streaming completes, the <code>structured</code> field on the message is set.
+    If it is not null, <code>app-protocol-renderer</code> renders it. Otherwise a markdown
+    fallback renders the raw text.</li>
+  </ul>
+
+  <h3>User bubble spec</h3>
+  <table>
+    <thead><tr><th>Property</th><th>Value</th></tr></thead>
+    <tbody>
+      <tr><td>Background</td><td><code>var(--bubble-bg)</code> — purple tint</td></tr>
+      <tr><td>Text</td><td><code>var(--bubble-text)</code> — dark purple</td></tr>
+      <tr><td>Border radius</td><td><code>18px 18px 6px 18px</code> — right tail</td></tr>
+      <tr><td>Max width</td><td>85% of container</td></tr>
+      <tr><td>Alignment</td><td>Right (<code>justify-content: flex-end</code>)</td></tr>
+      <tr><td>Font size</td><td>15px</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Streaming progress indicator</h3>
+  <pre><code>&lt;div class="main-chat-progress"&gt;
+  &lt;div class="main-chat-progress-icon"&gt;   &lt;!-- pulsing sparkle icon --&gt;
+    &lt;ion-icon name="sparkles-outline"&gt;&lt;/ion-icon&gt;
+  &lt;/div&gt;
+  &lt;div class="main-chat-progress-copy"&gt;
+    &lt;strong&gt;{{ streamingStatus }}&lt;/strong&gt;
+    &lt;p&gt;{{ streamingText | slice:0:120 }}…&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button (click)="stop()"&gt;Stop&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+
+  <p>The icon pulses via a CSS keyframe (<code>chat-breathe</code>) defined in
+  <code>_chat.scss</code>. No JS required.</p>
+
+  <h3>Connecting to your Spring Boot backend</h3>
+  <p>The chat area calls <code>StreamingService.send()</code>, which uses the browser Fetch API
+  to POST to <code>/api/chat</code> and reads the response as a <code>ReadableStream</code>.
+  Your Spring Boot endpoint must:</p>
+  <ol>
+    <li>Accept <code>Content-Type: application/json</code> POST with <code>{ conversationId, message, model, mode }</code></li>
+    <li>Return <code>Content-Type: text/event-stream</code> (SSE) or <code>application/octet-stream</code> (raw stream)</li>
+    <li>Stream lines in the format: <code>data: {"type":"chunk","text":"..."}</code></li>
+    <li>Send <code>data: {"type":"done","model":"...","prompt_tokens":123,"completion_tokens":456}</code> at the end</li>
+    <li>The final assembled text should be valid Protocol v1.3 JSON</li>
+  </ol>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="composer">9. Composer component</h2>
+
+  <p>File: <code>components/composer/</code> (html + ts + scss)</p>
+
+  <h3>Visual spec</h3>
+  <ul>
+    <li>Pill shape: <code>border-radius: 28px</code></li>
+    <li>Border: <code>1px solid #e2e6ed</code> with soft box-shadow</li>
+    <li>Focus: border switches to <code>var(--accent-border)</code></li>
+    <li>Textarea: min 28px (1 line), max 176px (~7 lines), font-size 16px on mobile (prevents iOS zoom)</li>
+    <li>Send button: 44px on mobile (minimum touch target), 32px on desktop</li>
+  </ul>
+
+  <h3>Auto-grow textarea</h3>
+  <p>The zip includes <code>AutoGrowDirective</code>. Apply it to any textarea:</p>
+  <pre><code>&lt;textarea appAutoGrow [maxHeightPx]="176"&gt;&lt;/textarea&gt;</code></pre>
+  <p>Alternatively, if using Ionic: <code>&lt;ion-textarea [autoGrow]="true"&gt;</code> — but the
+  max-height needs to be set manually via CSS because <code>ion-textarea</code>'s auto-grow does
+  not cap at a maximum.</p>
+
+  <h3>iOS safe area</h3>
+  <p>The composer bottom padding uses <code>env(safe-area-inset-bottom)</code> so it clears the
+  iPhone home bar. In Ionic Capacitor this is equivalent to using the Ionic CSS variable
+  <code>--ion-safe-area-bottom</code>. Already handled in <code>composer.component.scss</code>.</p>
+
+  <h3>Voice input</h3>
+  <p>Uses the browser <code>SpeechRecognition</code> API — works in Chrome and Edge on desktop,
+  and in Android Chrome WebView. Not available on iOS WebView (WKWebView blocks it). On iOS,
+  consider using the Capacitor Speech Recognition plugin as an alternative.</p>
+
+  <h3>@Oala mention</h3>
+  <p>When the user types <code>@o</code>, a suggestion popup appears. Selecting it sets a flag
+  that routes the message through a different system prompt / mode on the backend. This is
+  purely client-side UI logic — you pass <code>mode: 'oala'</code> in the API request body when
+  the mention is active.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="protocol-renderer">10. Protocol renderer component</h2>
+
+  <p>File: <code>components/protocol-renderer/</code></p>
+
+  <p>This is the heart of the UI. Drop it anywhere you have a <code>StructuredResponse</code> object:</p>
+
+  <pre><code>&lt;app-protocol-renderer
+  [response]="message.structured"
+  (interactionSubmit)="onInteractionSubmit($event)"&gt;
+&lt;/app-protocol-renderer&gt;</code></pre>
+
+  <p>The <code>interactionSubmit</code> event fires when a user completes a form block (multiple
+  choice or short text). The parent handles sending the answer as a new user message.</p>
+
+  <h3>Adding new block types</h3>
+  <p>If the AI backend introduces a new <code>type</code> in the future, add a new
+  <code>*ngSwitchCase</code> branch in the renderer template. The <code>*ngSwitchDefault</code>
+  branch already handles unknown types gracefully (renders body as markdown if present).</p>
+
+  <h3>ngx-markdown pipe</h3>
+  <p>The template uses a <code>| markdown</code> pipe. Install and import ngx-markdown:</p>
+  <pre><code>// app.config.ts or AppModule
+import { MarkdownModule } from 'ngx-markdown';
+// Add MarkdownModule.forRoot() to imports array</code></pre>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="guidance-list">11. Guidance list component</h2>
+
+  <p>File: <code>components/guidance-list/</code></p>
+
+  <p>Renders a list of items as either <strong>cards</strong> (unordered) or
+  <strong>timeline steps</strong> (ordered numbered circles):</p>
+
+  <pre><code>&lt;!-- Card list (cards block type) --&gt;
+&lt;app-guidance-list [items]="section.items" [ordered]="false"&gt;&lt;/app-guidance-list&gt;
+
+&lt;!-- Timeline steps (timeline / flow block type) --&gt;
+&lt;app-guidance-list [items]="section.items" [ordered]="true"&gt;&lt;/app-guidance-list&gt;</code></pre>
+
+  <h3>Timeline CSS details</h3>
+  <p>The numbered circles are styled with a CSS gradient background. The connecting backbone line
+  is a <code>::before</code> pseudo-element on the <code>.guidance-timeline</code> element.
+  It runs from <code>top: 18px</code> (centre of first circle) to <code>bottom: 18px</code>.</p>
+
+  <h3>AQF tones on cards</h3>
+  <p>Each item in the list can carry a <code>type</code> or <code>level</code> field from the AI
+  JSON. The component binds <code>[attr.data-learning-tone]="item.type || item.level"</code> on
+  each card, which triggers the AQF colour palette automatically.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="mini-pathway">12. Mini Pathway Panel</h2>
+
+  <p>File: <code>components/mini-pathway-panel/</code></p>
+
+  <h3>What triggers it</h3>
+  <p>The React reference app uses a MiniLM semantic similarity score to decide when to offer a
+  pathway. In your Angular implementation, the backend (Spring Boot) should return a field like
+  <code>pathway_relevance_score</code> in the SSE done event. If the score is ≥ 0.42, your
+  parent component should show the offer button and open the panel.</p>
+
+  <p>Alternatively, you can trigger it manually: show an "Explore Pathway" button in the chat
+  response footer and open the panel when the user clicks it.</p>
+
+  <h3>Opening the panel</h3>
+  <pre><code>&lt;!-- In app.component.html --&gt;
+&lt;app-mini-pathway-panel
+  *ngIf="panelOpen"
+  [savedPathways]="savedPathways"
+  (panelClose)="panelOpen = false"
+  (pathwayGenerated)="onPathwayGenerated($event)"
+  #pathwayPanel&gt;
+&lt;/app-mini-pathway-panel&gt;
+
+&lt;!-- To trigger generation externally: --&gt;
+// In app.component.ts
+@ViewChild('pathwayPanel') pathwayPanel!: MiniPathwayPanelComponent;
+
+openAndGenerate(query: string) {
+  this.panelOpen = true;
+  setTimeout(() => this.pathwayPanel.generate(query), 50);
+}</code></pre>
+
+  <h3>Panel dimensions</h3>
+  <table>
+    <thead><tr><th>Breakpoint</th><th>Width</th><th>Position</th></tr></thead>
+    <tbody>
+      <tr><td>≥ 1600px</td><td>490px</td><td>Side-by-side (flex sibling)</td></tr>
+      <tr><td>1200px–1599px</td><td>440px</td><td>Side-by-side</td></tr>
+      <tr><td>< 1200px</td><td>min(480px, 100%)</td><td>Absolute overlay (right-aligned)</td></tr>
+      <tr><td>Expanded mode</td><td>100% of parent</td><td>Absolute, covers chat area</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Resize handle</h3>
+  <p>The panel has a drag handle on its left edge. The component uses <code>@HostListener</code>
+  on <code>document:mousemove</code> and <code>document:mouseup</code> to track the drag. During
+  resize, <code>body:has(.mini-pathway-panel--resizing)</code> sets <code>cursor: col-resize</code>
+  globally so the cursor doesn't flicker. This CSS selector is in <code>_mini-pathway.scss</code>.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="sidebar">13. Sidebar component</h2>
+
+  <p>File: <code>components/sidebar/</code></p>
+
+  <h3>Conversation list</h3>
+  <p>The sidebar renders all conversations from <code>ChatService.state$</code>. Each conversation
+  item shows the title (auto-generated from the first message) and last-updated time. The active
+  conversation is highlighted with <code>.is-active</code> which applies <code>var(--accent-8)</code>
+  background and <code>var(--accent)</code> text.</p>
+
+  <h3>Session stats footer</h3>
+  <p>The footer shows total token count and estimated cost across all conversations in the current
+  session. These are derived from the <code>promptTokens</code> and <code>completionTokens</code>
+  fields stored on each assistant message. The cost formula uses Gemini Flash pricing
+  ($0.075/M input, $0.30/M output) — update the constants in <code>sidebar.component.ts</code>
+  to match your actual model pricing.</p>
+
+  <h3>Mobile behaviour</h3>
+  <p>On viewports below 992px, the sidebar is <code>position: fixed</code> and slides in via
+  <code>transform: translateX(-100%)</code>. The parent component controls the <code>isOpen</code>
+  input. A semi-transparent backdrop covers the chat area when the sidebar is open; tapping it
+  emits the <code>closed</code> event which sets <code>isOpen = false</code> in the parent.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="chat-service">14. ChatService</h2>
+
+  <p>File: <code>services/chat.service.ts</code></p>
+
+  <p>A singleton service that holds all application state in a single <code>BehaviorSubject</code>.
+  Every component subscribes to <code>ChatService.state$</code> and reacts to changes. No NgRx,
+  no component-to-component @Input chains.</p>
+
+  <h3>Key methods</h3>
+  <table>
+    <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>newConversation()</code></td><td>Creates a new conversation and makes it active</td></tr>
+      <tr><td><code>selectConversation(id)</code></td><td>Switches the active conversation</td></tr>
+      <tr><td><code>addUserMessage(text)</code></td><td>Appends a user message + new turn group; returns group ID</td></tr>
+      <tr><td><code>startStreaming(groupId)</code></td><td>Sets isStreaming = true, clears streaming text</td></tr>
+      <tr><td><code>appendStreamChunk(chunk)</code></td><td>Appends to the live streaming preview</td></tr>
+      <tr><td><code>finaliseAssistantMessage()</code></td><td>Stores the completed message, sets isStreaming = false</td></tr>
+      <tr><td><code>setError(msg)</code></td><td>Stores error, clears streaming state</td></tr>
+    </tbody>
+  </table>
+
+  <h3>State shape</h3>
+  <pre><code>interface ChatState {
+  conversations: Conversation[];
+  activeConversationId: string | null;
+  isStreaming: boolean;
+  streamingText: string;
+  streamingStatus: string;
+  error: string | null;
+  model: string;
+  mode: string;
+}</code></pre>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="streaming-service">15. StreamingService</h2>
+
+  <p>File: <code>services/streaming.service.ts</code></p>
+
+  <p>Handles the SSE connection to your Spring Boot backend using the browser Fetch API and
+  ReadableStream. It does not use Angular's HttpClient because HttpClient does not support
+  streaming responses well — raw Fetch is the correct approach here.</p>
+
+  <h3>SSE line protocol</h3>
+  <p>Each line from the server must be in this format:</p>
+  <pre><code>data: {"type":"status","message":"Searching knowledge base…"}
+data: {"type":"chunk","text":"Here is your"}
+data: {"type":"chunk","text":" pathway summary…"}
+data: {"type":"done","model":"gemini-2.0-flash","prompt_tokens":1200,"completion_tokens":450,"duration_ms":3100}
+data: [DONE]</code></pre>
+
+  <h3>Spring Boot implementation tip</h3>
+  <p>In Spring Boot, use <code>SseEmitter</code> or Spring WebFlux <code>Flux&lt;ServerSentEvent&gt;</code>
+  to stream the response. Set the response content type to <code>text/event-stream</code> and
+  write each JSON event as a <code>data:</code> line. Do not buffer — flush after each chunk.</p>
+
+  <h3>Stopping a stream</h3>
+  <p>The service uses <code>AbortController</code>. Calling <code>StreamingService.stop()</code>
+  aborts the fetch. Spring Boot will detect the broken connection (socket close) and should cancel
+  the underlying AI API call.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="responsive">16. Responsive behaviour</h2>
+
+  <p>All responsive logic is in CSS — no JS media query listeners needed. The breakpoints used:</p>
+
+  <table>
+    <thead><tr><th>Bootstrap class</th><th>Width</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>xs (default)</td><td>< 576px</td><td>Full-width bubbles, compact composer padding</td></tr>
+      <tr><td>sm (≥ 576px)</td><td>576px+</td><td>Composer padding increases, send button shrinks to 32px</td></tr>
+      <tr><td>md (≥ 768px)</td><td>768px+</td><td>Tables display normally (not stacked)</td></tr>
+      <tr><td>lg (≥ 992px)</td><td>992px+</td><td>Sidebar inline (not a drawer)</td></tr>
+      <tr><td>xl (≥ 1200px)</td><td>1200px+</td><td>Mini pathway side-by-side (not overlay)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Response table stacking</h3>
+  <p>On mobile (<code>&lt; 576px</code>), data tables collapse to a card-per-row layout. Each
+  <code>&lt;td&gt;</code> uses <code>data-label</code> attribute with the column header text, and
+  a CSS <code>::before</code> pseudo-element renders it as a small eyebrow label. This is done
+  entirely in CSS — no JS. The <code>data-label</code> values are set by the protocol renderer
+  template. See <code>_chat.scss</code> and <code>_mini-pathway.scss</code> for the CSS.</p>
+
+  <h3>Container queries (mini pathway panel)</h3>
+  <p>The mini pathway panel uses CSS <code>container-type: inline-size</code>. When the panel is
+  narrow (< 400px), internal elements switch to compact layout using <code>@container</code>
+  rules. This is supported in Chrome 105+, Safari 16+, Firefox 110+. No polyfill needed in a
+  modern WebView.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="ionic">17. Ionic / Capacitor-specific notes</h2>
+
+  <h3>Icons</h3>
+  <p>The component templates use <code>&lt;ion-icon name="..."&gt;</code>. These are ionicons
+  (already included with Ionic). If you are rendering outside an <code>ion-app</code> context,
+  import ionicons separately:</p>
+  <pre><code>&lt;!-- In index.html --&gt;
+&lt;script type="module" src="https://unpkg.com/ionicons@7/dist/ionicons/ionicons.esm.js"&gt;&lt;/script&gt;</code></pre>
+
+  <h3>Safe area insets</h3>
+  <p>Ionic exposes <code>--ion-safe-area-bottom</code>, <code>--ion-safe-area-top</code>, etc.
+  The composer uses the standard CSS <code>env(safe-area-inset-bottom)</code> which Capacitor
+  populates correctly. No changes needed.</p>
+
+  <h3>Scrolling</h3>
+  <p>Wrap the chat scroll area in an <code>&lt;ion-content&gt;</code> for native momentum
+  scrolling on iOS. The auto-scroll-to-bottom logic in the component uses
+  <code>scrollTop = scrollHeight</code> — in Ionic, use
+  <code>ionContent.scrollToBottom()</code> instead for better iOS behaviour:</p>
+  <pre><code>@ViewChild(IonContent) content!: IonContent;
+// After each new message:
+this.content.scrollToBottom(200); // 200ms animation</code></pre>
+
+  <h3>Keyboard avoidance</h3>
+  <p>Capacitor on iOS automatically adjusts the viewport when the keyboard appears. Ensure your
+  <code>capacitor.config.ts</code> has:</p>
+  <pre><code>ios: {
+  contentInset: 'always',
+  scrollEnabled: false,   // let Ionic handle it
+}</code></pre>
+
+  <h3>Speech recognition on iOS</h3>
+  <p>The Web Speech API is blocked in WKWebView. Use the
+  <a href="https://capacitorjs.com/docs/apis/speech-recognition">@capacitor/speech-recognition</a>
+  plugin instead. Replace the <code>SpeechRecognition</code> calls in
+  <code>composer.component.ts</code> with the Capacitor plugin's <code>SpeechRecognition.start()</code>
+  and <code>SpeechRecognition.stop()</code>.</p>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="accessibility">18. Accessibility notes</h2>
+
+  <ul>
+    <li>All icon-only buttons have <code>aria-label</code>. Do not remove them.</li>
+    <li>The streaming progress indicator has <code>role="status"</code> so screen readers announce updates.</li>
+    <li>Multiple-choice fieldsets have <code>role="checkbox"</code> and <code>aria-checked</code> on each option.</li>
+    <li>The mini pathway panel has <code>role="complementary"</code> and <code>aria-label</code>.</li>
+    <li>All interactive elements have <code>:focus-visible</code> outlines using <code>var(--accent)</code>.</li>
+    <li>The sidebar conversation list uses <code>aria-current="page"</code> on the active item.</li>
+    <li>Tables use <code>data-label</code> on each <code>&lt;td&gt;</code> for screen-reader-accessible stacked layout on mobile.</li>
+    <li><code>prefers-reduced-motion</code> media query is respected in both <code>_chat.scss</code> and <code>_guidance-list.scss</code> — animations are disabled.</li>
+  </ul>
+
+
+  <!-- ────────────────────────────────────────────── -->
+  <h2 id="checklist">19. Final implementation checklist</h2>
+
+  <p>Work through this before calling the feature complete:</p>
+
+  <ol class="step-list">
+    <li><div><strong>Styles registered</strong> — <code>_tokens.scss</code> is the first import; Bootstrap precedes <code>styles.scss</code> in angular.json.</div></li>
+    <li><div><strong>Accent runtime-overridable</strong> — <code>AppComponent.ngOnInit</code> reads <code>localStorage('oala-accent')</code> and sets <code>--accent</code> on the document root.</div></li>
+    <li><div><strong>API endpoints updated</strong> — both fetch calls in <code>streaming.service.ts</code> and <code>mini-pathway-panel.component.ts</code> point to your Spring Boot server.</div></li>
+    <li><div><strong>SSE stream format matches</strong> — your Spring Boot endpoint sends <code>data: {"type":"chunk","text":"..."}</code> lines and a final <code>data: {"type":"done",...}</code> line.</div></li>
+    <li><div><strong>Protocol v1.3 JSON</strong> — the AI's assembled response is valid <code>{"version":"1.3","output_sections":[...]}</code> JSON. Test with a real response before wiring the UI.</div></li>
+    <li><div><strong>AQF tones in JSON</strong> — item objects from the AI include a <code>type</code> or <code>level</code> field matching one of the 14 tone values in the table in Section 6.</div></li>
+    <li><div><strong>ngx-markdown imported</strong> — <code>MarkdownModule.forRoot()</code> is in your app config/module so the <code>| markdown</code> pipe works.</div></li>
+    <li><div><strong>AutoGrowDirective declared</strong> — imported in Composer's <code>imports: []</code> array (it is standalone). Verify textarea grows beyond one line.</div></li>
+    <li><div><strong>Responsive tested</strong> — check at 375px (iPhone SE), 768px (tablet), 1024px, and 1440px. The sidebar drawer, composer safe area, and mini pathway overlay should all work correctly.</div></li>
+    <li><div><strong>Table stacking tested</strong> — if the AI returns a table, resize to mobile width and confirm cells stack as labelled cards, not a horizontally scrolling table.</div></li>
+    <li><div><strong>Mini pathway panel tested</strong> — trigger generation, watch skeleton → streaming → completed report transition. Test the resize handle at desktop width.</div></li>
+    <li><div><strong>Interaction forms tested</strong> — send a prompt that returns an <code>interaction</code> block. Select choices and press Continue. Verify the answer is sent as a new user message.</div></li>
+    <li><div><strong>Reduced motion</strong> — in browser DevTools, enable "Prefer reduced motion" and confirm the streaming pulse and progress bar animations are suppressed.</div></li>
+    <li><div><strong>iOS keyboard</strong> — on a real iPhone, tap the composer. Confirm the keyboard does not cover the input and the send button is reachable.</div></li>
+    <li><div><strong>Error state</strong> — kill the API mid-request and confirm the error banner appears with a Retry button. Tapping Retry re-sends the last user message.</div></li>
+  </ol>
+
+  <div class="callout callout-success">
+    <strong>You're done when…</strong>
+    A user can open the app, type a message, see it stream in, read a structured response with
+    cards or a timeline, optionally open the mini pathway panel, and have their conversation
+    remembered in the sidebar — all on both mobile and desktop.
+  </div>
+
+  <hr style="margin: 48px 0; border: none; border-top: 1px solid var(--border);" />
+  <p style="font-size: 13px; color: var(--muted);">
+    Generated from the Oala AI Token Lab React source · Reference implementation by Ashik ·
+    Angular port reference package v1.0
+  </p>
+
+</main>
+</div>
+</body>
+</html>

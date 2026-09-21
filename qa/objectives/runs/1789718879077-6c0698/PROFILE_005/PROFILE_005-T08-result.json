@@ -1,0 +1,272 @@
+{
+  "test_id": "PROFILE_005-T08",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "NO_UNNECESSARY_RESEARCH",
+  "model": "gemini-3.7-flash",
+  "source_row": 509,
+  "input_context": {
+    "user_message": "Use my existing answers for my skills.",
+    "prior_context_text": "No time-sensitive factual question is present.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "277ac4a044818ade91ce67e19426d5a8dc43018d8eee7a88f97a5633725d2701",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "MISSING_INPUT_CONTROL",
+          "detail": "Needs input without a primary control"
+        }
+      ],
+      "latency_ms": 5920
+    }
+  ],
+  "failures": [
+    {
+      "code": "MISSING_INPUT_CONTROL",
+      "detail": "Needs input without a primary control"
+    }
+  ],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_matrix_initial",
+        "purpose": "Identify and record initial user skills along with self-reported proficiency and evidence.",
+        "prompt": "Select or add the key skills you would like to include in your profile, noting your proficiency level.",
+        "required": true,
+        "options": [],
+        "content": [
+          {
+            "label": "Skill Inventory",
+            "detail": "No prior skills were found in confirmed context. Please add or confirm your core skills.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [
+          "Skill Name",
+          "Proficiency",
+          "Evidence Status"
+        ],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User skill inventory",
+      "Skill proficiency levels",
+      "Evidence status for individual skills"
+    ],
+    "result": {
+      "disputed": [],
+      "next_actions": [],
+      "profile_update_candidate": null,
+      "skills_profile": [],
+      "summary": "No confirmed skills exist in the profile yet. Awaiting initial skill entry from the user."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user to input core skills as no prior confirmed facts were available in session context.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "disputed": [],
+        "next_actions": [],
+        "profile_update_candidate": null,
+        "skills_profile": [],
+        "summary": "Skill inventory is currently empty."
+      },
+      "evidence_and_unknowns": [
+        "No confirmed facts provided in context.",
+        "Skills must be provided by user before profile dimension can be generated."
+      ],
+      "recommended_next_action": "Prompt user to share or select their key skills."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate properly aligns with the active objective PROFILE_005.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context contained empty confirmed_facts and confirmed_answers; the candidate accurately identified that no prior skills exist in context rather than inventing prior answers.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question is concrete, clear, allows unsure, and asks directly for missing core skill inputs required for the objective.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'skill_matrix', which is within the V2 allowed list [skill_matrix | evidence_panel | profile_editor | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to PROFILE_005 logic by setting up the skill inventory schema and tracking unknown proficiency and evidence statuses.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded skills or current claims were hallucinated; missing facts are recorded as unknowns and status is NEEDS_INPUT.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychological constructs, scores, or career predictions are claimed.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Candidate correctly stops with NEEDS_INPUT because required input is missing from the fixture context.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Adheres strictly to the mandatory override 'V2 readiness policy: NONE' by setting readiness enabled to false.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Emits a clean, compact semantic handoff envelope with summary, confirmed_user_inputs, result, evidence_and_unknowns, and recommended_next_action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits structured intent with safe next_actions and does not trigger autonomous actions or direct endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate handled the empty context gracefully by adhering to the V2 UI overrides, setting readiness to NONE, avoiding hallucinated skills, and requesting the initial skill inventory via a valid skill_matrix primitive with NEEDS_INPUT status."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2937,
+      "total_input_tokens": 2112,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2112
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 825,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2509,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2509
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 844
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5920,
+  "usage": {
+    "total_tokens": 2744,
+    "total_input_tokens": 2098,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2098
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 646,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7331,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7331
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 663
+          }
+        ]
+      }
+    ]
+  }
+}

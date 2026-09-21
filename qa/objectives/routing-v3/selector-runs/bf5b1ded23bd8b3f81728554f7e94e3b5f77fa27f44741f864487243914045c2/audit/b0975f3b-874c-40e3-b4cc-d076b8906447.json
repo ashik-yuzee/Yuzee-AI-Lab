@@ -1,0 +1,484 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "EMP_SAFE_001",
+      "score": 0.8669750071112116,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.8669750071112116,
+      "contextScore": 0.7634908305777917
+    },
+    {
+      "id": "EMP_SAFE_002",
+      "score": 0.7748480793614567,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.772053343475498,
+      "contextScore": 0.7748480793614567
+    },
+    {
+      "id": "SCHOOL_036",
+      "score": 0.7516710885869108,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7278828400137334,
+      "contextScore": 0.7516710885869108
+    },
+    {
+      "id": "EMP_HIRING_001",
+      "score": 0.7791495858991069,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.725351607145978,
+      "contextScore": 0.7791495858991069
+    },
+    {
+      "id": "STUDY_008",
+      "score": 0.7359195694655977,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7359195694655977,
+      "contextScore": 0.7187766689295649
+    },
+    {
+      "id": "RECOVERY_003",
+      "score": 0.7274225430135078,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7274225430135078,
+      "contextScore": 0.7205180456853482
+    },
+    {
+      "id": "JOB_DECIDE_003",
+      "score": 0.7216053177996467,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7132364379273286,
+      "contextScore": 0.7216053177996467
+    },
+    {
+      "id": "EMP_DISCOVER_006",
+      "score": 0.722555106760287,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7072407707797642,
+      "contextScore": 0.722555106760287
+    },
+    {
+      "id": "SCHOOL_017",
+      "score": 0.7558752344301194,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7558752344301194
+    },
+    {
+      "id": "RECOVERY_004",
+      "score": 0.7512726099558202,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7512726099558202
+    },
+    {
+      "id": "JOB_COMPARE_006",
+      "score": 0.7332306576428415,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7332306576428415
+    },
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.7291575424076024,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7291575424076024
+    },
+    {
+      "id": "IND_PATH_005",
+      "score": 0.7257059576340334,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7257059576340334
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.7255685960499496,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7255685960499496
+    },
+    {
+      "id": "EXP_001",
+      "score": 0.7237477169357543,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7237477169357543
+    },
+    {
+      "id": "EMP_DISCOVER_002",
+      "score": 0.722454755355984,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.722454755355984
+    },
+    {
+      "id": "EMP_ENTRY_005",
+      "score": 0.7173685623421865,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7173685623421865
+    },
+    {
+      "id": "EMP_DISCOVER_001",
+      "score": 0.7111477676117781,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7111477676117781
+    },
+    {
+      "id": "EMP_SKILL_001",
+      "score": 0.7486829743656896,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7486829743656896
+    },
+    {
+      "id": "CHANGE_001",
+      "score": 0.7108713779122567,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7108713779122567
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. My old plans included engineering, travel and marketing. I used to research colleges and different locations. What matters now is checking a job offer that asks for money before an interview. Is that a scam?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Current request: assess suspicious hiring payment request, not earlier study plans.",
+      "confirmed_facts": [],
+      "possible_need": "Current request: assess suspicious hiring payment request, not earlier study plans.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Current request: assess suspicious hiring payment request, not earlier study plans."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "EMP_SAFE_001",
+        "button_label": "Check this opportunity",
+        "outcome": "Check legal entity, company domain/contact consistency, role existence and suspicious payment/sensitive-data requests.",
+        "when_to_use": "Serve when user encounters unfamiliar employer/opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Employer or Job Legitimate?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Assess employer or offer legitimacy with evidence; do not claim verified legitimacy without checks.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_SAFE_002",
+        "button_label": "Does anything look wrong?",
+        "outcome": "Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials.",
+        "when_to_use": "Serve when user receives suspicious offer/process.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Offer Red Flags' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Job Offer Red Flags: Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer/job ad, company verification sources, offer/request details",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_036",
+        "button_label": "Is this career actually in demand?",
+        "outcome": "Use current occupational demand, vacancies, region and growth evidence without treating demand as a career recommendation.",
+        "when_to_use": "Serve when student wants labour-market evidence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Demand Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Job Demand Check: Use current occupational demand, vacancies, region and growth evidence without treating demand as a career recommendation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_HIRING_001",
+        "button_label": "Are they hiring?",
+        "outcome": "Review active vacancies, trend, job families, locations and graduate hiring signals.",
+        "when_to_use": "Serve when user wants current employer demand.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Hiring Signals' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Hiring Signals: Review active vacancies, trend, job families, locations and graduate hiring signals. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current/recent employer vacancies, locations, teams and recruitment signals",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "STUDY_008",
+        "button_label": "Is the extra study worth it?",
+        "outcome": "Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims.",
+        "when_to_use": "Serve when user is balancing cost/time against likely benefit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cost vs Outcome' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cost vs Outcome: Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_003",
+        "button_label": "What are my options now?",
+        "outcome": "Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed.",
+        "when_to_use": "Serve when academic result or subject change disrupts plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Failed or Dropped a Subject' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Failed or Dropped a Subject: Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DECIDE_003",
+        "button_label": "What should I find out before applying?",
+        "outcome": "Generate a focused evidence checklist around team, work, progression, pay, location and requirements.",
+        "when_to_use": "Serve when user has a role but lacks key decision information.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Should I Find Out Before Applying?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Should I Find Out Before Applying?: Generate a focused evidence checklist around team, work, progression, pay, location and requirements. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_006",
+        "button_label": "Show me unexpected employers",
+        "outcome": "Surface banks, airlines, mining, health, government, retail, logistics, universities and other non-obvious employers for the role.",
+        "when_to_use": "Serve when user only considers famous companies in their target field.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Employers I Have Not Considered' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Employers I Have Not Considered: Surface banks, airlines, mining, health, government, retail, logistics, universities and other non-obvious employers for the role. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_017",
+        "button_label": "Build my Plan B",
+        "outcome": "Create multiple routes to the same destination such as direct degree, related degree, diploma transfer or VET/work route.",
+        "when_to_use": "Serve when student wants fallback options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Plan B' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Plan B: Create multiple routes to the same destination such as direct degree, related degree, diploma transfer or VET/work route. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_004",
+        "button_label": "I want something completely different",
+        "outcome": "Reset matching around the new goal and avoid anchoring on old subject/career assumptions.",
+        "when_to_use": "Serve when student changes direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Changed My Mind' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Changed My Mind: Reset matching around the new goal and avoid anchoring on old subject/career assumptions. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_006",
+        "button_label": "Which keeps more future options open?",
+        "outcome": "Compare skill transferability, industries, adjacent roles and further-study flexibility.",
+        "when_to_use": "Serve when young user fears choosing too narrowly.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Keeps More Future Options Open?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Keeps More Future Options Open?: Compare skill transferability, industries, adjacent roles and further-study flexibility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "outcome": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_use": "Serve when user has multiple opportunities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Two concrete job offers, not a comparison of broad careers or employer reputations.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_PATH_005",
+        "button_label": "What degrees lead here?",
+        "outcome": "Map relevant degrees to job families and identify cases needing professional registration or further study.",
+        "when_to_use": "Serve when user wants higher-education pathways into the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Routes: Map relevant degrees to job families and identify cases needing professional registration or further study. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EXP_001",
+        "button_label": "How can I test this career first?",
+        "outcome": "Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview.",
+        "when_to_use": "Serve when user is interested but has little real exposure.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Try Before I Commit' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Try Before I Commit: Suggest job shadowing, work experience, internship, volunteering, project, short course or informational interview. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career target, current experience, availability, location, skill gaps",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_002",
+        "button_label": "Who hires people in this job?",
+        "outcome": "Find employers across industries that hire the occupation.",
+        "when_to_use": "Serve when user knows an occupation but not employer landscape.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Companies Hiring My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Companies Hiring My Career: Find employers across industries that hire the occupation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_ENTRY_005",
+        "button_label": "Can I study and work here?",
+        "outcome": "Find cadetship/scholarship/employment programs and explain study/work commitments.",
+        "when_to_use": "Serve when student wants combined study/employment pathways.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cadetship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cadetship: Find cadetship/scholarship/employment programs and explain study/work commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_001",
+        "button_label": "Which companies should I explore?",
+        "outcome": "Match career, industry, skills, course, location, work values, company size and environment preferences to employers.",
+        "when_to_use": "Serve when user wants employer ideas.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Find Employers for Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Find Employers for Me: Match career, industry, skills, course, location, work values, company size and environment preferences to employers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_SKILL_001",
+        "button_label": "What skills do they hire for?",
+        "outcome": "Analyze current/recent vacancies for repeated skills, tools, qualifications, experience and soft-skill signals.",
+        "when_to_use": "Serve when user wants employer-specific capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills This Company Wants' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills This Company Wants: Analyze current/recent vacancies for repeated skills, tools, qualifications, experience and soft-skill signals. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer job ads/public evidence, occupation requirements and user profile",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CHANGE_001",
+        "button_label": "Help me change careers",
+        "outcome": "Identify current state, possible destination, what to keep, what to escape and constraints.",
+        "when_to_use": "Serve when user wants a different career but has not framed the change.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Explorer: Identify current state, possible destination, what to keep, what to escape and constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 5177,
+      "total_input_tokens": 4869,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4869
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 71,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 237,
+      "raw_prompt_token": 5305,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 5305
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 87
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 237
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:57Z",
+    "updated": "2026-09-18T12:16:57Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EvwICvkIAWkUfRMkroeUV57qJMBzDmpZu3PLIIoWRU0ib3n/WOw1GEusXWK+Xg8qW6KvMdwtDdt7Ulk3XlpR/D8JSR6dj6n9w99WXEGCfNRy21o0QeQBExWYjyC0l+TqN0tc7Nw+vrmc8932REIyv8itvjJXVmlR8enkfCvz7IVtZr5WAsF9hcbaXscj8Vr12/vT5kyulkLIWedTgXgWKzUsBE+UCvG9BR+X+MpeQ0H4EnH4IESUNPk7oBR6kh8LWjl89G8yZjOXc45/6gZFJyGZV8UH9EecgBnhi7twOk/+JNUlA5vm1JUK5gPly87CrG9peFs0mhY3XgsLEQ0k86mNeGoEL/q1+WZ9CRf7ym/pQBPyuhQN3/V/8PJr82nlIlYVmWDk/Vl0jGd0vUvNfqj7yQvbWj7M6XsVqHkHFusuNU0k8Upj7pLtHgEbXhUymC51faWJfQWUKKRhGptipMbcVWBkqikRWXlI4qx9Kqb4f+G+wWCn7qsBpmkO0NO5XAy6UcvbxylJqkVDaTFj4b7Ff3RKglmzwYzlD8rW+w2DlVwiNBj3oBt72x8bRnkLkzSyKbJJRT5ZqCMwsGObcr6gtSWcFpoK8e6Nh3jJwaehlpIFzgtkZ17HoeDeSlmEueccC20SS9ONTxRc2IxWsq1gKjpky76XsMYxGrnk16D87hMQfOOgehg10Ij0hIwCa1wR5TZtsUXKZ5TKE5BtWc7M/qibk9Hl5R7+vjhyyoNtD5BnybKJo6/9OmsGpw0gnt2YsbGW2W1UIeU8MdzozbUaaCGoQ+cVPkiUjgfIoObTSLvZQOCQGYQPo67OEmwZIy6Ky1HKx4RGhsi2qt+NIEy6lCIi+V46USn+qbWpYMwY8ctHS+zd3xWLTyxpu3owgbY/LGOMgH+D34ull2h95Lxy/N5OqbLn5Hf9dysREy13pW1cWQlviJzP9wmNjBubJff+nw3pbLQuZ9VGnCwZJ2vdAflEZGY3crKrIyAPzgV7+wR5bWMsnoMMxJdckSEYhv8C34102SFty8TdrPgYVNH5JwR90xOQpk1+joSgmun+sbCgNW/CalYAianVZjuUN7DNFgs6WN+mlAnm4KLDts880sB8XC4rtjU5oQZkYcJ9JKHkycyhCTwWsTfDam7wtqUWhyZ9htWDAYjq1QMGj68pZBtFPh/Y4RaqYlk974hiHsxBgOQgyxHWRUHh+AoJV5A8Czs2IFpmRXCifi9Rmd3kJ61PM40iAt1Rvg+FNPgRhCBS1mjxK+1jY2q+BG/jBWXQVB3JeBVYi//W4ADKrmK+lB93k2rmjaijj8XqYGUOxDIeCohheeJlzxkpyi2sgJFQxlLEnS/33IAN2MZgQT8wiUZiU7gaAPidWTSQe7i9EqvYEwlvhlhv1VEwwZr/boj0H5M5IuShCkpbNEIBO3ypiMgz+G09y9YTkjWPMZEZ+j+WrtLlIhR/+eyHzxLoXC+KVooIHr0lFE5A+mFOVtxoIUMH0y+NLwYp2V5u26uK7bKIhyx1t51YUrF3M2o=",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"OPTIONAL\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"EMP_SAFE_002\",\n  \"reason\": \"Identify common recruitment red flags and evaluate whether upfront payment requests indicate a fraudulent job offer.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "OPTIONAL",
+    "decision": "SUGGEST",
+    "objective_id": "EMP_SAFE_002",
+    "reason": "Identify common recruitment red flags and evaluate whether upfront payment requests indicate a fraudulent job offer.",
+    "disposition": "SUGGEST",
+    "selectionId": "6bc4b713-387d-4674-8b82-624e919fbf28",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.7748480793614567,
+    "margin": 0.09212692774975484,
+    "userConfidence": null,
+    "createdAt": 1789733817779
+  }
+}

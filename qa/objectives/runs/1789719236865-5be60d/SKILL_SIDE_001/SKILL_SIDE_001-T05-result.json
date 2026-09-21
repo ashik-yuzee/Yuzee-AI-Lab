@@ -1,0 +1,236 @@
+{
+  "test_id": "SKILL_SIDE_001-T05",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 316,
+  "input_context": {
+    "user_message": "We already completed skill gap and nothing has changed.",
+    "prior_context_text": "Completed objective result exists.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "c644f36b92fbd32ac3f224b62b7289f748b60eea0078bc611f8e7fab44579896",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 11535
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Skill gap review already completed with no changes requested",
+        "basis": "User confirmed skill gap analysis was completed and no updates are required",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [],
+    "result": {
+      "skill_gaps": [],
+      "unknowns": [
+        {
+          "label": "Prior results",
+          "detail": "No additional gap analysis conducted as user stated analysis was already completed.",
+          "source_status": "USER_CONFIRMED",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Skill gap analysis was already completed and requires no further updates.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No changes needed; prior skill gap results remain current."
+      },
+      "evidence_and_unknowns": [
+        "User confirmed no changes to existing skill gap evaluation."
+      ],
+      "recommended_next_action": "Continue with the next step or topic in chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate immediately marks the stage as PROCEED and status as COMPLETE without re-running the skill gap evaluation.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims a completed objective result exists in prior context ('Completed objective result exists.') but omitted the actual prior data in confirmed_facts or session data.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant or unnecessary questions were asked.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No disallowed UI primitives were emitted.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The model followed the mandate to not re-run an already completed objective and correctly formed the output structure.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsourced current facts or synthetic skill proficiencies were fabricated.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No predictive success or invalid psychometric scores were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction correctly stopped with COMPLETE/PROCEED rather than generating questions.",
+          "evidence_pointer": "candidate.stage"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness was disabled as no new assessment took place.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff to Oala is provided with appropriate summary and next actions.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoints, unsafe execution, or forbidden primitives were emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted actual prior completion state or confirmed facts while asserting 'Completed objective result exists', preventing assessment of specific data reuse."
+      ],
+      "summary": "The candidate handled the no-op/already-completed scenario appropriately by setting status to COMPLETE, proceeding without asking redundant questions, and returning a valid handoff."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2662,
+      "total_input_tokens": 1909,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1909
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 753,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2306,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2306
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 772
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 11535,
+  "usage": {
+    "total_tokens": 2538,
+    "total_input_tokens": 2134,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2134
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 404,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5596,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5596
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 424
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,406 @@
+{
+  "test_id": "STUDY_005-T09",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "UNIT_TITLE_TRAP",
+  "model": "gemini-3.7-flash",
+  "source_row": 220,
+  "input_context": {
+    "user_message": "The unit is called Data Analytics. Does that prove I will be advanced at SQL?",
+    "prior_context_text": "Only unit title is known.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "b82787abed6eb52aa8a238b50fe8d4c80acf845ebedc08cc6a8b2c182779fb4b",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "TABLE_SHAPE",
+          "detail": "sql_capability_breakdown"
+        }
+      ],
+      "latency_ms": 9431
+    }
+  ],
+  "failures": [
+    {
+      "code": "TABLE_SHAPE",
+      "detail": "sql_capability_breakdown"
+    }
+  ],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "NEEDS_RESEARCH",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "curriculum_evidence_check",
+        "purpose": "Clarify that a unit title alone does not evidence advanced SQL proficiency without syllabus details.",
+        "prompt": "Unit titles indicate topic areas, but curriculum learning outcomes and assessment rubrics are needed to verify specific tool depth.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Unit Title: Data Analytics",
+            "detail": "Topic focus is indicated, but specific tools (e.g., SQL, Python, Excel) and depth level cannot be inferred solely from the title.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Detailed Syllabus & Assessment Methods",
+            "detail": "Full unit guide, assessment breakdown, and software prerequisites are currently unverified.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "skill_matrix",
+        "id": "sql_capability_breakdown",
+        "purpose": "Map known status versus required syllabus evidence for SQL capabilities.",
+        "prompt": "Current capability status based on available curriculum data:",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Capability",
+          "Learning Depth Status",
+          "Assessment Evidence",
+          "Curriculum Basis"
+        ],
+        "rows": [
+          {
+            "label": "Advanced SQL & Database Querying",
+            "cells": [
+              "UNCLEAR",
+              "No assessment data available",
+              "Unit title 'Data Analytics' (syllabus unverified)"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "research_handoff",
+        "purpose": "Provide next steps to check unit syllabus or continue discussion.",
+        "prompt": "What would you like to do next?",
+        "required": true,
+        "options": [
+          {
+            "id": "research_required",
+            "label": "Look up full unit syllabus / course handbook",
+            "detail": "Retrieve official unit learning outcomes, prescribed tools, and assessment tasks."
+          },
+          {
+            "id": "continue_chat",
+            "label": "Continue in conversation",
+            "detail": "Discuss other units or general SQL learning requirements."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User seeks specific tool proficiency verification (SQL) from general unit title",
+        "basis": "User question: 'The unit is called Data Analytics. Does that prove I will be advanced at SQL?'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific software/tools taught in 'Data Analytics'",
+      "Official unit learning outcomes and learning depth (Introduced vs Practised vs Assessed)",
+      "Grading/assessment breakdown (e.g. exams, SQL practical labs, applied projects)"
+    ],
+    "result": {
+      "course_capabilities": [
+        {
+          "skill_or_capability": "Advanced SQL",
+          "curriculum_basis": [
+            {
+              "label": "Unit Title Only",
+              "detail": "Data Analytics title provides general topic context but no tool-specific syllabus details.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ],
+          "learning_depth_status": "UNCLEAR",
+          "assessment_evidence": "None (Unit syllabus unverified)",
+          "uncertainty": "Proficiency cannot be inferred from a title; unit may focus on theoretical analytics, BI tools, or Python/R instead of advanced SQL."
+        }
+      ],
+      "practical_components": [],
+      "unknowns": [
+        {
+          "label": "Unit Syllabus & Software Tools",
+          "detail": "Official unit guide is required to confirm whether SQL is introduced, practised, or assessed.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Course Understanding Readiness",
+      "score": 25,
+      "dimensions": [
+        {
+          "name": "Goal clarity",
+          "score": 80,
+          "reason": "Specific query regarding SQL skill acquisition."
+        },
+        {
+          "name": "Requirement evidence",
+          "score": 10,
+          "reason": "Only unit title is available; syllabus learning outcomes and assessments are unverified."
+        },
+        {
+          "name": "Route feasibility",
+          "score": 20,
+          "reason": "Unclear whether course covers required SQL depth."
+        }
+      ],
+      "blockers": [
+        "Missing official unit guide/syllabus to confirm tool coverage and assessment criteria"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "research_required",
+        "label": "Check unit syllabus",
+        "type": "RESEARCH"
+      },
+      {
+        "id": "continue_chat",
+        "label": "Discuss in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Clarified that the unit title 'Data Analytics' alone does not prove advanced SQL proficiency. Syllabus research is required to verify specific tools and assessment depth.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "course_capabilities": [
+          {
+            "skill_or_capability": "Advanced SQL",
+            "curriculum_basis": [
+              {
+                "label": "Unit Title: Data Analytics",
+                "detail": "Title indicates topic area only; syllabus required.",
+                "source_status": "UNKNOWN",
+                "evidence_refs": []
+              }
+            ],
+            "learning_depth_status": "UNCLEAR",
+            "assessment_evidence": "Unknown",
+            "uncertainty": "High - specific tools and depths are unconfirmed."
+          }
+        ],
+        "practical_components": [],
+        "unknowns": [
+          {
+            "label": "Course Syllabus",
+            "detail": "Unit guide needed to verify curriculum.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "evidence_and_unknowns": [
+        "Unit title does not verify tool depth",
+        "Missing official unit guide / assessment breakdown"
+      ],
+      "recommended_next_action": "Check the detailed unit guide or course handbook to confirm if SQL is taught and assessed."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correctly handles STUDY_005 relating to course unit interpretation and skill capability verification.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Correctly reuses the known context that only the unit title is provided and does not ask redundant questions about already established facts.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Does not pose unnecessary repetitive questions; provides appropriate next action choices via action_handoff.",
+          "evidence_pointer": "candidate.ui[2]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "All UI components used (evidence_panel, skill_matrix, action_handoff) are strictly within the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the override rule never to infer proficiency solely from a unit title, categorizing learning depth status as UNCLEAR and producing the exact output contract schema.",
+          "evidence_pointer": "candidate.result.course_capabilities[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Explicitly refuses to invent syllabus details or SQL coverage, marking tool coverage as UNKNOWN and setting status to NEEDS_RESEARCH.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Makes no psychometric claims or life/career success predictions.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops and signals NEEDS_RESEARCH / RESEARCH action handoff due to missing critical syllabus data.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Uses Course Understanding Readiness scoring decision readiness without predicting career/proficiency success.",
+          "evidence_pointer": "candidate.readiness.name"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns complete structured envelope with handoff, confirmed inputs, derived signals, unknowns, result, readiness, and next_actions.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits structured intent only without unauthorized direct backend calls or fabricated endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "Candidate fully passed all rubric criteria. It correctly applied STUDY_005 mandatory overrides by refusing to infer advanced SQL proficiency from a unit title alone, correctly assigned UNCLEAR status, used only allowed V2 primitives, and transitioned cleanly into NEEDS_RESEARCH handoff."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3645,
+      "total_input_tokens": 2834,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2834
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 811,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3231,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3231
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 830
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 9431,
+  "usage": {
+    "total_tokens": 3910,
+    "total_input_tokens": 2091,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2091
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1819,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7290,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7290
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1836
+          }
+        ]
+      }
+    ]
+  }
+}

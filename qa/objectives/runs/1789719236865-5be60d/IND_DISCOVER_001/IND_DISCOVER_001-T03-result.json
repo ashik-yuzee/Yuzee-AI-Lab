@@ -1,0 +1,308 @@
+{
+  "test_id": "IND_DISCOVER_001-T03",
+  "objective_id": "IND_DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "2080875ee27545d3034a1539c701376585fca069f4f379dcffdd47edf1b4ce79",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "MINIMAL_INPUT",
+  "model": "gemini-3.7-flash",
+  "source_row": 1874,
+  "input_context": {
+    "user_message": "Help me with find industries for me, but I have not given you much information.",
+    "prior_context_text": "Required target/entity/context may be missing.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "IND_DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "604c03f7f593a3e346ec6d5e5d31519e83f8422f3f33651a314abe7c71c726d6",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5390
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "IND_DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "broad_interest_areas",
+        "purpose": "Identify primary interest and activity clusters to ground candidate industry ecosystems.",
+        "prompt": "Which of these activity and problem areas appeal to you most?",
+        "required": true,
+        "options": [
+          {
+            "id": "tech_software",
+            "label": "Technology & Software",
+            "detail": "Building digital tools, coding, data analysis, and systems automation."
+          },
+          {
+            "id": "health_care",
+            "label": "Health, Wellbeing & Care",
+            "detail": "Supporting patients, medical science, public health, and therapy."
+          },
+          {
+            "id": "built_environment",
+            "label": "Engineering, Construction & Infrastructure",
+            "detail": "Designing physical structures, mechanics, transport, and manufacturing."
+          },
+          {
+            "id": "creative_media",
+            "label": "Creative Arts, Design & Media",
+            "detail": "Visual storytelling, writing, entertainment, marketing, and content creation."
+          },
+          {
+            "id": "business_finance",
+            "label": "Business, Commerce & Finance",
+            "detail": "Managing organisations, financial systems, entrepreneurship, and advisory."
+          },
+          {
+            "id": "environment_nature",
+            "label": "Environment, Sustainability & Agriculture",
+            "detail": "Conservation, renewable resources, agriculture, and climate solutions."
+          },
+          {
+            "id": "community_education",
+            "label": "Education, Public Service & Law",
+            "detail": "Teaching, community services, legal advocacy, and government policy."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User interest areas",
+      "User subjects and technical or practical strengths",
+      "Preferred working environment and constraints"
+    ],
+    "result": {
+      "industry_exploration_shortlist": null,
+      "next_actions": [],
+      "summary": "Industry exploration requires at least two defensible signals (such as interest clusters and subjects/strengths) before generating an explainable shortlist."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Industry Exploration Readiness",
+      "score": 10,
+      "dimensions": [
+        {
+          "name": "Structure understood",
+          "score": 10,
+          "reason": "No industry ecosystems explored yet."
+        },
+        {
+          "name": "Job/employer coverage",
+          "score": 0,
+          "reason": "Specific job families have not been mapped."
+        },
+        {
+          "name": "Evidence freshness",
+          "score": 50,
+          "reason": "Conceptual industry taxonomy is stable; market specifics not yet retrieved."
+        },
+        {
+          "name": "Personal relevance",
+          "score": 0,
+          "reason": "Awaiting initial user input on preferred problem areas."
+        },
+        {
+          "name": "Next research action",
+          "score": 0,
+          "reason": "No target industry identified to investigate."
+        }
+      ],
+      "blockers": [
+        "No confirmed user interests or profile signals available to form initial candidates."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Exploration",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user for primary interest clusters to begin mapping candidate industries.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting primary interest signals to construct a grounded industry shortlist."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: broad interest clusters, relevant subjects/skills, work environment preferences."
+      ],
+      "recommended_next_action": "Select up to 3 interest clusters to generate candidate industry ecosystems."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned objective IND_DISCOVER_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context contained no prior facts, and the candidate correctly treated all user signals as unknown without repeating existing data.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asked a concrete, discriminative multi-select question covering broad interest/activity areas with an unsure option enabled.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI component emitted is `multi_select`, which is on the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the objective requirement to seek at least two defensible signals rather than guessing a shortlist without context, setting status to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No current facts or market data were fabricated; unknowns are preserved explicitly.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No validated measurement or predictive success claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops with NEEDS_INPUT given the lack of necessary input signals.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Uses traceable dimensions for Industry Exploration Readiness reflecting that input is still required rather than predicting career success.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Produces a clean semantic envelope and Oala handoff block with confirmed inputs, unknowns, and next action recommendations.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard structural intents without executing unverified actions or fabricated endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate followed all rubric requirements and objective overrides by requesting essential missing inputs via an approved UI primitive (multi_select) and returning NEEDS_INPUT without fabricating industries."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3309,
+      "total_input_tokens": 2550,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2550
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 759,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2947,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2947
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 778
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5390,
+  "usage": {
+    "total_tokens": 3349,
+    "total_input_tokens": 2274,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2274
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1075,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6804,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6804
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1095
+          }
+        ]
+      }
+    ]
+  }
+}

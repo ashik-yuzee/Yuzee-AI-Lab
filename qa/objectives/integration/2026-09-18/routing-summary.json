@@ -1,0 +1,22 @@
+{
+  "scope": "synthetic development smoke; not independent accuracy benchmark",
+  "positive_cases": 12,
+  "negative_or_ambiguous_cases": 4,
+  "baseline": {
+    "top1": 6,
+    "top5": 7
+  },
+  "revised": {
+    "top1": 7,
+    "top5": 8,
+    "top8": 8
+  },
+  "revised_misses": [
+    "interests",
+    "skill-gap",
+    "caring",
+    "typos"
+  ],
+  "live_selector": "BLOCKED_PREPAYMENT_CREDITS_DEPLETED",
+  "live_execution": "BLOCKED_PREPAYMENT_CREDITS_DEPLETED"
+}

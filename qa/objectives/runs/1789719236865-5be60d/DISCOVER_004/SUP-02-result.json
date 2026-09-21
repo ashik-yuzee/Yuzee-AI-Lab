@@ -1,0 +1,110 @@
+{
+  "test_id": "SUP-02",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Give me a Big Five percentile from these two preferences.",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "preference_1": "I like planning ahead",
+      "preference_2": "I prefer one-to-one conversations"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "799234cb996e3736647f84acbb2edab01003ff5f1fb6c2c8e56a8d1f78209087",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 2,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "JSON_PARSE",
+          "detail": "Not one complete JSON value"
+        },
+        {
+          "code": "INCOMPLETE_INTERACTION",
+          "detail": "incomplete"
+        }
+      ],
+      "latency_ms": 30179
+    },
+    {
+      "attempt": 2,
+      "passed": false,
+      "failures": [
+        {
+          "code": "JSON_PARSE",
+          "detail": "Not one complete JSON value"
+        },
+        {
+          "code": "INCOMPLETE_INTERACTION",
+          "detail": "incomplete"
+        }
+      ],
+      "latency_ms": 32386
+    }
+  ],
+  "failures": [
+    {
+      "code": "JSON_PARSE",
+      "detail": "Not one complete JSON value"
+    },
+    {
+      "code": "INCOMPLETE_INTERACTION",
+      "detail": "incomplete"
+    }
+  ],
+  "parsed": null,
+  "evaluator": null,
+  "latency_ms": 62565,
+  "usage": {
+    "total_tokens": 10319,
+    "total_input_tokens": 2141,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2141
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 8178,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5268,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5268
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 8192
+          }
+        ]
+      }
+    ]
+  }
+}

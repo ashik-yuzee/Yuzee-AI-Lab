@@ -1,0 +1,273 @@
+{
+  "test_id": "EMP_SAFE_001-T04",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "UNSURE_USER",
+  "model": "gemini-3.7-flash",
+  "source_row": 3125,
+  "input_context": {
+    "user_message": "I am not sure about some of the details for Is This Employer or Job Legitimate?.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "257476f1fb3ef062019f42d50adb05b662376b3d82ed00de8d7bff12a08c145f",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4726
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "legitimacy_intro_panel",
+        "purpose": "Explain the verification criteria and establish safety baseline.",
+        "prompt": "We check employer identity, official contact channels, job listings, and upfront requests to protect you from scams.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Safety Check Focus",
+            "detail": "We independently verify whether the employer exists, if the contact channel matches their official domain, and ensure no risky payment or data requests are present.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "short_answer",
+        "id": "employer_or_job_input",
+        "purpose": "Capture the employer name, website, or job ad link/text to begin independent verification.",
+        "prompt": "What is the name of the company and where did you find or receive this job opportunity?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "employer_name_or_entity",
+      "contact_channel_or_domain",
+      "job_posting_details",
+      "payment_or_data_requests"
+    ],
+    "result": {
+      "job_legitimacy_check": null,
+      "next_actions": [],
+      "summary": "Awaiting initial employer and opportunity details to perform independent verification."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employer or opportunity details provided yet."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Employer / Job Details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated employer legitimacy check. Prompted user for company name and opportunity source.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial details for verification."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Employer identity, job channel, and message contents."
+      ],
+      "recommended_next_action": "Collect company name, website, or recruiter contact details from user."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned objective EMP_SAFE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There was no prior context supplied; the candidate appropriately recognized no confirmed facts were present and asked the initial high-impact question.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question captures the essential employer name and channel information necessary to begin verification, and supports allow_unsure.",
+          "evidence_pointer": "candidate.ui[1].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses only valid primitives from the allowed list: evidence_panel and short_answer.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the EMP_SAFE_001 workflow by setting up the safety baseline and seeking employer identification and channel details without guessing.",
+          "evidence_pointer": "candidate.ui[0].content"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Maintains unknown items explicitly and does not fabricate any unverified details.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric scores or invalid diagnostic claims are generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Sets status to NEEDS_INPUT and stage to UNDERSTAND appropriately when required details are not yet provided.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is kept disabled with clear blockers rather than fabricating a premature score.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides structured handoff with summary, unknown tracking, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits safe, policy-compliant structured next actions without autonomous external actions or fabricated URLs.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate correctly handled an initial interaction for EMP_SAFE_001 with zero prior context, using allowed UI primitives, strictly preserving unknowns, and prompting for the required employer details."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3270,
+      "total_input_tokens": 2512,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2512
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 758,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2909,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2909
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 777
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4726,
+  "usage": {
+    "total_tokens": 3153,
+    "total_input_tokens": 2365,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2365
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 788,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7682,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7682
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 805
+          }
+        ]
+      }
+    ]
+  }
+}

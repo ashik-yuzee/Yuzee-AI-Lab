@@ -1,0 +1,20 @@
+[
+  {
+    "id": "STUDY_005",
+    "error": "Error: The answer did not pass the workspace checks. Please retry. (RESULT_CONTRACT)",
+    "ms": 12244
+  },
+  {
+    "id": "EMP_SAFE_001",
+    "error": "Error: The answer did not pass the workspace checks. Please retry. (UNBOUND_ACTION_BUTTON)",
+    "ms": 11437
+  },
+  {
+    "id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "question": "Would you like to save Excel (Basic Filtering) to your profile and record Pivot Tables & SQL as not practiced?",
+    "summary": "Drafted 3 skill records: Excel (Filters) marked as self-reported workplace capability; Excel Pivot Tables and SQL noted as no experience. No broader role or analyst inferences made per instructions. Awaiting confirmation to save to profile dimension candidate record [PROFILE_UPDATE_CANDIDATE]. Disputed list contains items explicitly marked as not possessed: [NO_PIVOT_TABLES, NO_SQL]. Next actions include proceeding to Jobs from my skills or Skill Gap analysis once confirmed with status DEMONSTRATED or SELF_REPORTED as applicable under canonical schema definitions (e.g. SKILL_EXCEL_FILTERS, proficiency_status: BASIC, source_type: USER_STATEMENT, last_evidenced: null, user_confirmed: false). Profile dimension candidate prepared for persistence upon approval [PROFILE_UPDATE_CANDIDATE]. Completed breakdown ready for review and downstream matching workflows (e.g. SKILL_GAP, JOBS_FROM_SKILLS). All labels mapped directly without inferring analyst role context. Reusable profile dimension available to future matching and explanation upon save confirmation. All fields aligned to framework standards and constraints (proficiency_status, evidence_status, evidence_refs, source_type, last_evidenced, user_confirmed). End summary draft for profile persistence pipeline review.",
+    "sessionId": "6ba880f5-a71d-47ae-abb1-f5dedf68994e",
+    "ms": 9260
+  }
+]

@@ -1,0 +1,254 @@
+{
+  "test_id": "EMP_SAFE_001-T08",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 3129,
+  "input_context": {
+    "user_message": "For Is This Employer or Job Legitimate?, you already have enough evidence to produce the required result.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "77e4d5183a17b88bbc12d938aeefb4ded6f587b9857b721aaf35ff121b3dc500",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4233
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "short_answer",
+        "id": "employer_job_details",
+        "purpose": "Capture the employer name, job title, and source URL or contact channel for verification.",
+        "prompt": "Which employer and job opportunity would you like to verify? (Please share the company name, role title, and where/how you received the opportunity or message)",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "LEGAL_ENTITY_OR_OFFICIAL_EMPLOYER",
+      "OFFICIAL_DOMAIN/CAREERS_CHANNEL",
+      "SPECIFIC_ROLE_OR_REQUISITION_IF_POSSIBLE",
+      "RECRUITER_OR_CONTACT_CHANNEL",
+      "PROCESS_CONSISTENCY"
+    ],
+    "result": {
+      "job_legitimacy_check": null,
+      "next_actions": [],
+      "summary": "Legitimacy verification pending basic employer and role details."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employer or opportunity details provided for verification."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Employer Details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting initial employer name and job opportunity context to perform legitimacy check.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Legitimacy check cannot proceed without employer identity or job posting context."
+      },
+      "evidence_and_unknowns": [
+        "Employer identity unknown",
+        "Contact channel unknown",
+        "Role existence unverified"
+      ],
+      "recommended_next_action": "Provide company name and communication details to begin safety verification."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Appropriately retained the selected objective EMP_SAFE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test prompt claims facts exist, but the context fixture provides no prior facts or evidence.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Asks a concrete, focused initial question to establish the employer, role, and contact channel.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses allowed primitive 'short_answer' from the objective V2 allow-list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Preserves required objective unknowns such as LEGAL_ENTITY_OR_OFFICIAL_EMPLOYER and OFFICIAL_DOMAIN/CAREERS_CHANNEL.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Refuses to invent verification facts or results when no evidence was provided, setting status to NEEDS_INPUT.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, scam probability scores, or diagnostic metrics emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test expected a complete stop because it assumed prior evidence was present, but the context is empty.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Correctly sets readiness to disabled with an explicit blocker rather than guessing a numeric score.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, standard handoff envelope containing unknowns, inputs, and next actions.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Treats untrusted user prompt claims safely and requests inputs rather than taking unauthorized autonomous action.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: The user prompt claimed enough evidence exists to complete the result, but context.prior_context_text was 'None' and context.confirmed_facts / context.approved_evidence were empty."
+      ],
+      "summary": "Candidate correctly handled an empty context fixture by requesting the required input rather than fabricating a legitimacy assessment."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3095,
+      "total_input_tokens": 2408,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2408
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 687,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2805,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2805
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 706
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4233,
+  "usage": {
+    "total_tokens": 2969,
+    "total_input_tokens": 2367,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2367
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 602,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7684,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7684
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 621
+          }
+        ]
+      }
+    ]
+  }
+}

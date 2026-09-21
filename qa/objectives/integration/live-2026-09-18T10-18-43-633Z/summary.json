@@ -1,0 +1,23 @@
+[
+  {
+    "id": "STUDY_005",
+    "status": "COMPLETE",
+    "summary": "These units build logically: Programming introduces core logic, Databases covers structured data storage, and Web Projects teaches interface building. Together, they give a solid entry-level foundation, though full full-stack integration and specific assessment formats remain unverified.",
+    "sessionId": "a9b123c4-a836-428a-9d6a-fb897fca7ba8",
+    "ms": 11826
+  },
+  {
+    "id": "EMP_SAFE_001",
+    "status": "COMPLETE",
+    "summary": "This communication shows critical fraud indicators, specifically upfront payment for equipment and a request for banking passwords. Stop engagement immediately to protect financial and personal security.",
+    "sessionId": "d4f42dcf-5f50-4775-977a-0922c8d151cb",
+    "ms": 8638
+  },
+  {
+    "id": "PROFILE_005",
+    "status": "COMPLETE",
+    "summary": "Drafted your skills summary: Excel filters recorded as self-reported work experience. Pivot tables and SQL recorded with no experience. No data analyst role or advanced capability inferred.",
+    "sessionId": "dfc38da6-4715-4c89-9d2a-824f3fca14a2",
+    "ms": 7371
+  }
+]

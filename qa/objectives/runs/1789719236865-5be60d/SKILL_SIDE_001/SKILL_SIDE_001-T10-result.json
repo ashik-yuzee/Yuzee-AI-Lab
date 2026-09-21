@@ -1,0 +1,396 @@
+{
+  "test_id": "SKILL_SIDE_001-T10",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "PROFICIENCY_EVIDENCE",
+  "model": "gemini-3.7-flash",
+  "source_row": 321,
+  "input_context": {
+    "user_message": "The role needs advanced SQL and I have a beginner project.",
+    "prior_context_text": "Evidence supports lower proficiency only.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "b080a406e74ff70336c60ab595e9616092add7458f570a1f0d8d10a97f593637",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "UNAPPROVED_ACTION",
+          "detail": "learn_sql"
+        },
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.skill_gaps"
+        },
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.next_actions"
+        }
+      ],
+      "latency_ms": 6724
+    }
+  ],
+  "failures": [
+    {
+      "code": "UNAPPROVED_ACTION",
+      "detail": "learn_sql"
+    },
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.skill_gaps"
+    },
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.next_actions"
+    }
+  ],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "sql_gap_analysis",
+        "purpose": "Display current demonstrated level against target requirement for SQL.",
+        "prompt": "SQL Capability Comparison",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Target Requirement",
+          "User Status",
+          "Gap Status",
+          "Priority Basis"
+        ],
+        "rows": [
+          {
+            "label": "SQL",
+            "cells": [
+              "SQL",
+              "Advanced",
+              "PARTIAL",
+              "GAP_IDENTIFIED",
+              "Target role requires advanced SQL; only beginner project demonstrated"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "evidence_panel",
+        "id": "sql_evidence_breakdown",
+        "purpose": "Detail evidence supporting the current status and identify unknowns.",
+        "prompt": "Evidence & Unknowns",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Demonstrated SQL Work",
+            "detail": "Beginner project evidenced in prior context",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_statement",
+              "prior_context"
+            ]
+          },
+          {
+            "label": "Advanced SQL Competencies",
+            "detail": "Complex queries, optimisation, window functions, and indexing evidence missing or unverified",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "sql_next_step",
+        "purpose": "Provide clear handoff paths to bridge the SQL gap or continue planning.",
+        "prompt": "Next Steps for SQL",
+        "required": false,
+        "options": [
+          {
+            "id": "learn_sql",
+            "label": "Explore Advanced SQL Learning",
+            "detail": "Look into targeted practice and courses to build advanced SQL skills"
+          },
+          {
+            "id": "continue_chat",
+            "label": "Return to Chat",
+            "detail": "Discuss this gap and your next steps with Oala"
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Target SQL requirement is Advanced",
+        "basis": "User message explicitly states the role requires advanced SQL",
+        "confidence": "HIGH"
+      },
+      {
+        "signal": "Current demonstrated SQL proficiency is beginner/partial",
+        "basis": "User confirmed beginner project; prior context supports lower proficiency only",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific advanced SQL competencies currently possessed but undocumented",
+      "Target role's specific advanced SQL framework or database engine requirements"
+    ],
+    "result": {
+      "summary": "Target role requires Advanced SQL, but current evidence demonstrates a beginner level. A clear partial capability gap exists.",
+      "unknowns": [
+        "Whether the user has unevidenced exposure to intermediate/advanced SQL topics",
+        "Specific database engine requirements for the target role"
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Capability Readiness",
+      "score": 75,
+      "dimensions": [
+        {
+          "name": "Target clarity",
+          "score": 85,
+          "reason": "Target role SQL requirement is clearly identified as Advanced."
+        },
+        {
+          "name": "Current evidence",
+          "score": 70,
+          "reason": "Demonstrated beginner project exists; higher proficiency lacks evidence."
+        },
+        {
+          "name": "Gap priority",
+          "score": 80,
+          "reason": "Clear high-priority gap between beginner project and advanced requirement."
+        },
+        {
+          "name": "Learning feasibility",
+          "score": 70,
+          "reason": "Standard structured pathways exist to advance from beginner to advanced SQL."
+        },
+        {
+          "name": "Evidence/proof plan",
+          "score": 70,
+          "reason": "User can build and document portfolio projects to demonstrate advanced queries."
+        }
+      ],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "learn_sql",
+        "label": "Explore Advanced SQL Learning",
+        "type": "LEARN"
+      },
+      {
+        "id": "continue_chat",
+        "label": "Continue Chat with Oala",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Identified a partial capability gap in SQL between the required Advanced level and the user's demonstrated beginner level.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "SQL gap evaluated: Target is Advanced, demonstrated status is Partial (beginner project). Clear progression path needed."
+      },
+      "evidence_and_unknowns": [
+        "Evidenced: Beginner project",
+        "Unknown: Specific intermediate/advanced topics practiced outside portfolio"
+      ],
+      "recommended_next_action": "Explore targeted learning or project work to advance SQL capability."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate properly evaluates SKILL_SIDE_001 for comparing current demonstrated skills with target requirements.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Correctly reuses the fact that the user has a beginner project and the role needs advanced SQL without re-asking.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant or low-value questions asked; directly synthesises the capability comparison with appropriate UI components.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses only approved primitives ('skill_matrix', 'evidence_panel', 'action_handoff') from the V2 allow-list.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Accurately categorises SQL user_status as PARTIAL and gap_status as GAP_IDENTIFIED without marking absence of evidence as MISSING or inventing exact proficiency scores.",
+          "evidence_pointer": "candidate.ui[0].rows[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Clearly separates user-confirmed facts from unknowns and AI inferences, maintaining unknown vs unevidenced distinction.",
+          "evidence_pointer": "candidate.ui[1].content"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric constructs or predictive career claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops appropriately at COMPLETE with readiness >= 70 since sufficient evidence is present to describe the capability gap.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Capability Readiness score of 75 is fully decomposed into the 5 prescribed dimensions evaluating next-step readiness.",
+          "evidence_pointer": "candidate.readiness.dimensions"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides a clean, compact semantic handoff back to Oala with summary, result, evidence/unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits structured intents only without executing unconfirmed writes or referencing raw endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate perfectly fulfills all requirements of SKILL_SIDE_001 by applying the mandatory V2 UI primitives, categorising the SQL proficiency gap as PARTIAL without inventing scores, and delivering a clean Capability Readiness evaluation and handoff."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3373,
+      "total_input_tokens": 2551,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2551
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 822,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2948,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2948
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 840
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6724,
+  "usage": {
+    "total_tokens": 3624,
+    "total_input_tokens": 2137,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2137
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1487,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5599,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5599
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1504
+          }
+        ]
+      }
+    ]
+  }
+}

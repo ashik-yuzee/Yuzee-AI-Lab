@@ -221,6 +221,7 @@ export interface MessageTelemetry {
 }
 
 export interface ChatMessage {
+  objectiveTransfer?:{sessionId:string;label:string;revision:number};
   serverMessageId?: string;
   preflight?: import("./routing/turnNeeds").TurnNeeds;
   userEvent?: UserEvent;

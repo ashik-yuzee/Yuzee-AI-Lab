@@ -1,0 +1,290 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval2",
+  "candidates": [
+    {
+      "id": "STUDY_005",
+      "score": 0.7111516344803535
+    },
+    {
+      "id": "RECOVERY_002",
+      "score": 0.7058301279531414
+    },
+    {
+      "id": "SKILL_SIDE_004",
+      "score": 0.6995463599410682
+    },
+    {
+      "id": "SCHOOL_012",
+      "score": 0.6961104544659072
+    },
+    {
+      "id": "SCHOOL_004",
+      "score": 0.6958444169248443
+    },
+    {
+      "id": "EMP_GROWTH_005",
+      "score": 0.6888911937121203
+    },
+    {
+      "id": "GAP_003",
+      "score": 0.6805259715557876
+    },
+    {
+      "id": "PATH_007",
+      "score": 0.6792252134430777
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "The diploma brochure has unit names but I cannot picture what I would actually learn or practise.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "response": "We can translate the unit descriptions into practical examples and identify what still needs evidence.",
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "STUDY_005",
+        "button_label": "Show me what I will learn",
+        "topic_name": "What Will I Actually Learn?",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Translate course structure/units into concrete skills and practical capabilities.",
+        "when_to_serve": "Serve when user sees unit names but not capabilities. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'What Will I Actually Learn?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "key_output": "Route/course comparison tied to the goal, with gaps, trade-offs and next checks",
+        "needs_live_data": "Often",
+        "max_interactions": 4,
+        "allowed_primitives": [
+          "entity_picker",
+          "hierarchy_explorer",
+          "evidence_panel",
+          "skill_matrix",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "RECOVERY_002",
+        "button_label": "I am missing a required subject",
+        "topic_name": "I Missed a Prerequisite",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Find verified alternatives such as bridging, equivalent study, enabling or different provider/course routes.",
+        "when_to_serve": "Serve when student lacks a prerequisite. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'I Missed a Prerequisite' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "key_output": "Alternative routes preserving the goal where possible, with conditions and next steps",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "evidence_panel",
+          "pathway_builder",
+          "comparison_grid",
+          "timeline",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SKILL_SIDE_004",
+        "button_label": "What skills am I overlooking?",
+        "topic_name": "Hidden Transferable Skills",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Extract transferable capabilities from school, work, volunteering and life activities.",
+        "when_to_serve": "Serve when user thinks prior experience is irrelevant. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Hidden Transferable Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "User skills, target role/course, evidence, proficiency",
+        "key_output": "Clear skill inventory, gaps, learning priorities and connections to courses/jobs",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "evidence_panel",
+          "skill_matrix",
+          "profile_editor",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SCHOOL_012",
+        "button_label": "My school does not offer this subject",
+        "topic_name": "Missing Subject Alternative",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Find equivalent subjects, external study, bridging, later prerequisite alternatives or provider-specific routes.",
+        "when_to_serve": "Serve when required/recommended subject is unavailable. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Missing Subject Alternative' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "key_output": "Subject options with reasons, prerequisite effects, workload and options preserved",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "evidence_panel",
+          "pathway_builder",
+          "comparison_grid",
+          "timeline",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SCHOOL_004",
+        "button_label": "I do not know what I want yet",
+        "topic_name": "Keep My Options Open",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects.",
+        "when_to_serve": "Serve when student is undecided and fears closing doors. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Options Open' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "key_output": "Subject options with reasons, prerequisite effects, workload and options preserved",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "multi_select",
+          "comparison_grid",
+          "pathway_builder",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_GROWTH_005",
+        "button_label": "What could this company teach me?",
+        "topic_name": "Skills I Could Build Here",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Map likely skill development opportunities to teams, programs and role responsibilities.",
+        "when_to_serve": "Serve when user wants employer as a learning environment. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills I Could Build Here' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer development programs, internal roles, user target skill/role",
+        "key_output": "Evidence of training, internal mobility, promotion paths and skills the employer can develop",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "hierarchy_explorer",
+          "evidence_panel",
+          "ranking",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "GAP_003",
+        "button_label": "What am I close to?",
+        "topic_name": "Skills I Am Partly Ready For",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Identify near-ready capabilities and the next depth needed.",
+        "when_to_serve": "Serve when user has partial proficiency. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills I Am Partly Ready For' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Target role requirements, user skill evidence, experience, qualifications",
+        "key_output": "Have/partial/missing/unknown gap view plus prioritized barriers",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "skill_matrix",
+          "evidence_panel",
+          "comparison_grid",
+          "pathway_builder",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "PATH_007",
+        "button_label": "Could I start with a diploma?",
+        "topic_name": "Diploma to Degree",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Show diploma employment value plus possible bachelor progression/credit with explicit provider verification.",
+        "when_to_serve": "Serve when student needs or prefers staged tertiary entry. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Diploma to Degree' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "key_output": "One or more feasible post-school routes with conditions, trade-offs and next checks",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "pathway_builder",
+          "comparison_grid",
+          "evidence_panel",
+          "timeline",
+          "tradeoff_matrix",
+          "action_handoff"
+        ],
+        "available": true
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 2264,
+      "total_input_tokens": 2133,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2133
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 55,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 76,
+      "raw_prompt_token": 2362,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2362
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 71
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 76
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T10:22:02Z",
+    "updated": "2026-09-18T10:22:02Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EtUDCtIDAWkUfRM8N7he9nq3AxitQAXQ/6GHpb6LUdDdw2j7XSGDZWf1swho9MaeqSgCstfHxrCxTAQvOFOr8OuhiaNlXOd+4Sv06wjR6ER5LNDK/GIU2ZYQ4eWU+69q2C5ombHIpKE1j9tjkwgEn0BONjSre8DXmMyLITr+enDxrSDLF+1goFVp891LElEg6LAEtgXwJUQ99rTCP1+bd8eOgCqBzjw0Ox75DwjnEaXyDGOS81eweRPpiTm1SoMJUjRbxWeRTZBwqbV3LltWD5HlnR1+kQTtkW4FjsHhKdYn1l4n1Tl6kF78EuZHy4v19twUWNQTMVomOI9j6fwGER6Mp78E78nlqQOAUR7BjJsDLtWQsiKFHYlabG3p0ET+EDTlvuXyniZi3HqiARWb5WXH9sdfNctLFz0r44yaGdQXilJ35XFq3MPi+G9n+3hjGiSCfSIObTHf+FXEOuMwAz9ykTuf6oFZPOMt6phlOMjMPIDGP4Ls3YYIOkHTbIGyZSZSJKz+qiIuRH2vDY9ZgTs4lHAwhTnPHwWvt1/3uYFAm0aJjo6tNzObQQCh5vpmUnwJoVWydBO/LirUihd1yEnOUECGV6WX4Jxutk6NBeYFTk9Y3zoEkA==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"STUDY_005\",\n  \"reason\": \"This tool helps translate abstract diploma unit titles into concrete, practical day-to-day skills and capabilities.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "decision": "SUGGEST",
+    "objective_id": "STUDY_005",
+    "reason": "This tool helps translate abstract diploma unit titles into concrete, practical day-to-day skills and capabilities."
+  }
+}

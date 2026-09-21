@@ -1,0 +1,277 @@
+{
+  "test_id": "EMP_SAFE_001-T02",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "KNOWN_CONTEXT",
+  "model": "gemini-3.7-flash",
+  "source_row": 3123,
+  "input_context": {
+    "user_message": "We already established my target, location and constraints earlier. Use them for Is This Employer or Job Legitimate?; do not ask me again.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "fb2c0a9181f18bc7ee6e3d282019125c4dd8f865337352e3a99862b63a118282",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5393
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "known_status_panel",
+        "purpose": "Clarify that while generic preferences may exist, specific employer and role details are required to evaluate legitimacy.",
+        "prompt": "Legitimacy verification checks specific legal entities, official contact domains, and hiring processes.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Employer & Role Specifics Needed",
+            "detail": "Legitimacy cannot be determined from location or target career alone. We must evaluate the specific employer name, job posting link or text, and contact channel.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "short_answer",
+        "id": "employer_or_posting_input",
+        "purpose": "Capture the specific employer name, job link, or message text to begin safety checks.",
+        "prompt": "Enter the employer name, posting URL, or paste the message you received:",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Employer legal entity name",
+      "Specific job posting or offer details",
+      "Communication channel and recruiter contact domain"
+    ],
+    "result": {
+      "job_legitimacy_check": null,
+      "next_actions": [],
+      "summary": "Specific employer and opportunity details are required before conducting a legitimacy and safety assessment."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employer name, role, or communication channel provided."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide employer or job details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting specific employer or job posting details to begin verification.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Verification pending input of specific employer name, ad link, or message text."
+      },
+      "evidence_and_unknowns": [
+        "Missing employer legal entity",
+        "Missing opportunity ad/contact text"
+      ],
+      "recommended_next_action": "Provide the employer name or copy of the job ad/communication to start the legitimacy check."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate handles the requested EMP_SAFE_001 objective appropriately.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture prompt states prior context was established, but prior_context_text is 'None' and confirmed_facts is empty. Thus, context reuse cannot be assessed against omitted prior facts.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks a single concrete, highly discriminative question requesting specific employer/posting details necessary to evaluate legitimacy.",
+          "evidence_pointer": "candidate.ui[1].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses allowed primitives 'evidence_panel' and 'short_answer' conforming to the objective's allowed UI list.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly identifies that generic target/location constraints are insufficient for legitimacy checks and that legal entity, job posting, or contact details are required.",
+          "evidence_pointer": "candidate.ui[0].content[0].detail"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Does not fabricate any current claims or scam ratings without evidence; keeps missing items clearly cataloged as unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric tests or predictive claims are presented.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops at NEEDS_INPUT because essential inputs for evaluating legitimacy are missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/blocked due to lack of specific employer and contact information rather than issuing a numeric score.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object is structured cleanly with summaries, unknowns, and recommended next actions without raw UI state.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT intent and does not execute or fabricate unapproved external endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "MISSING_CONCRETE_STATE_OR_EVIDENCE: The user claims earlier target/location/constraints exist, but the test fixture contains no prior context facts, making Known-context reuse not assessable."
+      ],
+      "summary": "The candidate correctly requests the specific employer or job posting details needed to run legitimacy checks while maintaining evidence discipline and using allowed primitives. Known-context reuse is marked NOT_ASSESSABLE due to missing fixture context."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3419,
+      "total_input_tokens": 2554,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2554
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 865,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2951,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2951
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 884
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5393,
+  "usage": {
+    "total_tokens": 3174,
+    "total_input_tokens": 2375,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2375
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 799,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7692,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7692
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 819
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "version": "skills-jobs-rto-local-3",
+  "tools": [
+    {
+      "id": "skills_to_occupations",
+      "facet": "SKILLS",
+      "description": "Find general occupation profiles from skills, interests or a named role, then rank the bounded candidates locally with BGE.",
+      "objectives": [
+        "JOB_DISCOVER_002",
+        "SKILL_SIDE_005",
+        "JOB_SKILL_001",
+        "SKILL_SIDE_001"
+      ],
+      "sources": [
+        "onet_occupation",
+        "onet_job_skill",
+        "onet_anzsco_crosswalk"
+      ],
+      "output": "Occupations, tasks, expected skills and stored Australian mappings. No personal suitability score."
+    },
+    {
+      "id": "stored_jobs_by_area",
+      "facet": "JOBS",
+      "description": "Retrieve public Australian job advertisement records by role/skill and the user's resolved area.",
+      "objectives": [
+        "JOB_DISCOVER_010",
+        "EMP_SKILL_001",
+        "LEARN_002"
+      ],
+      "sources": [
+        "outside_jobs",
+        "region_spine",
+        "dim_location_asgs"
+      ],
+      "output": "Dated advertisements with geographic scope, source links and sample-only structured skill counts. Current availability is not established."
+    },
+    {
+      "id": "skill_learning_links",
+      "facet": "LEARNING",
+      "description": "Find qualifications and course records linked to requested skills or units.",
+      "objectives": [
+        "LEARN_002",
+        "SKILL_SIDE_001",
+        "SCHOOL_039",
+        "JOB_SKILL_001"
+      ],
+      "sources": [
+        "course_skill_edge",
+        "live_courses"
+      ],
+      "output": "Stored skill/unit links and course IDs for exploration; no claim of assessed user competence or guaranteed provider delivery."
+    },
+    {
+      "id": "rto_course_comparison",
+      "facet": "PROVIDER",
+      "description": "Use the comparison snippet to separate shared national qualification content, recorded RTO delivery/support differences and Yuzee-created course intelligence.",
+      "objectives": [
+        "STUDY_004",
+        "STUDY_005",
+        "STUDY_007"
+      ],
+      "sources": [
+        "live_courses",
+        "live_institutions",
+        "qualification_units"
+      ],
+      "output": "A bounded evidence-linked comparison; no arbitrary provider ranking or invented curriculum difference."
+    },
+    {
+      "id": "local_area_exploration",
+      "facet": "LOCAL",
+      "description": "Introduce the user's resolved area, community places, dated job/employer records and longer-term outlook before interest exploration.",
+      "objectives": [
+        "DISCOVER_001"
+      ],
+      "sources": [
+        "region_spine",
+        "abs_region_profile",
+        "local_market_organisations",
+        "region_demand_edge",
+        "jsa_employment_projection"
+      ],
+      "output": "Area-scoped overview and public directory examples; dated occupation demand and forecast context. Counts are not all local companies or confirmed open vacancies."
+    }
+  ],
+  "responsibilities": {
+    "Gemini": "Interpret the current request; plan bounded retrieval; explain results and uncertainties.",
+    "BGE": "Retrieve activity candidates and locally rank occupation candidates. Similarity is not confidence or permission.",
+    "application": "Own SQL, record projections, source IDs, geography, persistence and interactive controls.",
+    "user": "Choose roles, report experience, mark learning interests and correct the area."
+  },
+  "save_scope": "Conversation only; no writes to the source warehouse or external profile.",
+  "evidence_types": [
+    "USER_SELF_REPORTED",
+    "USER_LEARNING_INTENTION",
+    "USER_UNSURE",
+    "OCCUPATION_PROFILE",
+    "QUALIFICATION_SKILL_LINK",
+    "DATED_JOB_ADVERTISEMENT",
+    "SAMPLE_SKILL_FREQUENCY",
+    "DATED_REGIONAL_DEMAND"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_DECIDE_004",
+  "reason": "Compare your two concrete job offers side-by-side across salary, mentoring, commute, and career trade-offs.",
+  "disposition": "AUTO_OPEN",
+  "selectionId": "6f61c543-da71-4903-897f-60a2af888fa0",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8921287226445077,
+  "margin": 0.10303907388217759,
+  "userConfidence": null,
+  "createdAt": 1789733771044
+}

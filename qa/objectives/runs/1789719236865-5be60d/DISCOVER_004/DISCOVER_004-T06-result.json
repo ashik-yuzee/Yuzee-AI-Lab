@@ -1,0 +1,225 @@
+{
+  "test_id": "DISCOVER_004-T06",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 31,
+  "input_context": {
+    "user_message": "I already completed big five snapshot and nothing has changed.",
+    "prior_context_text": "Objective result exists and no material context changed.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "8893c557eef432992356cbaba732dadede74a7cc402eeb8e33502e8a4c94d875",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 3309
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "limitations": [],
+      "next_actions": [],
+      "personality_tendencies": [],
+      "summary": "The personality snapshot was previously completed and remains up to date with no material changes reported."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User indicated no updates or changes needed for their personality tendencies snapshot.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Personality snapshot complete with no further action required."
+      },
+      "evidence_and_unknowns": [
+        "User confirmed prior snapshot remains accurate without changes."
+      ],
+      "recommended_next_action": "Explore complementary objectives like comparing work environments or clarifying work values."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate properly recognises that the objective is already completed and sets status to COMPLETE rather than re-running the questionnaire.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture states prior context exists in abstract text ('Objective result exists and no material context changed.') but omits concrete prior personality data or signals.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant questions were asked upon completion/status confirmation.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid UI primitives were emitted (ui array is empty as expected for complete handoff).",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate acknowledges the completion of the personality snapshot and respects the V2 contract structure without forcing generic discovery.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not fabricate current factual claims or ungrounded data.",
+          "evidence_pointer": "candidate.handoff.evidence_and_unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated trait scores, percentiles, or diagnostic career predictions were generated.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The stop condition is met immediately upon user stating completion with no changes; interaction does not continue.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/null with no fake predictive career scores emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, compact semantic handoff suggesting next exploration objectives (comparing work environments, work values).",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "The candidate issues safe structured intents and does not perform unpermitted actions or fabricate direct endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted specific prior result data and answers under confirmed_facts, supplying only a placeholder description in prior_context_text."
+      ],
+      "summary": "The candidate correctly handled the completion notice by terminating interaction with a clean handoff to Oala and proposing next exploration objectives without re-asking questions or fabricating psychometric data."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2632,
+      "total_input_tokens": 1836,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1836
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 796,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2233,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2233
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 815
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 3309,
+  "usage": {
+    "total_tokens": 2440,
+    "total_input_tokens": 2118,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2118
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 322,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5207,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5207
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 342
+          }
+        ]
+      }
+    ]
+  }
+}

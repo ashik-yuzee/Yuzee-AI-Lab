@@ -1,0 +1,65 @@
+{
+  "date": "2026-09-18",
+  "credit_status": "RESTORED_LIVE_RESPONSES_VERIFIED",
+  "production_signoff": false,
+  "local_tests": {
+    "runtime": 34,
+    "harness_checks": 61,
+    "build": "PASS",
+    "teaching_skill_pathway_regressions": "PASS"
+  },
+  "execution_smoke": {
+    "final_run": "live-2026-09-18T10-18-43-633Z",
+    "structural_pass": 3,
+    "total": 3,
+    "ids": [
+      "STUDY_005",
+      "EMP_SAFE_001",
+      "PROFILE_005"
+    ],
+    "semantic_signoff": false,
+    "notes": [
+      "Course output can overstate practice depth from a hypothetical syllabus.",
+      "Safety output can mix user statements and general guidance, and imply a lookup through wording.",
+      "Profile draft now remains self-reported and explicitly not saved."
+    ]
+  },
+  "selector_smoke": {
+    "run": "selection-2026-09-18T10-21-59-403Z",
+    "total": 9,
+    "exact_expected": 8,
+    "live_model_calls": 6,
+    "local_bypasses": 3,
+    "positive_expected_matches": 3,
+    "no_action_cases_passed": 5,
+    "miss": "Interest exploration objective absent from BGE shortlist; Gemini returned NONE rather than an unrelated activity.",
+    "labels": "Synthetic fixtures; not independent counsellor review or real-user accuracy."
+  },
+  "bge_retrieval": {
+    "positive_cases": 12,
+    "top1": 7,
+    "top5": 8,
+    "top8": 8,
+    "model_weights_changed": false
+  },
+  "main_chat_validation": {
+    "conversation_id": "conv-1789663380852-4zureu",
+    "completed_session": "d0e09aa2-5568-48e6-9436-3268f9a9e4b4",
+    "objective": "JOB_DECIDE_004",
+    "automatic_suggestion": "PASS",
+    "duplicate_explanation_abstention": "PASS",
+    "workspace_open": "PASS",
+    "long_answer": "PASS_AFTER_PROVIDER_SCHEMA_FIX",
+    "completion": "PASS_AFTER_ONE_VALIDATED_CORRECTION",
+    "handoff_to_oala": "PASS_AFTER_CONTEXT_AND_SCHEMA_FIX",
+    "question_suppresses_suggestions": "PASS",
+    "method": "Browser exercised suggestion, opening, answer submission, saved results and handoff. During debugging the failed long answer was resubmitted through the same ObjectiveService using the synthetic test script. Not an uninterrupted first-attempt browser run."
+  },
+  "remaining": [
+    "Full 3140 execution suite",
+    "Independent 316 routing holdout",
+    "Semantic evidence and course-depth failures",
+    "Two source contracts disabled",
+    "Live research, entity verification and profile persistence not connected"
+  ]
+}

@@ -1,0 +1,265 @@
+{
+  "test_id": "PROFILE_005-T04",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 505,
+  "input_context": {
+    "user_message": "I want to do my skills, but some of my earlier information conflicts.",
+    "prior_context_text": "Prior context contains a material contradiction.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "97b2b04b71592702625574827532b6d505aecfeea280de90e8ae076a8488c7fe",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5417
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "profile_editor",
+        "id": "skills_review_editor",
+        "purpose": "Review, clarify, and input your current skills to resolve previous contradictions.",
+        "prompt": "List or update the core skills you want in your profile, noting whether they are self-reported or demonstrated.",
+        "required": true,
+        "options": [],
+        "content": [
+          {
+            "label": "Resolving Conflicting Skill Data",
+            "detail": "Clarify which skills you actively use or want to represent in your profile.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Skills profile requires manual clarification",
+        "basis": "User reported conflicting earlier context",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Confirmed list of verified and self-reported skills",
+      "Evidence status for individual skills"
+    ],
+    "result": {
+      "skills_profile": [],
+      "summary": "Awaiting user input to clarify and verify skills profile due to conflicting previous data."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Requested user review and clarification of skills to build a verified skills profile.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Skills inventory pending user entry and clarification."
+      },
+      "evidence_and_unknowns": [
+        "User-confirmed skill labels, proficiency levels, and evidence status are currently unverified."
+      ],
+      "recommended_next_action": "Enter or confirm your active skills in the profile editor."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correct objective PROFILE_005 maintained for skills profiling request.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims prior context contains a material contradiction, but the fixture omitted concrete facts or contradictory data ('MISSING_CONCRETE_STATE_OR_EVIDENCE').",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The prompt asks the user to clarify/list their core skills and status, appropriate for resolving the reported ambiguity.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'profile_editor', which is explicitly permitted in the V2 objective-specific overrides.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to PROFILE_005 logic by preparing to capture user wording, evidence status, and preserving unknowns without guessing.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported skills or claims were fabricated; unknown status is preserved as required.",
+          "evidence_pointer": "candidate.result.skills_profile"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric scores or career success predictions are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops with NEEDS_INPUT given the lack of confirmed skill items.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Follows the mandatory override 'readiness policy: NONE' by setting readiness to enabled=false.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Returns a clean, structured semantic handoff envelope without click history or raw UI state.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard CONTINUE_CHAT next action without executing unauthorized writes or endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted the concrete contradictory facts mentioned in prior_context ('MISSING_CONCRETE_STATE_OR_EVIDENCE'), preventing full assessment of context reuse."
+      ],
+      "summary": "Candidate correctly handles PROFILE_005 by requesting clarification using an allowed UI primitive (profile_editor) and setting readiness policy to NONE while preserving unknowns. Known-context reuse is marked NOT_ASSESSABLE due to fixture omission of concrete contradictory facts."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2946,
+      "total_input_tokens": 2113,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2113
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 833,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2510,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2510
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 851
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5417,
+  "usage": {
+    "total_tokens": 3045,
+    "total_input_tokens": 2190,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2190
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 612,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 243,
+    "raw_prompt_token": 5875,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5875
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 628
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 243
+          }
+        ]
+      }
+    ]
+  }
+}

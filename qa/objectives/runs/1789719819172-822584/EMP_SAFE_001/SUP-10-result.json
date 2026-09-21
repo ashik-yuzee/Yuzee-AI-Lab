@@ -1,0 +1,386 @@
+{
+  "test_id": "SUP-10",
+  "objective_id": "EMP_SAFE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "39dd2db70586c713b43b9d838e84b6d8ca5fe8d04fd4e3cbd42769e6ce19a70a",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2.1",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "A recruiter using a real company logo says to deposit their cheque, buy equipment and send my banking password. Is that enough proof?",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_SAFE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "9708679573d35dee050ff49f8adf313b678ab1057ff3cbbdd69076f2c3cf6cb2",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 8946
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "legitimacy_assessment_panel",
+        "purpose": "Show security assessment and critical red flags based on reported payment and credential requests.",
+        "prompt": "Job Safety Assessment: High Risk",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Overall Status: HIGH_RISK_STOP",
+            "detail": "Asking to deposit a cheque, buy equipment from funds, or share banking passwords/credentials are standard fraud patterns. Legitimate employers never request your banking passwords or require cheque-cashing schemes.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Logo & Branding Misuse",
+            "detail": "Anyone can copy a company logo onto an email, ad, or document. Visual branding alone is not proof of official employer authorization.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Critical Red Flag: Password/Credential Request",
+            "detail": "Sharing passwords or one-time codes gives unauthorized direct access to your accounts. No legitimate organization will ever ask for this.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Critical Red Flag: Cheque & Equipment Purchase Scheme",
+            "detail": "Fake cheque scams involve sending a counterfeit cheque, having you send money/buy equipment, and leaving you responsible when the cheque bounces.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "safe_actions_handoff",
+        "purpose": "Provide immediate protective actions for the user.",
+        "prompt": "Recommended Safe Next Actions",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Do Not Send Passwords or Money",
+            "detail": "Stop all communication immediately. Do not deposit any cheques or provide account access.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Secure Accounts if Shared",
+            "detail": "If you already provided any password, immediately change it and contact your bank's fraud department.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "HIGH_RISK_FRAUD_INDICATORS",
+        "basis": "User reported request to deposit a cheque, buy equipment, and provide banking password.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Official employer entity identity",
+      "Verified recruiter contact domain"
+    ],
+    "result": {
+      "job_legitimacy_check": {
+        "employer_identity": {
+          "status": "UNVERIFIED",
+          "evidence": [
+            {
+              "label": "Branding",
+              "detail": "Company logo is easily copied and does not verify employer identity.",
+              "source_status": "GENERAL_GUIDANCE",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "opportunity_identity": {
+          "status": "UNVERIFIED",
+          "official_role_evidence": []
+        },
+        "contact_channel_checks": [
+          {
+            "label": "Channel Integrity",
+            "detail": "Direct messaging without verified official domain.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "process_checks": [
+          {
+            "label": "Hiring & Payment Flow",
+            "detail": "Cheque deposit and equipment purchase scheme violates standard legitimate hiring practices.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "red_flags": [
+          {
+            "flag": "Banking Password Request",
+            "severity": "CRITICAL",
+            "evidence": "Recruiter asked for banking password",
+            "why_it_matters": "Grants direct access to drain funds or compromise financial identity."
+          },
+          {
+            "flag": "Cheque Cashing & Equipment Scheme",
+            "severity": "CRITICAL",
+            "evidence": "Recruiter asked to deposit cheque and purchase equipment",
+            "why_it_matters": "Standard counterfeit cheque scam where the victim loses personal money once the cheque bounces."
+          }
+        ],
+        "sensitive_data_or_payment_requests": [
+          {
+            "label": "Banking Credentials",
+            "detail": "Direct request for banking password.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "overall_status": "HIGH_RISK_STOP",
+        "safe_next_actions": [
+          {
+            "label": "Halt Communication",
+            "detail": "Cease all contact with the recruiter immediately.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Secure Financial Accounts",
+            "detail": "If credentials were provided, change passwords and contact your bank fraud department.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "unknowns": []
+      },
+      "next_actions": [
+        {
+          "label": "Cease Communication",
+          "detail": "Do not proceed with any requests or deposits.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "This interaction displays critical fraud red flags (fake cheque scam and banking credential theft). A company logo is not proof of legitimacy. Stop communication immediately and do not provide credentials or funds."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Critical security red flags detected: cheque scheme and password request."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Assessed employer legitimacy based on user-described cheque deposit and password request. Marked as HIGH_RISK_STOP.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Assessment concluded HIGH_RISK_STOP due to confirmed critical red flags: requesting banking passwords and counterfeit cheque equipment schemes."
+      },
+      "evidence_and_unknowns": [
+        "Company logo does not prove legitimacy.",
+        "Cheque deposit and password requests are critical fraud indicators."
+      ],
+      "recommended_next_action": "Cease all contact with the sender immediately and secure any compromised financial accounts."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly preserved the active objective EMP_SAFE_001 for verifying employer and job legitimacy.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "The candidate immediately ingested and addressed all facts from the user message (logo, cheque, equipment, password) without asking redundant questions.",
+          "evidence_pointer": "candidate.derived_signals[0].basis"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No extraneous questions were asked; the candidate correctly concluded the assessment immediately based on confirmed critical fraud indicators.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Emitted UI components ('evidence_panel' and 'action_handoff') are valid and within the objective allow-list.",
+          "evidence_pointer": "candidate.ui[*].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly separated visual branding from entity legitimacy, identified critical payment/password red flags, assigned overall_status 'HIGH_RISK_STOP', and adhered to the required output contract.",
+          "evidence_pointer": "candidate.result.job_legitimacy_check.overall_status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No invented factual claims were presented; general guidance was appropriately categorized without fabricating live external verification.",
+          "evidence_pointer": "candidate.result.job_legitimacy_check.employer_identity.evidence[0].source_status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims or numeric scam probability scores were emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stopped immediately with status COMPLETE upon detecting severe critical payment and credential red flags.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Adhered strictly to the readiness policy by refusing numeric scores and explicitly logging blockers.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object contains a compact semantic summary, result, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unapproved endpoint executions or unsafe writes were attempted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate successfully fulfilled all rubric requirements. It identified severe red flags (cheque scheme and password theft), avoided false confidence from branding logos, returned the required HIGH_RISK_STOP status without numeric probabilities, and provided safe next actions."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 4030,
+      "total_input_tokens": 3198,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3198
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 832,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3595,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3595
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 850
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 8946,
+  "usage": {
+    "total_tokens": 4244,
+    "total_input_tokens": 2383,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2383
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1861,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7700,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7700
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1877
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_DECIDE_004",
+  "reason": "Compare your two concrete job offers side-by-side on pay, training, and other key decision factors.",
+  "disposition": "AUTO_OPEN",
+  "selectionId": "0bd41ca2-4572-4aaa-991e-7a874cf46b04",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.9235816251318097,
+  "margin": 0.13102602210410264,
+  "userConfidence": null,
+  "createdAt": 1789733814370
+}

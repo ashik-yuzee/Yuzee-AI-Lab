@@ -50,11 +50,11 @@ export function allowSkillReview(userText:string):boolean {
  return !/\b(stop|pause|cancel|no (?:more |extra )?(?:questions|suggestions|follow.up)|do not suggest|don[’']t suggest|suicid\w*|self.harm|emergency)\b/i.test(userText);
 }
 
-/** Keep attention on Gemini's active question. Offer skills after an answer
- * with no question, outside safety responses and active service intake. */
+/** Review completed answers, including counselling questions. Safety responses
+ * and active service intake still take priority. */
 export function canReviewResponseSkills(response:any,userText:string):boolean {
  return !!response&&allowSkillReview(userText)&&
-  response.interaction?.kind==='none'&&
+  ['none','question'].includes(response.interaction?.kind)&&
   response.current_mode!=='S_SERVICE_HANDOFF'&&!response.service_trigger?.trigger_now&&
   !response.state?.safety_override_applied&&
   !/SAFETY|SECURITY|CRITICAL_CLARIFICATION/.test(response.response_intent||'')&&

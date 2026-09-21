@@ -1,0 +1,114 @@
+<!-- Composer — pill-shaped input bar -->
+<div class="composer-wrapper"
+     [class.composer-wrapper--listening]="isListening">
+
+  <!-- @Oala mention suggestion popup -->
+  <div *ngIf="showOalaSuggestion"
+       class="oala-suggestion"
+       role="listbox"
+       aria-label="Mention suggestions">
+    <button role="option"
+            (click)="selectOalaMention()"
+            (keydown.enter)="selectOalaMention()"
+            class="oala-suggestion-item">
+      <strong>@Oala · Yuzee guidance</strong>
+      <span>Understand our services, fees, pathways and more</span>
+    </button>
+  </div>
+
+  <!-- @Oala active pill / link -->
+  <div class="oala-status-bar">
+    <ng-container *ngIf="oalaMentionActive; else oalaLink">
+      <span class="oala-active-chip">
+        @Oala · Yuzee help
+        <button (click)="removeOalaMention()" aria-label="Remove Oala mention">
+          <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </span>
+    </ng-container>
+    <ng-template #oalaLink>
+      <button class="oala-link-btn" (click)="selectOalaMention()">
+        Ask <span>@Oala</span> about Yuzee services
+      </button>
+    </ng-template>
+  </div>
+
+  <!-- File attachment chips -->
+  <div *ngIf="attachments.length" class="composer-attachments">
+    <div *ngFor="let file of attachments; let i = index" class="attachment-chip">
+      <img *ngIf="isImageFile(file)" [src]="previewUrls[i]"
+           alt="" class="attachment-thumb" />
+      <ion-icon *ngIf="!isImageFile(file)"
+                name="attach-outline" aria-hidden="true"></ion-icon>
+      <span>{{ file.name }}</span>
+      <button (click)="removeAttachment(i)" [attr.aria-label]="'Remove ' + file.name">
+        <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main pill -->
+  <div class="composer-pill"
+       [class.composer-pill--listening]="isListening"
+       [class.composer-pill--has-content]="text.length > 0">
+
+    <!-- Hidden file input -->
+    <input #fileInput type="file"
+           accept="image/*,application/pdf,text/plain,text/csv,application/json"
+           multiple class="sr-only"
+           (change)="onFileSelected($event)" />
+
+    <!-- Attach button -->
+    <button type="button"
+            class="composer-icon-btn"
+            (click)="fileInput.click()"
+            aria-label="Attach file">
+      <ion-icon name="add-outline" aria-hidden="true"></ion-icon>
+    </button>
+
+    <!-- Textarea -->
+    <textarea #textareaEl
+              appAutoGrow
+              [maxHeightPx]="176"
+              id="composer-input"
+              rows="1"
+              placeholder="Tell me what you'd like help with…"
+              [disabled]="isStreaming"
+              [(ngModel)]="text"
+              (keydown)="onKeydown($event)"
+              (input)="onInput()"
+              aria-label="Chat message">
+    </textarea>
+
+    <!-- Mic button -->
+    <button type="button"
+            class="composer-icon-btn"
+            [class.composer-icon-btn--listening]="isListening"
+            (click)="toggleVoice()"
+            [attr.aria-label]="isListening ? 'Stop listening' : 'Start voice input'"
+            [attr.aria-pressed]="isListening">
+      <ion-icon [name]="isListening ? 'mic-off-outline' : 'mic-outline'"
+                aria-hidden="true"></ion-icon>
+    </button>
+
+    <!-- Send / Stop -->
+    <ng-container *ngIf="isStreaming; else sendBtn">
+      <button type="button"
+              class="composer-send-btn composer-send-btn--stop"
+              (click)="stop()"
+              aria-label="Stop generating">
+        <ion-icon name="stop" aria-hidden="true"></ion-icon>
+      </button>
+    </ng-container>
+    <ng-template #sendBtn>
+      <button type="button"
+              class="composer-send-btn"
+              [class.composer-send-btn--active]="text.trim().length > 0"
+              [disabled]="text.trim().length === 0"
+              (click)="send()"
+              aria-label="Send message">
+        <ion-icon name="arrow-up-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </ng-template>
+  </div>
+</div>

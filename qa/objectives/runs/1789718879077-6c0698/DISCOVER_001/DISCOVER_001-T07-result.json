@@ -1,0 +1,240 @@
+{
+  "test_id": "DISCOVER_001-T07",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 8,
+  "input_context": {
+    "user_message": "What is the tuition fee for this specific course next year?",
+    "prior_context_text": "A specific course is in context.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "71858ad965e04c61da328e8019bc36343b4baf642d794fa0970c9b44148714f1",
+  "status": "NEEDS_HUMAN_REVIEW",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 7932
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "NEEDS_RESEARCH",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Specific course tuition fee for next year"
+    ],
+    "result": {
+      "interest_themes": [],
+      "next_actions": [],
+      "summary": "Tuition fee pricing for next year is currently unknown and requires verified institutional research data.",
+      "unknowns": [
+        "Specific course tuition fee for next year"
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Current official tuition fee data is unavailable and requires research."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "research_required",
+        "label": "Research official course tuition fees",
+        "type": "RESEARCH"
+      }
+    ],
+    "handoff": {
+      "summary": "User requested course tuition fees for next year. Cannot guess current pricing figures; awaiting verified data.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "interest_themes": [],
+        "next_actions": [],
+        "summary": "Tuition fee pricing for next year is currently unknown and requires verified institutional research data.",
+        "unknowns": [
+          "Specific course tuition fee for next year"
+        ]
+      },
+      "evidence_and_unknowns": [
+        "Specific course tuition fee for next year is UNKNOWN"
+      ],
+      "recommended_next_action": "Fetch approved course fee information via research."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The user asked for course tuition fees, which does not belong in the Interest Explorer objective. The candidate properly abstained from executing the discovery flow and halted with NEEDS_RESEARCH/research handoff.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims 'A specific course is in context' but context.confirmed_facts is empty and does not specify course details, making context reuse unassessable.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No irrelevant or generic discovery questions were emitted; the candidate halted immediately without asking unnecessary questions.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI array is empty and no custom or forbidden UI primitives were generated.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate respected the objective override requirement stating that if a required current fact is unavailable, it must return NEEDS_RESEARCH rather than guessing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The model refrained from fabricating future tuition fee figures and explicitly marked the fee as unknown requiring research.",
+          "evidence_pointer": "candidate.unknowns[0]"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unsupported psychometric assessment or career prediction score was made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stopped immediately with NEEDS_RESEARCH rather than asking redundant discovery questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring was correctly disabled when research is missing.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean semantic handoff envelope was returned specifying the research blocker and next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emitted only structured research intent without executing direct endpoint calls or unconfirmed mutations.",
+          "evidence_pointer": "candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Context states 'A specific course is in context.' in plain text but provides an empty confirmed_facts dictionary, preventing verification of specific course context reuse."
+      ],
+      "summary": "The candidate properly handled an off-topic/factual pricing query within DISCOVER_001 by refusing to invent tuition fees, halting with NEEDS_RESEARCH, and emitting a clean handoff envelope."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2698,
+      "total_input_tokens": 1878,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1878
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 820,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2275,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2275
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 839
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 7932,
+  "usage": {
+    "total_tokens": 3344,
+    "total_input_tokens": 2035,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2035
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 418,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 891,
+    "raw_prompt_token": 6351,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6351
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 438
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 891
+          }
+        ]
+      }
+    ]
+  }
+}

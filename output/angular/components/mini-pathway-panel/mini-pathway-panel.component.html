@@ -1,0 +1,147 @@
+<!-- Mini Pathway Panel — right-side drawer -->
+<aside class="mini-pathway-panel"
+       [class.mini-pathway-panel--expanded]="isExpanded"
+       [class.mini-pathway-panel--resizing]="isResizing"
+       [style.width.px]="panelWidth || null"
+       role="complementary"
+       aria-label="Mini Pathway">
+
+  <!-- Resize handle -->
+  <div class="mini-pathway-resize-handle"
+       (mousedown)="startResize($event)"
+       (touchstart)="startResizeTouch($event)"
+       aria-hidden="true">
+    <span></span>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div>
+      <div class="mini-pathway-heading">
+        <div class="mini-pathway-heading-icon" aria-hidden="true">
+          <ion-icon name="map-outline"></ion-icon>
+        </div>
+        <h2>Mini Pathway</h2>
+      </div>
+    </div>
+    <div class="mini-pathway-header-actions">
+      <button class="mini-pathway-expand"
+              (click)="toggleExpand()"
+              [attr.aria-label]="isExpanded ? 'Collapse' : 'Expand panel'">
+        <ion-icon [name]="isExpanded ? 'contract-outline' : 'expand-outline'"
+                  aria-hidden="true"></ion-icon>
+        <span>{{ isExpanded ? 'Collapse' : 'Expand' }}</span>
+      </button>
+      <button (click)="close()" aria-label="Close mini pathway">
+        <ion-icon name="close-outline" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+  </header>
+
+  <!-- History selector -->
+  <div class="mini-pathway-history" *ngIf="savedPathways.length > 0">
+    <div class="mini-pathway-history-label">
+      <ion-icon name="time-outline" aria-hidden="true"></ion-icon>
+      Saved
+      <b>{{ savedPathways.length }}</b>
+    </div>
+    <button class="mini-pathway-history-trigger"
+            [class.mini-pathway-history-trigger--open]="dropdownOpen"
+            [disabled]="savedPathways.length === 0"
+            (click)="toggleDropdown()"
+            aria-haspopup="listbox"
+            [attr.aria-expanded]="dropdownOpen">
+      <div class="mini-pathway-history-trigger-text">
+        <strong>{{ activePathway?.title || 'Select a pathway' }}</strong>
+        <small>{{ activePathway?.context || 'Choose from saved reports' }}</small>
+      </div>
+      <ion-icon class="mini-pathway-history-chevron"
+                name="chevron-down-outline" aria-hidden="true"></ion-icon>
+    </button>
+
+    <ul *ngIf="dropdownOpen"
+        class="mini-pathway-history-list"
+        role="listbox"
+        [attr.aria-label]="'Saved pathways'">
+      <li *ngFor="let pw of savedPathways">
+        <button role="option"
+                [class.mini-pathway-history-option--selected]="pw.id === activePathway?.id"
+                [attr.aria-selected]="pw.id === activePathway?.id"
+                (click)="selectPathway(pw)">
+          <span class="mini-pathway-history-option-title">{{ pw.title }}</span>
+          <span class="mini-pathway-history-option-ctx">{{ pw.context }}</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Body -->
+  <div class="mini-pathway-body mini-pathway-report">
+
+    <!-- Skeleton while loading -->
+    <ng-container *ngIf="isGenerating && !streamContent">
+      <div class="mini-pathway-skeleton">
+        <span class="mini-pathway-skeleton-line mini-pathway-skeleton-title"></span>
+        <span class="mini-pathway-skeleton-line mini-pathway-skeleton-short"></span>
+        <span class="mini-pathway-skeleton-line"></span>
+        <span class="mini-pathway-skeleton-line mini-pathway-skeleton-short"></span>
+        <span class="mini-pathway-skeleton-line"></span>
+      </div>
+    </ng-container>
+
+    <!-- Streaming status -->
+    <div *ngIf="isGenerating" class="mini-pathway-stream-status">
+      <span role="status">
+        <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+        {{ streamStatus || 'Generating pathway…' }}
+      </span>
+      <button (click)="stopGeneration()">Stop</button>
+    </div>
+    <p *ngIf="isGenerating" class="mini-pathway-stream-caption">
+      This may take 15–30 seconds. The report is AI-generated.
+    </p>
+
+    <!-- Streaming content preview -->
+    <div *ngIf="isGenerating && streamContent"
+         class="mini-pathway-stream-section prose-content"
+         [innerHTML]="streamContent | markdown">
+    </div>
+
+    <!-- Completed report -->
+    <ng-container *ngIf="!isGenerating && activePathway?.report">
+      <!-- Colour guide -->
+      <details class="pathway-colour-guide" *ngIf="activePathway!.colourLegend?.length">
+        <summary>
+          Colour guide
+          <span>how to read the qualification types</span>
+          <ion-icon name="chevron-down-outline" aria-hidden="true"></ion-icon>
+        </summary>
+        <p>Each colour represents a different AQF qualification type.</p>
+        <div class="pathway-colour-key">
+          <span *ngFor="let entry of activePathway!.colourLegend"
+                [attr.data-learning-tone]="entry.tone">
+            <span class="pathway-type-dot" aria-hidden="true"></span>
+            {{ entry.label }}
+          </span>
+        </div>
+      </details>
+
+      <!-- Full protocol-rendered report -->
+      <app-protocol-renderer
+        *ngIf="activePathway!.report.output_sections"
+        [response]="activePathway!.report">
+      </app-protocol-renderer>
+
+      <!-- Caption -->
+      <p class="mini-pathway-caption">
+        This pathway is AI-generated and may not reflect current course availability.
+        Always verify with the institution.
+      </p>
+    </ng-container>
+
+    <!-- Error / empty notice -->
+    <div *ngIf="!isGenerating && !activePathway" class="mini-pathway-notice">
+      <p>No pathway generated yet. Send a message asking about a qualification or study option.</p>
+    </div>
+  </div>
+</aside>

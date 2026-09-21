@@ -1,0 +1,254 @@
+{
+  "test_id": "EMP_COMPARE_001-T06",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 3087,
+  "input_context": {
+    "user_message": "The objective for Compare Employers is already fully supported by confirmed information.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "86e32bfd473323082e02e8ccba6fd84999ea086f2c0e3a518553af6f1b436a37",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5100
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "employer_picker",
+        "purpose": "Select the employers and roles you want to compare",
+        "prompt": "Which employers and roles would you like to compare?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": 2,
+          "max": 5,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target employers and specific roles for comparison"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Please specify at least two employers and roles to begin comparison."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employers selected for comparison"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue Conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting employer selection to run comparison.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Comparison pending selection of target employers."
+      },
+      "evidence_and_unknowns": [
+        "Target employers unknown"
+      ],
+      "recommended_next_action": "Select at least two employers to compare."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the active pre-selected objective EMP_COMPARE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test prompt claims facts are fully supported, but the test context fixture provides empty confirmed_facts and prior_context_text is 'None'. Context reuse cannot be assessed due to fixture omission.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks for target employers using the entity_picker, which is the foundational required missing input for comparison.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits 'entity_picker', which is in the V2 allowed list [entity_picker, comparison_grid, constraint_builder, tradeoff_matrix, evidence_panel, action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the need for employer options before constructing an employer_comparison and sets status to NEEDS_INPUT correctly given empty context.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent any current facts or ungrounded claims about employers.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No validated psychological/psychometric claims or fake scores are generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test expects immediate stop/synthesis based on the prompt claim 'already fully supported', but the fixture context actually contains zero facts/evidence, making the stop condition unassessable as configured.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly marked disabled/blocked because no employers have been selected.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff envelope is returned with confirmed inputs, evidence/unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Candidate emits only safe structured UI and next_actions without direct external action or unauthorized writes.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: The user prompt claims that the objective is fully supported, but the fixture supplies empty confirmed_facts, empty approved_evidence, and prior_context 'None', making context reuse and supported-stop behavior impossible to evaluate."
+      ],
+      "summary": "The candidate handled empty inputs appropriately by asking for employers via an approved primitive, preserving discipline rather than hallucinating facts. Evaluated criteria pass, with Known-context reuse and Stop condition marked NOT_ASSESSABLE due to fixture state discrepancies."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3110,
+      "total_input_tokens": 2192,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2192
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 918,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2589,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2589
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 937
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5100,
+  "usage": {
+    "total_tokens": 2840,
+    "total_input_tokens": 2286,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2286
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 477,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 77,
+    "raw_prompt_token": 7293,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7293
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 492
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 77
+          }
+        ]
+      }
+    ]
+  }
+}

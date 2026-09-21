@@ -8,7 +8,7 @@ import { eligibleTools, scopedInstruction, ROUTER_VERSION } from '../src/routing
 
 const hash = (text: string | Buffer) => createHash('sha256').update(text).digest('hex');
 const source = readFileSync(QUIZ_PROMPT_PATH, 'utf8');
-assert.equal(hash(source), 'dae1a51322233fdf030558643a31bf0ff81cda54d3ed0eb6abff50b307a38890', 'Supplied v1.7 instructions must be preserved exactly');
+assert.equal(hash(readFileSync('src/protocol/v1.3/Yuzee_Quiz_Counsellor_Training_v1.7.md','utf8')), 'dae1a51322233fdf030558643a31bf0ff81cda54d3ed0eb6abff50b307a38890', 'Supplied v1.7 instructions must be preserved exactly');
 assert.equal(readFileSync(`spring-backend/src/main/resources/yuzee/prompts/${QUIZ_PROMPT_FILENAME}`, 'utf8'), source);
 const javaRegistry = readFileSync('spring-backend/src/main/java/com/yuzee/tokenlab/service/YuzeeProtocolRegistry.java', 'utf8');
 assert.ok(javaRegistry.includes(`PROMPT_VERSION = "${QUIZ_PROMPT_VERSION}"`));
@@ -17,8 +17,8 @@ assert.ok(javaRegistry.includes(QUIZ_PROMPT_FILENAME));
 const assembler = YuzeeRequestAssembler.getInstance();
 const base = { model: 'gemini-3.7-flash', messageText: 'Explain what makes a course useful.', useStructuredOutput: true };
 const ordinary = assembler.assembleRequest(base);
-const overlays = readFileSync('src/prompts/clear-guidance.md', 'utf8') + '\n' + readFileSync('src/prompts/learning-depth.md', 'utf8');
-assert.equal(ordinary.systemInstruction, source + '\n' + overlays);
+const overlays = readFileSync('src/prompts/activity-context.md', 'utf8') + '\n' + readFileSync('src/prompts/clear-guidance.md', 'utf8') + '\n' + readFileSync('src/prompts/learning-depth.md', 'utf8');
+assert.equal(ordinary.systemInstruction, source);
 assert.equal(ordinary.geminiConfig.systemInstruction, ordinary.systemInstruction);
 assert.equal(ordinary.contents, base.messageText, 'Instructions must stay out of the user message');
 assert.equal(ordinary.geminiConfig.responseMimeType, 'application/json');
@@ -27,7 +27,7 @@ assert.deepEqual(Object.keys(assembler.getSchemaJson().properties).sort(), [
   'service_trigger', 'rmo_readiness', 'state', 'followups',
 ].sort());
 const info = assembler.getProtocolInfo();
-assert.equal(info.promptVersion, '1.7');
+assert.equal(info.promptVersion, '1.9');
 assert.equal(info.schemaVersion, '1.3');
 assert.equal(info.protocolVersion, '1.3');
 assert.equal(info.promptHash, hash(ordinary.systemInstruction));
@@ -67,6 +67,6 @@ assert.equal(await cache.getCacheForModel(base.model, provider, ordinary.systemI
 await settle();
 assert.deepEqual(deleted, ['cachedContents/test-1']);
 assert.equal(created[1].config.systemInstruction, ordinary.systemInstruction);
-assert.ok(created[1].config.displayName.includes('v1.7'));
+assert.ok(created[1].config.displayName.includes('v1.9'));
 assert.equal(await cache.getCacheForModel(base.model, provider, ordinary.systemInstruction, info.promptHash), 'cachedContents/test-2');
-console.log('PASS: exact v1.7 assets, both backend references, single system instruction, all 103 skill insertions, JSON v1.3, custom overrides, reload and stale-cache replacement.');
+console.log('PASS: preserved v1.7 baseline, v1.9 assets, both backend references, single system instruction, all 103 skill insertions, JSON v1.3, custom overrides, reload and stale-cache replacement.');

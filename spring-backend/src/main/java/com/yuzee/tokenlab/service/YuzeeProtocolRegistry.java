@@ -13,7 +13,7 @@ import java.util.HexFormat;
 @Component
 public class YuzeeProtocolRegistry {
 
-    public static final String PROMPT_VERSION = "1.6";
+    public static final String PROMPT_VERSION = "1.11";
     public static final String PROTOCOL_VERSION = "1.3";
     public static final String SCHEMA_VERSION = "1.3";
     public static final String TARGET_RUNTIME_MODEL = "gemini-3.7-flash";
@@ -26,7 +26,7 @@ public class YuzeeProtocolRegistry {
     @PostConstruct
     public void init() {
         try {
-            ClassPathResource promptRes = new ClassPathResource("yuzee/prompts/Yuzee_Main_Prompt_Gemini_JSON_ONLY_FINAL_v0.12.md");
+            ClassPathResource promptRes = new ClassPathResource("yuzee/prompts/Yuzee_Quiz_Counsellor_Training_v1.11.md");
             try (InputStream is = promptRes.getInputStream()) {
                 this.productionPrompt = new String(is.readAllBytes(), StandardCharsets.UTF_8);
             }

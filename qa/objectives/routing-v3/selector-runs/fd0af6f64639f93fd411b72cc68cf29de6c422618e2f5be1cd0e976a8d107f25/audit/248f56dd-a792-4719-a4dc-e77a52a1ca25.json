@@ -1,0 +1,486 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "STUDY_002",
+      "score": 0.8087139004543826,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7984846868502068,
+      "contextScore": 0.8087139004543826
+    },
+    {
+      "id": "PATH_012",
+      "score": 0.8698318070295122,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.8698318070295122,
+      "contextScore": 0.7757935846517511
+    },
+    {
+      "id": "PATH_006",
+      "score": 0.809056885451321,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.809056885451321,
+      "contextScore": 0.7611436452263459
+    },
+    {
+      "id": "SCHOOL_023",
+      "score": 0.7785164092019016,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7286724650898723,
+      "contextScore": 0.7785164092019016
+    },
+    {
+      "id": "SCHOOL_024",
+      "score": 0.7531899606191907,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7380446111998604,
+      "contextScore": 0.7531899606191907
+    },
+    {
+      "id": "STUDY_008",
+      "score": 0.7741818127660463,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.720224382844341,
+      "contextScore": 0.7741818127660463
+    },
+    {
+      "id": "SCHOOL_038",
+      "score": 0.7462332010427597,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7411150135438391,
+      "contextScore": 0.7462332010427597
+    },
+    {
+      "id": "JOB_DISCOVER_002",
+      "score": 0.7493712020403502,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7185074408561158,
+      "contextScore": 0.7493712020403502
+    },
+    {
+      "id": "JOB_COMPARE_006",
+      "score": 0.7438100607805307,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7083669486353847,
+      "contextScore": 0.7438100607805307
+    },
+    {
+      "id": "PATH_003",
+      "score": 0.7828704837354958,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7828704837354958
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.7640301914743853,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7640301914743853
+    },
+    {
+      "id": "PATH_004",
+      "score": 0.7600803456829262,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7600803456829262
+    },
+    {
+      "id": "EMP_ENTRY_004",
+      "score": 0.7569709392028657,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7569709392028657
+    },
+    {
+      "id": "IND_PATH_006",
+      "score": 0.7547912140750551,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7547912140750551
+    },
+    {
+      "id": "PATH_005",
+      "score": 0.7321710538116831,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7321710538116831
+    },
+    {
+      "id": "JOB_COMPARE_003",
+      "score": 0.721429182298758,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.721429182298758
+    },
+    {
+      "id": "IND_COMPARE_005",
+      "score": 0.7910582307241527,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7910582307241527
+    },
+    {
+      "id": "IND_PATH_004",
+      "score": 0.7194151860106731,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7194151860106731
+    },
+    {
+      "id": "SCHOOL_027",
+      "score": 0.7830492819255259,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7830492819255259
+    },
+    {
+      "id": "IND_SKILL_002",
+      "score": 0.7129036468894036,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7129036468894036
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "Can you compare university, vocational college and learning through an apprenticeship for me?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Compare education and work-based routes and their trade-offs.",
+      "confirmed_facts": [],
+      "possible_need": "Compare education and work-based routes and their trade-offs.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Compare education and work-based routes and their trade-offs."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "STUDY_002",
+        "button_label": "Do I need a degree?",
+        "outcome": "Compare degree, diploma, certificate, apprenticeship, short course, microcredential, work+study and self-directed routes where appropriate.",
+        "when_to_use": "Serve when user assumes a degree is always required.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Degree or Another Route?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Degree or Another Route?: Compare degree, diploma, certificate, apprenticeship, short course, microcredential, work+study and self-directed routes where appropriate. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_012",
+        "button_label": "University vs TAFE vs apprenticeship",
+        "outcome": "Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner.",
+        "when_to_use": "Serve when student is choosing between pathway families.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Pathway Types' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Pathway Types: Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_006",
+        "button_label": "I need to earn money too",
+        "outcome": "Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training.",
+        "when_to_use": "Serve when student cannot afford a study-only route.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Earn While I Learn' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Earn While I Learn: Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_023",
+        "button_label": "TAFE or university - what actually changes?",
+        "outcome": "Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status.",
+        "when_to_use": "Serve when student equates prestige with outcome.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Outcomes, Not Prestige' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Outcomes, Not Prestige: Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_024",
+        "button_label": "Show all routes to my goal",
+        "outcome": "Map university, VET, apprenticeship, work+study, bridging and shorter learning routes to the same goal.",
+        "when_to_use": "Serve when student thinks there is one acceptable pathway.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Show All Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Show All Routes: Map university, VET, apprenticeship, work+study, bridging and shorter learning routes to the same goal. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "STUDY_008",
+        "button_label": "Is the extra study worth it?",
+        "outcome": "Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims.",
+        "when_to_use": "Serve when user is balancing cost/time against likely benefit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cost vs Outcome' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cost vs Outcome: Compare time, tuition, foregone earnings, outcome differences and alternative routes without making simplistic ROI claims. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_038",
+        "button_label": "I do not want to study for four years",
+        "outcome": "Compare shorter qualifications, VET, apprenticeship, short courses, microcredentials and staged pathways.",
+        "when_to_use": "Serve when student wants a faster route.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Shorter Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Shorter Routes: Compare shorter qualifications, VET, apprenticeship, short courses, microcredentials and staged pathways. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_002",
+        "button_label": "What jobs can I do with my skills?",
+        "outcome": "Map existing skills to occupations and explain which are directly usable versus gap-heavy.",
+        "when_to_use": "Serve when user knows capabilities but not occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Skills: Map existing skills to occupations and explain which are directly usable versus gap-heavy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_006",
+        "button_label": "Which keeps more future options open?",
+        "outcome": "Compare skill transferability, industries, adjacent roles and further-study flexibility.",
+        "when_to_use": "Serve when young user fears choosing too narrowly.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Keeps More Future Options Open?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Keeps More Future Options Open?: Compare skill transferability, industries, adjacent roles and further-study flexibility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_003",
+        "button_label": "Explore TAFE & vocational study",
+        "outcome": "Explain certificate/diploma/advanced diploma, skill sets, placements, employment and possible higher study.",
+        "when_to_use": "Serve when student is considering applied/vocational study.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Vocational Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Vocational Route: Explain certificate/diploma/advanced diploma, skill sets, placements, employment and possible higher study. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_004",
+        "button_label": "Could I do an apprenticeship?",
+        "outcome": "Explain employment + structured training + qualification and the employer/training contract requirement.",
+        "when_to_use": "Serve when student wants paid training/work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Apprenticeship Route: Explain employment + structured training + qualification and the employer/training contract requirement. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_ENTRY_004",
+        "button_label": "Can I train with this employer?",
+        "outcome": "Find employer apprenticeships/traineeships and relevant occupation/qualification paths.",
+        "when_to_use": "Serve when student wants apprenticeship opportunities at an employer.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Apprenticeship: Find employer apprenticeships/traineeships and relevant occupation/qualification paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_PATH_006",
+        "button_label": "Can I earn while I train?",
+        "outcome": "Show industry occupations where apprenticeships/traineeships exist and the employment/training relationship.",
+        "when_to_use": "Serve when user wants employer-based training.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Apprenticeship Routes: Show industry occupations where apprenticeships/traineeships exist and the employment/training relationship. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "PATH_005",
+        "button_label": "Start while I am still at school",
+        "outcome": "Explain school, employer, RTO, training contract and how work/training fits senior schooling.",
+        "when_to_use": "Serve when student wants to begin apprenticeship/traineeship during school.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'School-Based Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for School-Based Apprenticeship: Explain school, employer, RTO, training contract and how work/training fits senior schooling. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_003",
+        "button_label": "Which can I reach sooner?",
+        "outcome": "Compare skill, credential, experience, licensing and competition barriers.",
+        "when_to_use": "Serve when user prioritizes time-to-entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Is Easier to Enter?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Is Easier to Enter?: Compare skill, credential, experience, licensing and competition barriers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_COMPARE_005",
+        "button_label": "Which gives me more career options?",
+        "outcome": "Compare job-family breadth, transferable skills and cross-industry mobility.",
+        "when_to_use": "Serve when user wants breadth and mobility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Gives Me More Career Options?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Gives Me More Career Options?: Compare job-family breadth, transferable skills and cross-industry mobility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_PATH_004",
+        "button_label": "Can I enter through vocational study?",
+        "outcome": "Show relevant certificates/diplomas, apprenticeships/traineeships and job families.",
+        "when_to_use": "Serve when user wants applied/vocational entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'VET Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for VET Routes: Show relevant certificates/diplomas, apprenticeships/traineeships and job families. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_027",
+        "button_label": "I have to work while studying",
+        "outcome": "Compare study loads, delivery modes, timetables, work-based routes and reduced-load options.",
+        "when_to_use": "Serve when student has paid-work commitments.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Study Around Work' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Study Around Work: Compare study loads, delivery modes, timetables, work-based routes and reduced-load options. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_SKILL_002",
+        "button_label": "Which skills matter most?",
+        "outcome": "Assess breadth of use, occupations needing the skill, required depth, transferability and demand direction.",
+        "when_to_use": "Serve when user needs prioritization across the industry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Most Valuable Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Most Valuable Skills: Assess breadth of use, occupations needing the skill, required depth, transferability and demand direction. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry workforce/occupation evidence, skills taxonomy, vacancy/shortage signals",
+        "needs_live_data": "Yes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4436,
+      "total_input_tokens": 4274,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4274
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 76,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 86,
+      "raw_prompt_token": 4697,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4697
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 92
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 86
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:44Z",
+    "updated": "2026-09-18T12:16:44Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "ErcECrQEAWkUfRO9cr0HFAbRx3ij/cM6rc6d3Op0hg5RJw85afDkOj79r7OXrTRZl2aoRSx6VX90y2WWvj5+7LM5hB8S2NofUHaz/fkW/wXPLOxM/Lj0/YP5NocQCYeg/KewzfqdMfPaiuarPZGGiakdRqYdgATSVYSrkpN1dHOgk3ncYeSVW8NkrG/ixzESOtBKayhavQO0ICgSEXdYFKg9DFKm9dHXv9mKvy1m4VIetdXnJo4RkyTyHvergIxYH/J0dj4C+ddR7aAe9q7aY3m08sr/WndHv2gDwEUGedW9mpzMkl/WxMxzTq3FxvOtkrhjeNJmtSzAbqIWQrAen5dAKoQwu/kD3UvNJYLbrI6Tag6I7eGDmqR0SEj6Knq/x0IHQ1jsGwXEsSb0M2tjOHB8BBEU2AcVteCk/N6suuBm5jsy465BeC6J/VDUzbVQbtMczpVEMT5h+s53xK9bt1ZP+9uIHdh6gqGv3PpG8JsbjWGY2PSyVM9N6llqlgWYD97CMY0xuK/p/ZmwxH4/IOkN8W5xTaEmaL0oXxMEv3eZet4jaatpgBTd3bKRjRwdB7ymtCMT/tnOR7zCPK4MFOa1l/oP5YzEN48bupYvfl+nTmDBomgEsMiu2RL0x/oaho4gwZKr6bbR6BXwF0KQDjPg6J+6w55oWINL1bVnscL/VJcDwq2TaDW2BZwP+1rZVYTiGIj71v05+CTVLl5KH1sKP8Jn2FDcpFBfo9oRgB2psP88UKCYyECO",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"PATH_012\",\n  \"reason\": \"Compare learning styles, costs, duration, earnings, and credentials across university, vocational study, and apprenticeships side by side.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "PATH_012",
+    "reason": "Compare learning styles, costs, duration, earnings, and credentials across university, vocational study, and apprenticeships side by side.",
+    "disposition": "AUTO_OPEN",
+    "selectionId": "49c1f906-a16c-4e07-8019-31105751ba75",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.8698318070295122,
+    "margin": -0.06111790657512961,
+    "userConfidence": null,
+    "createdAt": 1789733804795
+  }
+}

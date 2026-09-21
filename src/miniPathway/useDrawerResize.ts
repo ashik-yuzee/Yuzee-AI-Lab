@@ -2,21 +2,21 @@ import {useEffect,useRef,useState} from 'react';
 import type {PointerEvent,KeyboardEvent} from 'react';
 
 const WIDTH_KEY='yuzee-mini-pathway-width';
-export function useDrawerResize(open:boolean,expanded:boolean){
+export function useDrawerResize(open:boolean,expanded:boolean,storageKey=WIDTH_KEY,dockBreakpoint=1200){
  const [viewport,setViewport]=useState(()=>window.innerWidth);
  const [preferred,setPreferred]=useState<number|null>(()=>{
-  try{const value=Number(localStorage.getItem(WIDTH_KEY));return Number.isFinite(value)&&value>=320?value:null;}catch{return null;}
+  try{const value=Number(localStorage.getItem(storageKey));return Number.isFinite(value)&&value>=320?value:null;}catch{return null;}
  });
  const [resizing,setResizing]=useState(false);
  const drag=useRef<{id:number;x:number;width:number}|null>(null);
  // Leave room to read the chat when docked; small screens use the existing overlay.
- const maximum=Math.max(1,viewport>=1200?viewport-360:viewport);
+ const maximum=Math.max(1,viewport>=dockBreakpoint?viewport-360:viewport);
  const minimum=Math.min(320,maximum);
  const clamp=(value:number)=>Math.round(Math.max(minimum,Math.min(maximum,value)));
- const defaultWidth=Math.floor(viewport*0.45);
+ const defaultWidth=viewport>=1600?490:viewport<dockBreakpoint?480:440;
  const width=clamp(preferred??defaultWidth);
  useEffect(()=>{const resize=()=>setViewport(window.innerWidth);window.addEventListener('resize',resize);return()=>window.removeEventListener('resize',resize);},[]);
- useEffect(()=>{try{if(preferred===null)localStorage.removeItem(WIDTH_KEY);else localStorage.setItem(WIDTH_KEY,String(preferred));}catch{/* Resizing still works if browser storage is unavailable. */}},[preferred]);
+ useEffect(()=>{try{if(preferred===null)localStorage.removeItem(storageKey);else localStorage.setItem(storageKey,String(preferred));}catch{/* Resizing still works if browser storage is unavailable. */}},[preferred,storageKey]);
  useEffect(()=>{drag.current=null;setResizing(false);},[open,expanded,viewport]);
  const finish=(event:PointerEvent<HTMLDivElement>)=>{
   if(drag.current?.id!==event.pointerId)return;

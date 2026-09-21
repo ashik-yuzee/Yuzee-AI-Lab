@@ -1,0 +1,279 @@
+{
+  "test_id": "IND_DISCOVER_001-T06",
+  "objective_id": "IND_DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "2080875ee27545d3034a1539c701376585fca069f4f379dcffdd47edf1b4ce79",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 1877,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "IND_DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "73fc039b4976959706b49e16232aeea9a1720c5d837874a17791a2772e3b12f8",
+  "status": "NEEDS_HUMAN_REVIEW",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4784
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "IND_DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "interests_and_activities",
+        "purpose": "Identify core interests, preferred subjects, or activity types to build initial industry exploration matches.",
+        "prompt": "Which areas or types of work sound most interesting or natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_tech_data",
+            "label": "Technology & Problem Solving",
+            "detail": "Working with software, data, systems, or technical building"
+          },
+          {
+            "id": "opt_health_care",
+            "label": "Health, Wellbeing & Care",
+            "detail": "Supporting physical health, mental wellbeing, or patient care"
+          },
+          {
+            "id": "opt_creative_media",
+            "label": "Creative Arts, Design & Media",
+            "detail": "Visual design, storytelling, digital content, or entertainment"
+          },
+          {
+            "id": "opt_business_finance",
+            "label": "Business, Finance & Enterprise",
+            "detail": "Managing projects, strategy, commerce, or financial analysis"
+          },
+          {
+            "id": "opt_environment_sustainability",
+            "label": "Environment, Energy & Outdoors",
+            "detail": "Sustainability, agriculture, climate solutions, or natural sciences"
+          },
+          {
+            "id": "opt_education_community",
+            "label": "Community, Law & Public Impact",
+            "detail": "Teaching, social impact, public service, justice, or policy"
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User interests, subjects, or preferred work themes",
+      "Target location or study constraints",
+      "Demonstrated or preferred skills"
+    ],
+    "result": {
+      "industry_exploration_shortlist": null,
+      "next_actions": [],
+      "summary": "To discover relevant industries to explore, we first need to gather your top interest areas or preferred types of work."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No profile signals, subjects, or interest areas supplied yet."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in Chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Industry exploration requires at least two user interest or subject signals to generate grounded sector recommendations.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting initial interest selection to map potential industry sectors and job families."
+      },
+      "evidence_and_unknowns": [
+        "User interests and activity preferences are unknown."
+      ],
+      "recommended_next_action": "Select up to 3 preferred interest themes to initiate industry matching."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The QA workbook guidelines note that off-topic selection is not measured by this already-selected planner fixture.",
+          "evidence_pointer": "context.session.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Confirmed facts dictionary was empty, and the candidate accurately acknowledged no prior inputs were available.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question presents distinct, age-appropriate industry theme buckets that directly enable initial matching.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI component emitted is multi_select, which is in the V2 allowed list [multi_select | hierarchy_explorer | evidence_panel | comparison_grid | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The planner correctly identified that at least two user interest/subject signals are needed before producing industry matches and sought initial inputs accordingly.",
+          "evidence_pointer": "candidate.handoff.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded or fabricated market claims were made; unknowns were explicitly preserved.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychological constructs, personality types, or diagnostic success claims were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The planner correctly halts with NEEDS_INPUT because zero signals were available to generate the shortlist.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is kept disabled with clear blocking reasons given the absence of input signals.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object properly captures user inputs, unknowns, semantic summary, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emitted actions are standard non-privileged chat handoffs with no external writes or endpoint exposure.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture tests routing and objective abstention against an off-topic prompt ('Write me a short birthday poem'), but routing is pre-selected and fixed by the fixture session harness."
+      ],
+      "summary": "The candidate handled the objective initiation gracefully under an empty context state, adhering to V2 UI constraints, evidence discipline, and psychometric restraint."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3220,
+      "total_input_tokens": 2392,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2392
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 828,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2789,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2789
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 846
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4784,
+  "usage": {
+    "total_tokens": 3105,
+    "total_input_tokens": 2261,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2261
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 844,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6791,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6791
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 860
+          }
+        ]
+      }
+    ]
+  }
+}

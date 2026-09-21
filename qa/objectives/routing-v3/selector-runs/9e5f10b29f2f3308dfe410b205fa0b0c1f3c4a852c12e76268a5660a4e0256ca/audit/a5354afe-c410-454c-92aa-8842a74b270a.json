@@ -1,0 +1,468 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "SCHOOL_037",
+      "score": 0.7423577202521927,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6994310672919984,
+      "contextScore": 0.7423577202521927
+    },
+    {
+      "id": "LEARN_ROUTE_003",
+      "score": 0.790865483321273,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6623346359900826,
+      "contextScore": 0.790865483321273
+    },
+    {
+      "id": "PATH_009",
+      "score": 0.7598169236327932,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6742770964892884,
+      "contextScore": 0.7598169236327932
+    },
+    {
+      "id": "SCHOOL_011",
+      "score": 0.777630844757239,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.777630844757239
+    },
+    {
+      "id": "SCHOOL_007",
+      "score": 0.7476399751550914,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7476399751550914
+    },
+    {
+      "id": "RECOVERY_003",
+      "score": 0.722015342234446,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.722015342234446
+    },
+    {
+      "id": "SCHOOL_001",
+      "score": 0.703139836514775,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.703139836514775
+    },
+    {
+      "id": "SCHOOL_040",
+      "score": 0.6990720215233461,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6990720215233461
+    },
+    {
+      "id": "SCHOOL_008",
+      "score": 0.695394281196619,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.695394281196619
+    },
+    {
+      "id": "SCHOOL_013",
+      "score": 0.6905700454869473,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6905700454869473
+    },
+    {
+      "id": "SCHOOL_004",
+      "score": 0.688327221743891,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.688327221743891
+    },
+    {
+      "id": "SCHOOL_009",
+      "score": 0.6829522236253499,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6829522236253499
+    },
+    {
+      "id": "SCHOOL_019",
+      "score": 0.6823063291174443,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6823063291174443
+    },
+    {
+      "id": "SCHOOL_014",
+      "score": 0.6703091806983742,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6703091806983742
+    },
+    {
+      "id": "SCHOOL_003",
+      "score": 0.8294878817120782,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.8294878817120782
+    },
+    {
+      "id": "RECOVERY_004",
+      "score": 0.6685359506378818,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6685359506378818
+    },
+    {
+      "id": "STUDY_007",
+      "score": 0.814143433627003,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.814143433627003
+    },
+    {
+      "id": "PATH_005",
+      "score": 0.6672788283138467,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6672788283138467
+    },
+    {
+      "id": "SCHOOL_010",
+      "score": 0.7986249429313453,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7986249429313453
+    },
+    {
+      "id": "SCHOOL_005",
+      "score": 0.6667842207420737,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6667842207420737
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I need to know if dropping chemistry would stop me getting into the course I want later.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Check subject prerequisites for a target course, identifying unknown course-specific requirements.",
+      "confirmed_facts": [],
+      "possible_need": "Check subject prerequisites for a target course, identifying unknown course-specific requirements.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Check subject prerequisites for a target course, identifying unknown course-specific requirements."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "SCHOOL_037",
+        "button_label": "Will I get a job after this course?",
+        "outcome": "Separate course outcomes, relevant entry roles, extra experience/skills, local demand and uncertainty.",
+        "when_to_use": "Serve when student assumes qualification automatically guarantees work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course to Employment Reality Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course to Employment Reality Check: Separate course outcomes, relevant entry roles, extra experience/skills, local demand and uncertainty. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "LEARN_ROUTE_003",
+        "button_label": "Find a short course",
+        "outcome": "Find short courses teaching the specific skill at the required level.",
+        "when_to_use": "Serve when user needs a focused learning option.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Short Course Finder' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Short Course Finder: Find short courses teaching the specific skill at the required level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, required depth, current level, budget/time, preferred learning mode, credential requirement",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_009",
+        "button_label": "Could I do something shorter?",
+        "outcome": "Clarify whether goal is exploration, one skill, job prep, portfolio, prerequisite or trial before commitment.",
+        "when_to_use": "Serve when student wants exploration or one focused skill.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Short Course Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Short Course Route: Clarify whether goal is exploration, one skill, job prep, portfolio, prerequisite or trial before commitment. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_011",
+        "button_label": "Can I drop this subject?",
+        "outcome": "Show affected courses, prerequisites, ATAR implications, knowledge gaps and alternative routes.",
+        "when_to_use": "Serve when student wants to drop/change a subject.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Happens if I Drop This?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Happens if I Drop This?: Show affected courses, prerequisites, ATAR implications, knowledge gaps and alternative routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_007",
+        "button_label": "I like it but I am not good at it",
+        "outcome": "Separate interest from current performance and explore support, foundations and risk before dropping the subject.",
+        "when_to_use": "Serve when student enjoys a subject but current marks are weak.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Interest vs Ability' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Interest vs Ability: Separate interest from current performance and explore support, foundations and risk before dropping the subject. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_003",
+        "button_label": "What are my options now?",
+        "outcome": "Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed.",
+        "when_to_use": "Serve when academic result or subject change disrupts plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Failed or Dropped a Subject' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Failed or Dropped a Subject: Show affected prerequisites/pathways and realistic alternatives without treating the route as permanently closed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_001",
+        "button_label": "Help me choose my subjects",
+        "outcome": "Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation.",
+        "when_to_use": "Serve when student is selecting subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Help Me Choose My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Help Me Choose My Subjects: Balance enjoyment, strength, careers, course prerequisites, workload, school offerings and option preservation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_040",
+        "button_label": "Can I handle this course?",
+        "outcome": "Explain likely workload, assumed knowledge, assessment style and support/bridging options.",
+        "when_to_use": "Serve when student worries about academic/workload demands.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Study Difficulty Preview' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Study Difficulty Preview: Explain likely workload, assumed knowledge, assessment style and support/bridging options. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_008",
+        "button_label": "Should I choose this for my ATAR?",
+        "outcome": "Challenge scaling-only decisions and compare likely performance, interest and prerequisites.",
+        "when_to_use": "Serve when student is choosing subjects mainly for scaling.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Scaling Reality Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Scaling Reality Check: Challenge scaling-only decisions and compare likely performance, interest and prerequisites. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_013",
+        "button_label": "How reversible is this choice?",
+        "outcome": "Explain which choices are easy, moderate or harder to change and what consequences follow.",
+        "when_to_use": "Serve when student fears a subject/pathway decision is permanent.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Reversibility Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Reversibility Check: Explain which choices are easy, moderate or harder to change and what consequences follow. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_004",
+        "button_label": "I do not know what I want yet",
+        "outcome": "Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects.",
+        "when_to_use": "Serve when student is undecided and fears closing doors.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Options Open' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Keep My Options Open: Find a reasonable subject combination that keeps broad options open without forcing poor-fit subjects. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_009",
+        "button_label": "Is this combination too much?",
+        "outcome": "Estimate assessment, exam, practical and project load alongside work/sport/family commitments.",
+        "when_to_use": "Serve when student is considering several demanding subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Workload Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Workload Check: Estimate assessment, exam, practical and project load alongside work/sport/family commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_019",
+        "button_label": "Am I copying my friends?",
+        "outcome": "Check whether the option independently fits the student’s interests, goals and constraints.",
+        "when_to_use": "Serve when student is choosing subjects/pathways because friends are.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Choose for Me, Not My Friends' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Choose for Me, Not My Friends: Check whether the option independently fits the student’s interests, goals and constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_014",
+        "button_label": "Am I ready, not just eligible?",
+        "outcome": "Separate formal eligibility from academic readiness, interest, study-style fit and life constraints.",
+        "when_to_use": "Serve when student meets entry rules but may not be prepared for study.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Ready vs Eligible' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Ready vs Eligible: Separate formal eligibility from academic readiness, interest, study-style fit and life constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_003",
+        "button_label": "What subjects do I need for this course?",
+        "outcome": "Classify required prerequisites, assumed knowledge, recommended subjects and no-requirement subjects.",
+        "when_to_use": "Serve when student has a specific tertiary course in mind.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for My Course' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for My Course: Classify required prerequisites, assumed knowledge, recommended subjects and no-requirement subjects. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "RECOVERY_004",
+        "button_label": "I want something completely different",
+        "outcome": "Reset matching around the new goal and avoid anchoring on old subject/career assumptions.",
+        "when_to_use": "Serve when student changes direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Changed My Mind' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Changed My Mind: Reset matching around the new goal and avoid anchoring on old subject/career assumptions. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_007",
+        "button_label": "What does this course not teach?",
+        "outcome": "Compare course-taught capabilities with target-role requirements and highlight extra learning/experience needed.",
+        "when_to_use": "Serve when user wants to know what will still be missing for a target job.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Gap Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Gap Check: Compare course-taught capabilities with target-role requirements and highlight extra learning/experience needed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_005",
+        "button_label": "Start while I am still at school",
+        "outcome": "Explain school, employer, RTO, training contract and how work/training fits senior schooling.",
+        "when_to_use": "Serve when student wants to begin apprenticeship/traineeship during school.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'School-Based Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for School-Based Apprenticeship: Explain school, employer, RTO, training contract and how work/training fits senior schooling. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_010",
+        "button_label": "Check my subject combination",
+        "outcome": "Check ATAR eligibility, prerequisites, option preservation, workload, overlap and missing foundations.",
+        "when_to_use": "Serve when student wants a final sanity check.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Combination Checker' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Combination Checker: Check ATAR eligibility, prerequisites, option preservation, workload, overlap and missing foundations. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_005",
+        "button_label": "Use my strongest subjects",
+        "outcome": "Use grades, enjoyment, effort, consistency and feedback rather than highest grade alone.",
+        "when_to_use": "Serve when student wants choices based on current performance.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Am Good At' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Am Good At: Use grades, enjoyment, effort, consistency and feedback rather than highest grade alone. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4319,
+      "total_input_tokens": 4254,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4254
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 65,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4659,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4659
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 81
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:47Z",
+    "updated": "2026-09-18T12:16:47Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EmIKYAFpFH0TAeVM+5T8JKoa7Y9Gu8N2FlfwpMALElkZOHZ9L9DuidJt61Vu0OP0s2wKuI3nqGNls0tfx+EIdR7f+LlXuys4h7UkMWk4gZTtrU3tJ9CnNyUz5KjVa/ICornGGQ==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"SCHOOL_011\",\n  \"reason\": \"This tool examines how dropping chemistry impacts prerequisites and future course entry options.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "SCHOOL_011",
+    "reason": "This tool examines how dropping chemistry impacts prerequisites and future course entry options.",
+    "disposition": "NONE",
+    "selectionId": "2764b76b-d811-46e6-b750-b604961ba74f",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.777630844757239,
+    "margin": -0.048507763069080334,
+    "userConfidence": null,
+    "createdAt": 1789733807310
+  }
+}

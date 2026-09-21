@@ -1,0 +1,252 @@
+{
+  "test_id": "SCHOOL_003-T01",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 582,
+  "input_context": {
+    "user_message": "I want help with subjects for my course.",
+    "prior_context_text": "No prior objective result.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "e5a62a361a1e14c4234aa9f21bec7283ef390d3882cb3735b32b0dc381990ba6",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4566
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SCHOOL_003",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_picker",
+        "purpose": "Identify the target tertiary course and institution to check exact subject prerequisites",
+        "prompt": "Which specific tertiary course and university/provider are you planning to apply for?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User seeking subject selection alignment with tertiary course requirements",
+        "basis": "User message explicitly states interest in subjects for their course",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target tertiary course name",
+      "Target provider / institution",
+      "Campus or intake year/period",
+      "Student's current year level and curriculum / jurisdiction"
+    ],
+    "result": {
+      "course_subject_requirements": null,
+      "summary": "Target course and provider are required before verifying exact prerequisites and assumed knowledge."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course and provider not specified"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Specify Target Course and Provider",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted student to name their target course and tertiary provider to verify prerequisites.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting specific course and provider details to evaluate subject prerequisites."
+      },
+      "evidence_and_unknowns": [
+        "Target course and provider unknown"
+      ],
+      "recommended_next_action": "Specify the target course and institution."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate executes SCHOOL_003 directly in response to the user's request for subject help.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no prior facts provided in the context, and the candidate did not re-ask any supplied information.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asks a single, discriminative question to identify the specific tertiary course and provider required for prerequisite checks.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses 'entity_picker', which is in the V2 allowed primitive list for SCHOOL_003.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "In accordance with mandatory overrides, when the course/provider is not selected, it seeks the target course/provider needed for exact prerequisite checks.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate does not invent prerequisites or current facts, setting status to NEEDS_INPUT and recording critical unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric scores, diagnostic claims, or life success predictions were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The planner correctly stops at NEEDS_INPUT rather than hallucinating course prerequisite data.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/unscored due to missing critical target route prerequisites, listing blockers accurately.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides a clean, compact semantic handoff with summary, confirmed inputs, unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Only approved structured schema intents (CONTINUE_CHAT) are emitted without direct external endpoints or unauthorized writes.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate cleanly executed objective SCHOOL_003, adhering strictly to the V2 UI primitives, mandatory overrides for unselected providers/courses, evidence boundaries, and standard JSON schema handoff."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2988,
+      "total_input_tokens": 2186,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2186
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 802,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2583,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2583
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 821
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4566,
+  "usage": {
+    "total_tokens": 2843,
+    "total_input_tokens": 2270,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2270
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 573,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6694,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6694
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 590
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,284 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval2",
+  "candidates": [
+    {
+      "id": "EMP_HIRING_001",
+      "score": 0.7152980856670782
+    },
+    {
+      "id": "PATH_004",
+      "score": 0.6959231585945306
+    },
+    {
+      "id": "VACANCY_004",
+      "score": 0.6938892511227001
+    },
+    {
+      "id": "EMP_SAFE_002",
+      "score": 0.6913246221521014
+    },
+    {
+      "id": "EMP_FIT_001",
+      "score": 0.6858999836357392
+    },
+    {
+      "id": "EMP_SAFE_001",
+      "score": 0.6851713453838448
+    },
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.6844376374993654
+    },
+    {
+      "id": "VACANCY_003",
+      "score": 0.6771035027166129
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "A recruiter wants an upfront payment for equipment and my bank password before an interview. Can you check this offer?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "response": "Do not pay or share your password. Those are serious red flags. The employer has not been verified; we can assess what is known and what needs checking.",
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "EMP_HIRING_001",
+        "button_label": "Are they hiring?",
+        "topic_name": "Hiring Signals",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Review active vacancies, trend, job families, locations and graduate hiring signals.",
+        "when_to_serve": "Serve when user wants current employer demand. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Hiring Signals' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Current/recent employer vacancies, locations, teams and recruitment signals",
+        "key_output": "Evidence of hiring, role growth, hard-to-fill areas and locations",
+        "needs_live_data": "Yes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "timeline",
+          "hierarchy_explorer",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "PATH_004",
+        "button_label": "Could I do an apprenticeship?",
+        "topic_name": "Apprenticeship Route",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Explain employment + structured training + qualification and the employer/training contract requirement.",
+        "when_to_serve": "Serve when student wants paid training/work. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Apprenticeship Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "key_output": "One or more feasible post-school routes with conditions, trade-offs and next checks",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "pathway_builder",
+          "comparison_grid",
+          "entity_picker",
+          "evidence_panel",
+          "timeline",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "VACANCY_004",
+        "button_label": "What would stop me getting this job?",
+        "topic_name": "What Am I Missing?",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Identify missing mandatory criteria, skill depth, experience or evidence likely to affect candidacy.",
+        "when_to_serve": "Serve when user wants blockers for a vacancy. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'What Am I Missing?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Specific job advertisement plus user profile/evidence",
+        "key_output": "Plain-language requirements, match/gaps and targeted next actions",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "evidence_panel",
+          "comparison_grid",
+          "readiness_scorecard",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_SAFE_002",
+        "button_label": "Does anything look wrong?",
+        "topic_name": "Job Offer Red Flags",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Flag requested payments, vague employer, unrealistic pay, message-only interview, early bank-data requests or questionable unpaid trials.",
+        "when_to_serve": "Serve when user receives suspicious offer/process. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Job Offer Red Flags' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer/job ad, company verification sources, offer/request details",
+        "key_output": "Legitimacy/red-flag assessment with deterministic security checks where possible",
+        "needs_live_data": "Yes",
+        "max_interactions": 4,
+        "allowed_primitives": [
+          "evidence_panel",
+          "yes_no_unsure",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_FIT_001",
+        "button_label": "Does this employer fit me?",
+        "topic_name": "Would I Fit Here?",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Compare role, skill, industry interest, location, company size, work style, flexibility, growth and values.",
+        "when_to_serve": "Serve when user wants employer-person fit. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Would I Fit Here?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer evidence plus user role/skill/industry/location/work-value preferences",
+        "key_output": "Potential fit, friction and unknowns without an overall employer score",
+        "needs_live_data": "Often",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "constraint_builder",
+          "tradeoff_matrix",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_SAFE_001",
+        "button_label": "Check this opportunity",
+        "topic_name": "Is This Employer or Job Legitimate?",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Check legal entity, company domain/contact consistency, role existence and suspicious payment/sensitive-data requests.",
+        "when_to_serve": "Serve when user encounters unfamiliar employer/opportunity. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Employer or Job Legitimate?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer/job ad, company verification sources, offer/request details",
+        "key_output": "Legitimacy/red-flag assessment with deterministic security checks where possible",
+        "needs_live_data": "Yes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "evidence_panel",
+          "yes_no_unsure",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "topic_name": "Compare Offer or Role",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_serve": "Serve when user has multiple opportunities. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Job choice, motives, priorities, evidence and unknowns",
+        "key_output": "Decision rationale, risks and research questions",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "ranking",
+          "comparison_grid",
+          "tradeoff_matrix",
+          "evidence_panel",
+          "readiness_scorecard",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "VACANCY_003",
+        "button_label": "How well do I match this job?",
+        "topic_name": "Do I Match?",
+        "primary_category": "Jobs, Skills & Learning",
+        "clear_purpose": "Compare requirements with evidence in the profile/CV and surface unknowns.",
+        "when_to_serve": "Serve when user wants fit to a specific vacancy. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Do I Match?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Specific job advertisement plus user profile/evidence",
+        "key_output": "Plain-language requirements, match/gaps and targeted next actions",
+        "needs_live_data": "Yes",
+        "max_interactions": 6,
+        "allowed_primitives": [
+          "entity_picker",
+          "skill_matrix",
+          "evidence_panel",
+          "comparison_grid",
+          "readiness_scorecard",
+          "action_handoff"
+        ],
+        "available": true
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 2203,
+      "total_input_tokens": 2147,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2147
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 56,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2382,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2382
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 72
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T10:22:08Z",
+    "updated": "2026-09-18T10:22:08Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TAbZatQXJ/s1LUhGI4l/iMNwRhMJj5I0VGr7i9mgTQgnOnBXFaxxUaQiEmAnApwo/VnRy4W2/M12LNtydgSqAAW1OK8HzP/2SslTcYLlIJWU8A+jnUiiKEWPvSJ97LhRpew90OGhS",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"EMP_SAFE_002\",\n  \"reason\": \"Systematically review the specific warning signs in this recruitment interaction to verify safety risks and determine safe next steps.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "decision": "SUGGEST",
+    "objective_id": "EMP_SAFE_002",
+    "reason": "Systematically review the specific warning signs in this recruitment interaction to verify safety risks and determine safe next steps."
+  }
+}

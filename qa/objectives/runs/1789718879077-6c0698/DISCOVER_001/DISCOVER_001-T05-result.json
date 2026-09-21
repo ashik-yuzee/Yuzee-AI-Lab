@@ -1,0 +1,331 @@
+{
+  "test_id": "DISCOVER_001-T05",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 6,
+  "input_context": {
+    "user_message": "I want to explore interest explorer, but what I said earlier probably contradicts this.",
+    "prior_context_text": "Prior context contains conflicting signals.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "8db57e4b123906df01b14958a6bbad48a29dfb6579c1c46c59e5c7cc6c7f44cf",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 7336
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "riasec_activity_interests",
+        "purpose": "Identify primary RIASEC-inspired activity interest areas without relying on contradictory prior statements.",
+        "prompt": "Which types of activities do you genuinely enjoy doing or exploring the most? (Choose 1 to 3)",
+        "required": true,
+        "options": [
+          {
+            "id": "realistic_building",
+            "label": "Building & Hands-on Work",
+            "detail": "Working with tools, machinery, hardware, physical materials, or outdoor environments."
+          },
+          {
+            "id": "investigative_problem_solving",
+            "label": "Analyzing & Problem-Solving",
+            "detail": "Investigating data, researching scientific questions, coding, or solving complex intellectual puzzles."
+          },
+          {
+            "id": "artistic_creating",
+            "label": "Creative Design & Expression",
+            "detail": "Visual design, creative writing, music, performing, or developing original media."
+          },
+          {
+            "id": "social_helping",
+            "label": "Helping & Collaborating",
+            "detail": "Teaching, mentoring, healthcare, counselling, or supporting individuals and communities."
+          },
+          {
+            "id": "enterprising_leading",
+            "label": "Leading & Persuading",
+            "detail": "Managing projects, entrepreneurship, sales, public speaking, or strategic decision-making."
+          },
+          {
+            "id": "conventional_organizing",
+            "label": "Organizing & Optimizing Systems",
+            "detail": "Managing records, financial calculations, workflows, quality control, or data management."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Ambiguous Interest Baseline",
+        "basis": "User indicated potential contradictions with earlier context; resetting exploration baseline.",
+        "confidence": "LOW"
+      }
+    ],
+    "unknowns": [
+      "Core RIASEC-inspired activity preferences",
+      "Grounded evidence linking interests to past school, work, or hobby examples"
+    ],
+    "result": {
+      "interest_themes": [],
+      "next_actions": [],
+      "summary": "Starting fresh to identify your core RIASEC-inspired activity interests and resolve conflicting prior signals.",
+      "unknowns": [
+        {
+          "label": "Selected Interest Themes",
+          "detail": "User has not yet selected preferred activity clusters.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Discovery Readiness",
+      "score": 15,
+      "dimensions": [
+        {
+          "name": "Self-awareness",
+          "score": 20,
+          "reason": "User is actively reflecting on interest areas but notes conflicting thoughts."
+        },
+        {
+          "name": "Evidence from answers/examples",
+          "score": 10,
+          "reason": "No confirmed activity preferences or concrete examples provided yet."
+        },
+        {
+          "name": "Constraint clarity",
+          "score": 20,
+          "reason": "Exploration baseline is open; no specific constraints confirmed."
+        },
+        {
+          "name": "Pattern consistency",
+          "score": 10,
+          "reason": "Prior statements contained contradictory signals."
+        },
+        {
+          "name": "Next-step clarity",
+          "score": 15,
+          "reason": "Requires initial activity selection to map subsequent exploration pathways."
+        }
+      ],
+      "blockers": [
+        "Awaiting user selection of 1-3 core activity interest themes"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated Interest Explorer (DISCOVER_001). Prompting user to select core activity preferences to establish an uncontradicted interest baseline.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "interest_themes": [],
+        "next_actions": [],
+        "summary": "Pending activity selection.",
+        "unknowns": [
+          {
+            "label": "Activity Preferences",
+            "detail": "Pending selection from RIASEC-inspired activity categories.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "evidence_and_unknowns": [
+        "Prior context contained contradictions; starting fresh with direct activity selection.",
+        "No confirmed RIASEC activity themes currently established."
+      ],
+      "recommended_next_action": "Complete multi_select activity interests to establish grounded themes."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correctly assigned and matched the DISCOVER_001 objective based on the user's explicit request to explore interests.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test harness indicates 'Prior context contains conflicting signals' but provided an empty confirmed_facts dictionary and no concrete prior text, making context reuse unassessable due to fixture limitations.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question is clear, concrete, age-appropriate, allows multi-select (1-3) with explicit RIASEC-inspired activity descriptions, and supports unsure.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate uses the allowed 'multi_select' primitive from the DISCOVER_001 allowlist with compliant fields.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the RIASEC-inspired activity framing and does not jump directly from a theme to a premature career recommendation.",
+          "evidence_pointer": "candidate.ui[0].options"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No ungrounded current facts or salary/market claims were fabricated; unknown status is properly maintained.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Avoids clinical/psychometric scoring or career-success predictions; frames choices around RIASEC-inspired activity exploration.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Properly pauses with NEEDS_INPUT because baseline interest inputs are missing at interaction 0.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Uses the specified Discovery Readiness model with traceable dimension scores reflecting low early readiness without predicting life/career success.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Includes a compact semantic handoff envelope with confirmed inputs, result, unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct external API endpoints, write actions, or unauthorized system actions are emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted actual prior context / confirmed facts while stating 'Prior context contains conflicting signals' (MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+      ],
+      "summary": "The candidate properly handles DISCOVER_001 with a valid multi_select primitive for RIASEC-inspired exploration, avoids unsupported psychometric/predictive claims, and correctly requests missing input. Context reuse could not be fully assessed due to fixture omissions."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3316,
+      "total_input_tokens": 2431,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2431
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 885,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2828,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2828
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 904
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 7336,
+  "usage": {
+    "total_tokens": 3305,
+    "total_input_tokens": 2038,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2038
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1267,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6354,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6354
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1284
+          }
+        ]
+      }
+    ]
+  }
+}

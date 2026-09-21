@@ -1,0 +1,247 @@
+{
+  "test_id": "EMP_COMPARE_001-T04",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "UNSURE_USER",
+  "model": "gemini-3.7-flash",
+  "source_row": 3085,
+  "input_context": {
+    "user_message": "I am not sure about some of the details for Compare Employers.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "fad31df90315e92ecc6cb7ce9af1106eefe93a92b0d2d6768a238e426891845b",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6119
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_employers",
+        "purpose": "Identify which employers or specific roles/programs to compare",
+        "prompt": "Which employers or graduate/internship programs would you like to compare?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 2,
+          "max": 5,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "target_employers_or_roles",
+      "user_priorities_and_constraints",
+      "role_level_and_location_scope"
+    ],
+    "result": {
+      "employer_comparison": null,
+      "next_actions": [],
+      "summary": "Please specify at least two employers or specific roles/programs to begin the comparison."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employers or roles specified for comparison"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide employers to compare",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiating employer comparison; awaiting target employer names or roles.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Comparison pending selection of target employers."
+      },
+      "evidence_and_unknowns": [
+        "Target employers unknown",
+        "Role scope unknown"
+      ],
+      "recommended_next_action": "Select or enter the employers you want to compare."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned objective EMP_COMPARE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no prior confirmed facts provided, and the candidate appropriately starts with empty confirmed inputs without re-asking existing data.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate prompts for the baseline target employers/programs with allow_unsure enabled, which is necessary and material for comparing employers.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI component 'entity_picker' is on the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly seeks employers/programs at the initial UNDERSTAND stage for comparison, listing relevant domain unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported employer claims, salaries, or facts are invented; status is correctly set to NEEDS_INPUT with explicit unknowns.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career predictions, or success scores are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction correctly pauses at NEEDS_INPUT because required initial options are missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/held back pending input, citing the blocking missing employer specification.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff structure is present with summary, confirmed inputs, evidence/unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits safe structured intent without direct endpoint invocations or autonomous policy-violating actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "All rubric criteria passed. The candidate properly initiated the EMP_COMPARE_001 workflow using an allowed V2 primitive, retained unknowns, avoided inventing facts, and set status to NEEDS_INPUT."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3011,
+      "total_input_tokens": 2230,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2230
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 781,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2627,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2627
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 800
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6119,
+  "usage": {
+    "total_tokens": 2815,
+    "total_input_tokens": 2286,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2286
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 529,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7293,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7293
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 546
+          }
+        ]
+      }
+    ]
+  }
+}

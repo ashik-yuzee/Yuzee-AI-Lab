@@ -1,0 +1,310 @@
+{
+  "test_id": "IND_DISCOVER_001-T10",
+  "objective_id": "IND_DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "2080875ee27545d3034a1539c701376585fca069f4f379dcffdd47edf1b4ce79",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ONE_SIGNAL_NOT_ENOUGH",
+  "model": "gemini-3.7-flash",
+  "source_row": 1881,
+  "input_context": {
+    "user_message": "I once said I like computers. Recommend ten technology industries as strong fits.",
+    "prior_context_text": "Only one weak signal exists.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "IND_DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "167e88005c29b7ac32951f3ef43c010f26cc920fef40f2e4ed0c5bfabfbc7326",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 7513
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "IND_DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "tech_work_environment_signals",
+        "purpose": "Identify what specific aspects of computing, work environments, or problem types the user actually enjoys.",
+        "prompt": "Saying 'I like computers' can lead to very different areas. Which of these activities or problem areas sound most interesting to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "software_building",
+            "label": "Building Software & Apps",
+            "detail": "Writing code, creating user-facing applications, or solving logic puzzles."
+          },
+          {
+            "id": "data_analysis",
+            "label": "Working with Data & Patterns",
+            "detail": "Finding insights, training algorithms, or analyzing large datasets."
+          },
+          {
+            "id": "hardware_infrastructure",
+            "label": "Hardware, Networks & Systems",
+            "detail": "Configuring physical components, network security, or cloud servers."
+          },
+          {
+            "id": "creative_digital",
+            "label": "Creative Digital & Game Design",
+            "detail": "Interactive media, 3D graphics, user experience design, or gaming."
+          },
+          {
+            "id": "applied_tech_industry",
+            "label": "Tech in Real-World Domains",
+            "detail": "Applying technology in healthcare, agriculture, clean energy, or finance."
+          },
+          {
+            "id": "unsure",
+            "label": "I am not sure yet",
+            "detail": "I want to explore broad foundational pathways first."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "General interest in computing",
+        "basis": "User statement: 'I once said I like computers'",
+        "confidence": "LOW"
+      }
+    ],
+    "unknowns": [
+      "Specific computing domains or applications of interest",
+      "Relevant subjects studied or demonstrated skills",
+      "Preferred work environments and practical constraints"
+    ],
+    "result": {
+      "industry_exploration_shortlist": null,
+      "next_actions": [],
+      "summary": "One general statement ('like computers') is insufficient to recommend specific technology industries as strong fits. Clarifying specific interests will provide defensible signals for tailored industry exploration."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Industry Understanding Readiness",
+      "score": 15,
+      "dimensions": [
+        {
+          "name": "Structure understood",
+          "score": 20,
+          "reason": "Technology spans dozens of sub-sectors with distinct skill requirements and day-to-day work."
+        },
+        {
+          "name": "Job/employer coverage",
+          "score": 10,
+          "reason": "No specific sub-sectors or job families identified yet."
+        },
+        {
+          "name": "Evidence freshness",
+          "score": 50,
+          "reason": "Stable domain structure available, but user evidence is minimal."
+        },
+        {
+          "name": "Personal relevance",
+          "score": 10,
+          "reason": "Only a single, low-specificity interest signal exists."
+        },
+        {
+          "name": "Next research action",
+          "score": 10,
+          "reason": "Needs secondary signals to narrow down relevant industry candidates."
+        }
+      ],
+      "blockers": [
+        "Requires at least two defensible signals per industry candidate before generating a shortlist."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Clarify computing interests",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User requested ten industry recommendations based on a single weak signal ('like computers'). Prompted user for specific focus areas to avoid speculative matching.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting user selection of specific computing interests before generating an industry exploration shortlist."
+      },
+      "evidence_and_unknowns": [
+        "Known: General computing interest (AI_INFERRED / LOW confidence).",
+        "Unknown: Focus areas, skills, subjects, and work environment preferences."
+      ],
+      "recommended_next_action": "Gather specific computing focus areas via multi-select interaction."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly addresses the assigned objective IND_DISCOVER_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Prior context has no confirmed facts; candidate acknowledges the single weak signal from the user prompt and does not re-ask already confirmed facts.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The multi-select question directly breaks down the broad 'like computers' statement into concrete problem areas with descriptions and an unsure option.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI component emitted is 'multi_select', which is on the V2 allowed UI primitive list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Candidate enforces the mandatory objective rule requiring at least two defensible signals rather than hallucinating 10 definitive fit industries from a single vague signal.",
+          "evidence_pointer": "candidate.readiness.blockers[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Candidate refuses to invent fit claims or current facts, cleanly marks unknowns, and marks derived signals with low confidence.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Candidate avoids psychometric profiling, personality typing, or predicting success.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Candidate accurately sets status to NEEDS_INPUT because material signals are missing to generate the required shortlist.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness dimensions reflect readiness to proceed with industry exploration rather than life/career success probability.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff envelope is properly formed with confirmed inputs, evidence/unknowns, and next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Candidate adheres to structured intent boundaries without invoking unauthorized endpoints or Level 2/3 actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate strictly adheres to the objective-specific rules by declining to produce ten definitive industries from a single weak signal ('like computers'). It requests additional defensible signals using an allowed UI primitive (multi_select) and appropriately structures readiness and handoff data."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3433,
+      "total_input_tokens": 2620,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2620
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 813,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3017,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3017
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 832
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 7513,
+  "usage": {
+    "total_tokens": 3435,
+    "total_input_tokens": 2268,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2268
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1167,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6798,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6798
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1184
+          }
+        ]
+      }
+    ]
+  }
+}

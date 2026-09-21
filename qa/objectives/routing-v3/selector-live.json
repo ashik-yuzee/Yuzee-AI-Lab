@@ -1,0 +1,131 @@
+[
+  {
+    "id": "interests-new",
+    "expected": [
+      "DISCOVER_001"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "DISCOVER_001",
+      "reason": "Explore everyday activities and interest themes to help identify the types of tasks you genuinely enjoy.",
+      "disposition": "SUGGEST",
+      "selectionId": "83f50f06-63ad-4624-83fa-5761dc9d1c7b",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v4-context",
+      "selectedSimilarity": 0.7746470443720086,
+      "selectedRank": 2,
+      "retrievalSources": [
+        "user",
+        "context"
+      ],
+      "margin": null,
+      "userConfidence": {
+        "score": 30,
+        "band": "low",
+        "evidence_strength": "weak",
+        "trend": "unknown",
+        "reason_codes": [
+          "EXPLICIT_UNCERTAINTY",
+          "CRITERIA_UNCLEAR",
+          "ROUTE_UNRESOLVED"
+        ]
+      },
+      "createdAt": 1789734222214
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 2643
+  },
+  {
+    "id": "careers-new",
+    "expected": [
+      "JOB_COMPARE_001"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_COMPARE_001",
+      "reason": "Compare the core tasks, required skills, and daily work environments of engineering and marketing side by side.",
+      "disposition": "AUTO_OPEN",
+      "selectionId": "5c11077e-e613-45ac-a4e0-4765d2614676",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v4-context",
+      "selectedSimilarity": 0.8884570685669777,
+      "selectedRank": 1,
+      "retrievalSources": [
+        "user",
+        "context"
+      ],
+      "margin": null,
+      "userConfidence": {
+        "score": 30,
+        "band": "low",
+        "evidence_strength": "weak",
+        "trend": "unknown",
+        "reason_codes": [
+          "EXPLICIT_UNCERTAINTY",
+          "CRITERIA_UNCLEAR",
+          "ROUTE_UNRESOLVED"
+        ]
+      },
+      "createdAt": 1789734225997
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 3783
+  },
+  {
+    "id": "short-context",
+    "expected": [
+      "DISCOVER_001",
+      "DISCOVER_003"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "NONE",
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "The user is in the middle of a chat-based exploratory dialogue clarifying their interests across coding and user observation, which is best handled directly in conversation.",
+      "disposition": "NONE",
+      "selectionId": "c7444319-fdb3-4f8a-8116-f16af87e8916",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v4-context",
+      "selectedSimilarity": null,
+      "selectedRank": null,
+      "retrievalSources": [],
+      "margin": null,
+      "userConfidence": {
+        "score": 35,
+        "band": "low",
+        "evidence_strength": "weak",
+        "trend": "unknown",
+        "reason_codes": [
+          "EXPLICIT_UNCERTAINTY",
+          "CRITERIA_UNCLEAR",
+          "ROUTE_UNRESOLVED",
+          "ACTION_EXPLORING"
+        ]
+      },
+      "createdAt": 1789734229255
+    },
+    "proposedDisposition": "NONE",
+    "correct": false,
+    "ms": 3258
+  },
+  {
+    "id": "optout",
+    "expected": [],
+    "result": {
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "No extra activity is needed for this message.",
+      "disposition": "NONE"
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 0
+  }
+]

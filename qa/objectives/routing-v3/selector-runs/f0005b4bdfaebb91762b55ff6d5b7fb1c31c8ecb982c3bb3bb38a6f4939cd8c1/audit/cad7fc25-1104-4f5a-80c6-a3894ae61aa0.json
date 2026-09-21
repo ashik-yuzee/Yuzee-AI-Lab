@@ -1,0 +1,470 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "GAP_001",
+      "score": 0.7595984387081545,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7333581367740225,
+      "contextScore": 0.7595984387081545
+    },
+    {
+      "id": "JOB_DISCOVER_002",
+      "score": 0.7379157550057456,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7379157550057456,
+      "contextScore": 0.7133725507608679
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.7291251245809403,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7291251245809403,
+      "contextScore": 0.7221459985795385
+    },
+    {
+      "id": "SKILL_SIDE_003",
+      "score": 0.7263394545047169,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.720327996590862,
+      "contextScore": 0.7263394545047169
+    },
+    {
+      "id": "STUDY_001",
+      "score": 0.7530217832062345,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7530217832062345
+    },
+    {
+      "id": "SCHOOL_002",
+      "score": 0.7480102806490752,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7480102806490752
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.737279245435707,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.737279245435707
+    },
+    {
+      "id": "SCHOOL_033",
+      "score": 0.7345381418361152,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7345381418361152
+    },
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.7303789244936759,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7303789244936759
+    },
+    {
+      "id": "EMP_GROWTH_005",
+      "score": 0.7294617009723899,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7294617009723899
+    },
+    {
+      "id": "JOB_DECIDE_003",
+      "score": 0.7287216890196347,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7287216890196347
+    },
+    {
+      "id": "SKILL_SIDE_005",
+      "score": 0.7281768163128669,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7281768163128669
+    },
+    {
+      "id": "STUDY_006",
+      "score": 0.7273995426113403,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7273995426113403
+    },
+    {
+      "id": "IND_SKILL_004",
+      "score": 0.721349871926304,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.721349871926304
+    },
+    {
+      "id": "SKILL_SIDE_001",
+      "score": 0.7775927756058556,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7775927756058556
+    },
+    {
+      "id": "PROFILE_009",
+      "score": 0.7197996072748897,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7197996072748897
+    },
+    {
+      "id": "VACANCY_003",
+      "score": 0.7444719935735481,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7444719935735481
+    },
+    {
+      "id": "LEARN_005",
+      "score": 0.7159380295355147,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7159380295355147
+    },
+    {
+      "id": "PROFILE_005",
+      "score": 0.7355635112784262,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7355635112784262
+    },
+    {
+      "id": "JOB_DISCOVER_004",
+      "score": 0.7155599346368784,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7155599346368784
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "My goal is junior data analysis. I do spreadsheets in the shop but have never checked what else I need to learn.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Compare current spreadsheet experience with skills needed for junior data analysis; distinguish unknown from missing.",
+      "confirmed_facts": [],
+      "possible_need": "Compare current spreadsheet experience with skills needed for junior data analysis; distinguish unknown from missing.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Compare current spreadsheet experience with skills needed for junior data analysis; distinguish unknown from missing."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "GAP_001",
+        "button_label": "What am I missing?",
+        "outcome": "Compare required capabilities to demonstrated/self-reported evidence and distinguish missing from unknown.",
+        "when_to_use": "Serve when user has a target job and wants a gap analysis.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Me to This Job' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Me to This Job: Compare required capabilities to demonstrated/self-reported evidence and distinguish missing from unknown. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role requirements, user skill evidence, experience, qualifications",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_002",
+        "button_label": "What jobs can I do with my skills?",
+        "outcome": "Map existing skills to occupations and explain which are directly usable versus gap-heavy.",
+        "when_to_use": "Serve when user knows capabilities but not occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Skills: Map existing skills to occupations and explain which are directly usable versus gap-heavy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SKILL_SIDE_003",
+        "button_label": "Show my existing skills",
+        "outcome": "Summarize evidenced and self-reported capabilities with confidence/evidence labels.",
+        "when_to_use": "Serve when user underestimates or cannot articulate capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills I Already Have' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills I Already Have: Summarize evidenced and self-reported capabilities with confidence/evidence labels. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "STUDY_001",
+        "button_label": "Find study routes",
+        "outcome": "Find appropriate study/training routes starting from the goal rather than course keywords.",
+        "when_to_use": "Serve when user knows a goal but not what learning route leads there.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Should I Study?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Should I Study?: Find appropriate study/training routes starting from the goal rather than course keywords. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_002",
+        "button_label": "What subjects help with my career?",
+        "outcome": "Show subjects that are useful for the target career while separating useful from mandatory prerequisites.",
+        "when_to_use": "Serve when student has a career goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for My Career: Show subjects that are useful for the target career while separating useful from mandatory prerequisites. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_033",
+        "button_label": "I need something for my resume",
+        "outcome": "Turn school, projects, clubs, volunteering and casual work into evidence of skills.",
+        "when_to_use": "Serve when student lacks employer-visible evidence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Build My First Evidence' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Build My First Evidence: Turn school, projects, clubs, volunteering and casual work into evidence of skills. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "outcome": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_use": "Serve when user wants employer comparison against a specific goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Better for My Career Goal: Compare how each employer could build the capabilities/experience needed for the user target. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_GROWTH_005",
+        "button_label": "What could this company teach me?",
+        "outcome": "Map likely skill development opportunities to teams, programs and role responsibilities.",
+        "when_to_use": "Serve when user wants employer as a learning environment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills I Could Build Here' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills I Could Build Here: Map likely skill development opportunities to teams, programs and role responsibilities. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer development programs, internal roles, user target skill/role",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DECIDE_003",
+        "button_label": "What should I find out before applying?",
+        "outcome": "Generate a focused evidence checklist around team, work, progression, pay, location and requirements.",
+        "when_to_use": "Serve when user has a role but lacks key decision information.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Should I Find Out Before Applying?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Should I Find Out Before Applying?: Generate a focused evidence checklist around team, work, progression, pay, location and requirements. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SKILL_SIDE_005",
+        "button_label": "Where can I use this skill?",
+        "outcome": "Map a skill to occupations and industries where it matters.",
+        "when_to_use": "Serve when user knows a capability but not where it is valuable.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill to Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill to Careers: Map a skill to occupations and industries where it matters. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "STUDY_006",
+        "button_label": "Where could this course take me?",
+        "outcome": "Map course to skills, realistic entry roles, later roles and specialisations.",
+        "when_to_use": "Serve when user wants to understand outcomes of a qualification.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course to Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course to Career: Map course to skills, realistic entry roles, later roles and specialisations. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_SKILL_004",
+        "button_label": "What skills are employers struggling to find?",
+        "outcome": "Separate skill shortage, occupation shortage, retention issue and training bottleneck where evidence allows.",
+        "when_to_use": "Serve when user wants shortage opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Hard-to-Find Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Hard-to-Find Skills: Separate skill shortage, occupation shortage, retention issue and training bottleneck where evidence allows. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry workforce/occupation evidence, skills taxonomy, vacancy/shortage signals",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SKILL_SIDE_001",
+        "button_label": "What am I missing?",
+        "outcome": "Compare current demonstrated skills with target requirements and separate missing from unknown.",
+        "when_to_use": "Serve when user has a target role/course and wants capability gaps.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill Gap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Identify a gap against a target role, distinguishing missing skills from unverified skills; not generic course learning or resume rewriting.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PROFILE_009",
+        "button_label": "My goals",
+        "outcome": "Save current goals with status such as exploring/target/changed.",
+        "when_to_use": "Serve when user has a goal or several possible goals.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Goals' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Goals: Save current goals with status such as exploring/target/changed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "VACANCY_003",
+        "button_label": "How well do I match this job?",
+        "outcome": "Compare requirements with evidence in the profile/CV and surface unknowns.",
+        "when_to_use": "Serve when user wants fit to a specific vacancy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Do I Match?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Do I Match?: Compare requirements with evidence in the profile/CV and surface unknowns. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Specific job advertisement plus user profile/evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "LEARN_005",
+        "button_label": "Build my learning order",
+        "outcome": "Sequence foundational skills, tools, practice, projects and communication/application skills.",
+        "when_to_use": "Serve when user wants a sequenced capability plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Build My Skill Roadmap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Build My Skill Roadmap: Sequence foundational skills, tools, practice, projects and communication/application skills. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PROFILE_005",
+        "button_label": "My skills",
+        "outcome": "Save skills with demonstrated/self-reported/unknown evidence labels.",
+        "when_to_use": "Serve when user wants a reusable capability profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Skills: Save skills with demonstrated/self-reported/unknown evidence labels. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_004",
+        "button_label": "What can I apply for now?",
+        "outcome": "Find roles with the smallest evidence/skill/credential gaps using current profile.",
+        "when_to_use": "Serve when user wants immediate options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs Without More Study' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs Without More Study: Find roles with the smallest evidence/skill/credential gaps using current profile. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4168,
+      "total_input_tokens": 4091,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4091
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 77,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4524,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4524
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 93
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:03Z",
+    "updated": "2026-09-18T12:16:03Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TTGuP+Izg0pKa1Gb9zk6Y4yI3MTmLQOu5PJMypSRmvj1ls5IpOik9IgQNBH18vDpdgvbT92MCNODwBc8SSlWfF8JWFzlpOiW1KWEcW1f34MWpm8Ce425k+nigdG6qgvXIGeikAJOJ",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"SKILL_SIDE_001\",\n  \"reason\": \"Compare your spreadsheet experience against junior data analyst requirements to see what skills you have and what you need to learn next.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "SKILL_SIDE_001",
+    "reason": "Compare your spreadsheet experience against junior data analyst requirements to see what skills you have and what you need to learn next.",
+    "disposition": "SUGGEST",
+    "selectionId": "4e71bf96-b98e-4d1c-a2e5-f60fac293a97",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.7775927756058556,
+    "margin": 0.02168268370240889,
+    "userConfidence": null,
+    "createdAt": 1789733763859
+  }
+}

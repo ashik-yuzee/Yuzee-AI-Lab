@@ -1,0 +1,520 @@
+[
+  {
+    "id": "interests-new",
+    "expected": [
+      "DISCOVER_001"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "DISCOVER_001",
+      "reason": "Explore everyday activities and tasks you enjoy to uncover interest themes and potential career directions.",
+      "disposition": "SUGGEST",
+      "selectionId": "9d6c8446-6cda-4c62-bf3e-a51566c2ffcb",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.9294257469957107,
+      "margin": -0.1440401246596612,
+      "userConfidence": null,
+      "createdAt": 1789733759473
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 11541
+  },
+  {
+    "id": "skills-new",
+    "expected": [
+      "SKILL_SIDE_001"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "SKILL_SIDE_001",
+      "reason": "Compare your spreadsheet experience against junior data analyst requirements to see what skills you have and what you need to learn next.",
+      "disposition": "SUGGEST",
+      "selectionId": "4e71bf96-b98e-4d1c-a2e5-f60fac293a97",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7775927756058556,
+      "margin": 0.02168268370240889,
+      "userConfidence": null,
+      "createdAt": 1789733763859
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 4381
+  },
+  {
+    "id": "caring-new",
+    "expected": [
+      "SCHOOL_028"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "SCHOOL_028",
+      "reason": "Explore flexible, part-time, online, and local training pathways structured around your daily family and caring responsibilities.",
+      "disposition": "SUGGEST",
+      "selectionId": "046f139c-e9cc-4ba1-8344-7f5580e7f50f",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7884506769285982,
+      "margin": 0.021056202950414216,
+      "userConfidence": null,
+      "createdAt": 1789733766422
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 2564
+  },
+  {
+    "id": "offers-new",
+    "expected": [
+      "JOB_DECIDE_004"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_DECIDE_004",
+      "reason": "Compare your two concrete job offers side-by-side across salary, mentoring, commute, and career trade-offs.",
+      "disposition": "AUTO_OPEN",
+      "selectionId": "6f61c543-da71-4903-897f-60a2af888fa0",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8921287226445077,
+      "margin": 0.10303907388217759,
+      "userConfidence": null,
+      "createdAt": 1789733771044
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 4622
+  },
+  {
+    "id": "careers-new",
+    "expected": [
+      "JOB_COMPARE_001"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_COMPARE_001",
+      "reason": "Compare daily tasks, required skills, and core work aspects between engineering and marketing side by side.",
+      "disposition": "SUGGEST",
+      "selectionId": "353bc392-b24d-41ea-8955-50e1a6519b04",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8421267535283566,
+      "margin": 0.03255471691204992,
+      "userConfidence": null,
+      "createdAt": 1789733775488
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 4443
+  },
+  {
+    "id": "typos-new",
+    "expected": [
+      "DISCOVER_001",
+      "DISCOVER_003"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "DISCOVER_001",
+      "reason": "Explore broad activity interests to help identify which career paths and tasks naturally suit you.",
+      "disposition": "SUGGEST",
+      "selectionId": "3934bfb2-6953-4557-9f14-cfb65f3c4f3a",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8975683296974154,
+      "margin": 0.1220811048166639,
+      "userConfidence": null,
+      "createdAt": 1789733780426
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 4937
+  },
+  {
+    "id": "short-context",
+    "expected": [
+      "DISCOVER_001",
+      "DISCOVER_003"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "DISCOVER_001",
+      "reason": "Explore how your interest in both coding and observing user behavior connects to broader activity themes and career paths.",
+      "disposition": "SUGGEST",
+      "selectionId": "387aa332-f7a3-4f5b-9480-af4dffb8b444",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7481792344853385,
+      "margin": 0.05413900640027003,
+      "userConfidence": null,
+      "createdAt": 1789733787280
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 6853
+  },
+  {
+    "id": "units-new",
+    "expected": [
+      "STUDY_005"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "STUDY_005",
+      "reason": "Translate these course unit names into the concrete practical skills, tasks, and capabilities you will actually learn.",
+      "disposition": "SUGGEST",
+      "selectionId": "fc1c9362-99a2-4090-8fa8-84c5186f6d29",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8209441540843669,
+      "margin": 0.07914696777090946,
+      "userConfidence": null,
+      "createdAt": 1789733792239
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 4959
+  },
+  {
+    "id": "scam-new",
+    "expected": [
+      "EMP_SAFE_001",
+      "EMP_SAFE_002"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "EMP_SAFE_002",
+      "reason": "Identify red flags and evaluate upfront payment requests in the hiring process to help you confirm whether this opportunity is legitimate.",
+      "disposition": "SUGGEST",
+      "selectionId": "3ffa5c7c-13fe-4326-b850-1d85b3f1ee63",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.6894824699745677,
+      "margin": 0.05310047654773942,
+      "userConfidence": null,
+      "createdAt": 1789733794924
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 2684
+  },
+  {
+    "id": "change-new",
+    "expected": [
+      "CHANGE_001",
+      "CHANGE_002",
+      "CHANGE_005"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "CHANGE_002",
+      "reason": "This activity will help map your existing retail experience and capabilities directly into valuable, transferable skills for tech roles so you don't have to start from scratch.",
+      "disposition": "SUGGEST",
+      "selectionId": "7b9f2746-4716-467a-a7ec-61064dfa4912",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7378857621460762,
+      "margin": 0.01152049499631691,
+      "userConfidence": null,
+      "createdAt": 1789733797357
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 2431
+  },
+  {
+    "id": "routes-new",
+    "expected": [
+      "PATH_012",
+      "SCHOOL_023"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "PATH_012",
+      "reason": "Compare learning styles, costs, duration, earnings, and credentials across university, vocational study, and apprenticeships side by side.",
+      "disposition": "AUTO_OPEN",
+      "selectionId": "49c1f906-a16c-4e07-8019-31105751ba75",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8698318070295122,
+      "margin": -0.06111790657512961,
+      "userConfidence": null,
+      "createdAt": 1789733804795
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 7439
+  },
+  {
+    "id": "entry-new",
+    "expected": [
+      "SCHOOL_003"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "SCHOOL_011",
+      "reason": "This tool examines how dropping chemistry impacts prerequisites and future course entry options.",
+      "disposition": "NONE",
+      "selectionId": "2764b76b-d811-46e6-b750-b604961ba74f",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.777630844757239,
+      "margin": -0.048507763069080334,
+      "userConfidence": null,
+      "createdAt": 1789733807310
+    },
+    "proposedDisposition": "NONE",
+    "correct": false,
+    "ms": 2514
+  },
+  {
+    "id": "correction",
+    "expected": [
+      "JOB_DECIDE_004"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_DECIDE_004",
+      "reason": "Compare the employment conditions, compensation, and key factors of your two concrete job offers side by side.",
+      "disposition": "AUTO_OPEN",
+      "selectionId": "122f4d99-5f65-4564-b783-be953f8d6cc2",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.8754392893066346,
+      "margin": 0.05619726005162551,
+      "userConfidence": null,
+      "createdAt": 1789733810180
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 2870
+  },
+  {
+    "id": "bad-context",
+    "expected": [
+      "JOB_DECIDE_004"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_DECIDE_004",
+      "reason": "Compare your two concrete job offers side-by-side on pay, training, and other key decision factors.",
+      "disposition": "AUTO_OPEN",
+      "selectionId": "0bd41ca2-4572-4aaa-991e-7a874cf46b04",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.9235816251318097,
+      "margin": 0.13102602210410264,
+      "userConfidence": null,
+      "createdAt": 1789733814370
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 4190
+  },
+  {
+    "id": "long-history",
+    "expected": [
+      "EMP_SAFE_001",
+      "EMP_SAFE_002"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "OPTIONAL",
+      "decision": "SUGGEST",
+      "objective_id": "EMP_SAFE_002",
+      "reason": "Identify common recruitment red flags and evaluate whether upfront payment requests indicate a fraudulent job offer.",
+      "disposition": "SUGGEST",
+      "selectionId": "6bc4b713-387d-4674-8b82-624e919fbf28",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7748480793614567,
+      "margin": 0.09212692774975484,
+      "userConfidence": null,
+      "createdAt": 1789733817779
+    },
+    "proposedDisposition": "SUGGEST",
+    "correct": true,
+    "ms": 3407
+  },
+  {
+    "id": "hello",
+    "expected": [],
+    "result": {
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "No extra activity is needed for this message.",
+      "disposition": "NONE"
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 0
+  },
+  {
+    "id": "optout",
+    "expected": [],
+    "result": {
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "No extra activity is needed for this message.",
+      "disposition": "NONE"
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 0
+  },
+  {
+    "id": "later",
+    "expected": [],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "NONE",
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "The user explicitly asked to defer comparing offers and only wants a quick explanation in chat.",
+      "disposition": "NONE",
+      "selectionId": "ae7543df-728c-48d0-8ca9-c90fa9484dbb",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": null,
+      "margin": 0.0805940413411943,
+      "userConfidence": null,
+      "createdAt": 1789733820266
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 2485
+  },
+  {
+    "id": "unrelated",
+    "expected": [],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "NONE",
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "The user is asking an off-topic cooking question, so no education or career counselling objective is appropriate.",
+      "disposition": "NONE",
+      "selectionId": "c6b2b532-9486-466f-b885-7549f4687bec",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": null,
+      "margin": -0.037300273898940306,
+      "userConfidence": null,
+      "createdAt": 1789733822885
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 2619
+  },
+  {
+    "id": "ambiguous",
+    "expected": [],
+    "result": {
+      "confidence": "LOW",
+      "workspace_need": "NONE",
+      "decision": "CLARIFY",
+      "objective_id": "",
+      "reason": "The reference 'that one' is ambiguous without prior context or identified options.",
+      "disposition": "NONE",
+      "selectionId": "d24a6bb0-c866-41af-bafe-817173f8e282",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": null,
+      "margin": 0.06799575206697084,
+      "userConfidence": null,
+      "createdAt": 1789733827250
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 4365
+  },
+  {
+    "id": "resolved",
+    "expected": [],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "NONE",
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "The user indicated that their question has been answered and they have enough information, so no further activity is needed.",
+      "disposition": "NONE",
+      "selectionId": "5e2d7bcb-6421-49c0-9384-55b7e8448c03",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": null,
+      "margin": 0.04162556238367876,
+      "userConfidence": null,
+      "createdAt": 1789733830098
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 2847
+  },
+  {
+    "id": "no-extra",
+    "expected": [],
+    "result": {
+      "decision": "NONE",
+      "objective_id": "",
+      "reason": "No extra activity is needed for this message.",
+      "disposition": "NONE"
+    },
+    "proposedDisposition": "NONE",
+    "correct": true,
+    "ms": 0
+  },
+  {
+    "id": "negated-domain",
+    "expected": [
+      "JOB_DECIDE_004"
+    ],
+    "result": {
+      "confidence": "HIGH",
+      "workspace_need": "REQUIRED",
+      "decision": "SUGGEST",
+      "objective_id": "JOB_DECIDE_004",
+      "reason": "Compare your two actual employment offers across key criteria like salary, flexibility, learning, and growth.",
+      "disposition": "SUGGEST",
+      "selectionId": "9e514f0c-0c9a-494b-ba5a-653182e03891",
+      "sourceMessageId": "a",
+      "policy": "workspace-assist-v3",
+      "selectedSimilarity": 0.7401708693107619,
+      "margin": -0.017619880124126963,
+      "userConfidence": null,
+      "createdAt": 1789733832848
+    },
+    "proposedDisposition": "AUTO_OPEN",
+    "correct": true,
+    "ms": 2749
+  }
+]

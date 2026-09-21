@@ -1,6 +1,7 @@
 import {learningToneIn} from "../miniPathway/learningTypes";
 import {PathwayLearningCues} from "./PathwayLearningCues";
 import {GuidanceList} from "./GuidanceList";
+import {readableMarkdown} from './readableMarkdown';
 import React, { useState, useEffect, useId } from "react";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -64,6 +65,7 @@ interface ProtocolV13RendererProps {
   readOnly?: boolean;
   conversationId?: string;
   hideRecommendedActions?: boolean;
+  deferQuestionToWorkspace?: boolean;
   pathwayLearningCues?: boolean;
   onOpenPathway?: () => void;
 }
@@ -78,6 +80,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
   readOnly = false,
   conversationId,
   hideRecommendedActions = false,
+  deferQuestionToWorkspace = false,
   pathwayLearningCues = false,
   onOpenPathway,
 }) => {
@@ -180,7 +183,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         return (
           <div key={block.id || index} className="space-y-1.5">
             {block.title && <h3 className="text-[16px] font-semibold text-[#1c1f26] leading-snug">{block.title}</h3>}
-            <div className="prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26]">
+            <div className="response-prose prose prose-slate max-w-none prose-p:text-[16px] prose-p:leading-[1.7] prose-p:text-[#2c333d] prose-p:my-2 prose-li:text-[16px] prose-li:leading-[1.7] prose-li:text-[#2c333d] prose-strong:text-[#1c1f26] prose-headings:text-[#1c1f26]">
               <Markdown
                 remarkPlugins={[remarkGfm]}
                 components={{
@@ -209,7 +212,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                     <td className="px-4 py-2.5 align-top" style={{ color: '#000000', borderRight: '1px solid #e5ddd5' }}>{children}</td>
                   ),
                 }}
-              >{block.text || (block as any).content || (block as any).body || ""}</Markdown>
+              >{readableMarkdown(block.text || (block as any).content || (block as any).body || "")}</Markdown>
             </div>
           </div>
         );
@@ -734,17 +737,16 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         <p className="text-[15px] text-[#0d0d0d] leading-[1.65] font-normal">{careText}</p>
       )}
 
-      {readableSections.length >= 5 && (
-        <details className="in-this-answer-details">
-          <summary>In this answer <span>Jump to a section</span></summary>
-          <nav aria-label="In this answer">
-            <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
-              {readableSections.map(section => <li key={section.index}><a className="text-sky-800 underline decoration-sky-200 underline-offset-4 hover:decoration-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4" href={`#${outputAnchor}-section-${section.index}`}>{section.title}</a></li>)}
-            </ul>
-          </nav>
-        </details>
-      )}
       {blocks[0] && <div id={`${outputAnchor}-section-0`} className="scroll-mt-6" data-output-type={blocks[0].type} data-output-variant={blocks[0].variant || "default"}>{renderBlock(blocks[0], 0)}</div>}
+
+      {readableSections.length >= 5 && (
+        <nav aria-label="In this answer" className="rounded-xl border border-slate-200 bg-slate-50/60 px-4 py-3">
+          <p className="text-sm font-semibold text-slate-700 mb-2">In this answer</p>
+          <ul className="flex flex-wrap gap-x-4 gap-y-2 text-sm">
+            {readableSections.map(section => <li key={section.index}><a className="text-sky-800 underline decoration-sky-200 underline-offset-4 hover:decoration-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4" href={`#${outputAnchor}-section-${section.index}`}>{section.title}</a></li>)}
+          </ul>
+        </nav>
+      )}
       {/* All explanations remain visible; links help readers move through longer answers. */}
       <div className="space-y-3">
         {blocks.slice(1).map((block, offset) => { const idx=offset+1; return <div key={block.id || idx} id={`${outputAnchor}-section-${idx}`} className="scroll-mt-6" data-output-type={block.type} data-output-variant={block.variant || "default"}>{renderBlock(block, idx)}</div>; })}
@@ -765,7 +767,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
       )}
 
       {(data.current_mode === 'S_SERVICE_HANDOFF' || data.rmo_readiness?.ready_to_generate && service?.service_intent_detected) && <p className="mt-4 text-sm font-medium text-slate-600" title="This is a draft in the conversation. Provider requests are not connected.">Draft only · Not sent</p>}
-      <ProtocolInteraction key={interaction.question_id} interaction={interaction} initialFields={initialFields} readOnly={readOnly} onInteract={onInteract} />
+      <div hidden={deferQuestionToWorkspace}><ProtocolInteraction key={interaction.question_id} interaction={interaction} initialFields={initialFields} readOnly={readOnly} onInteract={onInteract} /></div>
 
       {/* Recommended Actions — suppressed when ChatArea renders them in the floating bar */}
       {!hideRecommendedActions && interaction && interaction.kind === "none" && interaction.recommended_actions && interaction.recommended_actions.length > 0 && !readOnly && (

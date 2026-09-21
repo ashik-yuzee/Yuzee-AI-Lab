@@ -1,0 +1,251 @@
+{
+  "test_id": "PROFILE_005-T01",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 502,
+  "input_context": {
+    "user_message": "I want help with my skills.",
+    "prior_context_text": "No prior objective result.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "64cc64a3a1d42d6dab50292d68affd1b7f2b3e8d8d4bc034a7a1e8fd161f401a",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5005
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_matrix_initial",
+        "purpose": "Identify starting skills to record and evaluate evidence status.",
+        "prompt": "Which skills or capabilities would you like to add to your profile?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Evidence Source",
+          "Proficiency Level"
+        ],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User wants to create or organize their skill profile",
+        "basis": "User statement: 'I want help with my skills.'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific skills the user possesses or wants to track",
+      "Evidence status and proficiency for user skills"
+    ],
+    "result": {
+      "summary": "Initiating skill inventory to capture user skills, evidence types, and proficiency labels."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Share skills to build profile",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting initial skill inputs from user to build capability profile.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Initiating skill inventory to capture user skills, evidence types, and proficiency labels."
+      },
+      "evidence_and_unknowns": [
+        "No skills or evidence recorded yet."
+      ],
+      "recommended_next_action": "User provides initial skills and context."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correctly matches and routes to objective PROFILE_005 based on user intent.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Correctly handles empty prior context without re-asking existing facts.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Asks a focused, concrete question directly targeted at identifying starting skills.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses the approved V2 primitive 'skill_matrix' within the allowed UI list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the V2 flow for skill matrix initial setup, tracking evidence source and proficiency.",
+          "evidence_pointer": "candidate.ui[0].columns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Separates derived signal from user statements and properly notes missing facts under unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No ungrounded psychometric or predictive claims made.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Appropriately sets status to NEEDS_INPUT since skills must first be collected.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the mandatory override policy specifying readiness policy as NONE / disabled.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Includes structured handoff with summary, next action, and evidence/unknowns state.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits standard structured continuation intent without executing direct endpoints or unauthorized actions.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate fully complied with all criteria and V2 mandatory overrides for PROFILE_005, correctly initiating the skill inventory flow using approved primitives."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2764,
+      "total_input_tokens": 2035,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2035
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 729,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2432,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2432
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 748
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5005,
+  "usage": {
+    "total_tokens": 2734,
+    "total_input_tokens": 2180,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2180
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 554,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5865,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5865
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 571
+          }
+        ]
+      }
+    ]
+  }
+}

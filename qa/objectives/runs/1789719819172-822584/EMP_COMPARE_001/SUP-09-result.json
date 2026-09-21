@@ -1,0 +1,398 @@
+{
+  "test_id": "SUP-09",
+  "objective_id": "EMP_COMPARE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "6647d8b63cc502d769857c90a453a19bb5d740ba67a2b636e5cdf2839368c938",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2.1",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Help compare these employers for me.",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "priority": "Predictable hours matter more than company size",
+      "company_A": "Fictional Alpha",
+      "company_B": "Fictional Beta"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_COMPARE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "a68f917fa39602e29a5e0f283ea2db4283ed591e99c565ee6ff614ed2cd579ef",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "READINESS_POLICY",
+          "detail": "Employer Comparison Readiness. COMPLETE when options are genuinely comparable, hard constraints are checked, user priorities are explicit and no unlabelled critical unknown is hidden. No opaque overall employer score."
+        }
+      ],
+      "latency_ms": 7117
+    }
+  ],
+  "failures": [
+    {
+      "code": "READINESS_POLICY",
+      "detail": "Employer Comparison Readiness. COMPLETE when options are genuinely comparable, hard constraints are checked, user priorities are explicit and no unlabelled critical unknown is hidden. No opaque overall employer score."
+    }
+  ],
+  "parsed": {
+    "objective_id": "EMP_COMPARE_001",
+    "status": "NEEDS_RESEARCH",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "emp_evidence_status",
+        "purpose": "Show known priority and missing verified employer data",
+        "prompt": "Employer comparison status and required research",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Confirmed User Priority",
+            "detail": "Predictable hours matter more than company size.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": []
+          },
+          {
+            "label": "Target Employers",
+            "detail": "Comparing Fictional Alpha and Fictional Beta.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": []
+          },
+          {
+            "label": "Working Hours and Shift Patterns",
+            "detail": "Verified data on shift schedules, overtime expectations, and schedule predictability is currently unavailable.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "priority": "Predictable hours matter more than company size",
+      "company_A": "Fictional Alpha",
+      "company_B": "Fictional Beta"
+    },
+    "derived_signals": [
+      {
+        "signal": "Work-life predictability is the primary decision filter",
+        "basis": "User explicitly stated predictable hours matter more than company size",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific role titles or programs being compared at Fictional Alpha and Fictional Beta",
+      "Verified working hours, shift structure, and schedule predictability at Fictional Alpha",
+      "Verified working hours, shift structure, and schedule predictability at Fictional Beta"
+    ],
+    "result": {
+      "employer_comparison": {
+        "options": [
+          {
+            "company": "Fictional Alpha",
+            "role_or_program": null,
+            "normalised_scope": null
+          },
+          {
+            "company": "Fictional Beta",
+            "role_or_program": null,
+            "normalised_scope": null
+          }
+        ],
+        "user_priorities": [
+          {
+            "dimension": "Predictable Hours",
+            "hard_or_preference": "PREFERENCE",
+            "priority": "HIGH"
+          }
+        ],
+        "dimensions": [
+          {
+            "dimension": "Hours Predictability",
+            "option_evidence": [
+              {
+                "option": "Fictional Alpha",
+                "value_or_status": "UNKNOWN",
+                "source_class": "UNKNOWN",
+                "evidence_status": "UNVERIFIED",
+                "unknowns": [
+                  {
+                    "label": "Shift Schedule",
+                    "detail": "Requires verified employment data",
+                    "source_status": "UNKNOWN",
+                    "evidence_refs": []
+                  }
+                ]
+              },
+              {
+                "option": "Fictional Beta",
+                "value_or_status": "UNKNOWN",
+                "source_class": "UNKNOWN",
+                "evidence_status": "UNVERIFIED",
+                "unknowns": [
+                  {
+                    "label": "Shift Schedule",
+                    "detail": "Requires verified employment data",
+                    "source_status": "UNKNOWN",
+                    "evidence_refs": []
+                  }
+                ]
+              }
+            ],
+            "comparability_status": "INSUFFICIENT_DATA"
+          }
+        ],
+        "hard_constraint_conflicts": [],
+        "tradeoffs": [],
+        "decision_reversal_unknowns": [
+          {
+            "label": "Work Hour Policies",
+            "detail": "Verified shift schedule policies at either employer could determine the preferred choice.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "next_actions": [
+        {
+          "label": "Gather verified employer data",
+          "detail": "Research working hour structures and role scopes for Fictional Alpha and Fictional Beta.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "Comparison initiated between Fictional Alpha and Fictional Beta focusing on predictable hours. Awaiting verified role and hours data."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Employer Comparison Readiness",
+      "score": 30,
+      "dimensions": [
+        {
+          "name": "Comparable options",
+          "score": 40,
+          "reason": "Companies identified but specific role scopes are unconfirmed."
+        },
+        {
+          "name": "Evidence quality",
+          "score": 10,
+          "reason": "No verified data on working hours or contract terms is available."
+        },
+        {
+          "name": "User priorities",
+          "score": 90,
+          "reason": "User priority regarding predictable hours is explicit."
+        },
+        {
+          "name": "Trade-off clarity",
+          "score": 10,
+          "reason": "Cannot assess trade-offs without verified working conditions."
+        },
+        {
+          "name": "Decision actionability",
+          "score": 20,
+          "reason": "Cannot choose an employer without verified role details."
+        }
+      ],
+      "blockers": [
+        "Missing verified role specifications and hours policies for Fictional Alpha and Fictional Beta"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "research_required",
+        "label": "Research employer role conditions",
+        "type": "RESEARCH"
+      },
+      {
+        "id": "continue_chat",
+        "label": "Specify target roles or programs",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Identified comparison between Fictional Alpha and Fictional Beta prioritizing predictable hours; awaiting verified employer data and specific role scopes.",
+      "confirmed_user_inputs": {
+        "priority": "Predictable hours matter more than company size",
+        "company_A": "Fictional Alpha",
+        "company_B": "Fictional Beta"
+      },
+      "result": {
+        "summary": "Comparison initiated between Fictional Alpha and Fictional Beta focusing on predictable hours. Awaiting verified role and hours data."
+      },
+      "evidence_and_unknowns": [
+        "Target roles at both employers are unknown",
+        "Verified hours and shift patterns at both employers are unknown"
+      ],
+      "recommended_next_action": "Gather verified role scopes and working hour terms for Fictional Alpha and Fictional Beta."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets the EMP_COMPARE_001 objective matching the context.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Known context regarding company names and predictable hours priority is preserved without re-asking.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate does not spam redundant questions and only presents the evidence panel showing missing research.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses the approved 'evidence_panel' primitive allowed under the V2 override.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Constructs the full employer_comparison output contract, capturing options, user priorities, dimensions, and decision reversal unknowns.",
+          "evidence_pointer": "candidate.result.employer_comparison"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Correctly marks working hours and employer facts as UNKNOWN/NEEDS_RESEARCH without inventing stereotypes or unverified claims.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or personality claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Appropriately stops with NEEDS_RESEARCH due to missing critical facts rather than continuing to ask aimless questions or hallucinating.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Calculates Employer Comparison Readiness using required dimensions and accurately assesses low readiness (30) due to unverified employer data.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Handoff structure contains confirmed inputs, semantic summary, unknowns, and recommended next actions.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No profile write, external endpoint invocation, or unauthorized execution is performed.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate fully satisfied all requirements of EMP_COMPARE_001, appropriately identifying missing verified facts on shift/hour structures, setting status to NEEDS_RESEARCH, adhering to primitive allow-lists, and matching the required output contract without hallucinating claims."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3709,
+      "total_input_tokens": 2928,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2928
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 781,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3325,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3325
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 800
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 7117,
+  "usage": {
+    "total_tokens": 4029,
+    "total_input_tokens": 2318,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2318
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1711,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7599,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7599
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1728
+          }
+        ]
+      }
+    ]
+  }
+}

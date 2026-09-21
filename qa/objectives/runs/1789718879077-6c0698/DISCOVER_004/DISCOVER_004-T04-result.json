@@ -1,0 +1,271 @@
+{
+  "test_id": "DISCOVER_004-T04",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "UNSURE_USER",
+  "model": "gemini-3.7-flash",
+  "source_row": 29,
+  "input_context": {
+    "user_message": "I think this might help, but I am unsure about almost everything.",
+    "prior_context_text": "User explicitly expresses uncertainty.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "f3e5f12cc1b4772aa61a8ff085ddb73033242f9e4838bd764cae4c03605cf8b3",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5305
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "scenario_work_style",
+        "purpose": "Gather an initial qualitative signal on work collaboration and energy preferences in a concrete scenario.",
+        "prompt": "When starting a new project or group task, which scenario feels most natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_brainstorm_group",
+            "label": "Jump into an open group discussion",
+            "detail": "Talking through ideas out loud with others right away to build momentum."
+          },
+          {
+            "id": "opt_solo_plan",
+            "label": "Think through the details independently first",
+            "detail": "Clarifying goals and planning steps solo before sharing with the team."
+          },
+          {
+            "id": "opt_structure_lead",
+            "label": "Organise roles, schedules, and checklists",
+            "detail": "Focusing early on timelines, responsibilities, and practical coordination."
+          },
+          {
+            "id": "opt_unsure",
+            "label": "It depends heavily or I am unsure",
+            "detail": "My approach changes completely depending on the specific situation or team."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "High overall uncertainty regarding personal work tendencies",
+        "basis": "User statement: 'I am unsure about almost everything.'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Work style and collaboration preferences",
+      "Approach to ambiguity versus structured planning",
+      "Core qualitative personality tendencies across Big Five dimensions"
+    ],
+    "result": {
+      "summary": "Initiating a low-pressure qualitative exploration of work tendencies using concrete scenarios rather than abstract scoring."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Awaiting initial scenario choice to identify foundational work tendencies"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User expresses high uncertainty. Prompted with a single concrete scenario to begin identifying qualitative work tendencies.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Exploration initiated; awaiting first scenario selection."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: baseline collaboration and planning preferences."
+      ],
+      "recommended_next_action": "Complete the initial scenario test."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate handles DISCOVER_004 appropriately as requested by the test fixture.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no confirmed inputs in prior context; candidate correctly reused the user's explicit uncertainty as a derived signal.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The scenario question is concrete, low-pressure, and directly offers an explicit unsure option matching the test requirements.",
+          "evidence_pointer": "candidate.ui[0].options[3]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'scenario_test', which is strictly permitted within the V2 allowed UI primitives for this objective.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows the preferred V2 flow beginning with scenario_test and framing exploration qualitatively rather than with trait score labels.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Properly preserves unknowns and grounds derived signals strictly in the user's prompt.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric scores, percentiles, or diagnostic labels are assigned; readiness score is omitted/disabled as required.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction correctly sets status to NEEDS_INPUT without premature completion or redundant questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is set to not enabled while awaiting inputs, with no unsupported success prediction.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Standard structured handoff with summary, confirmed inputs, evidence/unknowns, and recommended action is present.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits only safe standard action types (CONTINUE_CHAT) with no direct external endpoint calls or writes.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate fully complies with the rubric. It adopts the V2 scenario_test primitive, explicitly accommodates user uncertainty with an unsure option, refrains from assigning unvalidated psychometric scores, and maintains clean evidence discipline."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2903,
+      "total_input_tokens": 2104,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2104
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 799,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2501,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2501
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 818
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5305,
+  "usage": {
+    "total_tokens": 2802,
+    "total_input_tokens": 2030,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2030
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 772,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6055,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6055
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 792
+          }
+        ]
+      }
+    ]
+  }
+}

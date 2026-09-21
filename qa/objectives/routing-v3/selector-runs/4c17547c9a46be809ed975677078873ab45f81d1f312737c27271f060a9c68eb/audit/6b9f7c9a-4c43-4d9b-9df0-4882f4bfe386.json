@@ -1,0 +1,470 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "LEARN_006",
+      "score": 0.6192738090272408,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5771984259151656,
+      "contextScore": 0.6192738090272408
+    },
+    {
+      "id": "LEARN_ROUTE_001",
+      "score": 0.6565740829261811,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5508739767457849,
+      "contextScore": 0.6565740829261811
+    },
+    {
+      "id": "SKILL_SIDE_005",
+      "score": 0.6646507906010178,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5441354260915645,
+      "contextScore": 0.6646507906010178
+    },
+    {
+      "id": "PATH_009",
+      "score": 0.6365089260404702,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5417187662199081,
+      "contextScore": 0.6365089260404702
+    },
+    {
+      "id": "SCHOOL_039",
+      "score": 0.6081481334978156,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5579248611531498,
+      "contextScore": 0.6081481334978156
+    },
+    {
+      "id": "LEARN_004",
+      "score": 0.6246672091597979,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.541849748033312,
+      "contextScore": 0.6246672091597979
+    },
+    {
+      "id": "CHANGE_002",
+      "score": 0.6270345018879305,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5414793545495715,
+      "contextScore": 0.6270345018879305
+    },
+    {
+      "id": "CAREER_SIDE_002",
+      "score": 0.6138954845038951,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5490912880364964,
+      "contextScore": 0.6138954845038951
+    },
+    {
+      "id": "FUTURE_SKILL_001",
+      "score": 0.6180130698168044,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5405360654055638,
+      "contextScore": 0.6180130698168044
+    },
+    {
+      "id": "SKILL_SIDE_007",
+      "score": 0.6137939896864001,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5312341392754947,
+      "contextScore": 0.6137939896864001
+    },
+    {
+      "id": "JOB_COMPARE_003",
+      "score": 0.5668378919575578,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5668378919575578
+    },
+    {
+      "id": "SCHOOL_030",
+      "score": 0.5636948104227707,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5636948104227707
+    },
+    {
+      "id": "JOB_REALITY_002",
+      "score": 0.5616453523411743,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5616453523411743
+    },
+    {
+      "id": "IND_COMPARE_004",
+      "score": 0.5527981850022349,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5527981850022349
+    },
+    {
+      "id": "LEARN_005",
+      "score": 0.551720693058015,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.551720693058015
+    },
+    {
+      "id": "PATH_011",
+      "score": 0.5369925251866388,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5369925251866388
+    },
+    {
+      "id": "SCHOOL_017",
+      "score": 0.5361898764305084,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5361898764305084
+    },
+    {
+      "id": "JOB_SKILL_003",
+      "score": 0.6281736852831997,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.6281736852831997
+    },
+    {
+      "id": "PROFILE_005",
+      "score": 0.5341321616491582,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.5341321616491582
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "How long should I boil pasta for dinner?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Cooking question, not an education or career request.",
+      "confirmed_facts": [],
+      "possible_need": "Cooking question, not an education or career request.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Cooking question, not an education or career request."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "LEARN_006",
+        "button_label": "Help me learn this",
+        "outcome": "Explain what it is, why it matters, beginner target, practice, tools, resources/evidence and next level.",
+        "when_to_use": "Serve when user selects a specific capability.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Learn One Skill' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Learn One Skill: Explain what it is, why it matters, beginner target, practice, tools, resources/evidence and next level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "LEARN_ROUTE_001",
+        "button_label": "How should I learn this?",
+        "outcome": "Compare workplace practice, project, mentor, short course, microcredential, formal study, self-study, internship or volunteering.",
+        "when_to_use": "Serve when user knows the skill but not the learning method.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Best Way to Learn This Skill' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Best Way to Learn This Skill: Compare workplace practice, project, mentor, short course, microcredential, formal study, self-study, internship or volunteering. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, required depth, current level, budget/time, preferred learning mode, credential requirement",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SKILL_SIDE_005",
+        "button_label": "Where can I use this skill?",
+        "outcome": "Map a skill to occupations and industries where it matters.",
+        "when_to_use": "Serve when user knows a capability but not where it is valuable.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill to Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill to Careers: Map a skill to occupations and industries where it matters. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PATH_009",
+        "button_label": "Could I do something shorter?",
+        "outcome": "Clarify whether goal is exploration, one skill, job prep, portfolio, prerequisite or trial before commitment.",
+        "when_to_use": "Serve when student wants exploration or one focused skill.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Short Course Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Short Course Route: Clarify whether goal is exploration, one skill, job prep, portfolio, prerequisite or trial before commitment. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_039",
+        "button_label": "I only need one skill",
+        "outcome": "Find short, targeted learning where appropriate and explain when formal qualification is still needed.",
+        "when_to_use": "Serve when student needs a focused capability rather than a full qualification.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill-Only Learning' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill-Only Learning: Find short, targeted learning where appropriate and explain when formal qualification is still needed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "LEARN_004",
+        "button_label": "What should I learn first?",
+        "outcome": "Map prerequisite skills and learning dependencies.",
+        "when_to_use": "Serve when user is about to start an advanced skill without foundations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill Prerequisites' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill Prerequisites: Map prerequisite skills and learning dependencies. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CHANGE_002",
+        "button_label": "What skills can I reuse?",
+        "outcome": "Translate existing work experience into capabilities relevant to a new role.",
+        "when_to_use": "Serve when user assumes they must start from zero.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Transferable Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Transferable Skills: Translate existing work experience into capabilities relevant to a new role. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CAREER_SIDE_002",
+        "button_label": "Show me a realistic day",
+        "outcome": "Describe a representative working day and recurring tasks while avoiding pretending every employer is identical.",
+        "when_to_use": "Serve when user understands the title but not the actual work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Day in the Life' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Day in the Life: Describe a representative working day and recurring tasks while avoiding pretending every employer is identical. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career idea, profile, work preferences, available occupational evidence",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "FUTURE_SKILL_001",
+        "button_label": "Is this skill becoming outdated?",
+        "outcome": "Check current demand, replacement tools, emerging alternatives and job-ad evidence.",
+        "when_to_use": "Serve when user worries a skill is losing relevance.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is My Skill Still Current?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Is My Skill Still Current?: Check current demand, replacement tools, emerging alternatives and job-ad evidence. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Occupation/skill, current job-market/tool evidence, technology/AI changes",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SKILL_SIDE_007",
+        "button_label": "How can I prove this skill?",
+        "outcome": "Suggest projects, work examples, assessment, credentials or portfolios that demonstrate capability.",
+        "when_to_use": "Serve when user can do something but lacks employer-visible proof.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Evidence My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Evidence My Skills: Suggest projects, work examples, assessment, credentials or portfolios that demonstrate capability. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_COMPARE_003",
+        "button_label": "Which can I reach sooner?",
+        "outcome": "Compare skill, credential, experience, licensing and competition barriers.",
+        "when_to_use": "Serve when user prioritizes time-to-entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Is Easier to Enter?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Is Easier to Enter?: Compare skill, credential, experience, licensing and competition barriers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_030",
+        "button_label": "What deadlines and steps do I have?",
+        "outcome": "Build a dated checklist of course/apprenticeship/application milestones using verified sources.",
+        "when_to_use": "Serve when student does not know the application sequence.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Application Timeline' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Application Timeline: Build a dated checklist of course/apprenticeship/application milestones using verified sources. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_REALITY_002",
+        "button_label": "Show me a normal workday",
+        "outcome": "Provide a representative day while noting employer/context variation.",
+        "when_to_use": "Serve when user wants concrete work context.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Day in the Life' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Day in the Life: Provide a representative day while noting employer/context variation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Occupation, current occupational evidence, user preferences",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_COMPARE_004",
+        "button_label": "Which is easier to enter?",
+        "outcome": "Compare credentials, experience, licensing, entry jobs and competition.",
+        "when_to_use": "Serve when user prioritizes time-to-entry.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Is Easier to Enter?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Is Easier to Enter?: Compare credentials, experience, licensing, entry jobs and competition. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "LEARN_005",
+        "button_label": "Build my learning order",
+        "outcome": "Sequence foundational skills, tools, practice, projects and communication/application skills.",
+        "when_to_use": "Serve when user wants a sequenced capability plan.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Build My Skill Roadmap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Build My Skill Roadmap: Sequence foundational skills, tools, practice, projects and communication/application skills. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Target role, current skills, gaps, prerequisites, job-market evidence, learning effort",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PATH_011",
+        "button_label": "Let me try it first",
+        "outcome": "Suggest work experience, VET subject, short course, project, volunteering, shadowing or informational interview.",
+        "when_to_use": "Serve when student is uncertain and needs exposure more than another quiz.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Try Before I Commit' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Try Before I Commit: Suggest work experience, VET subject, short course, project, volunteering, shadowing or informational interview. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_017",
+        "button_label": "Build my Plan B",
+        "outcome": "Create multiple routes to the same destination such as direct degree, related degree, diploma transfer or VET/work route.",
+        "when_to_use": "Serve when student wants fallback options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Plan B' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Plan B: Create multiple routes to the same destination such as direct degree, related degree, diploma transfer or VET/work route. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_SKILL_003",
+        "button_label": "How good do I need to be?",
+        "outcome": "Describe needed level such as awareness/basic/working/independent/advanced/expert by role context.",
+        "when_to_use": "Serve when user sees a skill name but not required proficiency.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill Depth' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill Depth: Describe needed level such as awareness/basic/working/independent/advanced/expert by role context. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Occupation/job ad, current skill taxonomies and job evidence",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PROFILE_005",
+        "button_label": "My skills",
+        "outcome": "Save skills with demonstrated/self-reported/unknown evidence labels.",
+        "when_to_use": "Serve when user wants a reusable capability profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Skills: Save skills with demonstrated/self-reported/unknown evidence labels. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Quiz/tool result from the corresponding profile dimension",
+        "needs_live_data": "No"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4043,
+      "total_input_tokens": 3936,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3936
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 64,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 43,
+      "raw_prompt_token": 4358,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4358
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 80
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 43
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:17:02Z",
+    "updated": "2026-09-18T12:17:02Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EqoCCqcCAWkUfRM7xMORXB/8nutUr3tY6aD2gnFVAHjVw/PLKrqTWZhof2fpkez+jejHGUp5lqZpTHX8w32MH66Dm1OTijFGH+LDDSffMVxdHVobNTyNrh4/g0OAnFvdDjLS9fH72qV+dQ1JG0tXnDz4wN2xhSAxntDBpDAtF2/KpNRYwA8MD8vxQSDUBrv1zln3/5Rj5tf+q7CW5LlJWyvMEgwcmyJqR1Rxvf5AerhYk/7qmh5oRUU0M+LCggwAGQNuFIWZegmGhl0fgm4Ax+rNkr57rSk71Gg1nVfto6xQS2aQEoHE7A25nXygK9q2g2Ub9C0VvwmKPTAc61Z0zs22wKbCmNM0f/BwSOPWHGDeqP+Z9tadPJUVNBqNAkyMHC9F4Hq2otWhpQdbLA==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"NONE\",\n  \"decision\": \"NONE\",\n  \"objective_id\": \"\",\n  \"reason\": \"The user is asking an off-topic cooking question, so no education or career counselling objective is appropriate.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "NONE",
+    "decision": "NONE",
+    "objective_id": "",
+    "reason": "The user is asking an off-topic cooking question, so no education or career counselling objective is appropriate.",
+    "disposition": "NONE",
+    "selectionId": "c6b2b532-9486-466f-b885-7549f4687bec",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": null,
+    "margin": -0.037300273898940306,
+    "userConfidence": null,
+    "createdAt": 1789733822885
+  }
+}

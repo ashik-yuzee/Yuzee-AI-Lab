@@ -1,0 +1,478 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "CHANGE_005",
+      "score": 0.7445647910938994,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7303998931089524,
+      "contextScore": 0.7445647910938994
+    },
+    {
+      "id": "CHANGE_001",
+      "score": 0.7330442960975825,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7330442960975825,
+      "contextScore": 0.7316542860565145
+    },
+    {
+      "id": "CHANGE_003",
+      "score": 0.7116952171967593,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7116952171967593,
+      "contextScore": 0.7077460013511984
+    },
+    {
+      "id": "IND_PATH_005",
+      "score": 0.7147760703848434,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7147760703848434,
+      "contextScore": 0.6940414187389654
+    },
+    {
+      "id": "IND_FUTURE_002",
+      "score": 0.708717652312621,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.708717652312621,
+      "contextScore": 0.6984210443268021
+    },
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.7101605954331116,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7101605954331116,
+      "contextScore": 0.6922740831244898
+    },
+    {
+      "id": "IND_JOB_005",
+      "score": 0.704316523408383,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.704316523408383,
+      "contextScore": 0.7014228739828714
+    },
+    {
+      "id": "SCHOOL_035",
+      "score": 0.702467066922901,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.702467066922901,
+      "contextScore": 0.6909079228668512
+    },
+    {
+      "id": "IND_DISCOVER_002",
+      "score": 0.7285927782977583,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7285927782977583
+    },
+    {
+      "id": "JOB_DISCOVER_006",
+      "score": 0.7163874079767382,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7163874079767382
+    },
+    {
+      "id": "FIRST_JOB_001",
+      "score": 0.7142666677311375,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7142666677311375
+    },
+    {
+      "id": "EMP_DISCOVER_001",
+      "score": 0.7138879979923685,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7138879979923685
+    },
+    {
+      "id": "CURRENT_JOB_005",
+      "score": 0.7070928411294465,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7070928411294465
+    },
+    {
+      "id": "IND_FUTURE_005",
+      "score": 0.7062934878256911,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7062934878256911
+    },
+    {
+      "id": "JOB_DISCOVER_001",
+      "score": 0.7055150821883194,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7055150821883194
+    },
+    {
+      "id": "CHANGE_002",
+      "score": 0.7378857621460762,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7378857621460762
+    },
+    {
+      "id": "IND_COMP_002",
+      "score": 0.700797633434273,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.700797633434273
+    },
+    {
+      "id": "CHANGE_004",
+      "score": 0.7248603415445302,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7248603415445302
+    },
+    {
+      "id": "IND_PATH_001",
+      "score": 0.6995299387959097,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6995299387959097
+    },
+    {
+      "id": "IND_SKILL_003",
+      "score": 0.7203120024099295,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7203120024099295
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "I have spent years in retail. I want to move into technology and use what I already know rather than start from zero.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Explore career transition and transferable experience from retail to technology.",
+      "confirmed_facts": [],
+      "possible_need": "Explore career transition and transferable experience from retail to technology.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Explore career transition and transferable experience from retail to technology."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "CHANGE_005",
+        "button_label": "Find changes without starting over",
+        "outcome": "Find transitions that reuse valuable experience and reduce the likelihood of restarting at entry level.",
+        "when_to_use": "Serve when user needs to protect income while changing careers.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Keep My Salary' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Keep My Salary: Find transitions that reuse valuable experience and reduce the likelihood of restarting at entry level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CHANGE_001",
+        "button_label": "Help me change careers",
+        "outcome": "Identify current state, possible destination, what to keep, what to escape and constraints.",
+        "when_to_use": "Serve when user wants a different career but has not framed the change.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Explorer: Identify current state, possible destination, what to keep, what to escape and constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CHANGE_003",
+        "button_label": "What is the easiest career move?",
+        "outcome": "Find roles with the smallest meaningful capability/credential gap.",
+        "when_to_use": "Serve when user wants a lower-friction transition.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Adjacent Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Adjacent Careers: Find roles with the smallest meaningful capability/credential gap. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_PATH_005",
+        "button_label": "What degrees lead here?",
+        "outcome": "Map relevant degrees to job families and identify cases needing professional registration or further study.",
+        "when_to_use": "Serve when user wants higher-education pathways into the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Routes: Map relevant degrees to job families and identify cases needing professional registration or further study. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_FUTURE_002",
+        "button_label": "What technology does this industry use?",
+        "outcome": "Map technologies/tools by value-chain stage and job family.",
+        "when_to_use": "Serve when user wants key technologies across the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Technology Map' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Technology Map: Map technologies/tools by value-chain stage and job family. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, current technology/AI/regulation/demographic/sustainability evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "outcome": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_use": "Serve when user wants employer comparison against a specific goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Better for My Career Goal: Compare how each employer could build the capabilities/experience needed for the user target. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_JOB_005",
+        "button_label": "How can people progress?",
+        "outcome": "Show progression ladders and adjacent transitions among industry roles.",
+        "when_to_use": "Serve when user wants long-term pathways inside the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Progression in This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Progression in This Industry: Show progression ladders and adjacent transitions among industry roles. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, occupation taxonomy, employer/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_035",
+        "button_label": "Will AI change this career?",
+        "outcome": "Break career into tasks and show which are changing, assisted, declining or growing, using current evidence where available.",
+        "when_to_use": "Serve when student worries technology will make a career obsolete.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'How Is This Career Changing?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for How Is This Career Changing?: Break career into tasks and show which are changing, assisted, declining or growing, using current evidence where available. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_DISCOVER_002",
+        "button_label": "Where could my interests take me?",
+        "outcome": "Map interests to multiple sectors instead of one obvious career.",
+        "when_to_use": "Serve when user has interests but not industry knowledge.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries From My Interests: Map interests to multiple sectors instead of one obvious career. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_006",
+        "button_label": "Find jobs that fit my lifestyle",
+        "outcome": "Filter and compare roles against explicit lifestyle/work-value constraints.",
+        "when_to_use": "Serve when user prioritizes salary, remote, flexibility, security or work conditions.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs That Match My Priorities' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs That Match My Priorities: Filter and compare roles against explicit lifestyle/work-value constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "FIRST_JOB_001",
+        "button_label": "Find my first job",
+        "outcome": "Find realistic entry/casual roles compatible with age, schedule, location, transport and current experience.",
+        "when_to_use": "Serve when user has little/no experience.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Jobs Can I Get Now?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Jobs Can I Get Now?: Find realistic entry/casual roles compatible with age, schedule, location, transport and current experience. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Age/eligibility, study schedule, location, transport, experience, career goal",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_001",
+        "button_label": "Which companies should I explore?",
+        "outcome": "Match career, industry, skills, course, location, work values, company size and environment preferences to employers.",
+        "when_to_use": "Serve when user wants employer ideas.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Find Employers for Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Find Employers for Me: Match career, industry, skills, course, location, work values, company size and environment preferences to employers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CURRENT_JOB_005",
+        "button_label": "What skills would make me more useful?",
+        "outcome": "Use role demand, company needs, adjacent/scarce skills and transferability to prioritize development.",
+        "when_to_use": "Serve when user wants higher leverage in their role/company.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Become More Valuable' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Become More Valuable: Use role demand, company needs, adjacent/scarce skills and transferability to prioritize development. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_FUTURE_005",
+        "button_label": "What will people need to learn?",
+        "outcome": "Identify capabilities increasing in importance across changing roles/tasks.",
+        "when_to_use": "Serve when user wants future-ready capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills of the Future' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills of the Future: Identify capabilities increasing in importance across changing roles/tasks. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, current technology/AI/regulation/demographic/sustainability evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_001",
+        "button_label": "Find jobs that could suit me",
+        "outcome": "Match interests, skills, strengths, values, education, experience, location and constraints to occupations.",
+        "when_to_use": "Serve when user wants job ideas from their whole profile.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Find Jobs That Fit Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Find Jobs That Fit Me: Match interests, skills, strengths, values, education, experience, location and constraints to occupations. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CHANGE_002",
+        "button_label": "What skills can I reuse?",
+        "outcome": "Translate existing work experience into capabilities relevant to a new role.",
+        "when_to_use": "Serve when user assumes they must start from zero.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Transferable Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Transferable Skills: Translate existing work experience into capabilities relevant to a new role. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_COMP_002",
+        "button_label": "Which companies should I know?",
+        "outcome": "Identify major employers with sources and location/role context.",
+        "when_to_use": "Serve when user wants major sector players.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Major Employers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Major Employers: Identify major employers with sources and location/role context. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, location, employer datasets and current hiring evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CHANGE_004",
+        "button_label": "How big is this change?",
+        "outcome": "Separate transferable capability, new skills, credentials, experience gap and likely entry level.",
+        "when_to_use": "Serve when user wants to understand transition effort.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Change Difficulty' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Change Difficulty: Separate transferable capability, new skills, credentials, experience gap and likely entry level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, experience, skills, reasons for change, constraints, target ideas",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_PATH_001",
+        "button_label": "How do people get into this industry?",
+        "outcome": "Map school, VET, university, apprenticeship, graduate program, internship, short course, microcredential, career change and entry job routes.",
+        "when_to_use": "Serve when user wants broad entry options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Entry Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Entry Routes: Map school, VET, university, apprenticeship, graduate program, internship, short course, microcredential, career change and entry job routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_SKILL_003",
+        "button_label": "Which skills open multiple jobs?",
+        "outcome": "Identify transferable capabilities that connect several occupations within the industry.",
+        "when_to_use": "Serve when user wants broad career flexibility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills Shared Across Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills Shared Across Jobs: Identify transferable capabilities that connect several occupations within the industry. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry workforce/occupation evidence, skills taxonomy, vacancy/shortage signals",
+        "needs_live_data": "Yes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4216,
+      "total_input_tokens": 4133,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4133
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 83,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4566,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4566
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 100
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:37Z",
+    "updated": "2026-09-18T12:16:37Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0T/LDAspU0NE0w3TDA/8Cd9HhJ38JTSvRilSmCQwzfJq1VEalTy3vZWxODQoWRrnOtZUCUan5ee8ibVNK/m27ga+hhyTGQc4kxt801mak8y72+2As3ZzZ5Rnq+Hap6yp+zE+dzQERD",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"OPTIONAL\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"CHANGE_002\",\n  \"reason\": \"This activity will help map your existing retail experience and capabilities directly into valuable, transferable skills for tech roles so you don't have to start from scratch.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "OPTIONAL",
+    "decision": "SUGGEST",
+    "objective_id": "CHANGE_002",
+    "reason": "This activity will help map your existing retail experience and capabilities directly into valuable, transferable skills for tech roles so you don't have to start from scratch.",
+    "disposition": "SUGGEST",
+    "selectionId": "7b9f2746-4716-467a-a7ec-61064dfa4912",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.7378857621460762,
+    "margin": 0.01152049499631691,
+    "userConfidence": null,
+    "createdAt": 1789733797357
+  }
+}

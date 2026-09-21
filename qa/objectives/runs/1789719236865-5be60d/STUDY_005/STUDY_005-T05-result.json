@@ -1,0 +1,226 @@
+{
+  "test_id": "STUDY_005-T05",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 216,
+  "input_context": {
+    "user_message": "We already completed what will i actually learn? and nothing has changed.",
+    "prior_context_text": "Completed objective result exists.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "a1d69ec3efed2c3532b8bc7809748bd71f38bec83f2e75f20ccf7650a4d20226",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 3319
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "unknowns": [
+        "No new course analysis requested; previous results stand unchanged."
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "This objective was already completed with no changes requested. Closed with no additional action.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Previous course capability analysis remains unchanged."
+      },
+      "evidence_and_unknowns": [
+        "No further curriculum breakdown required."
+      ],
+      "recommended_next_action": "Continue conversation in Oala or explore Course Gap Check."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the objective is already completed with no changes and marks it as COMPLETE/PROCEED rather than rerunning.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The fixture states 'Completed objective result exists.' but does not supply the concrete prior state or completed facts in context.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant questions were asked.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No UI primitives are emitted in this terminal complete state, violating no allow-list rules.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate handles the completion state cleanly and adheres to the V2 output contract schema without fabricating curriculum details.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unverified course facts or claims are invented.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric or diagnostic success claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Interaction stops immediately upon user confirming no changes.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is cleanly disabled for this no-action completion.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Provides a compact semantic Oala handoff indicating completion and recommending next steps.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unapproved writes, endpoints, or direct execution invocations are made.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted the concrete historical data/facts from the prior completed run despite claiming it exists (MISSING_CONCRETE_STATE_OR_EVIDENCE)."
+      ],
+      "summary": "The candidate cleanly handled the case where an objective was already completed, abstaining from unnecessary re-prompting or invented facts and successfully routing to completion."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2644,
+      "total_input_tokens": 1892,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1892
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 752,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2289,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2289
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 770
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 3319,
+  "usage": {
+    "total_tokens": 2486,
+    "total_input_tokens": 2174,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2174
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 312,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5845,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5845
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 332
+          }
+        ]
+      }
+    ]
+  }
+}

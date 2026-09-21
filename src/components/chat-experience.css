@@ -27,3 +27,6 @@
 
 .counselling-output [data-output-type] h4{font-size:14px;line-height:1.6;letter-spacing:.01em;text-transform:none;color:#52606d}
 .counselling-output>div>button{min-height:44px;padding:10px 14px;font-size:14px}
+
+/* Markdown fallback also needs real list spacing when no typography plugin is installed. */
+.response-prose p{margin:.65rem 0;line-height:1.7}.response-prose ul{list-style:disc;padding-left:1.4rem;margin:1rem 0}.response-prose ol{list-style:decimal;padding-left:1.4rem;margin:1rem 0}.response-prose li{display:list-item;padding-left:.25rem;margin:.65rem 0;line-height:1.7}.response-prose li::marker{color:#756289}.response-prose li>p{margin:.25rem 0}.response-prose h2,.response-prose h3,.response-prose h4{font-weight:650;margin:1.3rem 0 .55rem;line-height:1.4}

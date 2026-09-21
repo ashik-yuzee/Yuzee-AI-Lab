@@ -1,0 +1,309 @@
+{
+  "test_id": "SUP-04",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2.1",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Do I meet the maths prerequisite for this course?",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "target_course": "Fictional Harbour Design Diploma",
+      "provider": "Fictional Harbour College",
+      "maths_completed": "Year 11 General Maths"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "9b8289453d808fb37d6390786f979e96ab08466cd3a9da639a1f5eb7f07ec5c5",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5538
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SCHOOL_003",
+    "status": "NEEDS_RESEARCH",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "prereq_evidence_check",
+        "purpose": "Display current prerequisite verification status for the selected course.",
+        "prompt": "Current official requirements for Fictional Harbour Design Diploma at Fictional Harbour College are required to verify prerequisites.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Maths Requirement Status",
+            "detail": "Prerequisite rules for Fictional Harbour Design Diploma are unconfirmed. Research is needed before verifying whether Year 11 General Maths satisfies entry criteria.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "target_course": "Fictional Harbour Design Diploma",
+      "provider": "Fictional Harbour College",
+      "maths_completed": "Year 11 General Maths"
+    },
+    "derived_signals": [
+      {
+        "signal": "User is seeking confirmation of maths eligibility for target diploma.",
+        "basis": "User asked 'Do I meet the maths prerequisite for this course?' with known maths background.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Official published prerequisite subjects and minimum grade thresholds for Fictional Harbour Design Diploma at Fictional Harbour College"
+    ],
+    "result": {
+      "alternative_routes": [],
+      "course_subject_requirements": {
+        "target_course": "Fictional Harbour Design Diploma",
+        "provider": "Fictional Harbour College",
+        "campus_or_intake_if_relevant": null,
+        "subjects": [],
+        "missing_prerequisites": [],
+        "useful_foundations": [],
+        "unknowns": [
+          {
+            "label": "Official Prerequisite Rules",
+            "detail": "Specific subject requirements for Fictional Harbour Design Diploma are not available in approved evidence.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "next_actions": [
+        {
+          "label": "Retrieve Course Handbook Requirements",
+          "detail": "Source current admissions guide or course handbook for Fictional Harbour College.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "Target course and provider are identified, but live/approved prerequisite evidence is currently unavailable. Official course requirements must be verified before confirming eligibility."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Missing approved prerequisite data for Fictional Harbour Design Diploma at Fictional Harbour College"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "research_required",
+        "label": "Research official course prerequisite data",
+        "type": "RESEARCH"
+      },
+      {
+        "id": "continue_chat",
+        "label": "Continue in conversation",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prerequisite verification paused pending approved admissions evidence for Fictional Harbour Design Diploma.",
+      "confirmed_user_inputs": {
+        "target_course": "Fictional Harbour Design Diploma",
+        "provider": "Fictional Harbour College",
+        "maths_completed": "Year 11 General Maths"
+      },
+      "result": {
+        "summary": "Prerequisite check requires current official provider requirements before verifying Year 11 General Maths eligibility."
+      },
+      "evidence_and_unknowns": [
+        "Target course prerequisite requirements remain UNKNOWN due to missing provider evidence."
+      ],
+      "recommended_next_action": "Fetch approved course prerequisite details from provider data source."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "SCHOOL_003 matches the user prompt regarding course prerequisites and subject requirements.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "The candidate accurately captures all prior context facts (target_course, provider, maths_completed) without re-asking them.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate does not ask redundant or low-impact questions, displaying an evidence status panel appropriately.",
+          "evidence_pointer": "candidate.ui[0]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The UI uses 'evidence_panel', which is an allowed primitive under the objective's V2 specification.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly follows the V2 output contract and readiness policy by stopping and flagging NEEDS_RESEARCH when exact prerequisite evidence is missing.",
+          "evidence_pointer": "candidate.result.course_subject_requirements"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate avoids inventing eligibility requirements or prerequisites without approved evidence, correctly categorizing status as UNKNOWN.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric tools or predicted success probabilities are used.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops immediately with NEEDS_RESEARCH due to missing critical prerequisite evidence rather than guessing or repeatedly prompting.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is properly disabled with missing prerequisite data explicitly listed as a blocker.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Emits a complete, compact structured handoff containing confirmed inputs, result, unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits structured non-autonomous intents ('RESEARCH', 'CONTINUE_CHAT') without executing unauthorized profile writes or endpoints.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate strictly adheres to evidence discipline and the objective's readiness policy by recognizing the lack of approved prerequisite evidence and pausing with NEEDS_RESEARCH."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3300,
+      "total_input_tokens": 2520,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2520
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 780,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2917,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2917
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 799
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5538,
+  "usage": {
+    "total_tokens": 3334,
+    "total_input_tokens": 2307,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2307
+      }
+    ],
+    "total_cached_tokens": 1347,
+    "cached_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 1347
+      }
+    ],
+    "total_output_tokens": 1027,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7011,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7011
+          }
+        ],
+        "cache_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 4096
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1043
+          }
+        ]
+      }
+    ]
+  }
+}

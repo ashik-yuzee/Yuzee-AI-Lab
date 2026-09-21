@@ -1,0 +1,301 @@
+{
+  "test_id": "SKILL_SIDE_001-T04",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 315,
+  "input_context": {
+    "user_message": "I want to do skill gap, but some of my earlier information conflicts.",
+    "prior_context_text": "Prior context contains a material contradiction.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "9b31e103e91c7eda75b819bdf5f1f5668c4d6c8ced0017a2b9548b262bebe8d1",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6390
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_role_selection",
+        "purpose": "Select or clarify the primary target role or course to evaluate skill gaps against.",
+        "prompt": "Which target role or pathway would you like to use for this skill gap analysis?",
+        "required": true,
+        "options": [
+          {
+            "id": "role_software_engineer",
+            "label": "Software Engineer",
+            "detail": "Evaluate foundational programming, system design, and software development practices."
+          },
+          {
+            "id": "role_data_analyst",
+            "label": "Data Analyst",
+            "detail": "Evaluate data querying, statistical analysis, and dashboard visualization skills."
+          },
+          {
+            "id": "role_product_manager",
+            "label": "Associate Product Manager",
+            "detail": "Evaluate product lifecycle, user research, and cross-functional coordination skills."
+          },
+          {
+            "id": "role_custom_other",
+            "label": "Other / Custom Target",
+            "detail": "Specify a different target role or course in the conversation."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User wants to resolve conflicting target context before skill evaluation",
+        "basis": "User statement regarding conflicting earlier information",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Confirmed target role or pathway",
+      "Current demonstrated skill evidence",
+      "Proficiency benchmarks"
+    ],
+    "result": {
+      "next_actions": [],
+      "skill_gaps": [],
+      "summary": "Target role selection required to benchmark and identify skill gaps.",
+      "unknowns": [
+        {
+          "label": "Target Role",
+          "detail": "No target role or pathway has been confirmed yet.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target role is not confirmed."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Confirm Target Role",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Waiting for user to select or confirm target role/course to initiate skill gap benchmarking.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "next_actions": [],
+        "skill_gaps": [],
+        "summary": "Target role selection required to benchmark and identify skill gaps.",
+        "unknowns": [
+          {
+            "label": "Target Role",
+            "detail": "No target role or pathway has been confirmed yet.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "evidence_and_unknowns": [
+        "Target role unconfirmed due to conflicting prior inputs."
+      ],
+      "recommended_next_action": "Select target role via picker or confirm in chat."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Appropriately retained SKILL_SIDE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Fixture issue: context omitted concrete previous conflicting facts, stating only abstractly that prior context contains a contradiction.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Prompts user clearly for target role selection to establish baseline for gap evaluation.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses entity_picker, which is allowed under V2 rules.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Handles skill gap initiation by requesting target definition and tracking unknowns without hallucinating skills.",
+          "evidence_pointer": "candidate.result.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Preserves unconfirmed facts as UNKNOWN rather than guessing or assuming a role.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric or career success probability claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops at NEEDS_INPUT stage with 1 targeted interaction.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blocker noted when inputs are missing.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Compact semantic handoff envelope returned.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint executions, unsafe writes, or autonomous policy violations.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Prior context text contained an abstract meta-statement ('Prior context contains a material contradiction.') rather than actual conflicting data payload."
+      ],
+      "summary": "The candidate properly handles the unconfirmed target context using an allowed V2 primitive while strictly preserving unknowns."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2817,
+      "total_input_tokens": 2219,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2219
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 598,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2616,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2616
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 616
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6390,
+  "usage": {
+    "total_tokens": 3144,
+    "total_input_tokens": 2054,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2054
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 891,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 199,
+    "raw_prompt_token": 6833,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6833
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 909
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 199
+          }
+        ]
+      }
+    ]
+  }
+}

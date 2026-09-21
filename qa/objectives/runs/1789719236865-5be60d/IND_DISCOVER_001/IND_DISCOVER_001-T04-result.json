@@ -1,0 +1,286 @@
+{
+  "test_id": "IND_DISCOVER_001-T04",
+  "objective_id": "IND_DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "2080875ee27545d3034a1539c701376585fca069f4f379dcffdd47edf1b4ce79",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "CONTRADICTORY",
+  "model": "gemini-3.7-flash",
+  "source_row": 1875,
+  "input_context": {
+    "user_message": "I want to do find industries for me, but some of my earlier information conflicts.",
+    "prior_context_text": "Prior context contains a material contradiction.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "IND_DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "a4ec57033bc25d3f33d05507b29fe8db5242bdfd848337718c11256b2e0494a9",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5062
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "IND_DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "clarify_primary_interest_areas",
+        "purpose": "Resolve conflicting signals by confirming your primary focus areas for industry exploration.",
+        "prompt": "Which areas best represent what you want to focus on or explore right now? (Select 1 to 3)",
+        "required": true,
+        "options": [
+          {
+            "id": "tech_data",
+            "label": "Technology & Data",
+            "detail": "Software, cybersecurity, data analysis, and digital infrastructure."
+          },
+          {
+            "id": "health_care",
+            "label": "Health Care & Wellbeing",
+            "detail": "Clinical care, medical technology, public health, and mental wellbeing."
+          },
+          {
+            "id": "business_finance",
+            "label": "Business, Commerce & Finance",
+            "detail": "Consulting, banking, entrepreneurship, and organizational strategy."
+          },
+          {
+            "id": "creative_media",
+            "label": "Creative Industries & Media",
+            "detail": "Design, digital content, entertainment, and communications."
+          },
+          {
+            "id": "engineering_sustainability",
+            "label": "Engineering, Energy & Environment",
+            "detail": "Renewable energy, infrastructure, sustainability, and manufacturing."
+          },
+          {
+            "id": "social_education",
+            "label": "Education & Social Impact",
+            "detail": "Teaching, community development, policy, and public service."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "interest_conflict",
+        "basis": "User noted earlier information contains conflicts needing alignment before industry mapping",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Primary interest domain for industry matching",
+      "Preferred work environment and functional skill areas"
+    ],
+    "result": {
+      "industry_exploration_shortlist": null,
+      "next_actions": [],
+      "summary": "Clarifying your main areas of interest to resolve conflicting signals and build an accurate industry exploration shortlist."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Material contradiction in core interest signals requires confirmation."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Clarification required on primary interest areas due to conflicting context signals.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting user selection to generate industry exploration candidates."
+      },
+      "evidence_and_unknowns": [
+        "User interest focus areas are currently unknown due to context conflict."
+      ],
+      "recommended_next_action": "Select primary areas of interest to proceed with industry matching."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned objective IND_DISCOVER_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test fixture only contains a placeholder ('Prior context contains a material contradiction.') with empty confirmed_facts, omitting concrete prior contradictory facts. Context reuse cannot be directly evaluated.",
+          "evidence_pointer": "context.prior_context_text"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The clarifying multi_select question provides concrete, distinct focus areas to resolve ambiguity and unblock discovery.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses 'multi_select', which is within the objective's allowed V2 UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Preserves uncertainty when facing conflicting signals, requesting clarification rather than fabricating an arbitrary shortlist.",
+          "evidence_pointer": "candidate.derived_signals[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unapproved current market claims or fabricated external facts are emitted; unknowns are clearly marked.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No fake diagnostic, personality scores, or life outcome predictions are claimed.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops at NEEDS_INPUT stage with a single interaction when critical orientation input is required.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is kept disabled with clear blockers cited while awaiting core interest resolution.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Envelope contains confirmed inputs, derived signals with basis, unknowns, status, and compact handoff object.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized tool calls, URL fabrication, or write actions are attempted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "The test fixture omits specific prior contradiction data in context.confirmed_facts or chat history, providing only placeholder text ('Prior context contains a material contradiction.')."
+      ],
+      "summary": "The candidate handled the ambiguous context appropriately by pausing in NEEDS_INPUT and asking a single discriminative question with an allowed UI primitive. Known-context reuse is marked NOT_ASSESSABLE due to missing concrete facts in the fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3250,
+      "total_input_tokens": 2422,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2422
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 828,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2819,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2819
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 847
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5062,
+  "usage": {
+    "total_tokens": 3127,
+    "total_input_tokens": 2271,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2271
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 856,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6801,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6801
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 873
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -648,6 +648,13 @@ export const AdvancedLabModal: React.FC = () => {
                     onChange={(checked) => updateCurrentConversationSettings({ useStructuredOutput: checked })}
                   />
 
+                  <AppleToggle
+                    label="Pathway RAG Context"
+                    description="Injects relevant sections of the active mini pathway into each follow-up turn so the chat model can reference routes, timelines and next steps. Adds ~1,250 tokens per turn. Off by default."
+                    checked={!!conv.usePathwayRag}
+                    onChange={(checked) => updateCurrentConversationSettings({ usePathwayRag: checked })}
+                  />
+
                   {/* Info footer */}
                   <div className="p-3 bg-violet-50/60 rounded-xl border border-violet-100 text-[11px] text-violet-800 leading-relaxed">
                     <strong>Tip:</strong> Temperature and Top-P both control randomness — using both simultaneously can lead to unpredictable results. Gemini recommends adjusting one at a time. For structured JSON output (Protocol v1.3), a temperature of 1 with Top-P unset is the safest starting point.
@@ -678,13 +685,6 @@ export const AdvancedLabModal: React.FC = () => {
                       description="Routes summarization, compaction, and classification tasks to Gemini 3.5 Flash-Lite for minimum cost."
                       checked={conv.useFlashLiteUtility ?? true}
                       onChange={(checked) => updateCurrentConversationSettings({ useFlashLiteUtility: checked })}
-                    />
-
-                    <AppleToggle
-                      label="Pathway RAG Context"
-                      description="Injects relevant sections of the active mini pathway into each follow-up turn so the chat model can reference routes, timelines and next steps. Adds ~1,250 tokens per turn. Off by default."
-                      checked={!!conv.usePathwayRag}
-                      onChange={(checked) => updateCurrentConversationSettings({ usePathwayRag: checked })}
                     />
                   </div>
 

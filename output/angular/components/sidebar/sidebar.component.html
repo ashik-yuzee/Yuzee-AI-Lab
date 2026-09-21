@@ -1,0 +1,47 @@
+<!-- Sidebar — conversation list + session stats -->
+<nav class="app-sidebar" [class.is-open]="isOpen" aria-label="Conversations">
+
+  <!-- Header -->
+  <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-3">
+    <span class="sidebar-logo fw-bold">Oala</span>
+    <button class="sidebar-icon-btn"
+            (click)="newConversation()"
+            aria-label="New conversation">
+      <ion-icon name="create-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Conversation list -->
+  <div class="sidebar-list flex-grow-1 overflow-y-auto px-2 py-1">
+    <button *ngFor="let conv of conversations"
+            class="sidebar-conv-item w-100 text-start"
+            [class.is-active]="conv.id === activeId"
+            (click)="select(conv.id)"
+            [attr.aria-current]="conv.id === activeId ? 'page' : null">
+      <span class="sidebar-conv-title text-truncate">{{ conv.title || 'New conversation' }}</span>
+      <span class="sidebar-conv-time">{{ conv.updatedAt | date:'shortTime' }}</span>
+    </button>
+
+    <p *ngIf="conversations.length === 0"
+       class="text-muted small text-center py-4">
+      No conversations yet
+    </p>
+  </div>
+
+  <!-- Session stats footer -->
+  <div class="sidebar-footer px-3 py-3 border-top">
+    <div *ngIf="totalTokens > 0" class="sidebar-stats d-flex flex-wrap gap-2 mb-2">
+      <span class="stat-chip">
+        <ion-icon name="flash-outline" aria-hidden="true"></ion-icon>
+        {{ totalTokens | number }} tokens
+      </span>
+      <span *ngIf="totalCostUsd > 0" class="stat-chip">
+        ${{ totalCostUsd | number:'1.4-4' }}
+      </span>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <div class="sidebar-avatar" aria-hidden="true">A</div>
+      <span class="sidebar-username text-truncate small">{{ userEmail }}</span>
+    </div>
+  </div>
+</nav>

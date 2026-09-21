@@ -1,0 +1,281 @@
+{
+  "test_id": "IND_DISCOVER_001-T07",
+  "objective_id": "IND_DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "2080875ee27545d3034a1539c701376585fca069f4f379dcffdd47edf1b4ce79",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 1878,
+  "input_context": {
+    "user_message": "You already have every input needed for find industries for me. Give me the result now.",
+    "prior_context_text": "Required inputs/output evidence are sufficient.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "IND_DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "76eaf792da2598d440cc9897b798e5d93de97480ffb3881db994fdc1e8a4e8c4",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4862
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "IND_DISCOVER_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "multi_select",
+        "id": "select_primary_interest_areas",
+        "purpose": "Identify core subject and problem areas of interest to form defensible industry exploration candidates.",
+        "prompt": "Which of these broad areas or work styles do you feel most drawn toward exploring?",
+        "required": true,
+        "options": [
+          {
+            "id": "tech_computing",
+            "label": "Technology, Software & Systems",
+            "detail": "Building software, working with data, hardware, or technical problem solving"
+          },
+          {
+            "id": "health_care",
+            "label": "Health, Wellbeing & Care",
+            "detail": "Direct patient care, clinical sciences, or health services support"
+          },
+          {
+            "id": "built_env_eng",
+            "label": "Engineering, Construction & Infrastructure",
+            "detail": "Designing, making, building physical structures, systems, or sustainable environments"
+          },
+          {
+            "id": "creative_media",
+            "label": "Creative, Media & Design",
+            "detail": "Visual arts, digital media, writing, design, and entertainment"
+          },
+          {
+            "id": "business_finance",
+            "label": "Business, Finance & Operations",
+            "detail": "Organisational leadership, finance, consulting, commerce, and strategy"
+          },
+          {
+            "id": "science_environment",
+            "label": "Science, Agriculture & Environment",
+            "detail": "Scientific research, sustainability, renewable resources, and conservation"
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": 1,
+          "max": 3,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "User primary interest areas and subjects",
+      "Preferred work environment and skills profile",
+      "Geographic location or study constraints"
+    ],
+    "result": {
+      "industry_exploration_shortlist": null,
+      "next_actions": [],
+      "summary": "No confirmed profile facts, subjects, or interests are currently available to generate a defensible industry exploration set."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No confirmed user signals (interests, subjects, or work values) to ground industry matching."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide interest areas to start industry exploration",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initial input required: select primary interest areas to construct an industry exploration shortlist.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting user input on interest domains before generating supported industry options."
+      },
+      "evidence_and_unknowns": [
+        "No confirmed facts present in profile context."
+      ],
+      "recommended_next_action": "Select 1 to 3 focus areas in the workspace to produce tailored industry pathways."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Evaluated within context of selected objective IND_DISCOVER_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Fixture claims required inputs are sufficient in prior_context_text, but provides an empty confirmed_facts object and no profile signals.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Emitted question gathers primary interest areas with concrete examples and allows unsure.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Uses multi_select, which is in the allowed V2 primitive list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Candidate correctly recognizes that without at least two defensible signals, generating an industry exploration shortlist would violate the objective's requirement.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Candidate refrains from hallucinating current facts or profile signals, listing missing inputs under unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unvalidated psychometric traits or success predictions are claimed.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Fixture omits the prerequisite facts required to test immediate synthesis completion without asking questions.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness accurately identifies blockers without calculating unsupported scores.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Standard envelope with confirmed inputs, unknowns, result summary, and next actions returned properly.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Contains no direct endpoints or unauthorized external writes.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture issue MISSING_CONCRETE_STATE_OR_EVIDENCE: context indicates 'Required inputs/output evidence are sufficient' in text but leaves confirmed_facts empty."
+      ],
+      "summary": "The test fixture declares that all required inputs are present, but provides an empty confirmed_facts context. As a result, testing context reuse and immediate stop condition synthesis is not assessable due to fixture omissions. The candidate correctly adhered to evidence discipline and primitive validity by requesting the missing foundational inputs."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3116,
+      "total_input_tokens": 2432,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2432
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 684,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2829,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2829
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 702
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4862,
+  "usage": {
+    "total_tokens": 3126,
+    "total_input_tokens": 2273,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2273
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 853,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6803,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6803
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 869
+          }
+        ]
+      }
+    ]
+  }
+}

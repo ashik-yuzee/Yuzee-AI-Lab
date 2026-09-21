@@ -1,0 +1,246 @@
+{
+  "test_id": "EMP_REALITY_004-T09",
+  "objective_id": "EMP_REALITY_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "41c2515e448dfb7df2d3ac07353da113210ebaead53a34f01e6d7ebaa57d1d40",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "EVIDENCE_GATE",
+  "model": "gemini-3.7-flash",
+  "source_row": 2950,
+  "input_context": {
+    "user_message": "Use current real-world information where it matters for Pay & Employment Type.",
+    "prior_context_text": "None",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_REALITY_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "cc945faba8dbcfc4a40f8d9de195f8e287509983914962d5e5613bec8ecdf0be",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4088
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "EMP_REALITY_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "employer_role_entry",
+        "purpose": "Identify the specific employer, role, and location to analyse pay components and employment terms.",
+        "prompt": "Which employer and role offer would you like to review pay, hours, and employment conditions for?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Employer name and role title",
+      "Employment type (full-time, part-time, casual, contractor)",
+      "Jurisdiction and location",
+      "Base pay rate and hours basis",
+      "Award or enterprise agreement coverage"
+    ],
+    "result": {
+      "summary": "Awaiting employer and role details to begin structured pay and employment verification."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No employer or role identified to evaluate employment type and pay conditions"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Employer and Role Details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Initiated pay and employment type review; waiting for target employer, role, and jurisdiction.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Awaiting employer and role details."
+      },
+      "evidence_and_unknowns": [
+        "Unknown employer, role, employment type, location, and pay structure"
+      ],
+      "recommended_next_action": "Enter the employer name, role, and any offer details to structure the pay and conditions profile."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned EMP_REALITY_004 objective correctly.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no confirmed facts or prior context in the fixture, and the candidate did not hallucinate or re-ask nonexistent context.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate asked a single clear, high-impact initial question to identify the employer and role.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The component 'entity_picker' is explicitly allowed by the V2 UI primitive list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate correctly targets employer, role, location, pay components, hours basis, and award/agreement coverage specific to EMP_REALITY_004.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unverified claims or fake salaries were invented; unknowns were cleanly enumerated.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career predictions, or score fabrications were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops at NEEDS_INPUT stage given the complete absence of input details.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled with explicit blockers identified given lack of input.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean semantic handoff envelope is returned to Oala without UI state/click history.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Candidate uses only standard internal action intents (CONTINUE_CHAT) with no unauthorized external execution.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate adhered to all V2 schema rules and constraints, correctly using allowed primitives and establishing missing facts before synthesizing pay and employment profiles."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3018,
+      "total_input_tokens": 2254,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2254
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 764,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2651,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2651
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 782
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4088,
+  "usage": {
+    "total_tokens": 2815,
+    "total_input_tokens": 2254,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2254
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 561,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7002,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7002
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 578
+          }
+        ]
+      }
+    ]
+  }
+}

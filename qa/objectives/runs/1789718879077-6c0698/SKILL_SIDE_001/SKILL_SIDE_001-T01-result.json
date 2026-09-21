@@ -1,0 +1,279 @@
+{
+  "test_id": "SKILL_SIDE_001-T01",
+  "objective_id": "SKILL_SIDE_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "ab0c9911fab1c7594f711d7aff49cb9be7b9d96594b4481a03cea333eb87eb06",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "HAPPY_PATH",
+  "model": "gemini-3.7-flash",
+  "source_row": 312,
+  "input_context": {
+    "user_message": "I want help with skill gap.",
+    "prior_context_text": "No prior objective result.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SKILL_SIDE_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "8f4800fd0f6562cd517ca081f0b77fd72c5932cb33ca7bdc70330312446a2e22",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5311
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SKILL_SIDE_001",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_role_or_course",
+        "purpose": "Identify the target role or course to evaluate skill gaps against.",
+        "prompt": "What target role or course would you like to analyse for skill gaps?",
+        "required": true,
+        "options": [
+          {
+            "id": "software_developer",
+            "label": "Software Developer / Engineer",
+            "detail": "Core programming, system design, and software lifecycle skills."
+          },
+          {
+            "id": "data_analyst",
+            "label": "Data Analyst",
+            "detail": "Data visualization, SQL, statistics, and business reporting."
+          },
+          {
+            "id": "project_manager",
+            "label": "Project Manager",
+            "detail": "Agile methodologies, scheduling, risk management, and stakeholder communication."
+          },
+          {
+            "id": "other_custom",
+            "label": "Other Target Goal",
+            "detail": "Specify a specific role, course, or pathway in conversation."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User intent to evaluate capability and skill gaps",
+        "basis": "user_message: 'I want help with skill gap.'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target role, course, or destination standard",
+      "Current demonstrated skills and proficiency levels"
+    ],
+    "result": {
+      "summary": "Target role or course is needed before comparing required capabilities against current skills.",
+      "unknowns": [
+        {
+          "label": "Target Goal",
+          "detail": "Specific target role or course requirements are not yet established.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target goal not specified"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Specify Target Goal",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting target role or course selection to initiate skill gap analysis.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No target selected yet."
+      },
+      "evidence_and_unknowns": [
+        "Unknown target role or course",
+        "Unknown current user capability inventory"
+      ],
+      "recommended_next_action": "Select or state the target role/course to populate the skill matrix."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the user request for skill gap analysis and correctly focuses on SKILL_SIDE_001.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context is empty, and the candidate asks for the necessary initial input (target goal) without re-asking any established facts.",
+          "evidence_pointer": "candidate.ui[0].id"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The entity_picker asks a concrete, discriminative question to establish the target role/course needed to evaluate capability gaps.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits 'entity_picker', which is in the V2 allowed UI primitives list [skill_matrix | evidence_panel | entity_picker | profile_editor | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Follows V2 preferred flow by starting with entity_picker to identify the target role/course before moving to skill_matrix and evidence_panel.",
+          "evidence_pointer": "candidate.stage"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No current facts or proficiency levels were invented; missing inputs are correctly classified as unknowns.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No diagnostic or predictive life-success claims are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Interaction appropriately pauses with NEEDS_INPUT because material facts (target role/course) are missing to construct the skill matrix.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled with blockers identified rather than inventing an ungrounded readiness score.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Candidate returns a valid compact envelope containing derived signals, unknowns, result summary, and Oala handoff.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Next action is standard CONTINUE_CHAT with no unauthorized endpoint executions or Level 2/3 writes.",
+          "evidence_pointer": "candidate.next_actions[0].type"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "All rubric criteria passed. The candidate correctly initiates the SKILL_SIDE_001 workflow using an allowed V2 primitive (entity_picker) to ask for the missing target goal without inventing facts or misrepresenting readiness."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2949,
+      "total_input_tokens": 2119,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2119
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 830,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2516,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2516
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 849
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5311,
+  "usage": {
+    "total_tokens": 2833,
+    "total_input_tokens": 2044,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2044
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 789,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6823,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6823
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 809
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,272 @@
+{
+  "id": "d5bf3376-3907-4759-bd6d-5822ad6867e4",
+  "conversationId": "live-preview-EMP_SAFE_001",
+  "objectiveId": "EMP_SAFE_001",
+  "label": "Check this opportunity",
+  "sourceMessageId": "u",
+  "revision": 1,
+  "interactionCount": 0,
+  "state": "COMPLETE",
+  "createdAt": 1789726555553,
+  "updatedAt": 1789726565181,
+  "plan": {
+    "objective_id": "EMP_SAFE_001",
+    "status": "COMPLETE",
+    "stage": "READINESS",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "legitimacy_evidence_summary",
+        "purpose": "Display critical security checks and red flag findings",
+        "prompt": "Review the critical risk factors identified from this message.",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Upfront Equipment Payment Request",
+            "detail": "Legitimate employers never require candidates to pay upfront fees or purchase equipment before an interview.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Banking Password Request",
+            "detail": "No legitimate organization will ever ask for online banking credentials, passwords, or OTP security codes.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Unverified Employer Identity",
+            "detail": "No official domain, registered entity, or verified careers listing has been identified.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "action_handoff",
+        "id": "safe_next_step_action",
+        "purpose": "Handoff to safe next steps without external actions",
+        "prompt": "Do not send funds or share credentials. Proceed to explore general safety checks in chat.",
+        "required": true,
+        "options": [],
+        "content": [
+          {
+            "label": "Immediate Safety Direction",
+            "detail": "Cease all communication with the sender. Never transfer money, purchase gift cards, or share banking login details.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "HIGH_RISK_FINANCIAL_DEMAND",
+        "basis": "Message requests upfront payment for equipment prior to an interview.",
+        "confidence": "HIGH"
+      },
+      {
+        "signal": "CRITICAL_CREDENTIAL_HARVESTING",
+        "basis": "Message requests user online banking password.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Legal entity identity and registration",
+      "Official employer domain and verified recruitment channels",
+      "Specific job requisition existence"
+    ],
+    "result": {
+      "job_legitimacy_check": {
+        "employer_identity": {
+          "status": "UNVERIFIED",
+          "evidence": [
+            {
+              "label": "Official Entity Information",
+              "detail": "No verified legal entity name or registration supplied.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "opportunity_identity": {
+          "status": "UNVERIFIED",
+          "official_role_evidence": [
+            {
+              "label": "Official Role Listing",
+              "detail": "No public or official vacancy listing verified.",
+              "source_status": "UNKNOWN",
+              "evidence_refs": []
+            }
+          ]
+        },
+        "contact_channel_checks": [
+          {
+            "label": "SMS/Text Communication",
+            "detail": "Unsolicited text communication lacking official corporate domain authentication.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          }
+        ],
+        "process_checks": [
+          {
+            "label": "Pre-Interview Demand",
+            "detail": "Requesting financial transactions and credentials before conducting standard interview steps.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          }
+        ],
+        "red_flags": [
+          {
+            "flag": "Banking Password Request",
+            "severity": "CRITICAL",
+            "evidence": "Sender asked for banking password",
+            "why_it_matters": "Authentic recruiters never ask for banking credentials or passwords under any circumstances."
+          },
+          {
+            "flag": "Upfront Equipment Fee",
+            "severity": "CRITICAL",
+            "evidence": "Sender demanded payment for equipment before interview",
+            "why_it_matters": "Legitimate employers cover their own onboarding and equipment costs without charging applicants."
+          }
+        ],
+        "sensitive_data_or_payment_requests": [
+          {
+            "label": "Banking Credentials",
+            "detail": "Direct request for banking login password.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          },
+          {
+            "label": "Advance Fee / Equipment Payment",
+            "detail": "Payment demanded prior to any formal hiring evaluation.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "user_message"
+            ]
+          }
+        ],
+        "overall_status": "HIGH_RISK_STOP",
+        "safe_next_actions": [
+          {
+            "label": "Cease Contact",
+            "detail": "Do not reply, transfer funds, or provide any credentials.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "unknowns": [
+          {
+            "label": "Employer Verification",
+            "detail": "Employer registration and authentic careers portal are unverified.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "next_actions": [
+        {
+          "label": "Continue Discussion in Chat",
+          "detail": "Explore safe job search verification practices in chat.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "summary": "This offer exhibits critical security red flags: requesting upfront equipment payments and banking passwords. Legitimate employers never request account credentials or upfront fees. Stop communication immediately and do not provide funds or credentials."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Job-Legitimacy Verification Readiness",
+      "score": 0,
+      "dimensions": [
+        {
+          "name": "Identity/legitimacy evidence",
+          "score": 0,
+          "reason": "No official company domain or business registration verified."
+        },
+        {
+          "name": "Claim consistency",
+          "score": 0,
+          "reason": "Process deviates completely from standard recruitment practices."
+        },
+        {
+          "name": "Risk flags",
+          "score": 0,
+          "reason": "Critical red flags present: credential harvesting and upfront payment demand."
+        },
+        {
+          "name": "Critical unknowns",
+          "score": 0,
+          "reason": "Missing all verifiable legal entity and job requisition details."
+        },
+        {
+          "name": "Safe next action",
+          "score": 100,
+          "reason": "Clear stop-action identified to prevent financial or data loss."
+        }
+      ],
+      "blockers": [
+        "Confirmed requests for banking passwords and upfront equipment payments.",
+        "Unverified employer identity and unofficial communication channel."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in Chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "High-risk stop triggered. The opportunity demands an upfront payment and banking passwords, which are confirmed severe red flags. Stop contact immediately.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "High-risk stop triggered. The opportunity demands an upfront payment and banking passwords, which are confirmed severe red flags. Stop contact immediately."
+      },
+      "evidence_and_unknowns": [
+        "Payment requested before interview",
+        "Banking password requested",
+        "Employer identity unverified"
+      ],
+      "recommended_next_action": "Do not send funds or share sensitive credentials. Cease contact with the sender."
+    }
+  },
+  "context": {
+    "user_message": "I received a hypothetical job offer by text. They want a payment for equipment before interview and ask for my banking password. I have no verified company details. Help me understand what to check. Do not label the company verified or invent a lookup.",
+    "prior_context_text": "",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "context_limited": false
+  }
+}

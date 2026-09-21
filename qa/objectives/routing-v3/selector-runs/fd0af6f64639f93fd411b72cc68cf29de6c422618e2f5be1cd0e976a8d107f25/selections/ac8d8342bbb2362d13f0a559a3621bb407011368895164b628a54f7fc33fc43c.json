@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "PATH_012",
+  "reason": "Compare learning styles, costs, duration, earnings, and credentials across university, vocational study, and apprenticeships side by side.",
+  "disposition": "AUTO_OPEN",
+  "selectionId": "49c1f906-a16c-4e07-8019-31105751ba75",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8698318070295122,
+  "margin": -0.06111790657512961,
+  "userConfidence": null,
+  "createdAt": 1789733804795
+}

@@ -1,0 +1,254 @@
+{
+  "test_id": "STUDY_005-T06",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 217,
+  "input_context": {
+    "user_message": "Write me a short birthday poem.",
+    "prior_context_text": "No relation to the selected objective.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "c0982a84cdee05376df09acb059a2ff8ea7a0c81ab413a7de7433da81ff35b57",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "RESULT_CONTRACT",
+          "detail": "Missing result.next_actions"
+        }
+      ],
+      "latency_ms": 4155
+    }
+  ],
+  "failures": [
+    {
+      "code": "RESULT_CONTRACT",
+      "detail": "Missing result.next_actions"
+    }
+  ],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target course or curriculum to analyze"
+    ],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "unknowns": [
+        {
+          "label": "Course Selection",
+          "detail": "No course or curriculum was provided for learning capability breakdown.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Return to Chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User message does not request course curriculum or capability breakdown under objective STUDY_005. Closed objective without action.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "course_capabilities": [],
+        "practical_components": [],
+        "unknowns": [
+          {
+            "label": "Course Selection",
+            "detail": "No course provided for analysis.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "evidence_and_unknowns": [
+        "No course selected or referenced."
+      ],
+      "recommended_next_action": "Handle user request in general conversation."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes the prompt ('Write me a short birthday poem.') is completely off-topic for STUDY_005 and closes the objective cleanly via COMPLETE without running an irrelevant flow.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No existing facts were present to reuse, and none were re-asked.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No unnecessary questions were asked given the out-of-scope user prompt.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No UI primitives were emitted (empty list), respecting schema and allow-list rules.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The output schema follows the STUDY_005 contract with empty lists for course_capabilities and practical_components upon abstention/no-action.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No unsupported facts or course details were fabricated; missing course is properly marked as an unknown.",
+          "evidence_pointer": "candidate.result.unknowns[0]"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric, diagnostic, or predictive life claims were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Objective is immediately marked COMPLETE with no further questions generated.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled appropriately when terminating without course evaluation.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff is supplied summarizing the out-of-scope request and recommending returning to general chat.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No endpoints or unauthorized actions were generated.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate properly handled an off-topic user prompt by executing a no-action COMPLETE handoff back to chat, adhering to all schema and rubric constraints without hallucinating data."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2681,
+      "total_input_tokens": 1929,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1929
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 752,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2326,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2326
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 771
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4155,
+  "usage": {
+    "total_tokens": 2631,
+    "total_input_tokens": 2082,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2082
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 424,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 125,
+    "raw_prompt_token": 7281,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7281
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 439
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 125
+          }
+        ]
+      }
+    ]
+  }
+}

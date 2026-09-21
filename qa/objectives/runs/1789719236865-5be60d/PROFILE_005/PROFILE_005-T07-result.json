@@ -1,0 +1,254 @@
+{
+  "test_id": "PROFILE_005-T07",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 508,
+  "input_context": {
+    "user_message": "You already have every input needed for my skills. Give me the result now.",
+    "prior_context_text": "Required inputs/output evidence are sufficient.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "e23ec782365f8322d85fd7adc3008f29b1b4bce78a23d655d043b738929618b2",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6024
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_entry_matrix",
+        "purpose": "Capture and verify user skills along with self-reported or demonstrated evidence levels.",
+        "prompt": "List or select the skills you would like to record on your profile, including your evidence level.",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Evidence Status",
+          "Proficiency / Notes"
+        ],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Specific skills and verified evidence details to record"
+    ],
+    "result": {
+      "summary": "No verified skill records are present in confirmed profile facts. Input is required to capture and label skills before saving to profile."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Skills",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting skill entries and evidence status from user to build the profile dimension.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Skills profile creation pending specific skill inputs."
+      },
+      "evidence_and_unknowns": [
+        "User skills and evidence levels are unconfirmed."
+      ],
+      "recommended_next_action": "Enter skills and evidence status in the skill matrix."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Evaluated objective PROFILE_005 matches session and user context.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test claims all inputs were supplied ('Required inputs/output evidence are sufficient.'), but context.confirmed_facts and session.confirmed_answers are empty, making context reuse unassessable.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The UI prompt provides a clear and concrete skill entry matrix asking for skill and evidence level.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Emits only 'skill_matrix', which is valid under generic and V2 overrides allow-lists.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Correctly targets skills, evidence statuses, and proficiency notes consistent with PROFILE_005.",
+          "evidence_pointer": "candidate.ui[0].columns"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Did not invent skills or fabricate profile details when missing from context.",
+          "evidence_pointer": "candidate.unknowns[0]"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No invalid psychometric claims or fake readiness/success scores made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test expected immediate synthesis assuming complete input, but fixture lacked the actual input data, preventing assessment of stop condition under sufficient data.",
+          "evidence_pointer": "fixture_issues[0]"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness properly disabled in accordance with V2 readiness policy for skill persistence.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Standard structured handoff envelope containing summary, inputs, unknowns, and next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, unsafe autonomous writes, or policy violations.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Context states 'Required inputs/output evidence are sufficient' but omits actual skills data in confirmed_facts or confirmed_answers (MISSING_CONCRETE_STATE_OR_EVIDENCE), rendering completion/context reuse unassessable."
+      ],
+      "summary": "The candidate handles the empty context safely without hallucinating skills, adhering to V2 UI allow-lists and readiness policy. Context reuse and stop condition are marked NOT_ASSESSABLE due to missing concrete state in the test fixture."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2765,
+      "total_input_tokens": 2047,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2047
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 718,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2444,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2444
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 737
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6024,
+  "usage": {
+    "total_tokens": 3172,
+    "total_input_tokens": 2192,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2192
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 508,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 472,
+    "raw_prompt_token": 5877,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5877
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 524
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 472
+          }
+        ]
+      }
+    ]
+  }
+}

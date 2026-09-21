@@ -1,0 +1,287 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval2",
+  "candidates": [
+    {
+      "id": "SCHOOL_026",
+      "score": 0.5966237407788582
+    },
+    {
+      "id": "RECOVERY_006",
+      "score": 0.5656106100484916
+    },
+    {
+      "id": "EMP_JOB_002",
+      "score": 0.56556617138671
+    },
+    {
+      "id": "SKILL_SIDE_005",
+      "score": 0.5637438095777212
+    },
+    {
+      "id": "IND_JOB_002",
+      "score": 0.5539185981619545
+    },
+    {
+      "id": "SKILL_SIDE_007",
+      "score": 0.521492756356717
+    },
+    {
+      "id": "EMP_CULTURE_002",
+      "score": 0.5184178093812172
+    },
+    {
+      "id": "PATH_005",
+      "score": 0.5183019624510969
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "How do I bake sourdough bread at home?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "response": "You are asking about a home baking recipe.",
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "SCHOOL_026",
+        "button_label": "I need options near home",
+        "topic_name": "Pathways Near Me",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Prioritize local, online/hybrid, school-based and nearby work-based routes.",
+        "when_to_serve": "Serve when student has location/transport constraints. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Pathways Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "key_output": "Focused explanation or decision support for the specific school-to-postschool issue",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "entity_picker",
+          "comparison_grid",
+          "pathway_builder",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "RECOVERY_006",
+        "button_label": "I need to stay near home",
+        "topic_name": "I Cannot Move Away",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Find local, online/hybrid, regional, VET or apprenticeship alternatives compatible with travel constraints.",
+        "when_to_serve": "Serve when location blocks preferred option. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'I Cannot Move Away' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "key_output": "Alternative routes preserving the goal where possible, with conditions and next steps",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "entity_picker",
+          "comparison_grid",
+          "pathway_builder",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_JOB_002",
+        "button_label": "How could I start here?",
+        "topic_name": "Entry-Level Roles",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Show graduate roles, internships, cadetships, traineeships, apprenticeships, part-time, junior and support roles.",
+        "when_to_serve": "Serve when student/graduate wants realistic entry points. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Entry-Level Roles' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer, job postings, organization structure, user course/skills",
+        "key_output": "Role families, entry roles, hidden roles and user-relevant opportunities",
+        "needs_live_data": "Yes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "hierarchy_explorer",
+          "timeline",
+          "evidence_panel",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SKILL_SIDE_005",
+        "button_label": "Where can I use this skill?",
+        "topic_name": "Skill to Careers",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Map a skill to occupations and industries where it matters.",
+        "when_to_serve": "Serve when user knows a capability but not where it is valuable. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill to Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "User skills, target role/course, evidence, proficiency",
+        "key_output": "Clear skill inventory, gaps, learning priorities and connections to courses/jobs",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 4,
+        "allowed_primitives": [
+          "entity_picker",
+          "hierarchy_explorer",
+          "evidence_panel",
+          "comparison_grid",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "IND_JOB_002",
+        "button_label": "How could I get started?",
+        "topic_name": "Entry-Level Jobs",
+        "primary_category": "Industry Intelligence",
+        "clear_purpose": "Show school-leaver, certificate, apprenticeship, graduate, internship, support and trainee entry points.",
+        "when_to_serve": "Serve when user wants realistic first roles in the industry. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Entry-Level Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Industry, occupation taxonomy, employer/workforce evidence",
+        "key_output": "Job families, entry roles, hidden careers and progression paths inside the industry",
+        "needs_live_data": "Yes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "entity_picker",
+          "comparison_grid",
+          "evidence_panel",
+          "hierarchy_explorer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "SKILL_SIDE_007",
+        "button_label": "How can I prove this skill?",
+        "topic_name": "Evidence My Skills",
+        "primary_category": "Self Discovery & Goal",
+        "clear_purpose": "Suggest projects, work examples, assessment, credentials or portfolios that demonstrate capability.",
+        "when_to_serve": "Serve when user can do something but lacks employer-visible proof. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Evidence My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "User skills, target role/course, evidence, proficiency",
+        "key_output": "Clear skill inventory, gaps, learning priorities and connections to courses/jobs",
+        "needs_live_data": "Sometimes",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "skill_matrix",
+          "evidence_panel",
+          "scenario_test",
+          "pathway_builder",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "EMP_CULTURE_002",
+        "button_label": "How do I test the culture myself?",
+        "topic_name": "Questions I Should Ask",
+        "primary_category": "Employer Intelligence",
+        "clear_purpose": "Generate interview/networking questions about feedback, support, success, mobility, mistakes, team changes and role history.",
+        "when_to_serve": "Serve when user wants to verify team/manager experience. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'Questions I Should Ask' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Employer-stated values, policies, employee reviews, graduate stories, job ads and independent data",
+        "key_output": "Culture signals separated by source type plus questions to investigate personally",
+        "needs_live_data": "Yes",
+        "max_interactions": 4,
+        "allowed_primitives": [
+          "ranking",
+          "evidence_panel",
+          "short_answer",
+          "action_handoff"
+        ],
+        "available": true
+      },
+      {
+        "tool_id": "PATH_005",
+        "button_label": "Start while I am still at school",
+        "topic_name": "School-Based Apprenticeship",
+        "primary_category": "School Subjects & Pathways",
+        "clear_purpose": "Explain school, employer, RTO, training contract and how work/training fits senior schooling.",
+        "when_to_serve": "Serve when student wants to begin apprenticeship/traineeship during school. Use known context first; ask only for missing information that changes the result.",
+        "do_not_serve_when": "Do not surface this objective when the user is asking for an unrelated task, when 'School-Based Apprenticeship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "key_inputs": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "key_output": "One or more feasible post-school routes with conditions, trade-offs and next checks",
+        "needs_live_data": "Often",
+        "max_interactions": 5,
+        "allowed_primitives": [
+          "constraint_builder",
+          "timeline",
+          "pathway_builder",
+          "entity_picker",
+          "evidence_panel",
+          "comparison_grid",
+          "action_handoff"
+        ],
+        "available": true
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 2216,
+      "total_input_tokens": 2124,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2124
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 44,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 48,
+      "raw_prompt_token": 2359,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2359
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 60
+            }
+          ],
+          "thoughts_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 48
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T10:22:13Z",
+    "updated": "2026-09-18T10:22:13Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EtECCs4CAWkUfRNNzwL3L/cecAz9TrVTGBjEG26fZ8z83zdEyP2npz4MxU9gvrYpyfus1OB0dih1kNCCNoLHst8YI1N8eize06vcfde4rYJQJ2c4Lu0XHt+An8qNYKQ6gsLpTC5utDtqQCvun+pK+MpBt7EQ2uckYBYu3WWylKlS7kqNNLqrUILOMvDuu8ptPsyVXQbpE0cnn5aFPLk0gLtJJ2Ea2D5SLI1kULbMk8twYfnqm4rjL+vPbzVtie+mqPFEieh+estYEiJR34MVfVXmlB4j5ELX1iBBgPoEyu2zkPKjWFQvyNw+CrHqTwtJFwOxkWiw1iw6kKNuhvEg/piqBAPciW6++GAK4cvHroFXQwcdlGMaOtG6z5c1Bj/ENdVZrdW1csTKJeA4rLxiBIrGsTNGefCu4+PFMkqM3sACehiARDqYjclXNIl4SkypcGRzWg==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"decision\": \"NONE\",\n  \"objective_id\": \"\",\n  \"reason\": \"The user is asking an off-topic cooking question, so no career guidance objectives are relevant.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "decision": "NONE",
+    "objective_id": "",
+    "reason": "The user is asking an off-topic cooking question, so no career guidance objectives are relevant."
+  }
+}

@@ -1,0 +1,2406 @@
+{
+  "scope": "New synthetic development evaluation, not independent real-user accuracy. Context source is recorded by liveContext flag. Labels allow alternatives. No weight training. No fitting on these outputs.",
+  "liveContext": true,
+  "model": {
+    "id": "Xenova/bge-small-en-v1.5",
+    "label": "BGE-small",
+    "revision": "ea104dacec62c0de699686887e3f920caeb4f3e3",
+    "pooling": "cls",
+    "tokenBudget": 512,
+    "description": "Calibrated skill matching · 512-token input window"
+  },
+  "summary": {
+    "baseline": {
+      "positive": 3,
+      "top1": 0,
+      "covered": 1
+    },
+    "split": {
+      "positive": 3,
+      "top1": 0,
+      "covered": 1
+    },
+    "metadata": {
+      "positive": 3,
+      "top1": 1,
+      "covered": 2
+    },
+    "wider": {
+      "positive": 3,
+      "top1": 0,
+      "covered": 1
+    },
+    "combined": {
+      "positive": 3,
+      "top1": 2,
+      "covered": 2
+    }
+  },
+  "results": [
+    {
+      "id": "interests-new",
+      "text": "Nothing jumps out when people ask about my dream job. Can you help me notice what I actually like doing?",
+      "context": "Identify natural interests and enjoyable daily tasks to build career clarity.\nNothing jumps out when people ask about my dream job.\nExplore day-to-day task preferences and reflection exercises to discover working styles.\nThink about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+      "expected": [
+        "DISCOVER_001"
+      ],
+      "response": {
+        "schema_version": "1.3",
+        "current_mode": "A_CONVERSATION",
+        "response_intent": "EXPLORE_OPTIONS",
+        "content_blocks": [
+          {
+            "id": "b1",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "It is completely normal not to have a dream job in mind. Thinking about specific job titles can feel overwhelming when nothing immediately stands out.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b2",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "A much more practical way to start is by looking at small, everyday activities rather than entire careers. When you break your day down into types of tasks, you can often spot useful clues about what feels satisfying and what drains you.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b3",
+            "type": "list",
+            "level": "none",
+            "variant": "default",
+            "title": "Everyday Clues to Notice",
+            "text": "Here are a few different types of tasks to reflect on:",
+            "items": [
+              {
+                "id": "i1",
+                "title": "Solving structured problems",
+                "text": "Troubleshooting something broken, organising messy information, working with numbers, or following clear step-by-step logic.",
+                "value": "",
+                "status": "neutral"
+              },
+              {
+                "id": "i2",
+                "title": "Working with people directly",
+                "text": "Explaining ideas, helping someone solve a personal issue, collaborating in a team, or listening and guiding.",
+                "value": "",
+                "status": "neutral"
+              },
+              {
+                "id": "i3",
+                "title": "Creating or communicating",
+                "text": "Writing, designing, making something visual, telling stories, or presenting concepts clearly.",
+                "value": "",
+                "status": "neutral"
+              },
+              {
+                "id": "i4",
+                "title": "Hands-on and physical tasks",
+                "text": "Building, moving, using tools, being outdoors, or seeing concrete physical results from your effort.",
+                "value": "",
+                "status": "neutral"
+              }
+            ],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b4",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "You do not need to choose one of these categories right now. Identifying even one specific moment when a task felt engaging or effortless is enough to start finding patterns.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          }
+        ],
+        "interaction": {
+          "kind": "question",
+          "input_type": "text",
+          "question_id": "q_discovery_enjoyed_task",
+          "question": "Think about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+          "options": [],
+          "allow_other_input": false,
+          "other_input_label": "",
+          "fields": [],
+          "recommended_actions": []
+        },
+        "service_trigger": {
+          "service_intent_detected": false,
+          "primary_requested_service": "PATHWAY_RMO",
+          "confidence": "HIGH",
+          "reason": "User is seeking career exploration and guidance to identify core interests and strengths.",
+          "trigger_now": false,
+          "needs_more_clarity": false,
+          "actions": []
+        },
+        "rmo_readiness": {
+          "readiness": "NOT_READY",
+          "ready_to_generate": false,
+          "missing_inputs": [],
+          "verification_required": false
+        },
+        "state": {
+          "active_response_mode": "Standard",
+          "effective_response_mode": "Standard",
+          "mode_source": "default",
+          "safety_override_applied": false,
+          "user_confidence": {
+            "score": 30,
+            "band": "low",
+            "evidence_strength": "weak",
+            "trend": "unknown",
+            "reason_codes": [
+              "EXPLICIT_UNCERTAINTY",
+              "CRITERIA_UNCLEAR",
+              "ROUTE_UNRESOLVED"
+            ]
+          },
+          "progress": {
+            "explained": true,
+            "failed_attempts": 0,
+            "loop_count_same_issue": 0,
+            "security_breach_count": 0,
+            "active_security_penalty": null
+          },
+          "activity_context": {
+            "current_goal": "Identify natural interests and enjoyable daily tasks to build career clarity.",
+            "confirmed_facts": [
+              "Nothing jumps out when people ask about my dream job."
+            ],
+            "possible_need": "Explore day-to-day task preferences and reflection exercises to discover working styles.",
+            "missing_information": [
+              "Specific activities, hobbies, subjects, or tasks the user enjoys or dislikes.",
+              "Current education or employment background."
+            ],
+            "relevant_question": "Think about study, past work, a hobby, or helping someone out: what is one specific task or activity where you felt focused or satisfied while doing it?",
+            "user_constraints": []
+          }
+        },
+        "followups": {
+          "enabled": false,
+          "cancel_on_user_message": true,
+          "topic_lock": false,
+          "topic_key": "",
+          "triggers": []
+        }
+      },
+      "boundary": null,
+      "variants": {
+        "baseline": [
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7871659660230262
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.7332889248519326
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.7320527051952497
+          },
+          {
+            "id": "SCHOOL_031",
+            "score": 0.7319872865214442
+          },
+          {
+            "id": "CAREER_SIDE_003",
+            "score": 0.7318181851752619
+          },
+          {
+            "id": "SCHOOL_006",
+            "score": 0.7295153289720111
+          },
+          {
+            "id": "DISCOVER_001",
+            "score": 0.729324275782393
+          },
+          {
+            "id": "DISCOVER_003",
+            "score": 0.7259613134894601
+          }
+        ],
+        "split": [
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7510315497456752,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7473328808333836,
+            "contextScore": 0.7510315497456752
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7369046385647475,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7219898803461218,
+            "contextScore": 0.7369046385647475
+          },
+          {
+            "id": "SCHOOL_031",
+            "score": 0.7552623959419444,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7552623959419444,
+            "contextScore": 0.7233153074318073
+          },
+          {
+            "id": "JOB_DISCOVER_001",
+            "score": 0.7437999836462721,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7055782352164647,
+            "contextScore": 0.7437999836462721
+          },
+          {
+            "id": "CAREER_SIDE_003",
+            "score": 0.7259219125721367,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7174605565684943,
+            "contextScore": 0.7259219125721367
+          },
+          {
+            "id": "DISCOVER_001",
+            "score": 0.7253188981889522,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7082545333653767,
+            "contextScore": 0.7253188981889522
+          },
+          {
+            "id": "JOB_DECIDE_001",
+            "score": 0.7240233502609157,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7240233502609157
+          },
+          {
+            "id": "IND_JOB_003",
+            "score": 0.7215787799080208,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7215787799080208
+          }
+        ],
+        "metadata": [
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7871659660230262
+          },
+          {
+            "id": "DISCOVER_003",
+            "score": 0.778932376735309
+          },
+          {
+            "id": "DISCOVER_001",
+            "score": 0.7585187709047814
+          },
+          {
+            "id": "GOAL_002",
+            "score": 0.758243106494496
+          },
+          {
+            "id": "EXP_001",
+            "score": 0.7376495815069243
+          },
+          {
+            "id": "SCHOOL_006",
+            "score": 0.7370593704984317
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7345812497779143
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.7332889248519326
+          }
+        ],
+        "wider": [
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7871659660230262
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.7332889248519326
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.7320527051952497
+          },
+          {
+            "id": "SCHOOL_031",
+            "score": 0.7319872865214442
+          },
+          {
+            "id": "CAREER_SIDE_003",
+            "score": 0.7318181851752619
+          },
+          {
+            "id": "SCHOOL_006",
+            "score": 0.7295153289720111
+          },
+          {
+            "id": "DISCOVER_001",
+            "score": 0.729324275782393
+          },
+          {
+            "id": "DISCOVER_003",
+            "score": 0.7259613134894601
+          },
+          {
+            "id": "CURRENT_JOB_003",
+            "score": 0.7188303773494109
+          },
+          {
+            "id": "EMP_GROWTH_003",
+            "score": 0.7179068055713239
+          },
+          {
+            "id": "DISCOVER_004",
+            "score": 0.7149974205070577
+          },
+          {
+            "id": "JOB_DISCOVER_001",
+            "score": 0.7144874586296597
+          },
+          {
+            "id": "FIRST_JOB_003",
+            "score": 0.7135877291654609
+          },
+          {
+            "id": "EXP_001",
+            "score": 0.7129545650529412
+          },
+          {
+            "id": "IND_REALITY_001",
+            "score": 0.7125114045981351
+          },
+          {
+            "id": "GOAL_002",
+            "score": 0.7104772654464292
+          },
+          {
+            "id": "JOB_DECIDE_001",
+            "score": 0.7101403863334339
+          },
+          {
+            "id": "GOAL_003",
+            "score": 0.709739881077584
+          },
+          {
+            "id": "IND_FUTURE_004",
+            "score": 0.7085003489650008
+          },
+          {
+            "id": "EMP_HIRING_002",
+            "score": 0.7081193716851389
+          }
+        ],
+        "combined": [
+          {
+            "id": "DISCOVER_001",
+            "score": 0.7728331524046678,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7230731300539044,
+            "contextScore": 0.7728331524046678
+          },
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7510315497456752,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7473328808333836,
+            "contextScore": 0.7510315497456752
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7642923760849947,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7219898803461218,
+            "contextScore": 0.7642923760849947
+          },
+          {
+            "id": "DISCOVER_003",
+            "score": 0.7681018335767779,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7157266021341253,
+            "contextScore": 0.7681018335767779
+          },
+          {
+            "id": "SCHOOL_031",
+            "score": 0.7552623959419444,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7552623959419444,
+            "contextScore": 0.7300106210241738
+          },
+          {
+            "id": "JOB_DISCOVER_001",
+            "score": 0.7437999836462721,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7055782352164647,
+            "contextScore": 0.7437999836462721
+          },
+          {
+            "id": "CAREER_SIDE_003",
+            "score": 0.7259219125721367,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7174605565684943,
+            "contextScore": 0.7259219125721367
+          },
+          {
+            "id": "IND_JOB_003",
+            "score": 0.7241604189999735,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7241604189999735
+          },
+          {
+            "id": "JOB_DECIDE_001",
+            "score": 0.7240233502609157,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7240233502609157
+          },
+          {
+            "id": "FIRST_JOB_001",
+            "score": 0.7116124780867914,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7116124780867914
+          },
+          {
+            "id": "EXP_001",
+            "score": 0.7101330674613814,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7101330674613814
+          },
+          {
+            "id": "EMP_JOB_003",
+            "score": 0.7049092861953365,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7049092861953365
+          },
+          {
+            "id": "IND_FIT_001",
+            "score": 0.7025816006744802,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7025816006744802
+          },
+          {
+            "id": "JOB_REALITY_001",
+            "score": 0.7021556142507099,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7021556142507099
+          },
+          {
+            "id": "PROFILE_003",
+            "score": 0.7019617046529566,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7019617046529566
+          },
+          {
+            "id": "GOAL_004",
+            "score": 0.7016568649575231,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7016568649575231
+          },
+          {
+            "id": "SCHOOL_034",
+            "score": 0.7543566078374891,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.7543566078374891
+          },
+          {
+            "id": "JOB_DISCOVER_007",
+            "score": 0.7002631547974767,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7002631547974767
+          },
+          {
+            "id": "SCHOOL_006",
+            "score": 0.7528282415514368,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.7528282415514368
+          },
+          {
+            "id": "EMP_JOB_001",
+            "score": 0.6978351051186782,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6978351051186782
+          }
+        ]
+      },
+      "ms": 86
+    },
+    {
+      "id": "careers-new",
+      "text": "Can you put engineering and marketing next to each other so I understand what the work and skills are like?",
+      "context": "Compare engineering and marketing to understand daily work and required skills.\nCan you put engineering and marketing next to each other so I understand what the work and skills are like?\nExplore personal strengths, task preferences, and suitable pathway options across technical and commercial disciplines.\nWhen you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+      "expected": [
+        "JOB_COMPARE_001"
+      ],
+      "response": {
+        "schema_version": "1.3",
+        "current_mode": "A_CONVERSATION",
+        "response_intent": "COMPARE",
+        "content_blocks": [
+          {
+            "id": "b1",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "Engineering and marketing solve very different problems, but both are central to how products and services reach the real world. Putting them side by side helps clarify what you would actually do day-to-day and what kind of thinking each role relies on.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b2",
+            "type": "comparison",
+            "level": "none",
+            "variant": "default",
+            "title": "Engineering vs Marketing",
+            "text": "A direct comparison of daily responsibilities, required skills, and core focus areas.",
+            "items": [],
+            "columns": [
+              {
+                "key": "dimension",
+                "label": "Area"
+              },
+              {
+                "key": "engineering",
+                "label": "Engineering"
+              },
+              {
+                "key": "marketing",
+                "label": "Marketing"
+              }
+            ],
+            "rows": [
+              {
+                "id": "r1",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Core Purpose"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Designing, building, testing, and maintaining functional systems, structures, software, or physical products."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Understanding audience needs, communicating value, generating demand, and connecting offerings with customers."
+                  }
+                ]
+              },
+              {
+                "id": "r2",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Day-to-Day Work"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Technical problem solving, modelling or coding, reviewing specifications, quality testing, and debugging failures."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Audience research, campaign planning, content creation, channel analysis, and testing messaging performance."
+                  }
+                ]
+              },
+              {
+                "id": "r3",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Core Skills & Mindset"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Structured logic, technical numeracy, systems thinking, precision, and adherence to safety or architectural constraints."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Commercial awareness, customer empathy, persuasive communication, creative positioning, and data interpretation."
+                  }
+                ]
+              },
+              {
+                "id": "r4",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Typical Entry Paths"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Usually requires formal accredited degree or technical diploma pathways with defined math/science prerequisites."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Flexible entry through business/communication study, targeted digital portfolios, or direct entry-level experience."
+                  }
+                ]
+              },
+              {
+                "id": "r5",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Common Trade-offs"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "High technical rigor and longer training paths, but clear professional pathways and technical demand."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Fast-evolving tools and less structured early career progression, but high creative and commercial flexibility."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "interaction": {
+          "kind": "question",
+          "input_type": "text",
+          "question_id": "q_eng_mkt_pref",
+          "question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+          "options": [],
+          "allow_other_input": false,
+          "other_input_label": "",
+          "fields": [],
+          "recommended_actions": []
+        },
+        "service_trigger": {
+          "service_intent_detected": false,
+          "primary_requested_service": "PATHWAY_RMO",
+          "confidence": "HIGH",
+          "reason": "User is actively exploring and comparing two major discipline areas to clarify career direction.",
+          "trigger_now": false,
+          "needs_more_clarity": false,
+          "actions": []
+        },
+        "rmo_readiness": {
+          "readiness": "NOT_READY",
+          "ready_to_generate": false,
+          "missing_inputs": [],
+          "verification_required": false
+        },
+        "state": {
+          "active_response_mode": "Standard",
+          "effective_response_mode": "Standard",
+          "mode_source": "default",
+          "safety_override_applied": false,
+          "user_confidence": {
+            "score": 30,
+            "band": "low",
+            "evidence_strength": "weak",
+            "trend": "unknown",
+            "reason_codes": [
+              "EXPLICIT_UNCERTAINTY",
+              "CRITERIA_UNCLEAR",
+              "ROUTE_UNRESOLVED"
+            ]
+          },
+          "progress": {
+            "explained": true,
+            "failed_attempts": 0,
+            "loop_count_same_issue": 0,
+            "security_breach_count": 0,
+            "active_security_penalty": null
+          },
+          "activity_context": {
+            "current_goal": "Compare engineering and marketing to understand daily work and required skills.",
+            "confirmed_facts": [
+              "Can you put engineering and marketing next to each other so I understand what the work and skills are like?"
+            ],
+            "possible_need": "Explore personal strengths, task preferences, and suitable pathway options across technical and commercial disciplines.",
+            "missing_information": [
+              "User's past project experiences and enjoyed subjects",
+              "Preferred work style and problem-solving orientation"
+            ],
+            "relevant_question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+            "user_constraints": []
+          }
+        },
+        "followups": {
+          "enabled": false,
+          "cancel_on_user_message": true,
+          "topic_lock": false,
+          "topic_key": "",
+          "triggers": []
+        }
+      },
+      "boundary": null,
+      "variants": {
+        "baseline": [
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.7387916673494574
+          },
+          {
+            "id": "JOB_DISCOVER_002",
+            "score": 0.7262695318179146
+          },
+          {
+            "id": "JOB_COMPARE_002",
+            "score": 0.7150472910366382
+          },
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7126798321895873
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7120056135153812
+          },
+          {
+            "id": "IND_SKILL_003",
+            "score": 0.7066211848910993
+          },
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7063823282259872
+          },
+          {
+            "id": "IND_COMPARE_002",
+            "score": 0.704405149931888
+          }
+        ],
+        "split": [
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7200660319750333,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7200660319750333,
+            "contextScore": 0.7074712716343097
+          },
+          {
+            "id": "JOB_DISCOVER_002",
+            "score": 0.7198290302799759,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6962184117057134,
+            "contextScore": 0.7198290302799759
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.6941791785127696,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6941791785127696,
+            "contextScore": 0.6914784139930322
+          },
+          {
+            "id": "IND_SKILL_003",
+            "score": 0.7046352077890164,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6884079317625493,
+            "contextScore": 0.7046352077890164
+          },
+          {
+            "id": "IND_DISCOVER_002",
+            "score": 0.7104258945871706,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7104258945871706
+          },
+          {
+            "id": "IND_DISCOVER_003",
+            "score": 0.6981343907833526,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6981343907833526
+          },
+          {
+            "id": "EMP_DISCOVER_002",
+            "score": 0.6980735812748986,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6980735812748986
+          },
+          {
+            "id": "IND_FIT_001",
+            "score": 0.6970506875843487,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6970506875843487
+          }
+        ],
+        "metadata": [
+          {
+            "id": "JOB_COMPARE_001",
+            "score": 0.8301701349969846
+          },
+          {
+            "id": "JOB_DISCOVER_002",
+            "score": 0.7470933982427452
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7459942200558799
+          },
+          {
+            "id": "IND_SKILL_003",
+            "score": 0.7442043558708137
+          },
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.7387916673494574
+          },
+          {
+            "id": "IND_PATH_002",
+            "score": 0.7340834170949437
+          },
+          {
+            "id": "EMP_SKILL_002",
+            "score": 0.721310437370901
+          },
+          {
+            "id": "SKILL_SIDE_005",
+            "score": 0.7210584883397784
+          }
+        ],
+        "wider": [
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.7387916673494574
+          },
+          {
+            "id": "JOB_DISCOVER_002",
+            "score": 0.7262695318179146
+          },
+          {
+            "id": "JOB_COMPARE_002",
+            "score": 0.7150472910366382
+          },
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7126798321895873
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7120056135153812
+          },
+          {
+            "id": "IND_SKILL_003",
+            "score": 0.7066211848910993
+          },
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7063823282259872
+          },
+          {
+            "id": "IND_COMPARE_002",
+            "score": 0.704405149931888
+          },
+          {
+            "id": "IND_COMPARE_005",
+            "score": 0.7015826929949732
+          },
+          {
+            "id": "FUTURE_SKILL_005",
+            "score": 0.7001077520490347
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6975971111883925
+          },
+          {
+            "id": "FUTURE_SKILL_001",
+            "score": 0.6969337840739943
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.6956290563843652
+          },
+          {
+            "id": "IND_SKILL_002",
+            "score": 0.6952960840646384
+          },
+          {
+            "id": "SCHOOL_007",
+            "score": 0.695097890095609
+          },
+          {
+            "id": "IND_DISCOVER_004",
+            "score": 0.6938086867860573
+          },
+          {
+            "id": "IND_PATH_003",
+            "score": 0.6936362996185974
+          },
+          {
+            "id": "IND_DISCOVER_003",
+            "score": 0.6929107148861852
+          },
+          {
+            "id": "EMP_DISCOVER_004",
+            "score": 0.691628192250195
+          },
+          {
+            "id": "IND_PATH_002",
+            "score": 0.6908368594778642
+          }
+        ],
+        "combined": [
+          {
+            "id": "JOB_COMPARE_001",
+            "score": 0.8509807832536513,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.8421267535283566,
+            "contextScore": 0.8509807832536513
+          },
+          {
+            "id": "CAREER_SIDE_004",
+            "score": 0.7591838299289686,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7591838299289686,
+            "contextScore": 0.7375869783438782
+          },
+          {
+            "id": "IND_SKILL_003",
+            "score": 0.7391185976461545,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.733735204147975,
+            "contextScore": 0.7391185976461545
+          },
+          {
+            "id": "IND_PATH_002",
+            "score": 0.7505229137353284,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7505229137353284,
+            "contextScore": 0.7203455714596493
+          },
+          {
+            "id": "SKILL_SIDE_005",
+            "score": 0.7282372666321161,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7169788393619381,
+            "contextScore": 0.7282372666321161
+          },
+          {
+            "id": "JOB_DISCOVER_002",
+            "score": 0.7414608561236021,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.7091497961653224,
+            "contextScore": 0.7414608561236021
+          },
+          {
+            "id": "IND_FIT_001",
+            "score": 0.7114030328964153,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.709094880621746,
+            "contextScore": 0.7114030328964153
+          },
+          {
+            "id": "SCHOOL_002",
+            "score": 0.712228872981304,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.703241230641378,
+            "contextScore": 0.712228872981304
+          },
+          {
+            "id": "IND_DISCOVER_007",
+            "score": 0.7164386683386886,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7164386683386886
+          },
+          {
+            "id": "IND_DISCOVER_002",
+            "score": 0.7114533144751469,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7114533144751469
+          },
+          {
+            "id": "EMP_DISCOVER_002",
+            "score": 0.709776522060992,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.709776522060992
+          },
+          {
+            "id": "CURRENT_JOB_002",
+            "score": 0.7095544367937324,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7095544367937324
+          },
+          {
+            "id": "IND_DISCOVER_003",
+            "score": 0.7061146530427151,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7061146530427151
+          },
+          {
+            "id": "JOB_DISCOVER_010",
+            "score": 0.7044918649092426,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7044918649092426
+          },
+          {
+            "id": "JOB_SKILL_001",
+            "score": 0.7024666127719674,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.7024666127719674
+          },
+          {
+            "id": "GOAL_003",
+            "score": 0.6958206475540551,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6958206475540551
+          },
+          {
+            "id": "IND_DISCOVER_004",
+            "score": 0.6951542477903434,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6951542477903434
+          },
+          {
+            "id": "IND_DEEP_004",
+            "score": 0.7359911651622035,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.7359911651622035
+          },
+          {
+            "id": "IND_DEEP_002",
+            "score": 0.693709639091243,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.693709639091243
+          },
+          {
+            "id": "JOB_DISCOVER_007",
+            "score": 0.693566637816147,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.693566637816147
+          }
+        ]
+      },
+      "ms": 71
+    },
+    {
+      "id": "short-context",
+      "text": "both, honestly",
+      "prior": "I like writing code and watching how people use an app. I want to understand which activities I prefer.",
+      "context": "Understand preference between coding tasks and user observation activities to guide career pathway choices.\nI like writing code and watching how people use an app.. both, honestly\nHelp the user distinguish day-to-day work tasks across front-end engineering, product design, and technical product management.\nWhen building or testing something, do you get more satisfaction from solving code logic or refining the user experience?",
+      "expected": [
+        "DISCOVER_001",
+        "DISCOVER_003"
+      ],
+      "response": {
+        "schema_version": "1.3",
+        "current_mode": "A_CONVERSATION",
+        "response_intent": "EXPLORE_OPTIONS",
+        "content_blocks": [
+          {
+            "id": "b1",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "Enjoying both the build and the user experience is actually a very practical combination. It means you do not have to force a choice between purely technical work and human-centred design right away.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b2",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "Several roles sit directly at that intersection, though they balance the daily work differently:",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b3",
+            "type": "list",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "",
+            "items": [
+              {
+                "id": "i1",
+                "title": "Front-End or UI Engineering",
+                "text": "Writing code for interfaces, layout, and responsiveness while paying close attention to user interactions, transitions, and accessibility.",
+                "value": "",
+                "status": "neutral"
+              },
+              {
+                "id": "i2",
+                "title": "Product Design / UX Prototyping",
+                "text": "Observing user behaviour, testing interfaces, and building interactive prototypes, with coding used as an exploratory tool rather than production infrastructure.",
+                "value": "",
+                "status": "neutral"
+              },
+              {
+                "id": "i3",
+                "title": "Technical Product Management",
+                "text": "Understanding how software is architected while focusing heavily on user feedback, feature priorities, and solving real user friction.",
+                "value": "",
+                "status": "neutral"
+              }
+            ],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b4",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "To help narrow down which side energises you more in practice, think about where you find yourself spending time when you work on a project.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          }
+        ],
+        "interaction": {
+          "kind": "question",
+          "input_type": "text",
+          "question_id": "q_task_energy_distinction",
+          "question": "When you're building or testing something, do you get more satisfaction from getting the logic and code working smoothly, or from tweaking the interface and observing how a person interacts with it?",
+          "options": [],
+          "allow_other_input": false,
+          "other_input_label": "",
+          "fields": [],
+          "recommended_actions": []
+        },
+        "service_trigger": {
+          "service_intent_detected": false,
+          "primary_requested_service": "PATHWAY_RMO",
+          "confidence": "HIGH",
+          "reason": "User is actively exploring career and role fit at the intersection of coding and user research.",
+          "trigger_now": false,
+          "needs_more_clarity": false,
+          "actions": []
+        },
+        "rmo_readiness": {
+          "readiness": "NOT_READY",
+          "ready_to_generate": false,
+          "missing_inputs": [],
+          "verification_required": false
+        },
+        "state": {
+          "active_response_mode": "Standard",
+          "effective_response_mode": "Standard",
+          "mode_source": "default",
+          "safety_override_applied": false,
+          "user_confidence": {
+            "score": 35,
+            "band": "low",
+            "evidence_strength": "weak",
+            "trend": "unknown",
+            "reason_codes": [
+              "EXPLICIT_UNCERTAINTY",
+              "CRITERIA_UNCLEAR",
+              "ROUTE_UNRESOLVED",
+              "ACTION_EXPLORING"
+            ]
+          },
+          "progress": {
+            "explained": true,
+            "failed_attempts": 0,
+            "loop_count_same_issue": 0,
+            "security_breach_count": 0,
+            "active_security_penalty": null
+          },
+          "activity_context": {
+            "current_goal": "Understand preference between coding tasks and user observation activities to guide career pathway choices.",
+            "confirmed_facts": [
+              "I like writing code and watching how people use an app.",
+              "both, honestly"
+            ],
+            "possible_need": "Help the user distinguish day-to-day work tasks across front-end engineering, product design, and technical product management.",
+            "missing_information": [
+              "Specific coding languages or frameworks used",
+              "Experience level with user research or usability testing",
+              "Current education or employment stage"
+            ],
+            "relevant_question": "When building or testing something, do you get more satisfaction from solving code logic or refining the user experience?",
+            "user_constraints": []
+          }
+        },
+        "followups": {
+          "enabled": false,
+          "cancel_on_user_message": true,
+          "topic_lock": false,
+          "topic_key": "",
+          "triggers": []
+        }
+      },
+      "boundary": null,
+      "variants": {
+        "baseline": [
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7500397528131828
+          },
+          {
+            "id": "LEARN_ROUTE_002",
+            "score": 0.7437945624951368
+          },
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7383142473601005
+          },
+          {
+            "id": "IND_REALITY_001",
+            "score": 0.7367565762374874
+          },
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7290508180892856
+          },
+          {
+            "id": "JOB_SKILL_004",
+            "score": 0.7289064291569156
+          },
+          {
+            "id": "EMP_GROWTH_001",
+            "score": 0.7281737068071525
+          },
+          {
+            "id": "IND_SKILL_002",
+            "score": 0.7268813894217301
+          }
+        ],
+        "split": [
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7206015178942636,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6136767551919107,
+            "contextScore": 0.7206015178942636
+          },
+          {
+            "id": "JOB_COMPARE_005",
+            "score": 0.7081223356377904,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6580022086050616,
+            "contextScore": 0.7081223356377904
+          },
+          {
+            "id": "LEARN_ROUTE_002",
+            "score": 0.7330677272047301,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.5965717433594551,
+            "contextScore": 0.7330677272047301
+          },
+          {
+            "id": "SCHOOL_018",
+            "score": 0.6588089039753345,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6588089039753345
+          },
+          {
+            "id": "SCHOOL_009",
+            "score": 0.6217226291537381,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6217226291537381
+          },
+          {
+            "id": "DECIDE_003",
+            "score": 0.6161098077270128,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6161098077270128
+          },
+          {
+            "id": "JOB_DECIDE_004",
+            "score": 0.6142431605943962,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6142431605943962
+          },
+          {
+            "id": "JOB_COMPARE_004",
+            "score": 0.6091549228409541,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6091549228409541
+          }
+        ],
+        "metadata": [
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7500397528131828
+          },
+          {
+            "id": "LEARN_ROUTE_002",
+            "score": 0.7477705693839063
+          },
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7397910976545706
+          },
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7383142473601005
+          },
+          {
+            "id": "IND_REALITY_001",
+            "score": 0.7367565762374874
+          },
+          {
+            "id": "JOB_SKILL_004",
+            "score": 0.7289064291569156
+          },
+          {
+            "id": "EMP_GROWTH_001",
+            "score": 0.7281737068071525
+          },
+          {
+            "id": "IND_SKILL_002",
+            "score": 0.7268813894217301
+          }
+        ],
+        "wider": [
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7500397528131828
+          },
+          {
+            "id": "LEARN_ROUTE_002",
+            "score": 0.7437945624951368
+          },
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7383142473601005
+          },
+          {
+            "id": "IND_REALITY_001",
+            "score": 0.7367565762374874
+          },
+          {
+            "id": "CAREER_SIDE_001",
+            "score": 0.7290508180892856
+          },
+          {
+            "id": "JOB_SKILL_004",
+            "score": 0.7289064291569156
+          },
+          {
+            "id": "EMP_GROWTH_001",
+            "score": 0.7281737068071525
+          },
+          {
+            "id": "IND_SKILL_002",
+            "score": 0.7268813894217301
+          },
+          {
+            "id": "DISCOVER_002",
+            "score": 0.7234168684368772
+          },
+          {
+            "id": "IND_FUTURE_006",
+            "score": 0.7226308238929114
+          },
+          {
+            "id": "EMP_SKILL_004",
+            "score": 0.7213837879120872
+          },
+          {
+            "id": "EMP_DISCOVER_004",
+            "score": 0.7151981286366823
+          },
+          {
+            "id": "SCHOOL_023",
+            "score": 0.7139200530784107
+          },
+          {
+            "id": "EMP_SKILL_003",
+            "score": 0.713122493708635
+          },
+          {
+            "id": "FUTURE_SKILL_005",
+            "score": 0.7090725669661183
+          },
+          {
+            "id": "IND_REALITY_005",
+            "score": 0.7061642261527075
+          },
+          {
+            "id": "PROFILE_008",
+            "score": 0.7043907544266732
+          },
+          {
+            "id": "DISCOVER_004",
+            "score": 0.7040326524711865
+          },
+          {
+            "id": "SKILL_SIDE_004",
+            "score": 0.7039692031510474
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.7022946411411584
+          }
+        ],
+        "combined": [
+          {
+            "id": "IND_COMPARE_003",
+            "score": 0.7206015178942636,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6136767551919107,
+            "contextScore": 0.7206015178942636
+          },
+          {
+            "id": "LEARN_ROUTE_002",
+            "score": 0.7346586907977131,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.5965717433594551,
+            "contextScore": 0.7346586907977131
+          },
+          {
+            "id": "JOB_COMPARE_005",
+            "score": 0.7081223356377904,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6580022086050616,
+            "contextScore": 0.7081223356377904
+          },
+          {
+            "id": "EMP_FIT_005",
+            "score": 0.7212444939273679,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6025612333395516,
+            "contextScore": 0.7212444939273679
+          },
+          {
+            "id": "JOB_COMPARE_001",
+            "score": 0.7135157097503803,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.5918860238203689,
+            "contextScore": 0.7135157097503803
+          },
+          {
+            "id": "SCHOOL_018",
+            "score": 0.6588089039753345,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6588089039753345
+          },
+          {
+            "id": "SCHOOL_009",
+            "score": 0.6217226291537381,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6217226291537381
+          },
+          {
+            "id": "DECIDE_003",
+            "score": 0.6161098077270128,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6161098077270128
+          },
+          {
+            "id": "JOB_DECIDE_004",
+            "score": 0.6142431605943962,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6142431605943962
+          },
+          {
+            "id": "JOB_COMPARE_004",
+            "score": 0.6091549228409541,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6091549228409541
+          },
+          {
+            "id": "EMP_REALITY_004",
+            "score": 0.6063124530327405,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6063124530327405
+          },
+          {
+            "id": "EMP_SAFE_002",
+            "score": 0.6042592474345616,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6042592474345616
+          },
+          {
+            "id": "GOAL_001",
+            "score": 0.6031347482842631,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6031347482842631
+          },
+          {
+            "id": "SCHOOL_013",
+            "score": 0.5921775503409735,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.5921775503409735
+          },
+          {
+            "id": "IND_SKILL_002",
+            "score": 0.7444499292576297,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.7444499292576297
+          },
+          {
+            "id": "IND_COMPARE_006",
+            "score": 0.5920607805286818,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.5920607805286818
+          },
+          {
+            "id": "EMP_COMPARE_002",
+            "score": 0.7413436794688059,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.7413436794688059
+          },
+          {
+            "id": "IND_COMPARE_004",
+            "score": 0.5890697305831079,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.5890697305831079
+          },
+          {
+            "id": "DISCOVER_002",
+            "score": 0.73221691309853,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.73221691309853
+          },
+          {
+            "id": "GOAL_005",
+            "score": 0.5850792395515302,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.5850792395515302
+          }
+        ]
+      },
+      "ms": 58
+    },
+    {
+      "id": "optout",
+      "text": "Do not open any activities. Just explain the difference between engineering and marketing here.",
+      "context": "Understand the difference between engineering and marketing in chat without opening external activities.\nDo not open any activities. Just explain the difference between engineering and marketing here.\nHelp the user explore which field aligns better with their strengths and interests once they review the comparison.",
+      "expected": [],
+      "response": {
+        "schema_version": "1.3",
+        "current_mode": "B_DELIVERY",
+        "response_intent": "COMPARE",
+        "content_blocks": [
+          {
+            "id": "b1",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "Engineering and marketing focus on very different parts of building and delivering solutions. In simple terms, engineering is centered on designing, testing, and solving technical problems to create things that work reliably. Marketing is focused on understanding people, communicating value, and connecting those products or services to the audiences that need them.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          },
+          {
+            "id": "b2",
+            "type": "comparison",
+            "level": "none",
+            "variant": "default",
+            "title": "Core Differences",
+            "text": "Here is how the two fields compare across everyday responsibilities, core skills, and typical study routes:",
+            "items": [],
+            "columns": [
+              {
+                "key": "dimension",
+                "label": "Dimension"
+              },
+              {
+                "key": "engineering",
+                "label": "Engineering"
+              },
+              {
+                "key": "marketing",
+                "label": "Marketing"
+              }
+            ],
+            "rows": [
+              {
+                "id": "r1",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Primary Focus"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Technical problem-solving, product functionality, structural design, and systems performance."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Customer research, market positioning, audience engagement, and communication strategy."
+                  }
+                ]
+              },
+              {
+                "id": "r2",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Day-to-Day Tasks"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Modelling, drafting technical specifications, coding, running tests, diagnosing system faults, and optimising performance."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Campaign planning, writing content, analysing customer metrics, conducting interviews, and coordinating promotions."
+                  }
+                ]
+              },
+              {
+                "id": "r3",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Key Capabilities"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Applied mathematics, physics or logic, structured analysis, and technical tools."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Audience empathy, commercial awareness, creative communication, and data interpretation."
+                  }
+                ]
+              },
+              {
+                "id": "r4",
+                "cells": [
+                  {
+                    "key": "dimension",
+                    "value": "Common Entry Routes"
+                  },
+                  {
+                    "key": "engineering",
+                    "value": "Usually requires a structured engineering qualification or technical technical degree for professional roles."
+                  },
+                  {
+                    "key": "marketing",
+                    "value": "Can be entered via marketing or business degrees, communications courses, or hands-on portfolio/entry-level experience."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "b3",
+            "type": "text",
+            "level": "none",
+            "variant": "default",
+            "title": "",
+            "text": "If you are weighing both paths, think about the problems you naturally enjoy tackling. Someone leaning toward engineering usually enjoys dissecting how things function and designing technical fixes, whereas someone drawn to marketing often enjoys exploring why people make choices and finding compelling ways to share ideas.",
+            "items": [],
+            "columns": [],
+            "rows": []
+          }
+        ],
+        "interaction": {
+          "kind": "none",
+          "input_type": "none",
+          "question_id": "",
+          "question": "",
+          "options": [],
+          "allow_other_input": false,
+          "other_input_label": "",
+          "fields": [],
+          "recommended_actions": [
+            {
+              "id": "rq1",
+              "label": "Explore engineering pathways",
+              "message": "What kind of study or entry pathways exist for engineering?"
+            },
+            {
+              "id": "rq2",
+              "label": "Explore marketing pathways",
+              "message": "What are the common pathways to get started in marketing?"
+            }
+          ]
+        },
+        "service_trigger": {
+          "service_intent_detected": false,
+          "primary_requested_service": "PATHWAY_RMO",
+          "confidence": "HIGH",
+          "reason": "User is comparing two distinct career fields without an explicit service request.",
+          "trigger_now": false,
+          "needs_more_clarity": false,
+          "actions": []
+        },
+        "rmo_readiness": {
+          "readiness": "NOT_READY",
+          "ready_to_generate": false,
+          "missing_inputs": [],
+          "verification_required": false
+        },
+        "state": {
+          "active_response_mode": "Standard",
+          "effective_response_mode": "Standard",
+          "mode_source": "default",
+          "safety_override_applied": false,
+          "user_confidence": {
+            "score": 30,
+            "band": "low",
+            "evidence_strength": "weak",
+            "trend": "unknown",
+            "reason_codes": [
+              "EXPLICIT_UNCERTAINTY",
+              "CRITERIA_UNCLEAR",
+              "ROUTE_UNRESOLVED"
+            ]
+          },
+          "progress": {
+            "explained": true,
+            "failed_attempts": 0,
+            "loop_count_same_issue": 0,
+            "security_breach_count": 0,
+            "active_security_penalty": null
+          },
+          "activity_context": {
+            "current_goal": "Understand the difference between engineering and marketing in chat without opening external activities.",
+            "confirmed_facts": [
+              "Do not open any activities. Just explain the difference between engineering and marketing here."
+            ],
+            "possible_need": "Help the user explore which field aligns better with their strengths and interests once they review the comparison.",
+            "missing_information": [
+              "User's specific interests, strengths, and background",
+              "Whether they are exploring study or a career transition"
+            ],
+            "relevant_question": "",
+            "user_constraints": [
+              "Stay in chat; do not open activities"
+            ]
+          }
+        },
+        "followups": {
+          "enabled": false,
+          "cancel_on_user_message": true,
+          "topic_lock": false,
+          "topic_key": "",
+          "triggers": []
+        }
+      },
+      "boundary": "declined",
+      "variants": {
+        "baseline": [
+          {
+            "id": "SCHOOL_007",
+            "score": 0.6488005678735063
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6422028308982533
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.6312399904876713
+          },
+          {
+            "id": "IND_DEEP_007",
+            "score": 0.6311765076666505
+          },
+          {
+            "id": "IND_BUSINESS_002",
+            "score": 0.6308291711915507
+          },
+          {
+            "id": "IND_BUSINESS_005",
+            "score": 0.6261344900263937
+          },
+          {
+            "id": "EMP_CULTURE_001",
+            "score": 0.6235813811756431
+          },
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.6233793839248258
+          }
+        ],
+        "split": [
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6461478015476447,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6461478015476447,
+            "contextScore": 0.6378287200065273
+          },
+          {
+            "id": "SCHOOL_007",
+            "score": 0.6439532652931375,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6439532652931375,
+            "contextScore": 0.6377445723422219
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.6404218727029375,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6404218727029375,
+            "contextScore": 0.6120677232081051
+          },
+          {
+            "id": "IND_DEEP_001",
+            "score": 0.6769787831941363,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6769787831941363,
+            "contextScore": 0.6015823281996937
+          },
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.6369497712136176,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6369497712136176,
+            "contextScore": 0.6110716795466516
+          },
+          {
+            "id": "IND_DEEP_007",
+            "score": 0.6221440847676073,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6221440847676073,
+            "contextScore": 0.6207528221191672
+          },
+          {
+            "id": "EMP_DEEP_002",
+            "score": 0.6350973324208801,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6350973324208801,
+            "contextScore": 0.6057694985362738
+          },
+          {
+            "id": "IND_FUTURE_001",
+            "score": 0.6308732021689484,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6308732021689484,
+            "contextScore": 0.5946700906080712
+          }
+        ],
+        "metadata": [
+          {
+            "id": "JOB_COMPARE_001",
+            "score": 0.7918532923417597
+          },
+          {
+            "id": "SCHOOL_007",
+            "score": 0.6488005678735063
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.6480818978228793
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6422028308982533
+          },
+          {
+            "id": "IND_DEEP_007",
+            "score": 0.6311765076666505
+          },
+          {
+            "id": "IND_BUSINESS_002",
+            "score": 0.6308291711915507
+          },
+          {
+            "id": "JOB_COMPARE_006",
+            "score": 0.6276281962298268
+          },
+          {
+            "id": "IND_DEEP_004",
+            "score": 0.6263324548188243
+          }
+        ],
+        "wider": [
+          {
+            "id": "SCHOOL_007",
+            "score": 0.6488005678735063
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6422028308982533
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.6312399904876713
+          },
+          {
+            "id": "IND_DEEP_007",
+            "score": 0.6311765076666505
+          },
+          {
+            "id": "IND_BUSINESS_002",
+            "score": 0.6308291711915507
+          },
+          {
+            "id": "IND_BUSINESS_005",
+            "score": 0.6261344900263937
+          },
+          {
+            "id": "EMP_CULTURE_001",
+            "score": 0.6235813811756431
+          },
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.6233793839248258
+          },
+          {
+            "id": "IND_DEEP_006",
+            "score": 0.6228146379999362
+          },
+          {
+            "id": "IND_COMP_004",
+            "score": 0.6199015732381435
+          },
+          {
+            "id": "EMP_DEEP_002",
+            "score": 0.6197613812798402
+          },
+          {
+            "id": "STUDY_008",
+            "score": 0.6165929532927298
+          },
+          {
+            "id": "IND_DISCOVER_001",
+            "score": 0.6115506242193797
+          },
+          {
+            "id": "IND_PATH_002",
+            "score": 0.6104693953592711
+          },
+          {
+            "id": "DECIDE_004",
+            "score": 0.6102698181167048
+          },
+          {
+            "id": "IND_DEEP_001",
+            "score": 0.6083016099398321
+          },
+          {
+            "id": "IND_DISCOVER_002",
+            "score": 0.6079194003873868
+          },
+          {
+            "id": "IND_FUTURE_001",
+            "score": 0.6017102003155717
+          },
+          {
+            "id": "IND_PATH_003",
+            "score": 0.5999902178944089
+          },
+          {
+            "id": "IND_COMPARE_002",
+            "score": 0.5996207774182194
+          }
+        ],
+        "combined": [
+          {
+            "id": "JOB_COMPARE_001",
+            "score": 0.813961477468114,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.813961477468114,
+            "contextScore": 0.776481982758408
+          },
+          {
+            "id": "DISCOVER_007",
+            "score": 0.6564716802269562,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6564716802269562,
+            "contextScore": 0.6387040655078938
+          },
+          {
+            "id": "IND_DEEP_001",
+            "score": 0.6769787831941363,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6769787831941363,
+            "contextScore": 0.6188142932025064
+          },
+          {
+            "id": "IND_BUSINESS_001",
+            "score": 0.6461478015476447,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6461478015476447,
+            "contextScore": 0.6378287200065273
+          },
+          {
+            "id": "SCHOOL_007",
+            "score": 0.6439532652931375,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6439532652931375,
+            "contextScore": 0.6377445723422219
+          },
+          {
+            "id": "IND_PATH_002",
+            "score": 0.644920795008189,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.644920795008189,
+            "contextScore": 0.6184897996625316
+          },
+          {
+            "id": "IND_FUTURE_001",
+            "score": 0.6510157370219589,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6510157370219589,
+            "contextScore": 0.6098557895185601
+          },
+          {
+            "id": "IND_SKILL_001",
+            "score": 0.6369497712136176,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6369497712136176,
+            "contextScore": 0.6110716795466516
+          },
+          {
+            "id": "EMP_DEEP_001",
+            "score": 0.6364081846894807,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6364081846894807,
+            "contextScore": 0.611374602751982
+          },
+          {
+            "id": "IND_DEEP_007",
+            "score": 0.6221440847676073,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6221440847676073,
+            "contextScore": 0.6207528221191672
+          },
+          {
+            "id": "IND_DEEP_004",
+            "score": 0.6215705578578765,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6215705578578765,
+            "contextScore": 0.6144376961511595
+          },
+          {
+            "id": "EMP_DEEP_002",
+            "score": 0.6350973324208801,
+            "sources": [
+              "user",
+              "context"
+            ],
+            "userScore": 0.6350973324208801,
+            "contextScore": 0.6057694985362738
+          },
+          {
+            "id": "IND_DEEP_002",
+            "score": 0.6554219619990045,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6554219619990045
+          },
+          {
+            "id": "VACANCY_001",
+            "score": 0.6389219565831268,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6389219565831268
+          },
+          {
+            "id": "IND_BUSINESS_003",
+            "score": 0.6344614788321509,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6344614788321509
+          },
+          {
+            "id": "STUDY_008",
+            "score": 0.6274319031937833,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6274319031937833
+          },
+          {
+            "id": "IND_JOB_003",
+            "score": 0.6273701629711959,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6273701629711959
+          },
+          {
+            "id": "FIRST_JOB_003",
+            "score": 0.625996779689361,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.625996779689361
+          },
+          {
+            "id": "SCHOOL_031",
+            "score": 0.6232678231692979,
+            "sources": [
+              "user"
+            ],
+            "userScore": 0.6232678231692979
+          },
+          {
+            "id": "IND_BUSINESS_002",
+            "score": 0.6269670381243437,
+            "sources": [
+              "context"
+            ],
+            "contextScore": 0.6269670381243437
+          }
+        ]
+      },
+      "ms": 41
+    }
+  ]
+}

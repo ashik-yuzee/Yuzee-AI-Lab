@@ -1,0 +1,435 @@
+{
+  "test_id": "SUP-08",
+  "objective_id": "EMP_REALITY_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "41c2515e448dfb7df2d3ac07353da113210ebaead53a34f01e6d7ebaa57d1d40",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2.1",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Compare these two advertised rates.",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "company": "Fictional Sample Ltd",
+      "role": "Assistant",
+      "rate_A": "$30 per hour, paid hours unknown",
+      "rate_B": "$34 per hour including unspecified additions"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "EMP_REALITY_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "4fab70adcd27d6d3b37667f82982a7796e401325ffbbbf5aa333cc08a2572340",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "TABLE_SHAPE",
+          "detail": "rate_comparison_overview"
+        }
+      ],
+      "latency_ms": 9593
+    }
+  ],
+  "failures": [
+    {
+      "code": "TABLE_SHAPE",
+      "detail": "rate_comparison_overview"
+    }
+  ],
+  "parsed": {
+    "objective_id": "EMP_REALITY_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "comparison_grid",
+        "id": "rate_comparison_overview",
+        "purpose": "Show known pay data side by side highlighting missing comparability factors",
+        "prompt": "Here is what we know so far about both rates:",
+        "required": false,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Attribute",
+          "Option A",
+          "Option B"
+        ],
+        "rows": [
+          {
+            "label": "Gross Rate",
+            "cells": [
+              "$30 / hr",
+              "$34 / hr"
+            ]
+          },
+          {
+            "label": "Paid Hours / Schedule",
+            "cells": [
+              "Unknown",
+              "Unknown"
+            ]
+          },
+          {
+            "label": "Included Components",
+            "cells": [
+              "Base hourly rate",
+              "Includes unspecified additions"
+            ]
+          },
+          {
+            "label": "Employment Basis",
+            "cells": [
+              "Unconfirmed",
+              "Unconfirmed"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "constraint_builder",
+        "id": "missing_pay_details",
+        "purpose": "Capture critical missing employment and pay breakdown items to make rates comparable",
+        "prompt": "What employment type or pay inclusions apply to these roles?",
+        "required": true,
+        "options": [
+          {
+            "id": "option_a_casual",
+            "label": "Option A is Casual (includes 25% casual loading)",
+            "detail": "Casual rates often include loaded pay in lieu of paid leave."
+          },
+          {
+            "id": "option_a_perm",
+            "label": "Option A is Permanent / Part-Time (accrues leave)",
+            "detail": "Standard hourly rate with paid annual and sick leave."
+          },
+          {
+            "id": "option_b_super_included",
+            "label": "Option B rate includes superannuation / pension",
+            "detail": "Stated pay includes statutory retirement contributions."
+          },
+          {
+            "id": "option_b_allowance_included",
+            "label": "Option B includes shift allowances or penalties",
+            "detail": "Stated pay reflects weekend or evening loading rather than base pay."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "company": "Fictional Sample Ltd",
+      "role": "Assistant",
+      "rate_A": "$30 per hour, paid hours unknown",
+      "rate_B": "$34 per hour including unspecified additions"
+    },
+    "derived_signals": [
+      {
+        "signal": "Rate comparability is currently blocked by undefined pay inclusions and employment basis",
+        "basis": "Rate B notes unspecified additions and neither rate confirms casual loading or superannuation inclusion.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Employment type (Casual vs Permanent FTE/Part-Time) for both rates",
+      "Jurisdiction / Award / legal classification",
+      "Breakdown of Rate B additions (e.g., superannuation, penalties, allowances)",
+      "Guaranteed or contracted weekly hours"
+    ],
+    "result": {
+      "pay_employment_profile": {
+        "company": "Fictional Sample Ltd",
+        "role": "Assistant",
+        "location": null,
+        "jurisdiction": null,
+        "employment_type": null,
+        "hours_basis": null,
+        "pay_components": [
+          {
+            "component_type": "BASE_PAY",
+            "amount_or_range": "30",
+            "currency": "USD",
+            "period": "HOURLY",
+            "fte_or_hourly_basis": "HOURLY",
+            "source_type": "USER_CONFIRMED",
+            "evidence_date_if_known": null
+          },
+          {
+            "component_type": "TOTAL_COMP_IF_STATED",
+            "amount_or_range": "34",
+            "currency": "USD",
+            "period": "HOURLY",
+            "fte_or_hourly_basis": "HOURLY",
+            "source_type": "USER_CONFIRMED",
+            "evidence_date_if_known": null
+          }
+        ],
+        "award_or_agreement": {
+          "status": "UNVERIFIED",
+          "classification_if_verified": null,
+          "source_status": "UNKNOWN"
+        },
+        "overtime_allowances_bonus": [
+          {
+            "label": "Rate B Additions",
+            "detail": "Advertised as including unspecified additions.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": []
+          }
+        ],
+        "comparability_notes": [
+          {
+            "label": "Base vs Total Inclusions",
+            "detail": "Rate A ($30/hr) and Rate B ($34/hr) cannot be directly compared without identifying whether Rate B includes superannuation, allowances, or casual loading.",
+            "source_status": "AI_INFERRED",
+            "evidence_refs": []
+          }
+        ],
+        "unknowns": [
+          {
+            "label": "Hours and Inclusions",
+            "detail": "Hours basis, casual vs permanent classification, and specific components of Rate B are unknown.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "summary": "Initial pay figures gathered, but full comparison requires clarification of employment type and pay inclusions (super, allowances, or loading). Target comparison cannot be completed accurately until these items are specified."
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Pay-and-Employment Evidence Readiness",
+      "score": 35,
+      "dimensions": [
+        {
+          "name": "Role fit",
+          "score": 50,
+          "reason": "Assistant role identified at Fictional Sample Ltd."
+        },
+        {
+          "name": "Evidence quality",
+          "score": 30,
+          "reason": "Headline hourly figures are known, but component breakdowns are missing."
+        },
+        {
+          "name": "Development opportunity",
+          "score": 40,
+          "reason": "General role context known."
+        },
+        {
+          "name": "Practical feasibility",
+          "score": 30,
+          "reason": "Paid hours and schedule are not confirmed."
+        },
+        {
+          "name": "Risk/unknowns",
+          "score": 25,
+          "reason": "Unspecified additions in Rate B and unknown leave/super entitlements pose comparison risk."
+        }
+      ],
+      "blockers": [
+        "Unknown breakdown of additions for Rate B ($34/hr)",
+        "Unconfirmed employment type (casual vs permanent) and hours"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Clarify employment type and pay inclusions",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Compared advertised headline rates ($30/hr vs $34/hr with additions); identified that missing employment basis and component breakdown block a reliable comparison.",
+      "confirmed_user_inputs": {
+        "company": "Fictional Sample Ltd",
+        "role": "Assistant",
+        "rate_A": "$30 per hour, paid hours unknown",
+        "rate_B": "$34 per hour including unspecified additions"
+      },
+      "result": {
+        "summary": "Awaiting clarification of employment type and specific additions for Rate B to complete normalised pay comparison."
+      },
+      "evidence_and_unknowns": [
+        "Rate B additions details are unknown",
+        "Employment basis (casual/permanent/contract) is unknown for both roles",
+        "Weekly hours basis is unconfirmed"
+      ],
+      "recommended_next_action": "Clarify whether Rate B includes superannuation, allowances, or casual loading."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned EMP_REALITY_004 objective to compare advertised pay rates and employment conditions.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "The candidate preserved and displayed the confirmed facts ($30/hr and $34/hr with additions) in the comparison grid rather than asking the user to re-enter them.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The candidate uses a discriminative question asking about specific missing pay components (casual loading, super, shift allowances) necessary for comparability.",
+          "evidence_pointer": "candidate.ui[1]"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Emits comparison_grid and constraint_builder, which are on the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Separates BASE_PAY from TOTAL_COMP_IF_STATED, recognizes that rates cannot be directly compared without loading/hours, and populates the required pay_employment_profile schema structure.",
+          "evidence_pointer": "candidate.result.pay_employment_profile"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Does not invent hours, casual loading percentages, or annual salaries, and explicitly keeps unknowns separated with unverified source statuses.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career suitability predictions, or fake trait scores are emitted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate appropriately pauses with status NEEDS_INPUT because critical comparability facts are missing, rather than halting prematurely or guessing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Evaluates Pay-and-Employment Evidence Readiness at 35 with clear blockers and traceable evidence-gap dimensions.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "The handoff object contains confirmed inputs, semantic summary, unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No autonomous writes, URLs, or external endpoint invocations are present.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate strictly adheres to evidence discipline and objective requirements by refusing to fabricate annual conversions or award terms, correctly asking for key missing pay components."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 4004,
+      "total_input_tokens": 3188,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3188
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 816,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 3585,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 3585
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 835
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 9593,
+  "usage": {
+    "total_tokens": 4348,
+    "total_input_tokens": 2293,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2293
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 2055,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7399,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7399
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 2072
+          }
+        ]
+      }
+    ]
+  }
+}

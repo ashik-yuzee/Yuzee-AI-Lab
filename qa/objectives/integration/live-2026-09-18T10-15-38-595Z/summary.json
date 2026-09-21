@@ -1,0 +1,20 @@
+[
+  {
+    "id": "STUDY_005",
+    "error": "Error: The answer did not pass the workspace checks. Please retry. (TABLE_SHAPE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, RESULT_CONTRACT)",
+    "ms": 16956
+  },
+  {
+    "id": "EMP_SAFE_001",
+    "status": "COMPLETE",
+    "question": "Do not send funds or share credentials. Proceed to explore general safety checks in chat.",
+    "summary": "This offer exhibits critical security red flags: requesting upfront equipment payments and banking passwords. Legitimate employers never request account credentials or upfront fees. Stop communication immediately and do not provide funds or credentials.",
+    "sessionId": "d5bf3376-3907-4759-bd6d-5822ad6867e4",
+    "ms": 9628
+  },
+  {
+    "id": "PROFILE_005",
+    "error": "Error: The answer did not pass the workspace checks. Please retry. (UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, UNAPPROVED_EVIDENCE, RESULT_SUMMARY_SIZE, RESULT_CONTRACT, RESULT_CONTRACT, RESULT_CONTRACT)",
+    "ms": 20859
+  }
+]

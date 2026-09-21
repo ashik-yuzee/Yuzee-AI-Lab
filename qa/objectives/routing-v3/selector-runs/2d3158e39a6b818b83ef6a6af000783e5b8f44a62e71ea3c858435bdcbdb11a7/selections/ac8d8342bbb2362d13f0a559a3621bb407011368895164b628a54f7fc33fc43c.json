@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "REQUIRED",
+  "decision": "SUGGEST",
+  "objective_id": "JOB_COMPARE_001",
+  "reason": "Compare daily tasks, required skills, and core work aspects between engineering and marketing side by side.",
+  "disposition": "SUGGEST",
+  "selectionId": "353bc392-b24d-41ea-8955-50e1a6519b04",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.8421267535283566,
+  "margin": 0.03255471691204992,
+  "userConfidence": null,
+  "createdAt": 1789733775488
+}

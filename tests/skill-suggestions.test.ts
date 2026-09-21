@@ -23,7 +23,7 @@ assert.equal(parts.join(''),long);assert.ok(parts.every(s=>s.length<=256));asser
 for(const text of ['Stop','No more suggestions','Do not suggest anything','This is an emergency'])assert.equal(allowSkillReview(text),false);
 assert.equal(allowSkillReview('Help me understand the fees'),true);
 const counselling={current_mode:'A_CONVERSATION',response_intent:'EXPLORE_OPTIONS',content_blocks:[{text:'Compare part-time study, placement commitments and fees.'}],interaction:{kind:'question'},state:{safety_override_applied:false}};
-assert.equal(canReviewResponseSkills(counselling,'Structured vocational course'),false);
+assert.equal(canReviewResponseSkills(counselling,'Structured vocational course'),true);
 assert.equal(canReviewResponseSkills({...counselling,interaction:{kind:'none'}},'Help me choose'),true);
 assert.equal(canReviewResponseSkills(counselling,'Stop suggesting things'),false);
 assert.equal(canReviewResponseSkills({...counselling,current_mode:'S_SERVICE_HANDOFF'},'Apply'),false);

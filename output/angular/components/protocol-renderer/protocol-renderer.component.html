@@ -1,0 +1,204 @@
+<!-- Protocol v1.3 Renderer -->
+<div class="protocol-renderer counselling-output">
+  <ng-container *ngFor="let section of response.output_sections">
+
+    <!-- heading -->
+    <div *ngSwitchCase="'heading'"
+         [attr.data-output-type]="'heading'"
+         class="response-heading mt-4 mb-2">
+      <h4>{{ section.heading }}</h4>
+    </div>
+
+    <!-- text / prose -->
+    <div *ngSwitchCase="'text'"
+         [attr.data-output-type]="'text'"
+         class="response-text mt-3">
+      <div class="prose-content" [innerHTML]="section.body | markdown"></div>
+    </div>
+
+    <!-- cards (unordered guidance list) -->
+    <div *ngSwitchCase="'cards'"
+         [attr.data-output-type]="'cards'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <app-guidance-list [items]="section.items || []" [ordered]="false"></app-guidance-list>
+    </div>
+
+    <!-- timeline (ordered guidance list) -->
+    <div *ngSwitchCase="'timeline'"
+         [attr.data-output-type]="'timeline'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <app-guidance-list [items]="section.items || []" [ordered]="true"></app-guidance-list>
+    </div>
+
+    <!-- flow (same as timeline, different semantic) -->
+    <div *ngSwitchCase="'flow'"
+         [attr.data-output-type]="'flow'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <app-guidance-list [items]="section.items || []" [ordered]="true"></app-guidance-list>
+    </div>
+
+    <!-- table -->
+    <div *ngSwitchCase="'table'"
+         [attr.data-output-type]="'table'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <div class="response-table-scroll">
+        <table class="response-data-table table table-sm">
+          <thead>
+            <tr>
+              <th *ngFor="let col of section.columns">{{ col }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of section.rows">
+              <td *ngFor="let cell of row; let ci = index"
+                  [attr.data-label]="section.columns?.[ci]">{{ cell }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- callout -->
+    <div *ngSwitchCase="'callout'"
+         [attr.data-output-type]="'callout'"
+         [attr.data-output-variant]="section.variant || 'info'"
+         class="mt-3">
+      <div class="callout-inner">
+        <h4 *ngIf="section.heading">{{ section.heading }}</h4>
+        <div class="prose-content" [innerHTML]="section.body | markdown"></div>
+      </div>
+    </div>
+
+    <!-- scorecard -->
+    <div *ngSwitchCase="'scorecard'"
+         [attr.data-output-type]="'scorecard'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <ul class="guidance-scorecard">
+        <li *ngFor="let item of section.items" class="guidance-score-item">
+          <span class="guidance-score-label">{{ item.title }}</span>
+          <span class="guidance-score-value"
+                [class.text-accent]="item.percentage">
+            {{ item.percentage !== undefined ? (item.percentage + '%') : item.meta?.[0] }}
+          </span>
+          <span *ngIf="item.description" class="guidance-score-desc">{{ item.description }}</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- progress -->
+    <div *ngSwitchCase="'progress'"
+         [attr.data-output-type]="'progress'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <ul class="guidance-progress-list">
+        <li *ngFor="let item of section.items" class="guidance-progress-item">
+          <div class="guidance-progress-header">
+            <span class="guidance-progress-name">{{ item.title }}</span>
+            <span *ngIf="item.percentage !== undefined" class="guidance-progress-pct">{{ item.percentage }}%</span>
+          </div>
+          <div class="guidance-progress-bar-track">
+            <div class="guidance-progress-bar-fill"
+                 [style.transform]="'scaleX(' + ((item.percentage ?? 0) / 100) + ')'"
+                 role="progressbar"
+                 [attr.aria-valuenow]="item.percentage"
+                 aria-valuemin="0" aria-valuemax="100">
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- interaction — short text -->
+    <div *ngSwitchCase="'interaction'"
+         [attr.data-output-type]="'interaction'"
+         class="main-chat-question mt-4">
+      <div class="main-chat-question-kicker">
+        <ion-icon name="help-circle-outline" aria-hidden="true"></ion-icon>
+        Question
+      </div>
+      <p class="main-chat-question-title">{{ section.question }}</p>
+      <p *ngIf="section.hint" class="main-chat-question-hint">{{ section.hint }}</p>
+
+      <!-- Multiple choice -->
+      <ng-container *ngIf="section.choices?.length; else shortText">
+        <fieldset class="main-chat-choices" [attr.aria-label]="section.question">
+          <legend class="sr-only">{{ section.question }}</legend>
+          <div *ngFor="let choice of section.choices"
+               class="main-chat-choice"
+               [class.is-selected]="selectedChoices.has(choice.id)"
+               (click)="toggleChoice(choice.id)"
+               (keydown.space)="toggleChoice(choice.id); $event.preventDefault()"
+               tabindex="0" role="checkbox"
+               [attr.aria-checked]="selectedChoices.has(choice.id)">
+            <input type="checkbox"
+                   [id]="'choice-' + choice.id"
+                   [checked]="selectedChoices.has(choice.id)"
+                   (change)="toggleChoice(choice.id)"
+                   [attr.aria-label]="choice.label" />
+            <label class="main-chat-choice-copy" [attr.for]="'choice-' + choice.id">
+              <strong>{{ choice.label }}</strong>
+              <span *ngIf="choice.description">{{ choice.description }}</span>
+            </label>
+          </div>
+        </fieldset>
+      </ng-container>
+
+      <!-- Short text fallback -->
+      <ng-template #shortText>
+        <div class="main-chat-own-field">
+          <label [for]="'own-' + (section.question | slice:0:20 | slugify)">Your answer</label>
+          <textarea class="form-control"
+                    rows="2"
+                    [id]="'own-' + (section.question | slice:0:20 | slugify)"
+                    [(ngModel)]="ownAnswer"
+                    [placeholder]="section.hint || 'Type your answer…'">
+          </textarea>
+        </div>
+      </ng-template>
+
+      <div class="main-chat-question-footer">
+        <span>Press Continue when ready</span>
+        <button type="button"
+                class="btn btn-accent"
+                [disabled]="!canSubmitInteraction(section)"
+                (click)="submitInteraction(section)">
+          Continue
+          <ion-icon name="arrow-forward-outline" aria-hidden="true"></ion-icon>
+        </button>
+      </div>
+    </div>
+
+    <!-- pathway_map -->
+    <div *ngSwitchCase="'pathway_map'"
+         [attr.data-output-type]="'pathway_map'"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <ul class="guidance-pathway-map">
+        <ng-container *ngFor="let item of section.items; let last = last">
+          <li class="guidance-pathway-node"
+              [attr.data-learning-tone]="item.type || item.level">
+            <ion-icon name="school-outline" aria-hidden="true"></ion-icon>
+            <span>{{ item.title }}</span>
+            <span *ngIf="item.meta?.[0]" class="ms-auto text-muted small">{{ item.meta[0] }}</span>
+          </li>
+          <li *ngIf="!last" class="guidance-pathway-node guidance-pathway-node--connector"
+              aria-hidden="true">↓</li>
+        </ng-container>
+      </ul>
+    </div>
+
+    <!-- Default unknown block -->
+    <div *ngSwitchDefault
+         [attr.data-output-type]="section.type"
+         class="mt-3">
+      <h4 *ngIf="section.heading" class="section-eyebrow">{{ section.heading }}</h4>
+      <div *ngIf="section.body" class="prose-content" [innerHTML]="section.body | markdown"></div>
+    </div>
+
+  </ng-container>
+</div>

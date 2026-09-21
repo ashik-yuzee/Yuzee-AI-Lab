@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "CHANGE_002",
+  "reason": "This activity will help map your existing retail experience and capabilities directly into valuable, transferable skills for tech roles so you don't have to start from scratch.",
+  "disposition": "SUGGEST",
+  "selectionId": "7b9f2746-4716-467a-a7ec-61064dfa4912",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.7378857621460762,
+  "margin": 0.01152049499631691,
+  "userConfidence": null,
+  "createdAt": 1789733797357
+}

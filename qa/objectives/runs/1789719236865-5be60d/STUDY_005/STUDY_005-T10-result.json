@@ -1,0 +1,259 @@
+{
+  "test_id": "STUDY_005-T10",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "LEARNING_DEPTH",
+  "model": "gemini-3.7-flash",
+  "source_row": 221,
+  "input_context": {
+    "user_message": "Show which capabilities are introduced, practised and assessed.",
+    "prior_context_text": "Official curriculum details are available.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "2bd6be04bb440bfb544d0ea07491367c37ef35cc7de4ee3f3f88142de00388e9",
+  "status": "NEEDS_HUMAN_REVIEW",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4491
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_picker",
+        "purpose": "Identify the specific course or qualification to map capabilities for.",
+        "prompt": "Which course or qualification syllabus would you like to analyse for concrete skills?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "User requests a capability breakdown (introduced, practised, assessed)",
+        "basis": "User prompt explicitly asks to show capability progression levels across curriculum.",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Specific course or curriculum unit list to evaluate"
+    ],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "unknowns": [
+        {
+          "label": "Course Syllabus",
+          "detail": "Target course identity and unit breakdown are not yet specified.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course or curriculum structure is missing."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide Course Name",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompting user to specify the target course or qualification before mapping introduced, practised, and assessed capabilities.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "No course selected yet to evaluate learning depth and curriculum capabilities."
+      },
+      "evidence_and_unknowns": [
+        "Target course identity is currently unknown."
+      ],
+      "recommended_next_action": "Specify course name or syllabus to generate capability matrix."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate operates accurately within the specified objective STUDY_005.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The prior_context claims official curriculum details exist, but the test context provides empty confirmed_facts and empty approved_evidence without supplying the specific course or syllabus units, making reuse unassessable.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Asks a concrete, discriminative question to establish the specific course syllabus needed to map curriculum capabilities.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The primitive `entity_picker` is explicitly allowed in the V2 allow-list for STUDY_005.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The output structure adheres to the V2 output contract requirements (`course_capabilities`, `practical_components`, `unknowns`, `next_actions`) and focuses on curriculum capability breakdown.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No course syllabus data was present in the approved evidence, so the candidate properly preserved the course as unknown rather than fabricating curriculum capabilities.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No validated instrument claims, personality types, or life success predictions were generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly stops with NEEDS_INPUT because the necessary course identity is missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is appropriately disabled/blocked due to missing prerequisite course input rather than guessing readiness.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Emits a clean, compact Oala handoff without raw click history or internal UI noise.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits only approved structured intent without fabricating URLs, endpoints, or executing unauthorized actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "The fixture states 'Official curriculum details are available' in prior_context_text, but leaves confirmed_facts and approved_evidence empty without providing a syllabus."
+      ],
+      "summary": "The candidate handled missing course syllabus data safely by prompting with an allowed primitive (entity_picker) and maintaining strict evidence discipline without inventing curriculum depth."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2888,
+      "total_input_tokens": 2046,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2046
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 842,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2443,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2443
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 861
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4491,
+  "usage": {
+    "total_tokens": 2770,
+    "total_input_tokens": 2171,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2171
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 599,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5842,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5842
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 619
+          }
+        ]
+      }
+    ]
+  }
+}

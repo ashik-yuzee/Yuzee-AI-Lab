@@ -1,0 +1,281 @@
+{
+  "test_id": "STUDY_005-T08",
+  "objective_id": "STUDY_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "f6a891b8d46320e12d3edd17ea55920981b3e55aebd6180f976ca4e989c2ed85",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "EVIDENCE_GATE",
+  "model": "gemini-3.7-flash",
+  "source_row": 219,
+  "input_context": {
+    "user_message": "Use current real-world information where it matters for what will i actually learn?.",
+    "prior_context_text": "No current source data is loaded.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "STUDY_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "baf1ca51cd4581070d15c02a30570743ab492a3d1628289e74856c8045d12d3d",
+  "status": "FAIL",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "OPTIONS_MISSING",
+          "detail": "target_course_selection"
+        }
+      ],
+      "latency_ms": 5101
+    }
+  ],
+  "failures": [
+    {
+      "code": "OPTIONS_MISSING",
+      "detail": "target_course_selection"
+    }
+  ],
+  "parsed": {
+    "objective_id": "STUDY_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "entity_picker",
+        "id": "target_course_selection",
+        "purpose": "Identify the target course or curriculum to break down into concrete skills and practical capabilities.",
+        "prompt": "Which course or study route would you like to break down to see what you will actually learn?",
+        "required": true,
+        "options": [],
+        "content": [
+          {
+            "label": "Curriculum Detail Needed",
+            "detail": "To map out concrete skills, practical work, and assessments, please specify a course name or institution syllabus.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Target course title or syllabus",
+      "Institution or educational provider",
+      "Specific unit outline or curriculum structure"
+    ],
+    "result": {
+      "course_capabilities": [],
+      "practical_components": [],
+      "summary": "No target course has been specified yet. Once identified, official syllabus units can be mapped to learning depth and assessment capabilities.",
+      "unknowns": [
+        {
+          "label": "Target Course",
+          "detail": "Course name and curriculum details are required to assess concrete capability delivery.",
+          "source_status": "UNKNOWN",
+          "evidence_refs": []
+        }
+      ]
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Target course or syllabus is unknown"
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Specify Target Course",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Awaiting target course information to translate curriculum structure into concrete skills and practical capabilities.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "course_capabilities": [],
+        "practical_components": [],
+        "summary": "Awaiting course selection.",
+        "unknowns": [
+          {
+            "label": "Target Course",
+            "detail": "A specific course curriculum is needed.",
+            "source_status": "UNKNOWN",
+            "evidence_refs": []
+          }
+        ]
+      },
+      "evidence_and_unknowns": [
+        "Target course title and curriculum outline are currently unknown."
+      ],
+      "recommended_next_action": "Specify the course or program you wish to analyse."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate matches the assigned STUDY_005 objective ID and stays aligned to translating course structure into concrete skills.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "There were no confirmed facts in prior context; candidate correctly initializes confirmed_inputs as empty and asks for the missing target course.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "The question specifically asks for the target course/curriculum needed to map capabilities, which is the foundational material input.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits 'entity_picker', which is in the V2 allowed UI primitives list.",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The output follows STUDY_005 logic by structuring capability breakdown contracts and setting status to NEEDS_INPUT for course identification.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "No current facts were fabricated in the absence of source data; unknowns are explicitly documented and labeled.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, predictive success scores, or fake traits were produced.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate accurately stopped at NEEDS_INPUT without guessing when mandatory starting data was missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is properly disabled/uncalculated with blockers identified rather than showing an ungrounded readiness score.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A complete and compact handoff structure is present with summary, confirmed inputs, unknowns, and recommended action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct endpoint calls, writes, or unsafe external tool invocations were emitted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate followed all objective constraints, adhered to UI primitive allow-lists, properly handled missing source context without fabricating facts, and returned a valid Yuzee envelope."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2945,
+      "total_input_tokens": 2162,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2162
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 783,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2559,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2559
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 801
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5101,
+  "usage": {
+    "total_tokens": 2825,
+    "total_input_tokens": 2091,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2091
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 734,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 7290,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 7290
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 750
+          }
+        ]
+      }
+    ]
+  }
+}

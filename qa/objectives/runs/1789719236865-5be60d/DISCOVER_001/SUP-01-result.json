@@ -1,0 +1,354 @@
+{
+  "test_id": "SUP-01",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "I enjoy repairing my bike and helping classmates understand maths. What themes could I explore?",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "activity_1": "I enjoy repairing my bike",
+      "activity_2": "I enjoy helping classmates understand maths"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "9844160f1d7102c6a10f8c114c794dc5063be1f52c1d792e0c60784fe6c1953c",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6984
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "COMPLETE",
+    "stage": "PROCEED",
+    "ui": [
+      {
+        "component": "action_handoff",
+        "id": "action_handoff_themes",
+        "purpose": "Review RIASEC-inspired themes grounded in hands-on fixing and teaching math, and choose next exploration step.",
+        "prompt": "Here are the activity themes connected to your interests. What would you like to explore next?",
+        "required": false,
+        "options": [
+          {
+            "id": "opt_show_careers",
+            "label": "Show matching careers",
+            "detail": "Explore specific career fields combining technical troubleshooting, investigation, or teaching."
+          },
+          {
+            "id": "opt_compare_themes",
+            "label": "Compare top themes",
+            "detail": "Examine the balance between hands-on practical work and analytical problem-solving."
+          }
+        ],
+        "content": [
+          {
+            "label": "Practical & Technical (RIASEC-inspired Realistic)",
+            "detail": "Connected to repairing bikes: hands-on troubleshooting, physical mechanics, and making things work.",
+            "source_status": "AI_INFERRED",
+            "evidence_refs": [
+              "activity_1"
+            ]
+          },
+          {
+            "label": "Analytical & Problem Solving (RIASEC-inspired Investigative)",
+            "detail": "Connected to maths: structured reasoning, quantitative puzzles, and logical analysis.",
+            "source_status": "AI_INFERRED",
+            "evidence_refs": [
+              "activity_2"
+            ]
+          },
+          {
+            "label": "Mentoring & Explaining (RIASEC-inspired Social)",
+            "detail": "Connected to helping classmates: communicating concepts, teaching, and supporting others.",
+            "source_status": "AI_INFERRED",
+            "evidence_refs": [
+              "activity_2"
+            ]
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "activity_1": "I enjoy repairing my bike",
+      "activity_2": "I enjoy helping classmates understand maths"
+    },
+    "derived_signals": [
+      {
+        "signal": "Interest in practical, hands-on mechanical tasks (RIASEC-inspired Realistic)",
+        "basis": "User confirmed enjoying repairing bikes",
+        "confidence": "HIGH"
+      },
+      {
+        "signal": "Interest in quantitative analysis and mentoring (RIASEC-inspired Investigative & Social)",
+        "basis": "User confirmed enjoying helping classmates understand maths",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Preferred balance between independent technical work versus direct social collaboration",
+      "Work environment constraints or specific industry interests"
+    ],
+    "result": {
+      "interest_themes": [
+        {
+          "label": "Practical & Mechanical (RIASEC Realistic)",
+          "basis_activity_ids": [
+            "activity_1"
+          ],
+          "confidence_label": "High"
+        },
+        {
+          "label": "Analytical Problem Solving (RIASEC Investigative)",
+          "basis_activity_ids": [
+            "activity_2"
+          ],
+          "confidence_label": "High"
+        },
+        {
+          "label": "Teaching & Assisting (RIASEC Social)",
+          "basis_activity_ids": [
+            "activity_2"
+          ],
+          "confidence_label": "Medium"
+        }
+      ],
+      "next_actions": [
+        "Show matching careers",
+        "Compare my top interests"
+      ],
+      "summary": "Identified three primary RIASEC-inspired activity themes grounded in hands-on mechanics, math analysis, and peer teaching.",
+      "unknowns": [
+        "Specific career setting preferences and working environment constraints"
+      ]
+    },
+    "readiness": {
+      "enabled": true,
+      "name": "Discovery Readiness",
+      "score": 75,
+      "dimensions": [
+        {
+          "name": "Self-awareness",
+          "score": 80,
+          "reason": "User clearly articulated two distinct, concrete enjoyable activities."
+        },
+        {
+          "name": "Evidence from answers/examples",
+          "score": 80,
+          "reason": "Grounded in specific examples of bike repair and math instruction."
+        },
+        {
+          "name": "Constraint clarity",
+          "score": 50,
+          "reason": "Broader lifestyle, location, or study constraints are not yet explored."
+        },
+        {
+          "name": "Pattern consistency",
+          "score": 85,
+          "reason": "Themes consistently span hands-on technical, analytical, and supportive domains."
+        },
+        {
+          "name": "Next-step clarity",
+          "score": 80,
+          "reason": "Clear options available to explore matching careers or compare theme trade-offs."
+        }
+      ],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Explore career pathways matching these themes",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Synthesized RIASEC-inspired themes (Practical/Mechanical, Analytical, Teaching) from user activities of bike repair and peer math tutoring.",
+      "confirmed_user_inputs": {
+        "activity_1": "I enjoy repairing my bike",
+        "activity_2": "I enjoy helping classmates understand maths"
+      },
+      "result": {
+        "summary": "Identified Practical, Analytical, and Teaching activity themes ready for career mapping."
+      },
+      "evidence_and_unknowns": [
+        "User confirmed activities: bike repair and math tutoring",
+        "Unknown: Preference between physical workshop settings versus collaborative office/teaching settings"
+      ],
+      "recommended_next_action": "Explore career fields and education pathways that combine analytical problem-solving and hands-on technical skills."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly addresses objective DISCOVER_001 (Interest Explorer) matching the user's inquiry regarding exploring activity themes.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "The candidate directly reuses both confirmed activities from the context without re-asking any profile facts.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant questions were asked; the candidate immediately synthesizes into an action handoff choice to proceed.",
+          "evidence_pointer": "candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Emitted UI primitive 'action_handoff' is within the approved V2 list [multi_select | card_sort | scenario_test | spectrum | short_answer | action_handoff].",
+          "evidence_pointer": "candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Candidate uses 'RIASEC-inspired' framing, includes result.interest_themes[] with basis_activity_ids[] and confidence labels, and avoids mapping directly to single career recommendations.",
+          "evidence_pointer": "candidate.result.interest_themes"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Clearly separates user-confirmed facts from AI inference and explicit unknowns, with correct basis references.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No validated psychometric claims or life/career success probabilities are made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Correctly marks status as COMPLETE with stage PROCEED, stopping further questioning once the profile signal is supported.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Uses standard Discovery Readiness dimensions scored at 75 (>= 60 threshold) to evaluate next-step clarity rather than predictive career success.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Candidate produces a compact Oala handoff containing confirmed inputs, result, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No endpoint execution, forbidden writes, or fabricated external actions are attempted.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate satisfies all criteria of the workbook rubric and the mandatory objective-specific overrides for DISCOVER_001."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3383,
+      "total_input_tokens": 2567,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2567
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 816,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2964,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2964
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 835
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6984,
+  "usage": {
+    "total_tokens": 3600,
+    "total_input_tokens": 2151,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2151
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1449,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5420,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5420
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1466
+          }
+        ]
+      }
+    ]
+  }
+}

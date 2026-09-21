@@ -1,0 +1,462 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "JOB_DECIDE_004",
+      "score": 0.9235816251318097,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.9235816251318097
+    },
+    {
+      "id": "JOB_COMPARE_001",
+      "score": 0.7925556030277071,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7925556030277071
+    },
+    {
+      "id": "SKILL_SIDE_001",
+      "score": 0.7786778618184222,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7786778618184222
+    },
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.7692250744950839,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7692250744950839
+    },
+    {
+      "id": "EMP_COMPARE_001",
+      "score": 0.7640171353071445,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7640171353071445
+    },
+    {
+      "id": "PATH_006",
+      "score": 0.75957778293753,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.75957778293753
+    },
+    {
+      "id": "SCHOOL_023",
+      "score": 0.7500870934246155,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7500870934246155
+    },
+    {
+      "id": "CURRENT_JOB_001",
+      "score": 0.7477066097584254,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7477066097584254
+    },
+    {
+      "id": "CURRENT_JOB_002",
+      "score": 0.7436384565762131,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7436384565762131
+    },
+    {
+      "id": "VACANCY_003",
+      "score": 0.7435967882696648,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7435967882696648
+    },
+    {
+      "id": "JOB_DISCOVER_003",
+      "score": 0.7415334908234263,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7415334908234263
+    },
+    {
+      "id": "JOB_COMPARE_002",
+      "score": 0.739699981412911,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.739699981412911
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.7379897445505822,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7379897445505822
+    },
+    {
+      "id": "PATH_002",
+      "score": 0.7806380699010477,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7806380699010477
+    },
+    {
+      "id": "FIRST_JOB_004",
+      "score": 0.7365197070624132,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7365197070624132
+    },
+    {
+      "id": "LEARN_ROUTE_003",
+      "score": 0.7439757599357305,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7439757599357305
+    },
+    {
+      "id": "EXP_002",
+      "score": 0.7361267219888319,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7361267219888319
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.7282683199131538,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7282683199131538
+    },
+    {
+      "id": "JOB_REALITY_006",
+      "score": 0.7349882403979856,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7349882403979856
+    },
+    {
+      "id": "IND_PATH_005",
+      "score": 0.7275751237048259,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7275751237048259
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "Compare the two job offers I received, focusing on their pay and training.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Find university courses about engineering.",
+      "confirmed_facts": [],
+      "possible_need": "Find university courses about engineering.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Find university courses about engineering."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "JOB_DECIDE_004",
+        "button_label": "Compare two job offers",
+        "outcome": "Compare salary, learning, manager/team, role scope, commute, flexibility, progression and stability.",
+        "when_to_use": "Serve when user has multiple opportunities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Offer or Role' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Two concrete job offers, not a comparison of broad careers or employer reputations.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_COMPARE_001",
+        "button_label": "Compare these jobs",
+        "outcome": "Compare tasks, skills, entry, education, environment, pay, demand, location, progression, flexibility, AI exposure and fit.",
+        "when_to_use": "Serve when user has multiple occupations in mind.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Compare occupations or roles; use JOB_DECIDE_004 for two actual employment offers with concrete terms.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SKILL_SIDE_001",
+        "button_label": "What am I missing?",
+        "outcome": "Compare current demonstrated skills with target requirements and separate missing from unknown.",
+        "when_to_use": "Serve when user has a target role/course and wants capability gaps.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill Gap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Identify a gap against a target role, distinguishing missing skills from unverified skills; not generic course learning or resume rewriting.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "outcome": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_use": "Serve when user wants employer comparison against a specific goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Better for My Career Goal: Compare how each employer could build the capabilities/experience needed for the user target. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_COMPARE_001",
+        "button_label": "Compare these companies",
+        "outcome": "Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit.",
+        "when_to_use": "Serve when user is choosing where to apply/work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Employers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Employers: Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "PATH_006",
+        "button_label": "I need to earn money too",
+        "outcome": "Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training.",
+        "when_to_use": "Serve when student cannot afford a study-only route.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Earn While I Learn' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Earn While I Learn: Compare apprenticeship, traineeship, cadetship, part-time work+study, paid placements and employer training. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_023",
+        "button_label": "TAFE or university - what actually changes?",
+        "outcome": "Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status.",
+        "when_to_use": "Serve when student equates prestige with outcome.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Outcomes, Not Prestige' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Outcomes, Not Prestige: Compare routes on goal, skills, credential, cost, time, work experience and progression rather than status. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "CURRENT_JOB_001",
+        "button_label": "What should I learn for my current role?",
+        "outcome": "Compare current responsibilities, skills, tools and changing role requirements to identify development areas.",
+        "when_to_use": "Serve when user wants to improve in-place.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Get Better at My Current Job' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Get Better at My Current Job: Compare current responsibilities, skills, tools and changing role requirements to identify development areas. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CURRENT_JOB_002",
+        "button_label": "What do I need for the next level?",
+        "outcome": "Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope.",
+        "when_to_use": "Serve when user wants promotion.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills for Promotion' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills for Promotion: Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "VACANCY_003",
+        "button_label": "How well do I match this job?",
+        "outcome": "Compare requirements with evidence in the profile/CV and surface unknowns.",
+        "when_to_use": "Serve when user wants fit to a specific vacancy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Do I Match?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Do I Match?: Compare requirements with evidence in the profile/CV and surface unknowns. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Specific job advertisement plus user profile/evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_003",
+        "button_label": "What jobs could my course lead to?",
+        "outcome": "Show direct entry, adjacent, extra-skill, extra-experience and longer-term roles.",
+        "when_to_use": "Serve when user wants employment options from a qualification.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Course' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Course: Show direct entry, adjacent, extra-skill, extra-experience and longer-term roles. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_COMPARE_002",
+        "button_label": "Which uses what I already know?",
+        "outcome": "Compare skill overlap with each occupation and identify where evidence is strongest.",
+        "when_to_use": "Serve when user wants to maximize existing capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Job Uses More of My Skills?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Job Uses More of My Skills?: Compare skill overlap with each occupation and identify where evidence is strongest. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "PATH_002",
+        "button_label": "Explore university",
+        "outcome": "Explain direct, enabling, diploma-to-degree and other verified university entry routes.",
+        "when_to_use": "Serve when student is considering higher education.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Route: Explain direct, enabling, diploma-to-degree and other verified university entry routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "FIRST_JOB_004",
+        "button_label": "Which internship would help me most?",
+        "outcome": "Compare internships by skills developed, experience, industry exposure and target-role relevance.",
+        "when_to_use": "Serve when student compares internship options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Internship Fit' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Internship Fit: Compare internships by skills developed, experience, industry exposure and target-role relevance. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Age/eligibility, study schedule, location, transport, experience, career goal",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "LEARN_ROUTE_003",
+        "button_label": "Find a short course",
+        "outcome": "Find short courses teaching the specific skill at the required level.",
+        "when_to_use": "Serve when user needs a focused learning option.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Short Course Finder' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Short Course Finder: Find short courses teaching the specific skill at the required level. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, required depth, current level, budget/time, preferred learning mode, credential requirement",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EXP_002",
+        "button_label": "What experience am I missing?",
+        "outcome": "Compare target role experience requirements with demonstrated experience.",
+        "when_to_use": "Serve when user has skills but not the experience employers expect.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Experience Gap' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Experience Gap: Compare target role experience requirements with demonstrated experience. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career target, current experience, availability, location, skill gaps",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_REALITY_006",
+        "button_label": "Check my fit",
+        "outcome": "Compare tasks, environment, interests, values, strengths and constraints; show matches, friction and unknowns.",
+        "when_to_use": "Serve when user wants person-role fit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Is This Job Right for Me?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Is This Job Right for Me?: Compare tasks, environment, interests, values, strengths and constraints; show matches, friction and unknowns. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Occupation, current occupational evidence, user preferences",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_PATH_005",
+        "button_label": "What degrees lead here?",
+        "outcome": "Map relevant degrees to job families and identify cases needing professional registration or further study.",
+        "when_to_use": "Serve when user wants higher-education pathways into the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Routes: Map relevant degrees to job families and identify cases needing professional registration or further study. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4190,
+      "total_input_tokens": 4114,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4114
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 76,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4552,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4552
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 92
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:54Z",
+    "updated": "2026-09-18T12:16:54Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EmIKYAFpFH0T4W/+banzk8bvvAAi47TZVf71pME07lMGdtR7lQvJ99lCyJ/JLSBL0/UM1XtXXXpPSRLuRWvvR/fRCeyMJLN0o9ECJFJEVeFIJnCi4NGKhoviYr53hPzr5K8Ksg==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"JOB_DECIDE_004\",\n  \"reason\": \"Compare your two concrete job offers side-by-side on pay, training, and other key decision factors.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "JOB_DECIDE_004",
+    "reason": "Compare your two concrete job offers side-by-side on pay, training, and other key decision factors.",
+    "disposition": "AUTO_OPEN",
+    "selectionId": "0bd41ca2-4572-4aaa-991e-7a874cf46b04",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.9235816251318097,
+    "margin": 0.13102602210410264,
+    "userConfidence": null,
+    "createdAt": 1789733814370
+  }
+}

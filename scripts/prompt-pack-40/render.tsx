@@ -1,0 +1,15 @@
+import fs from 'node:fs';import React from 'react';import {renderToStaticMarkup} from 'react-dom/server';import {ProtocolV13Renderer} from '../../src/components/ProtocolV13Renderer';import {validateProtocol} from '../../src/protocol/validator';
+const root='output/prompt-pack-40/2026-09-20';const checks:any[]=[];let body='';const escape=(s:any)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]!));
+for(const file of fs.readdirSync(root+'/results').filter(f=>f.endsWith('.json')).sort()){
+ const d=JSON.parse(fs.readFileSync(root+'/results/'+file,'utf8'));let html='';
+ for(const r of d.records){let validation=r.validation;let error='';if(!r.response){try{validation=validateProtocol(JSON.parse(r.assistant?.content||''));}catch(e:any){error=e.message;}}
+ let rendered='';try{rendered=r.response?renderToStaticMarkup(<ProtocolV13Renderer data={r.response} readOnly/>):'<p class="missing">No accepted structured response. Raw model text is retained in the private test record.</p>';}catch(e:any){error=e.message;}
+ checks.push({run:d.id,turn:r.turn,accepted:!!r.response&&r.validation?.protocolAccepted,rendered:!!rendered,validation,renderError:error,tables:(r.response?.content_blocks||[]).filter((b:any)=>b.columns?.length).map((b:any)=>({id:b.id,type:b.type,columns:b.columns,rows:b.rows}))});
+ html+=`<section><h3>Turn ${r.turn}</h3><p class="user">${escape(r.message)}</p>${rendered}</section>`;
+ }
+ if(d.repetition===1&&d.variant==='baseline')body+=`<details id="${d.caseId}"><summary>${escape(d.caseId+' · '+d.title)}</summary>${html}</details>`;
+}
+fs.writeFileSync(root+'/render-checks.json',JSON.stringify(checks,null,2));
+const css=fs.readdirSync('dist/public/assets').find(f=>/^index-.*\.css$/.test(f));
+fs.writeFileSync('output/html/Yuzee-Prompt-Pack-40-Rendered-Responses.html',`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yuzee · 40-scenario rendered responses</title><link rel="stylesheet" href="/assets/${css}"><style>body{margin:0;background:#faf9fd;color:#202939;font:16px/1.65 system-ui}main{max-width:1050px;margin:auto;padding:32px 24px}h1{font-size:30px;font-weight:700}main>p{margin:15px 0}main>details{background:white;border:1px solid #ddd5eb;border-radius:12px;margin:16px 0;padding:18px}main>details>summary{cursor:pointer;color:#683fac;font-weight:650}section{padding:24px 0;border-top:1px solid #eae5f0}h3{font-size:18px;font-weight:650}.user{background:#eee6fc;padding:16px;border-radius:14px;margin:18px 0}.missing{color:#984111}button{cursor:default}</style><main><h1>Actual rendered responses</h1><p>First repetition of all 40 scenarios, using Yuzee’s current response renderer and built styles. Fictional course data. This is a static rendering review; answer controls are read-only. It does not prove workspace transitions or tenant isolation.</p>${body}</main></html>`);
+console.log('Rendered',checks.length,'turns; errors',checks.filter(x=>x.renderError).length);

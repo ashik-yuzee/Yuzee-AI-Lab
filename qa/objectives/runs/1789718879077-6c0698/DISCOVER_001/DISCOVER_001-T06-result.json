@@ -1,0 +1,244 @@
+{
+  "test_id": "DISCOVER_001-T06",
+  "objective_id": "DISCOVER_001",
+  "prompt_version": "V2",
+  "prompt_sha256": "3b877e75ca5120620d30a1ea7d62bc4739768ea244646716ae69a688d6588e5b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "ALREADY_RESOLVED",
+  "model": "gemini-3.7-flash",
+  "source_row": 7,
+  "input_context": {
+    "user_message": "I already completed interest explorer and nothing has changed.",
+    "prior_context_text": "Objective result exists and no material context changed.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_001",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "573088a2daaea2f44ce1357855fa89859ded37bb6d167260d212276eec0ffaf1",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 4036
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_001",
+    "status": "COMPLETE",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [],
+    "result": {
+      "interest_themes": [],
+      "next_actions": [],
+      "summary": "Interest Explorer was previously completed and no new details were provided. No re-assessment is needed.",
+      "unknowns": []
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "User confirmed interest exploration is already completed with no material changes. Objective closed without re-running.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "interest_themes": [],
+        "next_actions": [],
+        "summary": "Interest Explorer was previously completed and no new details were provided. No re-assessment is needed.",
+        "unknowns": []
+      },
+      "evidence_and_unknowns": [],
+      "recommended_next_action": "continue_chat"
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate recognizes that the user already completed the objective and nothing changed, immediately setting status to COMPLETE and handing back to chat rather than forcing an unwanted re-run.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "The test harness claims an objective result exists from earlier, but the context fixture provides empty confirmed_facts and empty confirmed_answers (MISSING_CONCRETE_STATE_OR_EVIDENCE), preventing full evaluation of concrete historical fact reuse.",
+          "evidence_pointer": "context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No redundant or unnecessary questions were asked, correctly respecting the user's statement that nothing changed.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "The candidate emits an empty UI array and valid structured next actions, with no invalid UI primitives.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "The candidate complies with the output contract schema and objective overrides while gracefully terminating execution based on user state.",
+          "evidence_pointer": "candidate.result"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "The candidate did not invent any interest themes, current facts, or ungrounded data.",
+          "evidence_pointer": "candidate.result.interest_themes"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, career predictions, or fake diagnostic scores are generated.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The candidate stopped immediately with status COMPLETE without continuing to ask questions.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring was correctly disabled since the interaction was completed with no new assessment needed.",
+          "evidence_pointer": "candidate.readiness.enabled"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff is provided returning the user to chat with a clear explanation of why no re-run occurred.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits safe, structured intent within policy without external endpoint calls or unauthorized actions.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture omitted actual prior interest exploration results in confirmed_facts despite specifying 'Objective result exists and no material context changed'."
+      ],
+      "summary": "The candidate correctly handled a scenario where the user states interest exploration is already completed with no changes by immediately completing the flow and routing back to chat without asking redundant questions or fabricating data."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2679,
+      "total_input_tokens": 1849,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1849
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 830,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2246,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2246
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 849
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 4036,
+  "usage": {
+    "total_tokens": 2496,
+    "total_input_tokens": 2035,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2035
+      }
+    ],
+    "total_cached_tokens": 1312,
+    "cached_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 1312
+      }
+    ],
+    "total_output_tokens": 340,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 121,
+    "raw_prompt_token": 6351,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6351
+          }
+        ],
+        "cache_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 4096
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 357
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 121
+          }
+        ]
+      }
+    ]
+  }
+}

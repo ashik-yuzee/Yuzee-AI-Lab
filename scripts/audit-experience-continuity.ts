@@ -1,0 +1,20 @@
+/** Synthetic saved-answer continuity check; no personal conversations accessed. */
+import fs from 'node:fs/promises';
+import {parse} from 'dotenv';
+import {responseToReadableText} from '../src/ux/responsePresentation';
+if(!process.argv.includes('--live'))throw Error('Use --live for the fictional continuity test.');
+const root='output/experience-flow/2026-09-20',env=parse(await fs.readFile('.env'));
+const j=JSON.parse(await fs.readFile(root+'/school-subjects.json','utf8'));
+const login=await fetch('http://localhost:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:env.ADMIN_USERNAME,password:env.ADMIN_PASSWORD})});
+const {token}=await login.json(),headers={'Content-Type':'application/json',Authorization:'Bearer '+token};
+const url='http://localhost:3000/api/conversations/'+j.conversationId;
+const list=await(await fetch(url+'/objectives',{headers})).json();
+const session=list.find((s:any)=>s.answers?.some((a:any)=>a.input?.unsure===true||a.answer==='Not sure'))||list.find((s:any)=>s.answers?.length);
+if(!session?.answers?.length)throw Error('Expected saved fictional browser answer is missing.');
+const message='In the activity I said I was not sure. What preference have I actually confirmed? Please keep any unchosen subject direction open. Just explain briefly; do not open another activity.';
+const r=await fetch(url+'/messages',{method:'POST',headers,body:JSON.stringify({message,responseMode:'standard',thinkingLevel:'medium',isOptionSelection:true,visibleWorkspaceId:session.id}),signal:AbortSignal.timeout(120000)});
+const raw=await r.text();if(!r.ok)throw Error('Local request failed '+r.status);
+const events=raw.split(/\r?\n\r?\n/).flatMap(p=>{const m=p.match(/^event: (\w+)\r?\ndata: (.*)$/s);if(!m)return [];try{return [{event:m[1],data:JSON.parse(m[2])}]}catch{return []}});
+const response=events.find(e=>e.event==='structured')?.data;
+const output={conversationId:j.conversationId,workspaceId:session.id,savedAnswers:session.answers,message,response,validation:events.find(e=>e.event==='validation')?.data,visibleText:response?responseToReadableText(response):'',errors:events.filter(e=>e.event==='error')};
+await fs.writeFile(root+'/continuity.json',JSON.stringify(output,null,2));console.log(output.visibleText);console.log('Accepted:',output.validation?.protocolAccepted);

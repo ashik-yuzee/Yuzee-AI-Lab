@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "build": "npm run check:bge-contract && tsc --noEmit && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs --external:vite",
+    "build": "npm run check:quiz-prompt && npm run check:bge-contract && npm run check:objectives && node scripts/build-objective-selection.mjs --check && tsc --noEmit && vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs --external:vite && cp src/warehouse/catalogue-worker.cjs dist/warehouse-worker.cjs && cp src/warehouse/linked-data.cjs dist/linked-data.cjs && cp src/warehouse/opportunities.cjs dist/opportunities.cjs && cp src/warehouse/provider-data.cjs dist/provider-data.cjs",
     "start": "node dist/server.cjs",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
@@ -38,7 +38,12 @@
     "test:bge-release": "node --import ./node_modules/tsx/dist/loader.mjs tests/bge-release.test.ts",
     "tune:bge": "node --import ./node_modules/tsx/dist/loader.mjs scripts/tune-bge.ts",
     "eval:bge-tasks": "node --import ./node_modules/tsx/dist/loader.mjs scripts/evaluate-bge-tasks.ts",
-    "test:quiz-prompt": "node --import ./node_modules/tsx/dist/loader.mjs tests/quiz-prompt-update.test.ts"
+    "test:quiz-prompt": "node --import ./node_modules/tsx/dist/loader.mjs tests/quiz-prompt-update.test.ts",
+    "test:objectives": "node --import ./node_modules/tsx/dist/loader.mjs --test tests/objectives.test.tsx",
+    "check:objectives": "node scripts/sync-objective-catalogue.mjs --check",
+    "check:quiz-prompt": "node --import tsx scripts/build-quiz-prompt.ts --check",
+    "test:phase1": "node --import tsx --test tests/phase1.test.tsx",
+    "test:warehouse": "node --import tsx --test tests/warehouse*.test.tsx"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

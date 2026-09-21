@@ -1,0 +1,222 @@
+{
+  "test_id": "DISCOVER_004-T07",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "OFF_TOPIC",
+  "model": "gemini-3.7-flash",
+  "source_row": 32,
+  "input_context": {
+    "user_message": "What is the tuition fee for this specific course next year?",
+    "prior_context_text": "A specific course is in context.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "30f26031c0e577d78d147233ebff92af48e09909a1734e588d3969e906a6ce6d",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 3476
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_RESEARCH",
+    "stage": "UNDERSTAND",
+    "ui": [],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Current and next year's tuition fees for the context course"
+    ],
+    "result": {
+      "summary": "Current tuition fee information is required from verified institution data and cannot be inferred or estimated under DISCOVER_004."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Tuition fee data requires live research evidence."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "research_required",
+        "label": "Research Course Tuition Fees",
+        "type": "RESEARCH"
+      }
+    ],
+    "handoff": {
+      "summary": "User requested factual tuition fee information which requires research rather than personality tendency exploration.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Factual fee inquiry forwarded to research."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Official next-year tuition fee for the specified course."
+      ],
+      "recommended_next_action": "research_required"
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "The candidate correctly stops DISCOVER_004 with NEEDS_RESEARCH/research routing instead of running a Big Five personality exploration in response to a factual tuition query.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "No previously confirmed facts were re-asked, and no redundant profile questions were presented.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "No unnecessary or generic questions were emitted; the candidate appropriately refrained from asking questions.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "No invalid UI primitives were generated (UI array is empty as expected for an immediate research handoff).",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adheres to the objective-specific override requiring NEEDS_RESEARCH rather than guessing when time-sensitive factual information is requested.",
+          "evidence_pointer": "candidate.result.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Tuition fees are marked unknown and no fabricated fee amounts are presented.",
+          "evidence_pointer": "candidate.unknowns"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No unsupported personality scores, percentiles, or psychometric classifications were generated.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "The interaction halted immediately with NEEDS_RESEARCH rather than continuing questioning.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness scoring is properly disabled with missing research blockers noted.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "A clean, compact handoff payload was provided detailing the unknown fee facts and recommended research next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct external endpoints or unconfirmed autonomous actions were invoked; structured research intent emitted properly.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate properly recognized that a specific tuition fee question should not run DISCOVER_004 and appropriately stopped with NEEDS_RESEARCH without hallucinating facts or psychometric scores."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2583,
+      "total_input_tokens": 1831,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 1831
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 752,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2228,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2228
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 771
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 3476,
+  "usage": {
+    "total_tokens": 2455,
+    "total_input_tokens": 2117,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2117
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 338,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5206,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5206
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 358
+          }
+        ]
+      }
+    ]
+  }
+}

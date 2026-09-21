@@ -1,0 +1,15 @@
+{
+  "confidence": "LOW",
+  "workspace_need": "NONE",
+  "decision": "CLARIFY",
+  "objective_id": "",
+  "reason": "The reference 'that one' is ambiguous without prior context or identified options.",
+  "disposition": "NONE",
+  "selectionId": "d24a6bb0-c866-41af-bafe-817173f8e282",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": null,
+  "margin": 0.06799575206697084,
+  "userConfidence": null,
+  "createdAt": 1789733827250
+}

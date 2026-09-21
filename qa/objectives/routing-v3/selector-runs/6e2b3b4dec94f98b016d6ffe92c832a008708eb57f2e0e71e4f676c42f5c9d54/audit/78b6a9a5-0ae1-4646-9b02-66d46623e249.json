@@ -1,0 +1,452 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "STUDY_005",
+      "score": 0.8209441540843669,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7556489858789873,
+      "contextScore": 0.8209441540843669
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.7417971863134575,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6692462354941834,
+      "contextScore": 0.7417971863134575
+    },
+    {
+      "id": "SCHOOL_039",
+      "score": 0.7408779149214246,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6699338700116136,
+      "contextScore": 0.7408779149214246
+    },
+    {
+      "id": "SCHOOL_002",
+      "score": 0.7042100135981226,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6682302574752753,
+      "contextScore": 0.7042100135981226
+    },
+    {
+      "id": "SCHOOL_014",
+      "score": 0.7048138788888855,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7048138788888855
+    },
+    {
+      "id": "SCHOOL_012",
+      "score": 0.6999730843810494,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6999730843810494
+    },
+    {
+      "id": "DISCOVER_001",
+      "score": 0.6994785124562564,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6994785124562564
+    },
+    {
+      "id": "IND_PATH_005",
+      "score": 0.6984847147026836,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6984847147026836
+    },
+    {
+      "id": "VACANCY_004",
+      "score": 0.6815659500736563,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6815659500736563
+    },
+    {
+      "id": "EMP_ENTRY_005",
+      "score": 0.6785443884473406,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6785443884473406
+    },
+    {
+      "id": "SCHOOL_034",
+      "score": 0.6776402636943655,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6776402636943655
+    },
+    {
+      "id": "PATH_002",
+      "score": 0.676883040902868,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.676883040902868
+    },
+    {
+      "id": "EMP_DISCOVER_003",
+      "score": 0.6728532682946907,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6728532682946907
+    },
+    {
+      "id": "RECOVERY_002",
+      "score": 0.6706074605399481,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6706074605399481
+    },
+    {
+      "id": "EMP_ENTRY_006",
+      "score": 0.6699706175231644,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6699706175231644
+    },
+    {
+      "id": "LEARN_ROUTE_001",
+      "score": 0.7520985382893506,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7520985382893506
+    },
+    {
+      "id": "SCHOOL_003",
+      "score": 0.7483995268762318,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7483995268762318
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.6690897750052985,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6690897750052985
+    },
+    {
+      "id": "EMP_DISCOVER_006",
+      "score": 0.6688325988808737,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6688325988808737
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "The college lists Applied Practice and Professional Foundations. Those names tell me nothing about what I would actually be doing.",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Explain course units with example learning activities, without inventing syllabus evidence.",
+      "confirmed_facts": [],
+      "possible_need": "Explain course units with example learning activities, without inventing syllabus evidence.",
+      "missing_information": [],
+      "relevant_question": "",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "What would help you next?",
+      "summary": [
+        "Explain course units with example learning activities, without inventing syllabus evidence."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "STUDY_005",
+        "button_label": "Show me what I will learn",
+        "outcome": "Translate course structure/units into concrete skills and practical capabilities.",
+        "when_to_use": "Serve when user sees unit names but not capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Will I Actually Learn?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Explain course learning; do not infer assessed competence from unit titles alone.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_039",
+        "button_label": "I only need one skill",
+        "outcome": "Find short, targeted learning where appropriate and explain when formal qualification is still needed.",
+        "when_to_use": "Serve when student needs a focused capability rather than a full qualification.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill-Only Learning' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill-Only Learning: Find short, targeted learning where appropriate and explain when formal qualification is still needed. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_002",
+        "button_label": "What subjects help with my career?",
+        "outcome": "Show subjects that are useful for the target career while separating useful from mandatory prerequisites.",
+        "when_to_use": "Serve when student has a career goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for My Career: Show subjects that are useful for the target career while separating useful from mandatory prerequisites. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_014",
+        "button_label": "Am I ready, not just eligible?",
+        "outcome": "Separate formal eligibility from academic readiness, interest, study-style fit and life constraints.",
+        "when_to_use": "Serve when student meets entry rules but may not be prepared for study.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Ready vs Eligible' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Ready vs Eligible: Separate formal eligibility from academic readiness, interest, study-style fit and life constraints. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_012",
+        "button_label": "My school does not offer this subject",
+        "outcome": "Find equivalent subjects, external study, bridging, later prerequisite alternatives or provider-specific routes.",
+        "when_to_use": "Serve when required/recommended subject is unavailable.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Missing Subject Alternative' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Missing Subject Alternative: Find equivalent subjects, external study, bridging, later prerequisite alternatives or provider-specific routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DISCOVER_001",
+        "button_label": "What am I interested in?",
+        "outcome": "Explore RIASEC-style activity interests and translate them into career/industry themes.",
+        "when_to_use": "Serve when user has no clear career direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Interest Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Explore unknown interests. Do not substitute saving an already established interest profile or choosing school subjects.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "IND_PATH_005",
+        "button_label": "What degrees lead here?",
+        "outcome": "Map relevant degrees to job families and identify cases needing professional registration or further study.",
+        "when_to_use": "Serve when user wants higher-education pathways into the sector.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Routes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Routes: Map relevant degrees to job families and identify cases needing professional registration or further study. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "VACANCY_004",
+        "button_label": "What would stop me getting this job?",
+        "outcome": "Identify missing mandatory criteria, skill depth, experience or evidence likely to affect candidacy.",
+        "when_to_use": "Serve when user wants blockers for a vacancy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Am I Missing?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Am I Missing?: Identify missing mandatory criteria, skill depth, experience or evidence likely to affect candidacy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Specific job advertisement plus user profile/evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_ENTRY_005",
+        "button_label": "Can I study and work here?",
+        "outcome": "Find cadetship/scholarship/employment programs and explain study/work commitments.",
+        "when_to_use": "Serve when student wants combined study/employment pathways.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Cadetship' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Cadetship: Find cadetship/scholarship/employment programs and explain study/work commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_034",
+        "button_label": "I have no skills",
+        "outcome": "Identify skills demonstrated through school, sport, family responsibilities, hobbies and casual work.",
+        "when_to_use": "Serve when student underestimates everyday capabilities.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Find Skills I Already Use' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Find Skills I Already Use: Identify skills demonstrated through school, sport, family responsibilities, hobbies and casual work. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "PATH_002",
+        "button_label": "Explore university",
+        "outcome": "Explain direct, enabling, diploma-to-degree and other verified university entry routes.",
+        "when_to_use": "Serve when student is considering higher education.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'University Route' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for University Route: Explain direct, enabling, diploma-to-degree and other verified university entry routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_003",
+        "button_label": "Who hires graduates like me?",
+        "outcome": "Map qualification outcomes/skills to employer types and actual employers.",
+        "when_to_use": "Serve when student/graduate wants employers beyond obvious profession.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Companies Hiring My Degree' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Companies Hiring My Degree: Map qualification outcomes/skills to employer types and actual employers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "RECOVERY_002",
+        "button_label": "I am missing a required subject",
+        "outcome": "Find verified alternatives such as bridging, equivalent study, enabling or different provider/course routes.",
+        "when_to_use": "Serve when student lacks a prerequisite.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'I Missed a Prerequisite' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for I Missed a Prerequisite: Find verified alternatives such as bridging, equivalent study, enabling or different provider/course routes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Original plan, what changed, current academic/financial/location constraints, target destination",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_ENTRY_006",
+        "button_label": "Do I need a graduate program?",
+        "outcome": "Find junior/direct-entry roles and explain when a graduate program is optional.",
+        "when_to_use": "Serve when graduate assumes graduate scheme is the only route.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Direct Entry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Direct Entry: Find junior/direct-entry roles and explain when a graduate program is optional. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer, program/vacancy evidence, degree/study stage, location, eligibility",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "LEARN_ROUTE_001",
+        "button_label": "How should I learn this?",
+        "outcome": "Compare workplace practice, project, mentor, short course, microcredential, formal study, self-study, internship or volunteering.",
+        "when_to_use": "Serve when user knows the skill but not the learning method.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Best Way to Learn This Skill' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Best Way to Learn This Skill: Compare workplace practice, project, mentor, short course, microcredential, formal study, self-study, internship or volunteering. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, required depth, current level, budget/time, preferred learning mode, credential requirement",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_003",
+        "button_label": "What subjects do I need for this course?",
+        "outcome": "Classify required prerequisites, assumed knowledge, recommended subjects and no-requirement subjects.",
+        "when_to_use": "Serve when student has a specific tertiary course in mind.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for My Course' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for My Course: Classify required prerequisites, assumed knowledge, recommended subjects and no-requirement subjects. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_006",
+        "button_label": "Show me unexpected employers",
+        "outcome": "Surface banks, airlines, mining, health, government, retail, logistics, universities and other non-obvious employers for the role.",
+        "when_to_use": "Serve when user only considers famous companies in their target field.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Employers I Have Not Considered' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Employers I Have Not Considered: Surface banks, airlines, mining, health, government, retail, logistics, universities and other non-obvious employers for the role. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4066,
+      "total_input_tokens": 3993,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 3993
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 73,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4407,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4407
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 89
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:16:32Z",
+    "updated": "2026-09-18T12:16:32Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "EmIKYAFpFH0TyhQ28o0Tcq7tTPN3aN20zyhw3CJFBBDBjsQZMjs7ukAKfpag91SNt8aO0oUPEkbDN0t7uDqInM5DuuevLyYWqIna9BlnzJ8Nu2sNPHkj0OM/NqYOrPzw/QP0Qw==",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"OPTIONAL\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"STUDY_005\",\n  \"reason\": \"Translate these course unit names into the concrete practical skills, tasks, and capabilities you will actually learn.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "OPTIONAL",
+    "decision": "SUGGEST",
+    "objective_id": "STUDY_005",
+    "reason": "Translate these course unit names into the concrete practical skills, tasks, and capabilities you will actually learn.",
+    "disposition": "SUGGEST",
+    "selectionId": "fc1c9362-99a2-4090-8fa8-84c5186f6d29",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v3",
+    "selectedSimilarity": 0.8209441540843669,
+    "margin": 0.07914696777090946,
+    "userConfidence": null,
+    "createdAt": 1789733792239
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "JOB_COMPARE_001",
+      "score": 0.8884570685669777,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.8421267535283566,
+      "contextScore": 0.8884570685669777
+    },
+    {
+      "id": "IND_PATH_002",
+      "score": 0.7505229137353284,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7505229137353284,
+      "contextScore": 0.7425149123212355
+    },
+    {
+      "id": "CAREER_SIDE_004",
+      "score": 0.7591838299289686,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7591838299289686,
+      "contextScore": 0.731942594498597
+    },
+    {
+      "id": "SKILL_SIDE_005",
+      "score": 0.7294511515641756,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7169788393619381,
+      "contextScore": 0.7294511515641756
+    },
+    {
+      "id": "IND_SKILL_003",
+      "score": 0.733735204147975,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.733735204147975,
+      "contextScore": 0.7217527508389326
+    },
+    {
+      "id": "JOB_DISCOVER_002",
+      "score": 0.7402070635117173,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7091497961653224,
+      "contextScore": 0.7402070635117173
+    },
+    {
+      "id": "CURRENT_JOB_002",
+      "score": 0.7241408053453544,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.7095544367937324,
+      "contextScore": 0.7241408053453544
+    },
+    {
+      "id": "IND_FIT_001",
+      "score": 0.719199230033604,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.709094880621746,
+      "contextScore": 0.719199230033604
+    },
+    {
+      "id": "SCHOOL_002",
+      "score": 0.7131530549234334,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.703241230641378,
+      "contextScore": 0.7131530549234334
+    },
+    {
+      "id": "IND_DISCOVER_007",
+      "score": 0.7164386683386886,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7164386683386886
+    },
+    {
+      "id": "IND_DISCOVER_002",
+      "score": 0.7114533144751469,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7114533144751469
+    },
+    {
+      "id": "EMP_DISCOVER_002",
+      "score": 0.709776522060992,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.709776522060992
+    },
+    {
+      "id": "IND_DISCOVER_003",
+      "score": 0.7061146530427151,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7061146530427151
+    },
+    {
+      "id": "JOB_DISCOVER_010",
+      "score": 0.7044918649092426,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7044918649092426
+    },
+    {
+      "id": "JOB_SKILL_001",
+      "score": 0.7024666127719674,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.7024666127719674
+    },
+    {
+      "id": "GOAL_003",
+      "score": 0.6958206475540551,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6958206475540551
+    },
+    {
+      "id": "IND_DISCOVER_004",
+      "score": 0.6951542477903434,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6951542477903434
+    },
+    {
+      "id": "IND_DEEP_002",
+      "score": 0.693709639091243,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.693709639091243
+    },
+    {
+      "id": "JOB_DISCOVER_007",
+      "score": 0.693566637816147,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.693566637816147
+    },
+    {
+      "id": "IND_COMPARE_001",
+      "score": 0.7260383652317699,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7260383652317699
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "Can you put engineering and marketing next to each other so I understand what the work and skills are like?",
+      "prior_context_text": "",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Compare engineering and marketing to understand daily work and required skills.",
+      "confirmed_facts": [
+        "Can you put engineering and marketing next to each other so I understand what the work and skills are like?"
+      ],
+      "possible_need": "Explore personal strengths, task preferences, and suitable pathway options across technical and commercial disciplines.",
+      "missing_information": [
+        "User's past project experiences and enjoyed subjects",
+        "Preferred work style and problem-solving orientation"
+      ],
+      "relevant_question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "COMPARE",
+      "question": "When you think about projects or tasks you have enjoyed in the past, do you lean more toward figuring out how something works technically, or how to communicate and position an idea for people?",
+      "summary": [
+        "Engineering and marketing solve very different problems, but both are central to how products and services reach the real world. Putting them side by side helps clarify what you would actually do day-to-day and what kind of thinking each role relies on.",
+        "A direct comparison of daily responsibilities, required skills, and core focus areas."
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "JOB_COMPARE_001",
+        "button_label": "Compare these jobs",
+        "outcome": "Compare tasks, skills, entry, education, environment, pay, demand, location, progression, flexibility, AI exposure and fit.",
+        "when_to_use": "Serve when user has multiple occupations in mind.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Compare occupations or roles; use JOB_DECIDE_004 for two actual employment offers with concrete terms.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_PATH_002",
+        "button_label": "What school subjects help?",
+        "outcome": "Connect relevant school subjects to industry job families and later study while separating prerequisite from useful.",
+        "when_to_use": "Serve when school student wants industry-aligned subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for This Industry' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for This Industry: Connect relevant school subjects to industry job families and later study while separating prerequisite from useful. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry, target roles, user education/experience, location, study constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "CAREER_SIDE_004",
+        "button_label": "Show careers like this",
+        "outcome": "Find adjacent occupations sharing tasks, skills or purpose.",
+        "when_to_use": "Serve when user likes one career but wants alternatives.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Similar Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Similar Careers: Find adjacent occupations sharing tasks, skills or purpose. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career idea, profile, work preferences, available occupational evidence",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SKILL_SIDE_005",
+        "button_label": "Where can I use this skill?",
+        "outcome": "Map a skill to occupations and industries where it matters.",
+        "when_to_use": "Serve when user knows a capability but not where it is valuable.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skill to Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skill to Careers: Map a skill to occupations and industries where it matters. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User skills, target role/course, evidence, proficiency",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "IND_SKILL_003",
+        "button_label": "Which skills open multiple jobs?",
+        "outcome": "Identify transferable capabilities that connect several occupations within the industry.",
+        "when_to_use": "Serve when user wants broad career flexibility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills Shared Across Jobs' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills Shared Across Jobs: Identify transferable capabilities that connect several occupations within the industry. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry workforce/occupation evidence, skills taxonomy, vacancy/shortage signals",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_002",
+        "button_label": "What jobs can I do with my skills?",
+        "outcome": "Map existing skills to occupations and explain which are directly usable versus gap-heavy.",
+        "when_to_use": "Serve when user knows capabilities but not occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Skills: Map existing skills to occupations and explain which are directly usable versus gap-heavy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CURRENT_JOB_002",
+        "button_label": "What do I need for the next level?",
+        "outcome": "Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope.",
+        "when_to_use": "Serve when user wants promotion.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills for Promotion' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills for Promotion: Compare current vs next-level expectations in technical depth, ownership, mentoring, communication and scope. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current role, responsibilities, current skill evidence, employer/industry needs, target next level",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_FIT_001",
+        "button_label": "Could this industry suit me?",
+        "outcome": "Compare interests, values, skills, environment, location, study tolerance, salary expectations and goals.",
+        "when_to_use": "Serve when user wants person-industry fit.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Would I Like This Industry?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Would I Like This Industry?: Compare interests, values, skills, environment, location, study tolerance, salary expectations and goals. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry profile plus user interests, work values, skills, environment preferences, location and study tolerance",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_002",
+        "button_label": "What subjects help with my career?",
+        "outcome": "Show subjects that are useful for the target career while separating useful from mandatory prerequisites.",
+        "when_to_use": "Serve when student has a career goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects for My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects for My Career: Show subjects that are useful for the target career while separating useful from mandatory prerequisites. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_DISCOVER_007",
+        "button_label": "What is growing where I live?",
+        "outcome": "Combine regional industry employment/growth, occupations and employers.",
+        "when_to_use": "Serve when user wants location-specific industry opportunity.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries Growing Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries Growing Near Me: Combine regional industry employment/growth, occupations and employers. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_DISCOVER_002",
+        "button_label": "Where could my interests take me?",
+        "outcome": "Map interests to multiple sectors instead of one obvious career.",
+        "when_to_use": "Serve when user has interests but not industry knowledge.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Interests' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries From My Interests: Map interests to multiple sectors instead of one obvious career. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_DISCOVER_002",
+        "button_label": "Who hires people in this job?",
+        "outcome": "Find employers across industries that hire the occupation.",
+        "when_to_use": "Serve when user knows an occupation but not employer landscape.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Companies Hiring My Career' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Companies Hiring My Career: Find employers across industries that hire the occupation. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career goal, industry, skills, course, location, work values, company-size preference and constraints",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_DISCOVER_003",
+        "button_label": "Where could my school subjects lead?",
+        "outcome": "Map subject combinations to relevant industries and sub-industries.",
+        "when_to_use": "Serve when student wants to connect school subjects to worlds of work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Subjects' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries From My Subjects: Map subject combinations to relevant industries and sub-industries. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_010",
+        "button_label": "What jobs are actually available around me?",
+        "outcome": "Combine occupational fit with current local vacancies, industry presence and transport/location.",
+        "when_to_use": "Serve when user needs local demand and realistic vacancies.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs Near Me' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs Near Me: Combine occupational fit with current local vacancies, industry presence and transport/location. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_SKILL_001",
+        "button_label": "What skills do I need?",
+        "outcome": "Separate core job skills, knowledge, tools/software, transferable skills and context-specific capabilities.",
+        "when_to_use": "Serve when user wants the capability requirements of an occupation.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Skills for This Job' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Skills for This Job: Separate core job skills, knowledge, tools/software, transferable skills and context-specific capabilities. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Occupation/job ad, current skill taxonomies and job evidence",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "GOAL_003",
+        "button_label": "Find career themes",
+        "outcome": "Combine recurring interests, values, activities and preferences into a small set of career themes.",
+        "when_to_use": "Serve when user has scattered interests that need organizing.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Career Themes' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Career Themes: Combine recurring interests, values, activities and preferences into a small set of career themes. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal clarity, interests, constraints, existing ideas, preferred future",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "IND_DISCOVER_004",
+        "button_label": "Where are my skills valuable?",
+        "outcome": "Map the same capability across multiple industries to show portability.",
+        "when_to_use": "Serve when user wants to know where capabilities transfer.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industries From My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industries From My Skills: Map the same capability across multiple industries to show portability. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, subjects, interests, skills, career ideas, location and study constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_DEEP_002",
+        "button_label": "Show me how this industry is structured",
+        "outcome": "Map formal and practical sectors/subsectors and how they connect.",
+        "when_to_use": "Serve when user wants to understand the ecosystem.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Industry Map' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Industry Map: Map formal and practical sectors/subsectors and how they connect. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Named industry plus classification, sector/value-chain/business evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_007",
+        "button_label": "Show me something different",
+        "outcome": "Surface adjacent and surprising occupations that still have defensible links to the profile.",
+        "when_to_use": "Serve when user is stuck on obvious occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs I Might Not Have Considered' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs I Might Not Have Considered: Surface adjacent and surprising occupations that still have defensible links to the profile. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_COMPARE_001",
+        "button_label": "Compare these industries",
+        "outcome": "Compare sectors, job families, entry routes, qualifications, skills, work setting, locations, size, growth, pay context, AI change, mobility and user fit.",
+        "when_to_use": "Serve when user is choosing between sectors.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Industries' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Industries: Compare sectors, job families, entry routes, qualifications, skills, work setting, locations, size, growth, pay context, AI change, mobility and user fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4343,
+      "total_input_tokens": 4269,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4269
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 74,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4720,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4720
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 90
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:23:45Z",
+    "updated": "2026-09-18T12:23:45Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TbdgtiD90OyCgVk0ZEpq6HpTzl5wgTwUz/8d2IdxtL8ZDWg4SKB6WogF2NV5197QYX0cdHo9f/h85qS3Dpesmz0iHnmz/0yTEDN/qTKl1Mfa3DfyfJz6ZxVm4TbFk3KRsBBn/k7im",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"REQUIRED\",\n  \"decision\": \"SUGGEST\",\n  \"objective_id\": \"JOB_COMPARE_001\",\n  \"reason\": \"Compare the core tasks, required skills, and daily work environments of engineering and marketing side by side.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "REQUIRED",
+    "decision": "SUGGEST",
+    "objective_id": "JOB_COMPARE_001",
+    "reason": "Compare the core tasks, required skills, and daily work environments of engineering and marketing side by side.",
+    "disposition": "AUTO_OPEN",
+    "selectionId": "5c11077e-e613-45ac-a4e0-4765d2614676",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v4-context",
+    "selectedSimilarity": 0.8884570685669777,
+    "selectedRank": 1,
+    "retrievalSources": [
+      "user",
+      "context"
+    ],
+    "margin": null,
+    "userConfidence": {
+      "score": 30,
+      "band": "low",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+        "EXPLICIT_UNCERTAINTY",
+        "CRITERIA_UNCLEAR",
+        "ROUTE_UNRESOLVED"
+      ]
+    },
+    "createdAt": 1789734225997
+  }
+}

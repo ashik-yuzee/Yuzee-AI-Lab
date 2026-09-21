@@ -1,0 +1,344 @@
+{
+  "test_id": "SUP-03",
+  "objective_id": "PROFILE_005",
+  "prompt_version": "V2",
+  "prompt_sha256": "6a7b4fe05942230ee6534cefb40f958a9d92ab000eb93a2b1b6f8fe9ae13c53b",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Show my skills so I can review them before saving.",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "skill_claim": "I say I can use Excel; no work sample has been assessed"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "PROFILE_005",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "9a25bb03176bce23c5b2617fe5e452c477c633032cd32db925701bf982af6afb",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 7820
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "PROFILE_005",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "skill_matrix",
+        "id": "skills_review_matrix",
+        "purpose": "Review current self-reported skills and evidence labels.",
+        "prompt": "Review your skills inventory and select any items requiring adjustments.",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [
+          "Skill",
+          "Evidence Status",
+          "Proficiency",
+          "Source"
+        ],
+        "rows": [
+          {
+            "label": "Spreadsheet Management (Excel)",
+            "cells": [
+              "Spreadsheet Management (Excel)",
+              "SELF_REPORTED",
+              "Unassessed",
+              "User claim"
+            ]
+          }
+        ],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "evidence_panel",
+        "id": "skills_evidence_detail",
+        "purpose": "Display evidence grounding and distinguish user claims from assessed capabilities.",
+        "prompt": "Current skill evidence records:",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Excel capability claim",
+            "detail": "Self-reported familiarity; no formal assessment or practical sample verified.",
+            "source_status": "USER_CONFIRMED",
+            "evidence_refs": [
+              "confirmed_facts.skill_claim"
+            ]
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "profile_editor",
+        "id": "confirm_skill_save",
+        "purpose": "Allow user to confirm or edit self-reported skill entry prior to profile persistence.",
+        "prompt": "Confirm skill details to update your profile:",
+        "required": false,
+        "options": [
+          {
+            "id": "confirm_entry",
+            "label": "Confirm & Save to Profile",
+            "detail": "Save Excel as a self-reported skill."
+          },
+          {
+            "id": "edit_entry",
+            "label": "Edit Details",
+            "detail": "Update proficiency or add context before saving."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {
+      "skill_claim": "I say I can use Excel; no work sample has been assessed"
+    },
+    "derived_signals": [
+      {
+        "signal": "Spreadsheet Management capability",
+        "basis": "User statement regarding Excel usage",
+        "confidence": "MEDIUM"
+      }
+    ],
+    "unknowns": [
+      "Demonstrated skill proficiency level",
+      "Specific Excel tasks or advanced tool usage"
+    ],
+    "result": {
+      "disputed": [],
+      "next_actions": [],
+      "profile_update_candidate": "Excel (Self-Reported)",
+      "skills_profile": [
+        {
+          "skill_id": "skill_excel_spreadsheets",
+          "user_label": "Excel",
+          "proficiency_status": null,
+          "evidence_status": "SELF_REPORTED",
+          "evidence_refs": [
+            "confirmed_facts.skill_claim"
+          ],
+          "source_type": "user_claim",
+          "last_evidenced": null,
+          "user_confirmed": true
+        }
+      ],
+      "summary": "Reviewing self-reported Excel skill prior to saving to profile."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": []
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Confirm Skills Review",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Displaying current self-reported Excel skill for user confirmation before profile update.",
+      "confirmed_user_inputs": {
+        "skill_claim": "I say I can use Excel; no work sample has been assessed"
+      },
+      "result": {
+        "summary": "1 self-reported skill identified for review."
+      },
+      "evidence_and_unknowns": [
+        "Excel is self-reported with no work sample assessed.",
+        "Proficiency depth is unknown."
+      ],
+      "recommended_next_action": "User confirmation needed to persist skill entry to capability profile."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correct objective PROFILE_005 maintained for reviewing and saving skills.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Correctly incorporated the existing confirmed skill claim without re-asking.",
+          "evidence_pointer": "candidate.confirmed_inputs.skill_claim"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "UI components provide concrete, actionable review and confirmation options without repetitive questions.",
+          "evidence_pointer": "candidate.ui[2].options"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Used only primitives on the V2 allow-list: skill_matrix, evidence_panel, and profile_editor.",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Adhered strictly to the V2 output contract schema including skills_profile array with canonical fields, evidence status (SELF_REPORTED), and null proficiency.",
+          "evidence_pointer": "candidate.result.skills_profile[0]"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Correctly labeled Excel as SELF_REPORTED and marked unassessed proficiency as unknown rather than inferring depth.",
+          "evidence_pointer": "candidate.ui[0].rows[0].cells"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric or capability depth scores were fabricated.",
+          "evidence_pointer": "candidate.derived_signals"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Stops appropriately at NEEDS_INPUT to require user confirmation before saving.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Followed the V2 override policy (NONE) by disabling readiness scoring.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Emitted a complete, compact Oala handoff containing confirmed inputs, evidence/unknowns, and recommended next action.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No direct writes or unauthorized endpoint execution; enforces USER_CONFIRM_TO_SAVE policy through profile_editor.",
+          "evidence_pointer": "candidate.ui[2]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "The candidate fully satisfied all requirements of PROFILE_005 V2 overrides, properly formatting the skills profile output contract, respecting evidence boundaries by marking unverified Excel skills as SELF_REPORTED without proficiency assumptions, and requiring user confirmation before persisting."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3267,
+      "total_input_tokens": 2475,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2475
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 792,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2872,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2872
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 811
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 7820,
+  "usage": {
+    "total_tokens": 3470,
+    "total_input_tokens": 2207,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2207
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 1263,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 5914,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 5914
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 1280
+          }
+        ]
+      }
+    ]
+  }
+}

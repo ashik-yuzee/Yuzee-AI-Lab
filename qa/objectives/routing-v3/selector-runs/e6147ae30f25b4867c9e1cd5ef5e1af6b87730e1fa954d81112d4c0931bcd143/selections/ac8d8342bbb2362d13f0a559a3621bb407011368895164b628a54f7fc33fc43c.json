@@ -1,0 +1,15 @@
+{
+  "confidence": "HIGH",
+  "workspace_need": "OPTIONAL",
+  "decision": "SUGGEST",
+  "objective_id": "EMP_SAFE_002",
+  "reason": "Identify red flags and evaluate upfront payment requests in the hiring process to help you confirm whether this opportunity is legitimate.",
+  "disposition": "SUGGEST",
+  "selectionId": "3ffa5c7c-13fe-4326-b850-1d85b3f1ee63",
+  "sourceMessageId": "a",
+  "policy": "workspace-assist-v3",
+  "selectedSimilarity": 0.6894824699745677,
+  "margin": 0.05310047654773942,
+  "userConfidence": null,
+  "createdAt": 1789733794924
+}

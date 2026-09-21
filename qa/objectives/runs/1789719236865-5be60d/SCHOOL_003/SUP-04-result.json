@@ -1,0 +1,58 @@
+{
+  "test_id": "SUP-04",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "supplemental",
+  "scenario_type": "SUPPLEMENTAL",
+  "model": "gemini-3.7-flash",
+  "source_row": null,
+  "input_context": {
+    "user_message": "Do I meet the maths prerequisite for this course?",
+    "prior_context_text": "Concrete synthetic fixture; not a real user or provider.",
+    "confirmed_facts": {
+      "target_course": "Fictional Harbour Design Diploma",
+      "provider": "Fictional Harbour College",
+      "maths_completed": "Year 11 General Maths"
+    },
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "IN_PROGRESS"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "1b575c3e5969ce6978c5bd1af02ee0a9082f36ea776ffa1d470023e57f1f2685",
+  "status": "API_BLOCKED",
+  "hard_pass": false,
+  "first_attempt_pass": false,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": false,
+      "failures": [
+        {
+          "code": "HTTP_400",
+          "detail": "Transport/API failure, not a prompt failure"
+        }
+      ],
+      "latency_ms": 1507
+    }
+  ],
+  "failures": [
+    {
+      "code": "HTTP_400",
+      "detail": "Transport/API failure, not a prompt failure"
+    }
+  ],
+  "parsed": null,
+  "evaluator": null,
+  "latency_ms": 1507,
+  "usage": null
+}

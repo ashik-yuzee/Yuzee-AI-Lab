@@ -1,0 +1,293 @@
+{
+  "test_id": "SCHOOL_003-T10",
+  "objective_id": "SCHOOL_003",
+  "prompt_version": "V2",
+  "prompt_sha256": "00dfb2075f1df88de6df0a3a8d7f0c73bb7412e5cd542061e80c5031efc5f805",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.2",
+  "suite": "prepared",
+  "scenario_type": "COURSE_ENTITY_MISSING",
+  "model": "gemini-3.7-flash",
+  "source_row": 591,
+  "input_context": {
+    "user_message": "What subjects do I need for engineering at university?",
+    "prior_context_text": "No provider/course/campus specified.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "SCHOOL_003",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [],
+  "request_sha256": "8f183ef8467d0365c9a0a41ab76a95e9851748a8f8e349b50c0be83a4364b6a7",
+  "status": "PASS",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 5688
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "SCHOOL_003",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "evidence_panel",
+        "id": "foundation_guidance",
+        "purpose": "Explain common general foundations for engineering without asserting unverified mandatory rules.",
+        "prompt": "Engineering prerequisite overview across tertiary providers",
+        "required": false,
+        "options": [],
+        "content": [
+          {
+            "label": "Mathematics (Advanced / Higher Level)",
+            "detail": "Most university engineering degrees require or strongly assume advanced mathematics (e.g. Calculus/Maths Methods/Specialist Maths).",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Physics / Chemistry",
+            "detail": "Physics is often assumed knowledge or recommended; Chemistry or specialized sciences may be required depending on the engineering branch (e.g. Chemical/Biomedical).",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          },
+          {
+            "label": "Exact Prerequisites Vary by University",
+            "detail": "Prerequisites cannot be confirmed as mandatory without knowing the specific institution and degree program.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": false,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      },
+      {
+        "component": "entity_picker",
+        "id": "target_course_provider",
+        "purpose": "Collect the specific university and degree to check exact verified entry requirements.",
+        "prompt": "Which specific university and engineering course (or campus/intake) do you have in mind?",
+        "required": true,
+        "options": [],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [
+      {
+        "signal": "Interest in university engineering pathway",
+        "basis": "User asked: 'What subjects do I need for engineering at university?'",
+        "confidence": "HIGH"
+      }
+    ],
+    "unknowns": [
+      "Target university/provider",
+      "Target engineering degree/specialisation",
+      "Target campus or entry year/intake",
+      "Current subjects and grades"
+    ],
+    "result": {
+      "alternative_routes": [],
+      "course_subject_requirements": null,
+      "next_actions": [],
+      "summary": "Engineering degrees typically build upon advanced mathematics and physics, but exact mandatory prerequisites depend strictly on the specific university and program."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "Exact target university and course are not identified.",
+        "Verified entry requirements require specific provider details."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Provide target university and course details",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Explained common engineering foundation subjects and requested the specific institution and degree program to verify exact admission prerequisites.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "summary": "Prerequisites cannot be confirmed until an exact university and engineering program are selected."
+      },
+      "evidence_and_unknowns": [
+        "Target provider and course entity missing."
+      ],
+      "recommended_next_action": "Select or state target university and engineering degree."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Correctly matches the active SCHOOL_003 objective regarding subjects required for a tertiary course.",
+          "evidence_pointer": "candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "PASS",
+          "reason": "Context had no confirmed facts or target provider; candidate did not re-ask any previously supplied facts.",
+          "evidence_pointer": "candidate.confirmed_inputs"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Correctly asks for the minimal high-impact missing entity (specific university and course) needed to verify mandatory requirements.",
+          "evidence_pointer": "candidate.ui[1].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "Used only allowed V2 primitives (evidence_panel and entity_picker).",
+          "evidence_pointer": "candidate.ui"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Followed the mandatory override: when no provider/course is selected, explained only common foundations and prompted for the specific entity without claiming unverified mandatory prerequisites.",
+          "evidence_pointer": "candidate.ui[0].content"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Did not invent mandatory admission rules or current facts; explicitly labeled guidance as general and preserved unknowns.",
+          "evidence_pointer": "candidate.ui[0].content[0].source_status"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "No psychometric claims, fake trait scores, or success predictions were made.",
+          "evidence_pointer": "candidate.readiness"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "PASS",
+          "reason": "Properly paused with status NEEDS_INPUT since critical decision facts (provider/course) are missing.",
+          "evidence_pointer": "candidate.status"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness verification correctly identifies blockers and does not issue an unsupported readiness score without verified provider evidence.",
+          "evidence_pointer": "candidate.readiness.blockers"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Produces a complete and compact Oala handoff containing confirmed inputs, summary, unknowns, and recommended next steps.",
+          "evidence_pointer": "candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "Emits safe UI and standard next actions without unauthorized API calls, URLs, or state mutations.",
+          "evidence_pointer": "candidate.next_actions"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [],
+      "summary": "Candidate fully complied with the objective prompt and mandatory overrides by providing general foundational guidance and requesting specific institution/course details before asserting mandatory prerequisites."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 3270,
+      "total_input_tokens": 2485,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2485
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 785,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2882,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2882
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 804
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 5688,
+  "usage": {
+    "total_tokens": 3256,
+    "total_input_tokens": 2274,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2274
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 982,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 0,
+    "raw_prompt_token": 6698,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6698
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 999
+          }
+        ]
+      }
+    ]
+  }
+}

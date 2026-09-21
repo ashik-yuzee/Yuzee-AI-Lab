@@ -1,0 +1,491 @@
+{
+  "kind": "selection",
+  "version": "objectives-316-preview-v1-retrieval3",
+  "candidates": [
+    {
+      "id": "EMP_COMPARE_002",
+      "score": 0.7398875458645033,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7398875458645033
+    },
+    {
+      "id": "IND_COMPARE_005",
+      "score": 0.7333620960786679,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7333620960786679
+    },
+    {
+      "id": "EMP_FIT_005",
+      "score": 0.7300041555601562,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6025612333395516,
+      "contextScore": 0.7300041555601562
+    },
+    {
+      "id": "STUDY_004",
+      "score": 0.7287952223389867,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7287952223389867
+    },
+    {
+      "id": "DISCOVER_007",
+      "score": 0.7278855507116314,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7278855507116314
+    },
+    {
+      "id": "LEARN_ROUTE_002",
+      "score": 0.7263125204353238,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5965717433594551,
+      "contextScore": 0.7263125204353238
+    },
+    {
+      "id": "IND_COMPARE_003",
+      "score": 0.7235522878962929,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.6136767551919107,
+      "contextScore": 0.7235522878962929
+    },
+    {
+      "id": "SCHOOL_006",
+      "score": 0.7226671541819495,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7226671541819495
+    },
+    {
+      "id": "EMP_COMPARE_001",
+      "score": 0.7223383941861344,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7223383941861344
+    },
+    {
+      "id": "PATH_012",
+      "score": 0.7221734416517434,
+      "sources": [
+        "user",
+        "context"
+      ],
+      "userScore": 0.5816751518286208,
+      "contextScore": 0.7221734416517434
+    },
+    {
+      "id": "JOB_DISCOVER_002",
+      "score": 0.7220942971571019,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7220942971571019
+    },
+    {
+      "id": "CAREER_SIDE_004",
+      "score": 0.7211516869180058,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7211516869180058
+    },
+    {
+      "id": "DISCOVER_001",
+      "score": 0.7207603044135041,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7207603044135041
+    },
+    {
+      "id": "IND_REALITY_001",
+      "score": 0.7199300506053127,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7199300506053127
+    },
+    {
+      "id": "EMP_SKILL_004",
+      "score": 0.7175197797163613,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7175197797163613
+    },
+    {
+      "id": "JOB_DECIDE_001",
+      "score": 0.7169782866315427,
+      "sources": [
+        "context"
+      ],
+      "contextScore": 0.7169782866315427
+    },
+    {
+      "id": "SCHOOL_018",
+      "score": 0.6588089039753345,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6588089039753345
+    },
+    {
+      "id": "JOB_COMPARE_005",
+      "score": 0.6580022086050616,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6580022086050616
+    },
+    {
+      "id": "SCHOOL_009",
+      "score": 0.6217226291537381,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6217226291537381
+    },
+    {
+      "id": "DECIDE_003",
+      "score": 0.6161098077270128,
+      "sources": [
+        "user"
+      ],
+      "userScore": 0.6161098077270128
+    }
+  ],
+  "input": {
+    "context": {
+      "user_message": "both, honestly",
+      "prior_context_text": "I like writing code and watching how people use an app. I want to understand which activities I prefer.",
+      "confirmed_facts": {},
+      "approved_evidence": [],
+      "context_limited": false
+    },
+    "activity_context": {
+      "current_goal": "Understand preference between coding tasks and user observation activities to guide career pathway choices.",
+      "confirmed_facts": [
+        "I like writing code and watching how people use an app.",
+        "both, honestly"
+      ],
+      "possible_need": "Help the user distinguish day-to-day work tasks across front-end engineering, product design, and technical product management.",
+      "missing_information": [
+        "Specific coding languages or frameworks used",
+        "Experience level with user research or usability testing",
+        "Current education or employment stage"
+      ],
+      "relevant_question": "When building or testing something, do you get more satisfaction from solving code logic or refining the user experience?",
+      "user_constraints": []
+    },
+    "response": {
+      "intent": "EXPLORE_OPTIONS",
+      "question": "When you're building or testing something, do you get more satisfaction from getting the logic and code working smoothly, or from tweaking the interface and observing how a person interacts with it?",
+      "summary": [
+        "Enjoying both the build and the user experience is actually a very practical combination. It means you do not have to force a choice between purely technical work and human-centred design right away.",
+        "Several roles sit directly at that intersection, though they balance the daily work differently:"
+      ]
+    },
+    "already_opened": [],
+    "candidates": [
+      {
+        "tool_id": "EMP_COMPARE_002",
+        "button_label": "Which develops the skills I need?",
+        "outcome": "Compare how each employer could build the capabilities/experience needed for the user target.",
+        "when_to_use": "Serve when user wants employer comparison against a specific goal.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Better for My Career Goal' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Better for My Career Goal: Compare how each employer could build the capabilities/experience needed for the user target. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "IND_COMPARE_005",
+        "button_label": "Which gives me more career options?",
+        "outcome": "Compare job-family breadth, transferable skills and cross-industry mobility.",
+        "when_to_use": "Serve when user wants breadth and mobility.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Gives Me More Career Options?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Gives Me More Career Options?: Compare job-family breadth, transferable skills and cross-industry mobility. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_FIT_005",
+        "button_label": "Government or company?",
+        "outcome": "Compare work type, career structure, pay frameworks, mobility, mission, conditions and pace.",
+        "when_to_use": "Serve when user is considering public vs private employment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Government vs Private Sector' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Government vs Private Sector: Compare work type, career structure, pay frameworks, mobility, mission, conditions and pace. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer evidence plus user role/skill/industry/location/work-value preferences",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "STUDY_004",
+        "button_label": "Compare my courses",
+        "outcome": "Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit.",
+        "when_to_use": "Serve when user is choosing between specific courses.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course Comparison' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course Comparison: Compare content, skills, missing skills, placements, entry, cost, flexibility, jobs and goal fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, candidate courses/routes, budget, time, location, study preferences, prerequisites",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DISCOVER_007",
+        "button_label": "What do I enjoy doing in subjects?",
+        "outcome": "Separate the subject label from the activities within it, such as experiments, explaining, analysis or design.",
+        "when_to_use": "Serve when user names school subjects but not the activities they enjoy.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Actually Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Actually Enjoy: Separate the subject label from the activities within it, such as experiments, explaining, analysis or design. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "LEARN_ROUTE_002",
+        "button_label": "Do I need a course?",
+        "outcome": "Compare formal instruction versus project/practice evidence for the specific skill and target role.",
+        "when_to_use": "Serve when user assumes every skill requires a course.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Course or Project?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Course or Project?: Compare formal instruction versus project/practice evidence for the specific skill and target role. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Skill, required depth, current level, budget/time, preferred learning mode, credential requirement",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "IND_COMPARE_003",
+        "button_label": "Which uses my skills better?",
+        "outcome": "Compare how current capabilities map to job families in each sector.",
+        "when_to_use": "Serve when user wants to maximize transferability.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Uses My Skills Better?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Uses My Skills Better?: Compare how current capabilities map to job families in each sector. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more industries, user profile, current market/workforce evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "SCHOOL_006",
+        "button_label": "Use what I enjoy",
+        "outcome": "Identify which activities within subjects are actually enjoyable and connect them to paths.",
+        "when_to_use": "Serve when student wants subject choice based on enjoyment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subjects I Enjoy' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subjects I Enjoy: Identify which activities within subjects are actually enjoyable and connect them to paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "EMP_COMPARE_001",
+        "button_label": "Compare these companies",
+        "outcome": "Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit.",
+        "when_to_use": "Serve when user is choosing where to apply/work.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Employers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Employers: Compare roles, skills, industry, locations, graduate programs, internships, training, progression, mobility, flexibility, hiring, size and fit. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more employers, user priorities, role/program/hiring/workplace evidence",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "PATH_012",
+        "button_label": "University vs TAFE vs apprenticeship",
+        "outcome": "Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner.",
+        "when_to_use": "Serve when student is choosing between pathway families.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Compare Pathway Types' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Compare Pathway Types: Compare learning style, income while learning, time, credential, entry, cost and fit to the goal without declaring a universal winner. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Goal, school status, entry profile, location, budget, time, need to earn, preferred learning style",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "JOB_DISCOVER_002",
+        "button_label": "What jobs can I do with my skills?",
+        "outcome": "Map existing skills to occupations and explain which are directly usable versus gap-heavy.",
+        "when_to_use": "Serve when user knows capabilities but not occupations.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Jobs From My Skills' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Jobs From My Skills: Map existing skills to occupations and explain which are directly usable versus gap-heavy. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Profile, skills, course, experience, location, salary/lifestyle constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "CAREER_SIDE_004",
+        "button_label": "Show careers like this",
+        "outcome": "Find adjacent occupations sharing tasks, skills or purpose.",
+        "when_to_use": "Serve when user likes one career but wants alternatives.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Similar Careers' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Similar Careers: Find adjacent occupations sharing tasks, skills or purpose. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Career idea, profile, work preferences, available occupational evidence",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "DISCOVER_001",
+        "button_label": "What am I interested in?",
+        "outcome": "Explore RIASEC-style activity interests and translate them into career/industry themes.",
+        "when_to_use": "Serve when user has no clear career direction.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Interest Explorer' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Explore unknown interests. Do not substitute saving an already established interest profile or choosing school subjects.",
+        "input_requirements": "User answers, interests, preferences, examples from school/work/life",
+        "needs_live_data": "No"
+      },
+      {
+        "tool_id": "IND_REALITY_001",
+        "button_label": "What is it like working here?",
+        "outcome": "Explain indoor/outdoor, office/site, physical, customer-facing, teamwork, travel, remote work, shifts, regulation, safety and pace.",
+        "when_to_use": "Serve when user wants lived work context.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'What Is Work Actually Like?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for What Is Work Actually Like?: Explain indoor/outdoor, office/site, physical, customer-facing, teamwork, travel, remote work, shifts, regulation, safety and pace. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Industry employment/workforce data, occupation mix, region and user preferences",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "EMP_SKILL_004",
+        "button_label": "What do their employees study?",
+        "outcome": "Identify qualification/discipline patterns in employer hiring without implying exclusivity.",
+        "when_to_use": "Serve when user wants study-to-employer alignment.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Qualifications They Hire' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Qualifications They Hire: Identify qualification/discipline patterns in employer hiring without implying exclusivity. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Employer job ads/public evidence, occupation requirements and user profile",
+        "needs_live_data": "Yes"
+      },
+      {
+        "tool_id": "JOB_DECIDE_001",
+        "button_label": "Why am I choosing this job?",
+        "outcome": "Surface the basis of the choice so the user can distinguish genuine fit from external influence.",
+        "when_to_use": "Serve when user may be influenced by salary, prestige, parents, social media or one anecdote.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Why Am I Choosing This Job?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Why Am I Choosing This Job?: Surface the basis of the choice so the user can distinguish genuine fit from external influence. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Job choice, motives, priorities, evidence and unknowns",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "SCHOOL_018",
+        "button_label": "My choice vs other people’s expectations",
+        "outcome": "Separate the student’s own goals/values from external expectations and prepare a neutral comparison.",
+        "when_to_use": "Serve when parents/teachers/peers strongly influence the choice.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'My Choice vs Other People’s Expectations' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for My Choice vs Other People’s Expectations: Separate the student’s own goals/values from external expectations and prepare a neutral comparison. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Student concern plus relevant subjects, goals, constraints and verified pathway information",
+        "needs_live_data": "Sometimes"
+      },
+      {
+        "tool_id": "JOB_COMPARE_005",
+        "button_label": "Which has better progression?",
+        "outcome": "Compare career levels, adjacent roles, specialisations and leadership/professional paths.",
+        "when_to_use": "Serve when user values long-term growth.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Which Has Better Progression?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Which Has Better Progression?: Compare career levels, adjacent roles, specialisations and leadership/professional paths. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Two or more occupations plus profile and current labour-market evidence where relevant",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "SCHOOL_009",
+        "button_label": "Is this combination too much?",
+        "outcome": "Estimate assessment, exam, practical and project load alongside work/sport/family commitments.",
+        "when_to_use": "Serve when student is considering several demanding subjects.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Subject Workload Check' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Subject Workload Check: Estimate assessment, exam, practical and project load alongside work/sport/family commitments. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Current subjects/grades, interests, target careers/courses, school offerings, prerequisites, workload constraints",
+        "needs_live_data": "Often"
+      },
+      {
+        "tool_id": "DECIDE_003",
+        "button_label": "Help me make the decision",
+        "outcome": "Identify whether the blockage is missing information, too many options, fear, conflicting priorities, pressure, cost, entry or goal uncertainty.",
+        "when_to_use": "Serve when user is unable to choose despite having options.",
+        "exclusions": "Do not surface this objective when the user is asking for an unrelated task, when 'Why Am I Stuck?' is already resolved and no material context changed, or when another objective is clearly more specific. Do not use it merely to collect extra profile data.",
+        "distinction": "Use for Why Am I Stuck?: Identify whether the blockage is missing information, too many options, fear, conflicting priorities, pressure, cost, entry or goal uncertainty. Choose a related activity only if its outcome better matches the current request.",
+        "input_requirements": "Options under consideration, user priorities, constraints, unknowns",
+        "needs_live_data": "Sometimes"
+      }
+    ]
+  },
+  "raw": {
+    "status": "completed",
+    "usage": {
+      "total_tokens": 4457,
+      "total_input_tokens": 4384,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 4384
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 73,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 4822,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 4822
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 89
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2026-09-18T12:23:49Z",
+    "updated": "2026-09-18T12:23:49Z",
+    "service_tier": "standard",
+    "steps": [
+      {
+        "signature": "Em0KawFpFH0TwloNh+tCLMtpKN/YdT3sHFXpwR/1Tyn65qw+pi9Ua9Q7pbka807HY8gUOzGdkoKhQ4f5CFi08RZUmT8ERd1wZC6JuYZzA3BM7GxkxyzIdNttLXT6LoRsRfwjJ3u7TB6WuqtPVAfu",
+        "type": "thought"
+      },
+      {
+        "content": [
+          {
+            "text": "{\n  \"confidence\": \"HIGH\",\n  \"workspace_need\": \"NONE\",\n  \"decision\": \"NONE\",\n  \"objective_id\": \"\",\n  \"reason\": \"The user is in the middle of a chat-based exploratory dialogue clarifying their interests across coding and user observation, which is best handled directly in conversation.\"\n}",
+            "type": "text"
+          }
+        ],
+        "type": "model_output"
+      }
+    ],
+    "object": "interaction",
+    "model": "gemini-3.7-flash"
+  },
+  "output": {
+    "confidence": "HIGH",
+    "workspace_need": "NONE",
+    "decision": "NONE",
+    "objective_id": "",
+    "reason": "The user is in the middle of a chat-based exploratory dialogue clarifying their interests across coding and user observation, which is best handled directly in conversation.",
+    "disposition": "NONE",
+    "selectionId": "c7444319-fdb3-4f8a-8116-f16af87e8916",
+    "sourceMessageId": "a",
+    "policy": "workspace-assist-v4-context",
+    "selectedSimilarity": null,
+    "selectedRank": null,
+    "retrievalSources": [],
+    "margin": null,
+    "userConfidence": {
+      "score": 35,
+      "band": "low",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+        "EXPLICIT_UNCERTAINTY",
+        "CRITERIA_UNCLEAR",
+        "ROUTE_UNRESOLVED",
+        "ACTION_EXPLORING"
+      ]
+    },
+    "createdAt": 1789734229255
+  }
+}

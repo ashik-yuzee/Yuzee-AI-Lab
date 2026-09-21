@@ -1,0 +1,293 @@
+{
+  "test_id": "DISCOVER_004-T08",
+  "objective_id": "DISCOVER_004",
+  "prompt_version": "V2",
+  "prompt_sha256": "2064b42f37c3842cc94aa8350bcb61e0f79d1dd081749fa032aa9e3b21eaea52",
+  "workbook_sha256": "bac0f85d42b6a008c94fe92c23a24f49d256dde65ff0814994dbff3806171ce7",
+  "harness_version": "objective-harness-0.1",
+  "suite": "prepared",
+  "scenario_type": "STOP_TEST",
+  "model": "gemini-3.7-flash",
+  "source_row": 33,
+  "input_context": {
+    "user_message": "Here are enough details for big five snapshot: I have already answered the relevant questions and confirmed them.",
+    "prior_context_text": "All required output fields can be supported.",
+    "confirmed_facts": {},
+    "approved_evidence": [],
+    "session": {
+      "objective_id": "DISCOVER_004",
+      "interaction_count": 0,
+      "confirmed_answers": {},
+      "temporary_answers": {},
+      "completion_status": "NOT_STARTED"
+    }
+  },
+  "fixture_issues": [
+    "MISSING_CONCRETE_STATE_OR_EVIDENCE"
+  ],
+  "request_sha256": "10ab9947df22819da1ad9c7b1844a04d2e7065377f27c61450a105aa823d883c",
+  "status": "FIXTURE_BLOCKED",
+  "hard_pass": true,
+  "first_attempt_pass": true,
+  "attempts": 1,
+  "attempt_history": [
+    {
+      "attempt": 1,
+      "passed": true,
+      "failures": [],
+      "latency_ms": 6854
+    }
+  ],
+  "failures": [],
+  "parsed": {
+    "objective_id": "DISCOVER_004",
+    "status": "NEEDS_INPUT",
+    "stage": "UNDERSTAND",
+    "ui": [
+      {
+        "component": "scenario_test",
+        "id": "work_style_scenario",
+        "purpose": "Gather concrete behavioral evidence on collaboration and task execution preferences.",
+        "prompt": "When starting a complex, open-ended team project, which approach feels most natural to you?",
+        "required": true,
+        "options": [
+          {
+            "id": "opt_plan_structure",
+            "label": "Structured & Methodical",
+            "detail": "Break the project into clear milestones, establish timelines, and organize the steps before diving in."
+          },
+          {
+            "id": "opt_explore_adapt",
+            "label": "Exploratory & Flexible",
+            "detail": "Brainstorm broad possibilities first, test ideas iteratively, and adjust the plan as new insights emerge."
+          },
+          {
+            "id": "opt_people_align",
+            "label": "Collaborative & Discussion-Led",
+            "detail": "Focus on bringing everyone together, understanding individual strengths, and building shared consensus."
+          },
+          {
+            "id": "opt_independent_deep",
+            "label": "Independent Deep Work",
+            "detail": "Take ownership of a specific technical or analytical component and focus deeply on execution."
+          }
+        ],
+        "content": [],
+        "columns": [],
+        "rows": [],
+        "settings": {
+          "allow_unsure": true,
+          "min": null,
+          "max": null,
+          "min_label": null,
+          "max_label": null,
+          "buckets": []
+        }
+      }
+    ],
+    "confirmed_inputs": {},
+    "derived_signals": [],
+    "unknowns": [
+      "Workplace interaction preferences across key Big Five behavioral dimensions (structure, exploration, collaboration, stress management)"
+    ],
+    "result": {
+      "limitations": [
+        {
+          "label": "Exploratory Snapshot",
+          "detail": "This is a qualitative tendencies snapshot for reflection, not a psychometric evaluation or career constraint.",
+          "source_status": "GENERAL_GUIDANCE",
+          "evidence_refs": []
+        }
+      ],
+      "next_actions": [],
+      "personality_tendencies": [],
+      "summary": "Initial scenario assessment required to map qualitative work-style tendencies."
+    },
+    "readiness": {
+      "enabled": false,
+      "name": null,
+      "score": null,
+      "dimensions": [],
+      "blockers": [
+        "No confirmed behavioral scenario responses recorded yet."
+      ]
+    },
+    "next_actions": [
+      {
+        "id": "continue_chat",
+        "label": "Continue in chat",
+        "type": "CONTINUE_CHAT"
+      }
+    ],
+    "handoff": {
+      "summary": "Prompted user with a practical team project scenario to begin exploring qualitative work-style tendencies.",
+      "confirmed_user_inputs": {},
+      "result": {
+        "limitations": [
+          {
+            "label": "Exploratory Snapshot",
+            "detail": "This is a qualitative tendencies snapshot for reflection, not a psychometric evaluation or career constraint.",
+            "source_status": "GENERAL_GUIDANCE",
+            "evidence_refs": []
+          }
+        ],
+        "next_actions": [],
+        "personality_tendencies": [],
+        "summary": "Awaiting initial behavioral scenario selection."
+      },
+      "evidence_and_unknowns": [
+        "Unknown: Project planning and collaboration preference."
+      ],
+      "recommended_next_action": "Complete the work style scenario to ground qualitative personality tendencies."
+    }
+  },
+  "evaluator": {
+    "model": "gemini-3.7-flash",
+    "valid": true,
+    "parsed": {
+      "criteria": [
+        {
+          "criterion": "Routing",
+          "verdict": "PASS",
+          "reason": "Evaluator does not measure off-topic selection for an already-selected planner.",
+          "evidence_pointer": "$.candidate.objective_id"
+        },
+        {
+          "criterion": "Known-context reuse",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Fixture asserts prior facts exist ('All required output fields can be supported.') but supplies completely empty confirmed_facts, answers, and profile context.",
+          "evidence_pointer": "$.context.confirmed_facts"
+        },
+        {
+          "criterion": "Question quality",
+          "verdict": "PASS",
+          "reason": "Emitted scenario_test is concrete, discriminative, and appropriate for grounding behavioral tendencies.",
+          "evidence_pointer": "$.candidate.ui[0].prompt"
+        },
+        {
+          "criterion": "Primitive validity",
+          "verdict": "PASS",
+          "reason": "scenario_test is strictly in the allowed UI primitive list for DISCOVER_004.",
+          "evidence_pointer": "$.candidate.ui[0].component"
+        },
+        {
+          "criterion": "Objective-specific logic",
+          "verdict": "PASS",
+          "reason": "Construct aligns with exploring qualitative workplace behavioral tendencies without using traits as strict career determinism.",
+          "evidence_pointer": "$.candidate.handoff.summary"
+        },
+        {
+          "criterion": "Evidence discipline",
+          "verdict": "PASS",
+          "reason": "Does not fabricate missing facts; accurately records unknown workplace interaction preferences.",
+          "evidence_pointer": "$.candidate.unknowns[0]"
+        },
+        {
+          "criterion": "Psychometric restraint",
+          "verdict": "PASS",
+          "reason": "Explicitly restricts output to qualitative tendencies and attaches an exploratory snapshot limitation without score percentiles.",
+          "evidence_pointer": "$.candidate.result.limitations[0]"
+        },
+        {
+          "criterion": "Stop condition",
+          "verdict": "NOT_ASSESSABLE",
+          "reason": "Cannot assess stop condition synthesis because the fixture omitted concrete input context while expecting immediate synthesis.",
+          "evidence_pointer": "$.context.fixture_issues[0]"
+        },
+        {
+          "criterion": "Readiness logic",
+          "verdict": "PASS",
+          "reason": "Readiness is disabled with blocker noted rather than outputting arbitrary scores or career fit predictions.",
+          "evidence_pointer": "$.candidate.readiness"
+        },
+        {
+          "criterion": "Handoff",
+          "verdict": "PASS",
+          "reason": "Contains standard compact structured envelope including handoff with confirmed inputs, limitations, unknowns, and next action.",
+          "evidence_pointer": "$.candidate.handoff"
+        },
+        {
+          "criterion": "Security/action boundary",
+          "verdict": "PASS",
+          "reason": "No unauthorized tool invocations or direct Level 2/3 execution.",
+          "evidence_pointer": "$.candidate.next_actions[0]"
+        }
+      ],
+      "critical_failures": [],
+      "fixture_limitations": [
+        "Fixture has MISSING_CONCRETE_STATE_OR_EVIDENCE: test prompt and expected behavior claim all fields are answered and confirmed, but confirmed_facts and session answers are completely empty."
+      ],
+      "summary": "The candidate handled the empty fixture state appropriately by requesting input via an approved UI primitive. Stop condition and context reuse cannot be assessed due to fixture limitations."
+    },
+    "error": null,
+    "usage": {
+      "total_tokens": 2915,
+      "total_input_tokens": 2213,
+      "input_tokens_by_modality": [
+        {
+          "modality": "text",
+          "tokens": 2213
+        }
+      ],
+      "total_cached_tokens": 0,
+      "total_output_tokens": 702,
+      "total_tool_use_tokens": 0,
+      "total_thought_tokens": 0,
+      "raw_prompt_token": 2610,
+      "model_invocation_token_counts": [
+        {
+          "prompt_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 2610
+            }
+          ],
+          "candidates_tokens_details": [
+            {
+              "modality": "text",
+              "tokens": 720
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "latency_ms": 6854,
+  "usage": {
+    "total_tokens": 3146,
+    "total_input_tokens": 2039,
+    "input_tokens_by_modality": [
+      {
+        "modality": "text",
+        "tokens": 2039
+      }
+    ],
+    "total_cached_tokens": 0,
+    "total_output_tokens": 889,
+    "total_tool_use_tokens": 0,
+    "total_thought_tokens": 218,
+    "raw_prompt_token": 6064,
+    "model_invocation_token_counts": [
+      {
+        "prompt_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 6064
+          }
+        ],
+        "candidates_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 905
+          }
+        ],
+        "thoughts_tokens_details": [
+          {
+            "modality": "text",
+            "tokens": 218
+          }
+        ]
+      }
+    ]
+  }
+}

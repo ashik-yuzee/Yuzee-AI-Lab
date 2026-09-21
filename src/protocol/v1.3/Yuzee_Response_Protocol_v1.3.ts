@@ -159,6 +159,7 @@ export interface YuzeeProgress {
 }
 
 export interface YuzeeState {
+  activity_context?: import('../../objectives/activityContext').ActivityContext;
   active_response_mode: string;
   effective_response_mode: string;
   mode_source: 'tag' | 'sticky' | 'default';

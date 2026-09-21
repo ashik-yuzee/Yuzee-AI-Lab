@@ -1,0 +1,40 @@
+[
+  {
+    "objective_id": "GOAL_001",
+    "source_row": 10,
+    "readiness_allowed": false,
+    "completionKeys": [
+      "goal_state",
+      "supporting_signals",
+      "missing_signal",
+      "next_objective"
+    ],
+    "warnings": [
+      {
+        "path": "result.goal_state",
+        "text": "enum"
+      }
+    ],
+    "source_contract": "goal_state enum; supporting_signals[]; missing_signal; next_objective"
+  },
+  {
+    "objective_id": "GOAL_004",
+    "source_row": 13,
+    "readiness_allowed": true,
+    "completionKeys": [
+      "career_candidates",
+      "title",
+      "supporting_signal_ids",
+      "possible_friction",
+      "unresolved_entities",
+      "next_actions"
+    ],
+    "warnings": [
+      {
+        "path": "result.career_candidates",
+        "text": " with entity_id"
+      }
+    ],
+    "source_contract": "career_candidates {obvious[], adjacent[], surprising[]} with entity_id, title, supporting_signal_ids[], possible_friction[]; unresolved_entities[]; next_actions[]"
+  }
+]

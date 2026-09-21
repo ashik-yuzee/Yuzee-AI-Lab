@@ -1,3 +1,9 @@
+import {readableMarkdown} from './readableMarkdown';
+import {workspaceQuestionOwner,shouldDeferChatQuestion} from '../orchestration/questionOwner';
+import {activitySearchContext} from '../objectives/activityContext';
+import {ObjectiveHistory} from '../objectives/ObjectiveHistory';
+import {ObjectiveSuggestions} from '../objectives/ObjectiveSuggestions';
+import {useObjectives} from '../objectives/ObjectiveContext';
 import {outdatedHelpClaim} from '../services/HelpEvidence';
 import {suggestionText,canReviewResponseSkills} from '../routing/skillSuggestions';
 import {SkillSuggestions} from './SkillSuggestions';
@@ -71,6 +77,8 @@ export const ChatArea: React.FC = () => {
   const completedRoute=lastAssistant?.routing||lastAssistant?.telemetry?.routing;
   const latestMessage=allMessages.at(-1);
   const latestUser=[...allMessages].reverse().find(m=>m.role==='user');
+  const objectives=useObjectives();
+  const questionCoordination=workspaceQuestionOwner(objectives.sessions,objectives.enabled&&objectives.open?objectives.selectedId:null);
   const hasSuggestions=!!(!isStreaming && latestMessage===lastAssistant && !lastAssistant?.streamStopped && canReviewResponseSkills(lastStructured,latestUser?.content||''));
   const reviewText=hasSuggestions ? suggestionText(lastStructured,allMessages.filter(m=>m.role==='user').slice(-3).map(m=>m.content)) : '';
   const isLastAssistantMsg = (msgId: string) => lastAssistant?.id === msgId;
@@ -277,7 +285,7 @@ export const ChatArea: React.FC = () => {
                             : msg.content;
                           return (
                             <div id={`message-${msg.id}`}>
-                              <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#6d7782] mb-2.5">You</div>
+                              <div className="text-[11px] font-bold uppercase tracking-[0.06em] text-[#6d7782] mb-2.5">{msg.objectiveTransfer?'Workspace update':'You'}</div>
                               <div
                                 className="inline-block text-[16px] sm:text-[15px] leading-[1.6] max-w-full sm:max-w-[85%] whitespace-pre-wrap px-3.5 sm:px-4 py-3"
                                 style={{ backgroundColor: 'var(--bubble-bg)', color: 'var(--bubble-text)', borderRadius: '18px 18px 6px 18px' }}
@@ -336,17 +344,18 @@ export const ChatArea: React.FC = () => {
                                   readOnly={isStreaming || !isLastAssistantMsg(msg.id)}
                                   conversationId={currentConversation?.id}
                                   hideRecommendedActions={true}
+                                  deferQuestionToWorkspace={isLastAssistantMsg(msg.id)&&shouldDeferChatQuestion(structured,questionCoordination)}
                                 />
                               ) : (
                                 !msg.error && !msg.streamStopped && !msg.isStreaming && (
-                                  <div className="prose prose-slate max-w-none text-[16px] sm:text-[15px] leading-[1.7] sm:leading-[1.65] text-[#0d0d0d]
+                                  <div className="response-prose prose prose-slate max-w-none text-[16px] sm:text-[15px] leading-[1.7] sm:leading-[1.65] text-[#0d0d0d]
                                     prose-p:text-[16px] sm:prose-p:text-[15px] prose-p:leading-[1.7] sm:prose-p:leading-[1.65] prose-p:text-[#0d0d0d] prose-p:my-3
                                     prose-li:text-[16px] sm:prose-li:text-[15px] prose-li:text-[#0d0d0d]
                                     prose-strong:text-[#0d0d0d] prose-strong:font-semibold
                                     prose-headings:text-[#0d0d0d] prose-headings:font-bold
                                     prose-code:bg-[#f4f4f4] prose-code:text-[#c7254e] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-[13px]
                                     prose-pre:bg-[#1e1e1e] prose-pre:text-[#d4d4d4] prose-pre:rounded-xl prose-pre:p-4">
-                                    <Markdown remarkPlugins={[remarkGfm]}>{(msg.telemetry as any)?.validation?.protocolAccepted === false ? "This response could not be displayed. Please try again." : responseToReadableText(msg.content) || "Preparing your answer…"}</Markdown>
+                                    <Markdown remarkPlugins={[remarkGfm]}>{(msg.telemetry as any)?.validation?.protocolAccepted === false ? "This response could not be displayed. Please try again." : readableMarkdown(responseToReadableText(msg.content) || "Preparing your answer…")}</Markdown>
                                   </div>
                                 )
                               )}
@@ -364,7 +373,7 @@ export const ChatArea: React.FC = () => {
                                 </div>
                               )}
 
-                              {hasSuggestions && lastAssistant && msg.id===lastAssistant.id && <SkillSuggestions
+                              {!objectives.enabled && hasSuggestions && lastAssistant && msg.id===lastAssistant.id && <SkillSuggestions
                                 key={`${currentConversation?.id}:${lastAssistant.id}`}
                                 sourceMessageId={lastAssistant.serverMessageId||lastAssistant.id}
                                 reviewText={reviewText} userText={latestUser?.content||''}
@@ -372,7 +381,8 @@ export const ChatArea: React.FC = () => {
                                 onChoose={(message,skillChoice)=>sendMessage({message,userQuestionAnswers:[],skillChoice})}
                               />}
 
-                              {msg.id===latestMessage?.id&&structured&&!msg.isStreaming&&<div id="mini-pathway-offer" />}
+                              {objectives.enabled&&!latestUser?.objectiveTransfer&&hasSuggestions&&lastAssistant&&msg.id===lastAssistant.id&&<ObjectiveSuggestions sourceMessageId={lastAssistant.serverMessageId||lastAssistant.id} userText={latestUser?.content||''} reviewText={activitySearchContext(lastStructured,allMessages.filter(m=>m.role==='user').slice(-4).map(m=>m.content))}/>}
+                              <ObjectiveHistory sourceMessageId={msg.serverMessageId||msg.id}/>{msg.id===latestMessage?.id&&structured&&!msg.isStreaming&&<div id="mini-pathway-offer" />}
                               {/* Telemetry footer */}
                               {msg.telemetry && !msg.isStreaming && (msg.structuredResponse || msg.content) && !msg.telemetry?.usage?.isMock && (
                                 <div className="pt-2 border-t border-[#f0f0f0] flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-y-1.5 gap-x-2 text-[11px] text-slate-400">
