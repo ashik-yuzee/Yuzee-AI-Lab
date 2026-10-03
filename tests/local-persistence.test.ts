@@ -20,5 +20,7 @@ try {
  const badFile=path.join(dir,'broken.json');await fs.writeFile(badFile,'broken');
  await assert.rejects(()=>new LocalConversationStore(badFile).save({id:'bad'}));
  assert.equal(await fs.readFile(badFile,'utf8'),'broken');
- console.log('PASS: concurrent saves, updates, deletion, restart, incomplete temporary file and unreadable-history protection.');
+ await store.clear();assert.deepEqual(await store.list(),[]);assert.deepEqual(await new LocalConversationStore(path.join(dir,'conversations.json')).list(),[],'delete-all survives restart');
+ await assert.rejects(()=>new LocalConversationStore(badFile).clear(),undefined,'never overwrites unreadable history');
+ console.log('PASS: concurrent saves, updates, deletion, delete-all, restart, incomplete temporary file and unreadable-history protection.');
 } finally {await fs.rm(dir,{recursive:true,force:true});}

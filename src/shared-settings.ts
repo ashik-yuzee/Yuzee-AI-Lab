@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { statePath } from './services/paths';
 import path from 'path';
 import crypto from 'crypto';
 
@@ -11,7 +12,7 @@ export interface SharedSettings {
   updatedAt: number;
 }
 
-const FILE = path.join(process.cwd(), 'data', 'shared-settings.json');
+const FILE = statePath('shared-settings.json');
 
 const DEFAULTS: SharedSettings = {
   systemPromptMode: 'default',

@@ -30,3 +30,28 @@
 
 /* Markdown fallback also needs real list spacing when no typography plugin is installed. */
 .response-prose p{margin:.65rem 0;line-height:1.7}.response-prose ul{list-style:disc;padding-left:1.4rem;margin:1rem 0}.response-prose ol{list-style:decimal;padding-left:1.4rem;margin:1rem 0}.response-prose li{display:list-item;padding-left:.25rem;margin:.65rem 0;line-height:1.7}.response-prose li::marker{color:#756289}.response-prose li>p{margin:.25rem 0}.response-prose h2,.response-prose h3,.response-prose h4{font-weight:650;margin:1.3rem 0 .55rem;line-height:1.4}
+/* Composer thinking effort (ChatGPT-style): quiet text trigger, popover with a stepped slider. */
+.thinking-effort{position:relative;flex-shrink:0}
+.thinking-effort-trigger{display:inline-flex;align-items:center;gap:3px;height:32px;padding:0 8px 0 10px;border:0;border-radius:999px;background:transparent;color:#8a8f98;font-size:14px;line-height:1;cursor:pointer;transition:background .15s,color .15s}
+.thinking-effort-trigger:hover,.thinking-effort-trigger.is-open{background:#f0f1f3;color:#5b6472}
+.thinking-effort-trigger:focus-visible{outline:2px solid var(--accent,#8952ee);outline-offset:2px}
+.thinking-effort-trigger:disabled{opacity:.5;cursor:not-allowed}
+.thinking-effort-popover{position:absolute;right:-40px;bottom:calc(100% + 10px);z-index:30;width:min(232px,calc(100vw - 32px));padding:11px 12px 13px;background:#fff;border:1px solid #e7e7ea;border-radius:14px;box-shadow:0 8px 24px rgba(17,17,17,.08)}
+.thinking-effort-title{display:flex;align-items:center;justify-content:center;gap:1px;margin:0 0 9px;font-size:14px;font-weight:600;color:#111}
+.thinking-effort-title svg{color:#8a8f98}
+.thinking-effort-slider{position:relative;height:18px;border-radius:999px;background:#e8e8ea}
+.thinking-effort-fill{position:absolute;left:0;top:0;bottom:0;width:calc((100% - 20px) * var(--p) + 10px);border-radius:999px;background:color-mix(in srgb,var(--accent,#8952ee) 68%,#fff);transition:width .15s}
+.thinking-effort-dot{position:absolute;top:50%;width:4px;height:4px;margin-top:-2px;border-radius:50%;background:#b8b8be;pointer-events:none}
+.thinking-effort-dot.is-start{left:8px;background:rgba(255,255,255,.75)}
+.thinking-effort-dot.is-end{right:8px}
+.thinking-effort-knob{position:absolute;top:50%;left:calc((100% - 20px) * var(--p));width:20px;height:20px;margin-top:-10px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(17,17,17,.2),0 0 0 1px rgba(17,17,17,.04);transition:left .15s;pointer-events:none}
+.thinking-effort-slider input{position:absolute;left:0;top:-6px;width:100%;height:calc(100% + 12px);margin:0;opacity:0;cursor:pointer}
+.thinking-effort-slider input{z-index:1}
+.thinking-effort-slider input:focus-visible~.thinking-effort-knob{outline:2px solid var(--accent,#8952ee);outline-offset:2px}
+@media(max-width:480px){.thinking-effort-trigger{font-size:13px;padding:0 6px 0 8px}.thinking-effort-popover{right:-36px}}
+@media(prefers-reduced-motion:reduce){.thinking-effort-fill,.thinking-effort-knob{transition:none}}
+/* Live draft while the answer streams; replaced by the checked answer when the turn completes. */
+.main-chat-draft{animation:chat-draft-in .2s ease-out both}
+.main-chat-draft + .main-chat-progress{min-height:0;padding-top:4px}
+@keyframes chat-draft-in{from{opacity:.4}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.main-chat-draft{animation:none}}

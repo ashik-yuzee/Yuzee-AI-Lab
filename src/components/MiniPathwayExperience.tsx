@@ -1,7 +1,7 @@
 import {PathwayColourGuide} from "./PathwayLearningCues";
 import React,{useEffect,useRef,useState} from 'react';
 import {createPortal} from 'react-dom';
-import {Map,ArrowRight,X,Maximize2,Minimize2} from 'lucide-react';
+import {Map,ArrowRight,X,Maximize2,Minimize2,Route} from 'lucide-react';
 import {useTokenLab} from '../context/TokenLabContext';
 import {acceptedResponse} from '../ux/responsePresentation';
 import {onRouterStatus,startWarmup,reviewMiniPathway} from '../services/MicroToolRouter';
@@ -107,14 +107,13 @@ export function MiniPathwayExperience(){
  const card=available&&target&&!isStreaming?createPortal(<button ref={opener} type="button" className="mini-pathway-offer" disabled={loading} onClick={()=>{if(currentSaved){chooseSaved(currentSaved.id);reveal();}else if(hint)void generate('manual',hint);}}>
   <Map size={21}/><span><strong>{loading?'Preparing your mini pathway…':currentSaved?'Open your mini pathway':'Explore a mini pathway'}</strong><small>See possible routes, trade-offs and a practical next step.</small></span><ArrowRight size={19}/>
  </button>,target):null;
- const savedControl=historyTarget&&(history.runs.length>0||history.error||loading)?createPortal(<button type="button" className="mini-pathway-saved-control" aria-label={`Open saved pathways (${history.runs.length})`} aria-expanded={open} aria-controls="mini-pathway-panel" onClick={()=>{setError('');reveal();}}><Map size={17}/><span>Saved pathways</span><b>{history.runs.length}</b></button>,historyTarget):null;
- return <>{card}{savedControl}{open&&<aside id="mini-pathway-panel" ref={panel} className={`mini-pathway-panel${expanded?' mini-pathway-panel--expanded':''}${drawer.resizing?' mini-pathway-panel--resizing':''}`} style={expanded?undefined:{width:drawer.width}} aria-label="Mini pathway">
+ const savedControl=historyTarget&&(history.runs.length>0||history.error||loading)?createPortal(<button type="button" className="mini-pathway-saved-control" hidden={open} title="Pathway" aria-label={`Open pathway panel (${history.runs.length} saved)`} aria-expanded={open} aria-controls="mini-pathway-panel" onClick={()=>{setError('');reveal();}}><Route size={16} aria-hidden="true"/></button>,historyTarget):null;
+ return <>{card}{savedControl}{open&&!expanded&&<div className="mph-scrim" aria-hidden="true" onClick={close}/>}{open&&<aside id="mini-pathway-panel" ref={panel} className={`mini-pathway-panel${expanded?' mini-pathway-panel--expanded':''}${drawer.resizing?' mini-pathway-panel--resizing':''}`} style={expanded?undefined:{width:drawer.width}} aria-label="Pathway">
   {!expanded&&<div className="mini-pathway-resize-handle" {...drawer.separatorProps}><span aria-hidden="true"/></div>}
-  <header><div className="mini-pathway-heading"><span className="mini-pathway-heading-icon" aria-hidden="true"><Map size={23}/></span><div><span className="mini-pathway-kicker">YOUR POSSIBILITIES</span><h2>Mini pathway</h2></div></div><div className="mini-pathway-header-actions">
-   <button type="button" className="mini-pathway-expand" aria-label={expanded?'Restore mini pathway to side panel':'Expand mini pathway'} aria-expanded={expanded} aria-controls="mini-pathway-body" title={expanded?'Return to the side panel (Esc)':'Expand across the screen'} onClick={()=>setExpanded(v=>!v)}>{expanded?<Minimize2 size={18}/>:<Maximize2 size={18}/>}<span>{expanded?'Collapse':'Expand'}</span></button>
-   <button type="button" aria-label="Close mini pathway" onClick={close}><X size={22}/></button>
+  <header><div className="mini-pathway-heading"><span className="mini-pathway-heading-icon" aria-hidden="true"><Map size={23}/></span><div className="mp-title-row"><h2>Pathway</h2><PathwayHistorySelector runs={history.runs} selectedId={run?.id} messages={conv?.messages||[]} loading={loading} error={history.error} onRetry={history.retry} onSelect={chooseSaved}/></div></div><div className="mini-pathway-header-actions">
+   <button type="button" className="mini-pathway-expand" aria-label={expanded?'Restore pathway to side panel':'Expand pathway'} aria-expanded={expanded} aria-controls="mini-pathway-body" title={expanded?'Return to the side panel (Esc)':'Expand across the screen'} onClick={()=>setExpanded(v=>!v)}>{expanded?<Minimize2 size={18}/>:<Maximize2 size={18}/>}<span>{expanded?'Collapse':'Expand'}</span></button>
+   <button type="button" aria-label="Close pathway" onClick={close}><X size={22}/></button>
   </div></header>
-  <PathwayHistorySelector runs={history.runs} selectedId={run?.id} messages={conv?.messages||[]} loading={loading} onSelect={chooseSaved}/>
   <div id="mini-pathway-body" className="mini-pathway-body">
    <PathwayColourGuide/>
    {history.error&&<div className="mini-pathway-notice" role="alert"><p>{history.error}</p><button type="button" onClick={history.retry}>Reload saved pathways</button></div>}

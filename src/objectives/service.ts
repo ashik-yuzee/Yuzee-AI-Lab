@@ -1,4 +1,5 @@
 import {explorationChoice,workspaceCourses} from '../warehouse/choices';
+import { statePath } from '../services/paths';
 import {WAREHOUSE_INSTRUCTION} from '../warehouse/service';
 import {warehouseEvidence,type WarehouseRetriever,type WarehousePack} from '../warehouse/types';
 import {sharedConversationContext,objectiveRecallText} from '../orchestration/sharedContext';
@@ -29,7 +30,7 @@ export async function callObjectiveModel(request:any,signal:AbortSignal){
  if(!response.ok){const error=await response.json().catch(()=>null);const depleted=response.status===429&&/prepayment credits are depleted/i.test(error?.error?.message||'');throw Object.assign(Error(depleted?'Gemini’s prepaid credits are depleted. Restore the project’s credits to continue.':response.status===429?'Gemini has reached its request or quota limit. Please try again later.':response.status===400?'This activity request could not be processed. Your saved answer has been kept.':`Gemini request failed (${response.status}). Please retry.`),{httpStatus:response.status,providerMessage:String(error?.error?.message||'').replaceAll(process.env.GEMINI_API_KEY,'[redacted]').slice(0,3000)});}
  const body=await response.json();
  if(body.status&&body.status!=='completed')throw Error('Gemini did not finish the response. Please retry.');
- if(body.model&&body.model!==OBJECTIVE_MODEL)throw Error('Unexpected model response.');
+ if(body.model&&body.model!==(request?.model||OBJECTIVE_MODEL))throw Error('Unexpected model response.');
  return body;
 }
 function request(system:string,input:any,schema:any,tokens=8192){return {model:OBJECTIVE_MODEL,system_instruction:system,input:JSON.stringify(input),response_format:{type:'text',mime_type:'application/json',schema:objectiveProviderSchema(schema)},generation_config:{temperature:1,seed:316,max_output_tokens:tokens,thinking_level:'low',thinking_summaries:'none'},store:false};}
@@ -51,7 +52,7 @@ export function objectiveContext(conv:ObjectiveConversation,sessions:ObjectiveSe
 }
 export class ObjectiveService{
  private locks=new Set<string>();
- constructor(private root=path.resolve('data/objective-preview'),private call:ModelCall=callObjectiveModel,private retrieve?:WarehouseRetriever){}
+ constructor(private root=statePath('objective-preview'),private call:ModelCall=callObjectiveModel,private retrieve?:WarehouseRetriever){}
  private folder(conv:string){return path.join(this.root,checksum(conv));}
  private async write(file:string,value:any){await fs.mkdir(path.dirname(file),{recursive:true});const tmp=file+'.'+crypto.randomUUID()+'.tmp';await fs.writeFile(tmp,JSON.stringify(value,null,2),{mode:0o600});await fs.rename(tmp,file);}
  async list(conv:string):Promise<ObjectiveSession[]>{

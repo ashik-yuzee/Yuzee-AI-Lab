@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { statePath } from '../services/paths';
 import {reviewMiniPathwayReport} from './reportReview';
 import {createHash,randomUUID} from 'node:crypto';
 import type {GoogleGenAI} from '@google/genai';
@@ -24,7 +25,7 @@ export function validateMiniPathwayOutput(value:unknown):YuzeeResponseV13 {
 export class MiniPathwayService {
  private store:LocalConversationStore;
  private active=new Set<string>();
- constructor(private ai:()=>GoogleGenAI|null,file='data/mini-pathways.json',private onUsage:(run:MiniPathwayRun)=>void=()=>{}){this.store=new LocalConversationStore(file);}
+ constructor(private ai:()=>GoogleGenAI|null,file=statePath('mini-pathways.json'),private onUsage:(run:MiniPathwayRun)=>void=()=>{}){this.store=new LocalConversationStore(file);}
  async list(id:string):Promise<MiniPathwayRun[]>{return (await this.store.list()).filter(r=>r.conversationId===id).map(r=>r.status==='running'&&!this.active.has(id)?{...r,status:'error',error:'The previous pathway stopped. You can try again.'}:r);}
  async remove(id:string){for(const r of await this.list(id))await this.store.delete(r.id);}
  async generate(conv:{id:string;model:string;messages:PathwaySource[]},request:any,signal:AbortSignal,progress:(stage:string)=>void,isCurrent:()=>boolean,draft:(event:PathwayDraftEvent)=>void=()=>{}):Promise<MiniPathwayRun>{

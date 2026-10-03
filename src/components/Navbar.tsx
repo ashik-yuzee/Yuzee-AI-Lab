@@ -12,9 +12,12 @@ import {
   FileJson,
   Wrench,
   Bot,
+  Layers,
 } from "lucide-react";
+import { loadFeatures, saveFeatures } from "../services/featureFlags";
+const LOCKED_HINT = "Fixed for this conversation. Start a new conversation to change it.";
 import { AppleSelect, AppleSelectOption } from "./ui/AppleSelect";
-import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
+import { GEMINI_MODELS, calcTurnCost, turnCost, formatCost } from "../data/models";
 import { RUNTIME_ROUTER_MODELS, ROUTER_MODEL_KEY, DEFAULT_ROUTER_MODEL } from "../routing/models";
 import { setRouterModel, getRouterModel } from "../services/MicroToolRouter";
 
@@ -26,6 +29,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     capabilities,
     updateCurrentConversationSettings,
     applyOptimizationMode,
+    chatLocked,
+    pendingSettings,
     isSidebarOpen,
     setSidebarOpen,
     isTokenInspectorOpen,
@@ -41,7 +46,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     setActiveLabTab,
   } = useTokenLab();
 
-  const currentMode: OptimizationMode = (currentConversation?.mode as OptimizationMode) || "AUTO";
+  // New conversations start in Vanilla unless a mode was chosen before the first message.
+  const currentMode: OptimizationMode = (currentConversation?.mode as OptimizationMode) || (pendingSettings.mode as OptimizationMode) || "VANILLA";
   const [localMode, setLocalMode] = useState<OptimizationMode | null>(null);
   const displayMode = localMode ?? currentMode;
   // Reset local override when switching conversations
@@ -57,6 +63,25 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     badge: m.id.startsWith('cloudflare/') ? 'Server' : 'Local',
     badgeColor: m.id.startsWith('cloudflare/') ? 'amber' : 'emerald',
   }));
+
+  // EXP-RAG retrieval embeddings (shared with Settings → Data intelligence & RAG). "default" resolves on the server:
+  // Gemini when a Gemini key is configured, else local BGE.
+  const [ragEmbedder, setRagEmbedder] = useState(() => loadFeatures().ragEmbedder);
+  const [serverEmbedder, setServerEmbedder] = useState<'gemini' | 'bge'>('gemini');
+  useEffect(() => {
+    if (displayMode !== "EXP_RAG") return;
+    setRagEmbedder(loadFeatures().ragEmbedder);
+    fetch('/api/rag/status').then(r => r.ok ? r.json() : null).then(s => { if (s?.defaultEmbedder) setServerEmbedder(s.defaultEmbedder); }).catch(() => {});
+  }, [displayMode]);
+  const embedderOptions: AppleSelectOption[] = [
+    { value: "gemini", label: "Gemini Embedding 2", description: "EXP-RAG retrieval via the Gemini API · best quality in evaluation", badge: "API", badgeColor: "blue" },
+    { value: "bge", label: "BGE-small (embeddings)", description: "EXP-RAG retrieval on this server's local model files", badge: "Local", badgeColor: "emerald" },
+  ];
+  const chooseEmbedder = (value: string) => {
+    const next = value === "bge" ? "bge" : "gemini";
+    saveFeatures({ ...loadFeatures(), ragEmbedder: next });
+    setRagEmbedder(next);
+  };
 
   // Server-driven model registry
   const availableList = capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS;
@@ -96,6 +121,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     });
 
   const modeOptions: AppleSelectOption[] = [
+    {value:"EXP_RAG",label:"EXP-RAG (Experimental)",description:"Short cached core prompt; guidance and warehouse evidence retrieved per turn; rolling summaries. Gemini 3.7 Flash, medium thinking.",badge:"RAG",badgeColor:"emerald"},
     {value:"MICRO_PROMPT",label:"Oala assist (Preview)",description:"Type @Oala in your message for Yuzee service guidance. Local routing runs only when addressed.",badge:"Preview",badgeColor:"amber"},
     {
       value: "VANILLA",
@@ -139,7 +165,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     if (m.role !== "assistant" || !m.telemetry?.usage) return sum;
     const model = m.telemetry?.model || currentConversation?.model || "";
     if (!model) return sum;
-    return sum + (calcTurnCost(model, m.telemetry.usage) ?? 0);
+    return sum + (turnCost(model, m.telemetry.usage) ?? 0);
   }, 0);
   const hasAssistantMsg = (currentConversation?.messages || []).some(m => m.role === "assistant");
 
@@ -164,6 +190,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
       <div className="hidden md:flex items-center gap-2">
         <AppleSelect
           id="select-model"
+          disabled={chatLocked}
+          title={chatLocked ? LOCKED_HINT : undefined}
           value={currentConversation?.model || selectedModel}
           options={modelOptions}
           onChange={(newModel) => updateCurrentConversationSettings({ model: newModel })}
@@ -175,6 +203,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
 
         <AppleSelect
           id="select-optimization-mode"
+          disabled={chatLocked}
+          title={chatLocked ? LOCKED_HINT : undefined}
           value={displayMode}
           options={modeOptions}
           onChange={(newMode) => { setLocalMode(newMode as OptimizationMode); applyOptimizationMode(newMode as OptimizationMode); }}
@@ -186,6 +216,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
 
         <AppleSelect
           id="select-router-model"
+          disabled={chatLocked}
+          title={chatLocked ? LOCKED_HINT : undefined}
           value={routerModelId}
           options={routerModelOptions}
           onChange={(id) => { setRouterModel(id); setRouterModelId(id); }}
@@ -194,6 +226,21 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           popoverWidth="w-72"
           showSearchThreshold={10}
         />
+
+        {displayMode === "EXP_RAG" && (
+          <AppleSelect
+            id="select-rag-embedder"
+            disabled={chatLocked}
+            title={chatLocked ? LOCKED_HINT : undefined}
+            value={ragEmbedder === "default" ? serverEmbedder : ragEmbedder}
+            options={embedderOptions}
+            onChange={chooseEmbedder}
+            leadingIcon={Layers}
+            compact
+            popoverWidth="w-72"
+            showSearchThreshold={10}
+          />
+        )}
 
         <button
           id="btn-pathway"
@@ -234,6 +281,8 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
       <div className="md:hidden">
         <AppleSelect
           id="select-model-mobile"
+          disabled={chatLocked}
+          title={chatLocked ? LOCKED_HINT : undefined}
           value={currentConversation?.model || selectedModel}
           options={modelOptions}
           onChange={(newModel) => updateCurrentConversationSettings({ model: newModel })}

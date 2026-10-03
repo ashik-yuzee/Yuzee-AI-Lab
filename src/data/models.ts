@@ -256,6 +256,13 @@ export function getModelInfo(modelId: string): ModelCapabilityInfo | undefined {
   return GEMINI_MODELS.find((m) => m.id === modelId);
 }
 
+/** Full cost of a chat turn: the answer (incl. review) plus auxiliary calls made for it (e.g. the warehouse planner). */
+export function turnCost(modelId: string, usage: any): number | null {
+  const main = calcTurnCost(modelId, usage);
+  const aux = Number(usage?.auxiliaryCostUsd) || 0;
+  return main === null ? (aux || null) : main + aux;
+}
+
 export function calcTurnCost(
   modelId: string,
   usage: {

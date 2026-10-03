@@ -743,6 +743,22 @@ cost.
   the user. SDK-level retries are disabled (`retryOptions:{attempts:1}`) so a 503 cannot hide
   behind a silent internal retry until timeout.
 
+### 11.8 EXP-RAG — `src/rag/`
+
+An experimental mode that replaces the full counsellor prompt with a short cached core plus
+per-turn retrieval: verbatim v1.11 guidance modules, warehouse evidence (typed-lookup chunks fused
+with a local BGE + FTS5 catalogue index) and a rolling conversation summary. Full design, numbers
+and operations: `docs/EXP-RAG.md`.
+
+### 11.9 Warehouse intelligence — `src/intelligence/` + `workers/intelligence/`
+
+Port of Yuzee Dev's Neo4j graph and TimesFM forecasts. A Docker worker exports the SQLite
+warehouse, evaluates the 45 monthly IVI series (pinned TimesFM 2.5 vs baselines on holdouts),
+projects every row into a generation-versioned Neo4j graph and writes `data/intelligence/current.json`.
+After a READY warehouse lookup, every mode gets bounded graph links and (for outlook questions)
+freshness-checked forecasts in `WAREHOUSE_DATA.intelligence`; without Neo4j it is a no-op.
+Details: `docs/WAREHOUSE-INTELLIGENCE.md`.
+
 ---
 
 ## 12. Local semantic routing (BGE) — `src/routing/` + `src/workers/`
@@ -822,7 +838,7 @@ Key actions: `selectConversation`, `startNewConversation`, `loadDemoConversation
 `refreshStats`, `resetSessionStats`, `inspectTurnTelemetry`, `clearLocalData`.
 
 **Modes** (`applyOptimizationMode`): `AUTO`, `SAVE_TOKENS`, `FULL_CONTEXT`, `VANILLA`,
-`MICRO_PROMPT`, `ADVANCED`.
+`MICRO_PROMPT`, `ADVANCED`, `EXP_RAG` (short cached core prompt + per-turn retrieval; see `docs/EXP-RAG.md`).
 **Presets** (`applyPreset`): `MAX_QUALITY`, `BALANCED`, `MAX_SAVINGS`, `VANILLA`, `ADVANCED`.
 Both write strategy, thinking level, context budget, retained turns and response mode together.
 
@@ -929,9 +945,15 @@ gitignored.
 **Vercel** (`vercel.json`) — static output from `dist/public`; all `/api/*` rewrites hit
 `api/index.ts`, which `require`s the pre-bundled `dist/server.cjs`. The bundle is required
 because `@vercel/node` transpiles but does not bundle transitive imports, leaving
-extensionless ESM paths unresolvable at runtime. `maxDuration` is 300 s, but the handler still
-self-limits to 8.5 s when `process.env.VERCEL` is set so the Hobby-tier 10 s kill produces an
-informative error rather than a dropped socket.
+extensionless ESM paths unresolvable at runtime. `maxDuration` is 300 s; a chat turn self-limits
+to `RESPONSE_TIMEOUT_MS` (default 90 s) so a slow turn ends with an informative error.
+`startServer()` never runs there, so the first `/api` request runs `bootState()` (DB schema,
+conversations, stats). Writable state (fallback conversation store, stats, token log, previews)
+goes to the temp dir (`YUZEE_STATE_DIR`, `src/services/paths.ts`); it is per instance, so set
+`DATABASE_URL` for durable conversations. A conversation missing from an instance's cache is
+loaded from storage before any `/api/conversations/:id` handler runs. Neo4j/TimesFM and the BGE
+files are optional there; see `docs/WAREHOUSE-INTELLIGENCE.md` and the Gemini embedding option in
+`docs/EXP-RAG.md`.
 
 **Local production** — `npm run build` then `npm start`.
 

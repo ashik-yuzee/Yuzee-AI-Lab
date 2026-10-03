@@ -54,6 +54,9 @@ import { TRUSTED_SERVICE_ACTIONS } from "../protocol/validator";
 import { AppleConfirmDialog } from "./ui/AppleConfirmDialog";
 import { ProtocolInteraction } from "./ProtocolInteraction";
 
+/** "primary_focus" -> "Primary focus" (machine ids used as visible labels). */
+export const humanizeId = (id: string) => { const t = id.replace(/[_-]+/g, " ").trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
+
 interface ProtocolV13RendererProps {
   data: YuzeeResponseV13;
   initialFields?: Record<string,string>;
@@ -267,7 +270,11 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
         const cmpRows: Array<{ id?: string; criteria?: string; cells?: Array<{ key: string; value: string }> }> = block.rows || [];
         // Avoid duplicating the row label when Gemini also supplies it as an explicit criteria column.
         const criteriaAlreadyInColumns = cmpRows.length > 0 && cmpCols.some(col => /^(decision\s+)?(criteria|criterion|factor)$/i.test(col.label.trim()) && cmpRows.every(row => row.criteria?.trim() && row.cells?.find(cell => cell.key === col.key)?.value?.trim().toLowerCase() === row.criteria.trim().toLowerCase()));
-        const hasCriteria = cmpRows.some((r) => r.criteria) && !criteriaAlreadyInColumns;
+        // v1.3 rows carry only id + cells, so the row id is the dimension name ("primary_focus" -> "Primary focus").
+        // Generic ids (row_1, r2) and blocks that already have a criteria/factor column show no extra label column.
+        const factorColumn = cmpCols.some(col => /^(decision\s+)?(criteria|criterion|factor|dimension)s?$/i.test(col.label.trim()));
+        const rowLabel = (row: { id?: string; criteria?: string }) => row.criteria?.trim() || (!row.id || /^(row|r|item|criteria|criterion)?[-_ ]?\d+$/i.test(row.id) ? "" : humanizeId(row.id));
+        const hasCriteria = !criteriaAlreadyInColumns && !factorColumn && cmpRows.length > 0 && cmpRows.every((r) => rowLabel(r));
         return (
           <div key={block.id || index} className="space-y-3">
             {block.title && (
@@ -293,7 +300,7 @@ export const ProtocolV13Renderer: React.FC<ProtocolV13RendererProps> = ({
                   {cmpRows.map((row, rIdx) => (
                     <tr key={row.id || rIdx} data-learning-tone={pathwayLearningCues?learningToneIn((row.cells||[]).map(cell=>cell.value).join(" ")):undefined} style={{ borderBottom: rIdx < cmpRows.length - 1 ? "1px solid #e5ddd5" : "none" }}>
                       {hasCriteria && (
-                        <td data-label="Factor" style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#000000", background: "#fffdfb" }}>{row.criteria || row.id}</td>
+                        <td data-label="Factor" style={{ padding: "14px 16px", verticalAlign: "top", fontWeight: 600, color: "#000000", background: "#fffdfb" }}>{rowLabel(row)}</td>
                       )}
                       {cmpCols.map((col, cIdx) => {
                         const cell = row.cells?.find((c) => c.key === col.key);

@@ -1,0 +1,68 @@
+{
+  "format": "yuzee-forecast-run-v2",
+  "status": "COMPLETE",
+  "source_release": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "input_manifest_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "input_content_sha256": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "policy": "ivi-monthly-three-holdouts-v2",
+  "horizon": 6,
+  "as_of": "2026-01-01",
+  "model": {
+    "model_id": "google/timesfm-2.5-200m-pytorch",
+    "model_revision": "1d952420fba87f3c6dee4f240de0f1a0fbc790e3",
+    "model_weights_sha256": "2f776efe6245e42b24bc4153ffdf61810140210e4bd3b01fb21f7aa779ab6ce8",
+    "runtime_version": "2.0.2"
+  },
+  "results": [
+    {
+      "series_id": "IVI__VIC__SL1__SA__MONTHLY",
+      "last_period": "2025-12",
+      "geography": "VIC",
+      "scope": "STATE",
+      "metric": "internet_vacancy_index",
+      "frequency": "MONTHLY",
+      "method": "last_value",
+      "holdout_folds": 3,
+      "holdout_points": 18,
+      "holdout_mae": {
+        "last_value": 1.0,
+        "seasonal_naive_12": 2.0,
+        "timesfm_2.5": 3.0
+      },
+      "timesfm_q10_q90_observed_coverage": 0.8,
+      "current_advice_eligible": true,
+      "freshness": "CURRENT",
+      "forecast_points": [
+        {
+          "period": "2026-01",
+          "value": 12.0
+        },
+        {
+          "period": "2026-02",
+          "value": 12.0
+        },
+        {
+          "period": "2026-03",
+          "value": 12.0
+        },
+        {
+          "period": "2026-04",
+          "value": 12.0
+        },
+        {
+          "period": "2026-05",
+          "value": 12.0
+        },
+        {
+          "period": "2026-06",
+          "value": 12.0
+        }
+      ]
+    }
+  ],
+  "skipped": [],
+  "eligible_series": 1,
+  "skipped_series": 0,
+  "current_advice_series": 1,
+  "content_sha256": "7faa19cc90fbca214b2b0e5004f781f82a7ce0a7dd0913e814c92346b774eb09"
+}

@@ -17,6 +17,12 @@ export type WarehousePack = {
  sourcePolicy:'USER_APPROVED_CATALOGUE';
  connected?:WarehouseConnections;
  comparison?:WarehouseComparison;
+ /** Graph connections and vacancy forecasts attached for this turn (src/intelligence). */
+ intelligence?:WarehouseIntelligence|null;
+};
+export type WarehouseIntelligence={status:string;source:string;notes:string[];
+ graph:Array<{entityType:string;sourceId:string;name:string;connections:Array<{relation:string;entityType:string;name:string;sourceId:string;period?:string;state?:string;regionKey?:string;scope?:string;method?:string;historicalEvidence?:boolean}>}>;
+ forecasts:Array<{seriesId:string;geography:string;skillLevel:string;relevantCareers:string[];status:string;metric?:string;lastObservedPeriod?:string;method?:string;holdoutMeanAbsoluteError?:Record<string,number>;intervalCoverageOnHoldouts?:number;points?:Array<{period:string;value:number;q10?:number;q90?:number}>;note?:string}>;
 };
 export type ProviderMatch={query:string;status:'MATCHED'|'AMBIGUOUS'|'NOT_FOUND';providers:Array<{id:string;evidenceId:string;name:string;rtoCode:string|null;type:string|null;area:string;description:string|null;support:string[];updatedAt:string|null;scope:string}>};
 export type WarehouseComparison={
@@ -46,11 +52,17 @@ export type WarehouseConnections={
  exploration?:WarehouseExploration|null;
  location:{requested:string;region:{key:string;name:string;tier:string;state:string}|null;candidates:Array<{key:string;name:string;tier:string;state:string}>};
  providers:Array<{id:string;evidenceId:string;name:string;type:string;higherEducationCode:string;city:string;state:string;campuses:Array<{name:string;town:string;state:string;postcode:string}>;support:string[];higherEducationFunding:any;funding:any[];courseIds:string[]}>;
- careers:Array<{id:string;evidenceId:string;title:string;description:string;tasks:string[];skills:string[];workStyles:string[];courseLinks:Array<{courseId:string;courseName:string;method:string;confidence:number|null}>;profileScope:string;profileSource:string;profileMethod:string;groupCode:string}>;
+ careers:Array<{id:string;evidenceId:string;title:string;description:string;tasks:string[];skills:string[];workStyles:string[];courseLinks:Array<{courseId:string;courseName:string;method:string;confidence:number|null}>;profileScope:string;profileSource:string;profileMethod:string;groupCode:string;skillLevel?:number|null}>;
  industries:Array<{id:string;evidenceId:string;name:string;courseId?:string;careerId?:string;method:string;scope:string}>;
  signals:Array<{id:string;evidenceId:string;kind:string;careerId?:string;title:string;text:string;scope:string;region:string;period:string|null;source:string;method:string;localMatch:boolean;updatedAt?:string;metrics?:{advertisements?:number|null;employers?:number|null;growthPercent?:number|null;horizonYears?:number|null;baseYear?:number|null}}>;
  relationships:Array<{from:string;to:string;relation:string;method:string;confidence:number|null}>;scopeNote:string;
 };
 export const warehouseEvidence=(pack:WarehousePack)=>[...(pack.connected?.localOverview?[{id:pack.connected.localOverview.evidenceId,source:'USER_APPROVED_YUZEE_WAREHOUSE',record_path:'warehouse_data.connected.localOverview'}]:[]),...pack.courses.map((c,index)=>({id:c.evidenceId,source:'USER_APPROVED_YUZEE_CATALOGUE',record_path:`warehouse_data.courses[${index}]`})),...(pack.comparison?.qualifications||[]).map((q,i)=>({id:q.evidenceId,source:'USER_APPROVED_YUZEE_WAREHOUSE',record_path:`warehouse_data.comparison.qualifications[${i}]`})),...(pack.comparison?.providerMatches||[]).flatMap((m,i)=>m.providers.map((p,j)=>({id:p.evidenceId,source:'USER_APPROVED_YUZEE_WAREHOUSE',record_path:`warehouse_data.comparison.providerMatches[${i}].providers[${j}]`}))),...(['providers','careers','industries','signals'] as const).flatMap(key=>(pack.connected?.[key]||[]).map((r,index)=>({id:r.evidenceId,source:'USER_APPROVED_YUZEE_WAREHOUSE',record_path:`warehouse_data.connected.${key}[${index}]`}))),...(['roles','learning','jobs','observedSkills'] as const).flatMap(key=>(pack.connected?.exploration?.[key]||[]).map((r,index)=>({id:r.evidenceId,source:'USER_APPROVED_YUZEE_WAREHOUSE',record_path:`warehouse_data.connected.exploration.${key}[${index}]`})))];
-export type WarehouseInput = {message:string;context?:string;selectedCourseIds?:string[];force?:boolean};
+export type WarehouseInput = {message:string;context?:string;selectedCourseIds?:string[];force?:boolean;
+ /** Observes the validated query plan (EXP-RAG reuses its typed search terms). */
+ /** Planner model override (EXP-RAG uses a faster model); default gemini-3.7-flash. */
+ planModel?:string;
+ /** Token usage of the planner call, so a chat turn can report its full cost. */
+ onUsage?:(u:{model:string;inputTokens:number;cachedTokens:number;outputTokens:number;thinkingTokens:number})=>void;
+ onPlan?:(plan:{action:string;queries:string[];comparison?:boolean;provider_queries?:string[];occupation_queries?:string[];skill_queries?:string[];role_queries?:string[];job_queries?:string[];industry_queries?:string[];location?:{name:string;postcode:string;state:string};facets?:string[]})=>void};
 export type WarehouseRetriever = (input:WarehouseInput,signal?:AbortSignal)=>Promise<WarehousePack>;

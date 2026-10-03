@@ -49,6 +49,8 @@ Spring API at http://localhost:8080
 - **3-layer protocol validation**: JSON parse → schema v1.3 → semantic — rejected responses never enter context
 - **Real `usageMetadata`**: prompt, output, thinking, and cached token counts from the provider
 - **Compaction break-even economics**: tracks whether compaction pays off before triggering it
+- **EXP-RAG mode**: short cached core prompt with per-turn retrieved guidance, hybrid warehouse RAG and rolling summaries (`docs/EXP-RAG.md`)
+- **Warehouse intelligence**: Neo4j relationship graph + TimesFM vacancy forecasts built by a Docker worker and used by every chat mode (`docs/WAREHOUSE-INTELLIGENCE.md`)
 
 ## Models
 

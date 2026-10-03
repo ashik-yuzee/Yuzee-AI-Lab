@@ -1,4 +1,5 @@
 import {visibleWorkspaceId} from '../orchestration/workspacePresence';
+import { featurePayload } from './featureFlags';
 import { parseChatProgress } from "../ux/streamProgress";
 import {
   CapabilitiesResponse,
@@ -84,7 +85,8 @@ export async function deleteConversation(id: string): Promise<void> {
   const res = await fetch(`${API_BASE}/api/conversations/${id}`, {
     method: "DELETE",
   });
-  if (!res.ok) throw new Error("Failed to delete conversation");
+  // 404: already gone on the server (e.g. a restart without a database) — still remove it locally.
+  if (!res.ok && res.status !== 404) throw new Error("Failed to delete conversation");
 }
 
 export async function restoreConversation(conv: Conversation): Promise<Conversation> {
@@ -180,6 +182,20 @@ export async function fetchDailyCost(): Promise<number> {
 export async function resetSessionStats(): Promise<void> {
   const res = await fetch(`${API_BASE}/api/tokens/session-reset`, { method: "POST" });
   if (!res.ok) throw new Error("Failed to reset session stats");
+}
+
+/** Deletes every conversation on the server (and its saved pathways, research and workspaces). */
+export async function deleteAllConversations(): Promise<number> {
+  const res = await fetch(`${API_BASE}/api/conversations`, { method: "DELETE" });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.error || "Conversations could not be deleted.");
+  return body.deleted ?? 0;
+}
+
+/** Clears all token telemetry: session counters, token log and the per-turn database log. */
+export async function resetAllTelemetry(): Promise<void> {
+  const res = await fetch(`${API_BASE}/api/tokens/reset-all`, { method: "POST" });
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Telemetry could not be reset.");
 }
 
 export async function generateConversationTitle(id: string): Promise<string> {
@@ -422,7 +438,7 @@ export function streamChatMessage(
             return await fetch(`${API_BASE}/api/conversations/${conversationId}/messages`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({...payload,visibleWorkspaceId:visibleWorkspaceId(conversationId)}),
+              body: JSON.stringify({...payload,visibleWorkspaceId:visibleWorkspaceId(conversationId),features:featurePayload()}),
               signal: controller.signal,
             });
           } catch (err: any) {

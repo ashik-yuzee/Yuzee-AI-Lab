@@ -9,7 +9,7 @@ import {suggestionText,canReviewResponseSkills} from '../routing/skillSuggestion
 import {SkillSuggestions} from './SkillSuggestions';
 import {ChatTurnDivider} from './ChatTurnDivider';
 import {researchOffer} from '../routing/turnNeeds';
-import { ChatStreamingStatus } from './ChatStreamingStatus';
+import { ChatStreamingStatus, ChatStreamingDraft } from './ChatStreamingStatus';
 import { acceptedResponse, responseToReadableText } from "../ux/responsePresentation";
 import { MoreDetails } from './MoreDetails';
 import React, { useRef, useEffect } from "react";
@@ -19,7 +19,7 @@ import { Composer } from "./Composer";
 import { ProtocolV13Renderer } from "./ProtocolV13Renderer";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { GEMINI_MODELS, calcTurnCost, formatCost } from "../data/models";
+import { GEMINI_MODELS, calcTurnCost, turnCost, formatCost } from "../data/models";
 import {
   Sparkles,
   Activity,
@@ -363,6 +363,7 @@ export const ChatArea: React.FC = () => {
                               {structured && offer && !msg.isStreaming && currentConversation && <MoreDetails offer={offer} key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={sendMessage} />}
                               {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 
+                              {msg.isStreaming && !structured && <ChatStreamingDraft content={msg.content}/>}
                               {msg.isStreaming && !structured && <ChatStreamingStatus phase={msg.streamProgress?.phase} startedAt={msg.createdAt} onStop={stopStreaming}/>}
                               {msg.streamStopped && <div className="main-chat-stopped" role="status">Stopped. Your question is still here.<button type="button" onClick={retryLastMessage}>Try again</button></div>}
 
@@ -411,10 +412,8 @@ export const ChatArea: React.FC = () => {
                                       <Activity className="w-3 h-3 shrink-0" />
                                       {/* Mobile: compact token summary */}
                                       <span className="sm:hidden truncate">
-                                        {msg.telemetry.usage.totalTokens > 1000
-                                          ? `${(msg.telemetry.usage.totalTokens / 1000).toFixed(1)}k`
-                                          : msg.telemetry.usage.totalTokens} tok
-                                        {(() => { const cost = calcTurnCost(msg.telemetry.model || "", msg.telemetry.usage); return cost !== null ? ` · ${formatCost(cost)}` : null; })()}
+                                        {(() => { const t = msg.telemetry.usage.totalTokens + (msg.telemetry.usage.auxiliaryTokens || 0); return t > 1000 ? `${(t / 1000).toFixed(1)}k` : t; })()} tok
+                                        {(() => { const cost = turnCost(msg.telemetry.model || "", msg.telemetry.usage); return cost !== null ? ` · ${formatCost(cost)}` : null; })()}
                                       </span>
                                       {/* Desktop: full breakdown */}
                                       <span className="hidden sm:inline">
@@ -425,8 +424,9 @@ export const ChatArea: React.FC = () => {
                                         )}
                                         {" "}· Out <strong>{msg.telemetry.usage.outputTokens.toLocaleString()}</strong>
                                         {msg.telemetry.usage.thinkingTokens != null && msg.telemetry.usage.thinkingTokens > 0 && <> · Think <strong>{msg.telemetry.usage.thinkingTokens}</strong></>}
-                                        {" "}· <strong>{msg.telemetry.usage.totalTokens.toLocaleString()}</strong>
-                                        {(() => { const cost = calcTurnCost(msg.telemetry.model || "", msg.telemetry.usage); return cost !== null ? <> · <span className="text-emerald-600">{formatCost(cost)}</span></> : null; })()}
+                                        {msg.telemetry.usage.auxiliaryTokens ? <span title="Warehouse search planning (a separate model call made for this answer)"> · Plan <strong>{msg.telemetry.usage.auxiliaryTokens.toLocaleString()}</strong></span> : null}
+                                        {" "}· <strong>{(msg.telemetry.usage.totalTokens + (msg.telemetry.usage.auxiliaryTokens || 0)).toLocaleString()}</strong>
+                                        {(() => { const cost = turnCost(msg.telemetry.model || "", msg.telemetry.usage); return cost !== null ? <> · <span className="text-emerald-600">{formatCost(cost)}</span></> : null; })()}
                                       </span>
                                     </button>
                                   </div>

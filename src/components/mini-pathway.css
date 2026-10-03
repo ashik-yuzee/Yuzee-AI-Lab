@@ -48,18 +48,7 @@ body:has(.mini-pathway-panel--resizing),body:has(.mini-pathway-panel--resizing) 
 .mini-pathway-panel header>div:first-child{min-width:0}
 .mini-pathway-panel header{gap:10px}
 .mini-pathway-panel>header{flex-shrink:0}
-.mini-pathway-history{padding:14px 24px 12px;border-bottom:1px solid #eee8f5;background:#fff;flex-shrink:0}
-.mini-pathway-history label{display:block;font-size:13px;font-weight:600;color:#49345f;margin-bottom:7px}
-.mini-pathway-history label span{color:#727784;font-weight:400}
-.mini-pathway-history select{display:block;width:100%;min-width:0;padding:10px 28px 10px 10px;border:1px solid #dcd3e6;border-radius:8px;background:#fff;color:#344054;font-size:13px;text-overflow:ellipsis}
-.mini-pathway-history select:focus-visible{outline:2px solid #8952ee;outline-offset:2px}
-.mini-pathway-history p{font-size:12px;line-height:1.5;color:#667085;margin:8px 0 0;overflow-wrap:anywhere}
-.mini-pathway-saved-control{display:flex;align-items:center;gap:7px;white-space:nowrap;padding:7px 9px;border:1px solid #e3d9f1;border-radius:9px;font-size:12px;color:#693ba5;background:#fcfaff;cursor:pointer}
-.mini-pathway-saved-control b{font-size:11px;background:#eee7f7;border-radius:5px;padding:1px 5px}
-.mini-pathway-saved-control:focus-visible{outline:2px solid #8952ee;outline-offset:2px}
 .mini-pathway-panel .mini-pathway-create{display:flex;align-items:center;gap:8px;width:100%;border:1px solid #e3d9f1;text-align:left;font-size:13px;margin-bottom:18px;padding:10px 12px;background:#fcfaff}
-@media(max-width:900px){.mini-pathway-saved-control span{display:none}}
-@media(max-width:600px){.mini-pathway-history{padding:12px 18px}.mini-pathway-history p{max-height:3em;overflow:auto}}
 
 /* Real streamed sections stay readable; only the unfinished placeholder shimmers. */
 .mini-pathway-stream-status{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 9px}
@@ -75,24 +64,73 @@ body:has(.mini-pathway-panel--resizing),body:has(.mini-pathway-panel--resizing) 
 @media(prefers-reduced-motion:reduce){.mini-pathway-stream-section,.mini-pathway-skeleton,.mini-pathway-skeleton-line{animation:none}}
 
 /* The saved-pathway drawer has its own palette; the main conversation stays neutral. */
+/* Panel chrome follows the Yuzee mobile staging pathway panel (_group-pathway.scss, final effective values). */
 .mini-pathway-panel{
- --pathway-purple:#6433a3;--pathway-title:#492579;--pathway-ink:#373047;
- --pathway-muted:#696078;--pathway-line:#ded1ef;--pathway-soft:#f4edfc;
- background:#fdfbff;border-left-color:#cbb5e5;color:var(--pathway-ink);
- box-shadow:-4px 0 24px #4925790a;
+ --mp-accent:#6d4bc3;--mp-accent-ink:#553a9e;--mp-accent-soft:#f6f3fc;--mp-accent-line:#e6def6;
+ --pathway-purple:#6d4bc3;--pathway-title:#111111;--pathway-ink:#3c3c44;
+ --pathway-muted:#6b6b76;--pathway-line:#eeeeeb;--pathway-soft:#f7f7f9;
+ background:#fff;border-left:1px solid #eeeeeb;color:var(--pathway-ink);
+ box-shadow:-4px 0 20px rgba(17,17,17,.04);
+ font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
 }
-.mini-pathway-panel>header{background:linear-gradient(115deg,#eee4fb,#faf6ff);border-bottom-color:var(--pathway-line)}
+.mini-pathway-panel>header{background:#fff;border-bottom:1px solid #eeeeeb}
+.mini-pathway-panel h2{font-size:22px;font-weight:600;letter-spacing:-.01em;line-height:1.2;margin:0;color:#111}
+.mini-pathway-heading-icon{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border:0;border-radius:10px;background:var(--mp-accent-soft);color:var(--mp-accent)}
+.mini-pathway-panel button{color:#3c3c44}
+.mini-pathway-header-actions button:hover{background:#f4f4f7}
+.mini-pathway-panel button:focus-visible{outline:2px solid var(--mp-accent);outline-offset:2px}
+.mini-pathway-panel .mini-pathway-expand{border:1px solid #e3e3e8;background:#fff;color:#111;font-size:13px;font-weight:500;min-height:44px}
+.mp-title-row{display:flex;align-items:center;gap:4px;min-width:0}
+/* Saved-pathways popover */
+/* The list anchors to the header (not the icon) so it never overflows a narrow or right-docked panel. */
+.mini-pathway-panel>header{position:relative}
+.mph-menu{position:static;display:inline-flex;align-items:center;margin-top:6px}
+.mini-pathway-panel .mph-trigger{position:relative;display:grid;place-items:center;width:24px;height:24px;margin-left:4px;padding:0;border:0;border-radius:6px;background:none;color:var(--mp-accent)}
+.mph-trigger::after{content:"";position:absolute;inset:-10px}
+.mini-pathway-panel .mph-trigger--open{background:var(--mp-accent-soft)}
+.mph-trigger:disabled{cursor:default}
+.mph-spin{animation:mph-spin 1s linear infinite}
+@keyframes mph-spin{to{transform:rotate(360deg)}}
+.mph-list{position:absolute;z-index:5;left:24px;top:calc(100% - 8px);width:min(320px,calc(100% - 48px));max-height:264px;overflow:auto;margin:0;padding:6px;list-style:none;background:#fff;border:1px solid #e3e3e8;border-radius:12px;box-shadow:0 12px 32px rgba(17,17,17,.12)}
+.mph-list li{margin:0;padding:0!important}
+.mini-pathway-panel .mph-option{position:relative;display:grid;gap:1px;width:100%;padding:8px 32px 8px 10px;border-radius:8px;text-align:left;background:none}
+.mini-pathway-panel .mph-option:hover{background:#f7f7f9}
+.mini-pathway-panel .mph-option--selected,.mini-pathway-panel .mph-option--selected:hover{background:var(--mp-accent-soft)}
+.mph-option-title{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;font-size:13px;font-weight:600;color:#111}
+.mph-option-title em{font-style:normal;padding:0 6px;border-radius:999px;background:var(--mp-accent-soft);color:var(--mp-accent-ink);font-size:10.5px;font-weight:600;line-height:18px}
+.mph-option--selected .mph-option-title em{background:#fff}
+.mph-meta{font-size:12px;font-weight:400;color:#6b6b76}
+.mph-option-ctx{font-size:12px;line-height:1.45;color:#5b5b66;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mph-check{position:absolute;right:12px;top:10px;color:var(--mp-accent)}
+.mph-empty{padding:14px;font-size:13px;line-height:1.45;color:#5b5b66}
+.mph-empty p{margin:0 0 8px}.mph-empty p:last-child{margin:0}
+.mini-pathway-panel .mph-empty button{padding:8px 12px;border:1px solid #e3e3e8;border-radius:9px;background:#fff;color:#111;font-size:13px;font-weight:600}
+/* Open button (header slot): 36px icon tile, hidden while the panel is open. */
+.mini-pathway-saved-control{display:grid;place-items:center;width:36px;height:36px;border:1px solid #e3e3e8;border-radius:8px;background:#fff;color:#3c3c44;box-shadow:0 2px 10px rgba(17,17,17,.08);cursor:pointer}
+.mini-pathway-saved-control:hover{background:#f4f4f7}
+.mini-pathway-saved-control[hidden]{display:none}
+.mini-pathway-saved-control:focus-visible{outline:2px solid #6d4bc3;outline-offset:2px}
+.mini-pathway-panel .mini-pathway-create{border-color:#e3d9f1;background:#fcfaff;color:#3c3c44}
+.mini-pathway-caption{color:#6b6b76}
+.mini-pathway-body>.mini-pathway-caption:last-child{text-align:center;margin:14px 0 4px}
+.mini-pathway-resize-handle span{background:#c9c9d1;border:0;box-shadow:0 0 0 1px #e3e3e8}
+/* Phones: bottom sheet (staging global.scss). */
+@media(max-width:767px){
+ .mini-pathway-panel:not(.mini-pathway-panel--expanded){position:fixed;left:0;right:0;bottom:0;top:auto;width:100%!important;height:min(85dvh,100%);border-left:0;border-radius:24px 24px 0 0;box-shadow:0 -10px 34px rgba(17,17,17,.18);z-index:60;animation:mph-sheet-in .42s cubic-bezier(.32,.72,0,1);overflow:hidden}
+ .mini-pathway-panel:not(.mini-pathway-panel--expanded)::before{content:"";display:block;flex-shrink:0;width:40px;height:5px;margin:12px auto 11px;border-radius:999px;background:#a1a1a6}
+ .mini-pathway-panel>header{padding:10px 17px}
+ .mini-pathway-panel h2{font-size:20px}
+ .mini-pathway-resize-handle,.mini-pathway-panel .mini-pathway-expand{display:none}
+ .mph-list{position:fixed;left:17px;right:17px;top:auto;width:auto;max-height:min(320px,48dvh);border-radius:14px;box-shadow:0 14px 36px rgba(0,0,0,.16),0 2px 6px rgba(0,0,0,.06)}
+ .mini-pathway-panel .mph-option{min-height:52px;border-radius:10px}
+ .mph-option-title{font-size:15px}.mph-option-ctx{font-size:13px}
+}
+.mph-scrim{display:none}
+@media(max-width:767px){.mph-scrim{display:block;position:fixed;inset:0;z-index:59;background:rgba(0,0,0,.4)}}
+@keyframes mph-sheet-in{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.mph-spin,.mini-pathway-panel{animation:none!important}}
 .mini-pathway-panel h2{color:var(--pathway-title)}
-.mini-pathway-kicker{color:#7045a0}
 .mini-pathway-heading{display:flex;align-items:center;gap:12px}
-.mini-pathway-heading-icon{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border:1px solid #d8c4ef;border-radius:13px;background:#ffffffb3;color:var(--pathway-purple)}
-.mini-pathway-panel button{color:var(--pathway-purple)}
-.mini-pathway-panel .mini-pathway-expand{border-color:#cbb5e5;background:#fff}
-.mini-pathway-header-actions button:hover{background:#e9dcf9}
-.mini-pathway-panel .mini-pathway-history{background:#f8f3fe;border-color:var(--pathway-line)}
-.mini-pathway-history label{color:var(--pathway-title)}
-.mini-pathway-history select{border-color:#cbb5e5;color:var(--pathway-ink)}
-.mini-pathway-history p,.mini-pathway-caption{color:var(--pathway-muted)}
 .mini-pathway-panel .mini-pathway-report{color:var(--pathway-ink)}
 .mini-pathway-report :is(h2,h3,h4),.mini-pathway-report .guidance-section-title{color:var(--pathway-title)!important}
 .mini-pathway-report .guidance-row-title{color:#443055}
@@ -130,7 +168,6 @@ body:has(.mini-pathway-panel--resizing),body:has(.mini-pathway-panel--resizing) 
  .mini-pathway-heading{gap:8px}
  .mini-pathway-heading-icon{width:32px;height:36px;border-radius:10px}
  .mini-pathway-panel h2{font-size:20px;white-space:nowrap}
- .mini-pathway-kicker{font-size:9px;white-space:nowrap}
  .mini-pathway-expand span{display:none}
  .mini-pathway-header-actions{gap:4px}
  .mini-pathway-body{padding:18px 16px}

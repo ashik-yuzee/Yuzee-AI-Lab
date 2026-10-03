@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { Download, X, FileJson, FileSpreadsheet, ShieldCheck, Check } from "lucide-react";
-import { calcTurnCost, formatCost } from "../data/models";
+import { calcTurnCost, turnCost, formatCost } from "../data/models";
 
 export const ExportModal: React.FC = () => {
   const { isExportOpen, setExportOpen, currentConversation, conversations, sessionStats } = useTokenLab();
@@ -76,7 +76,7 @@ export const ExportModal: React.FC = () => {
       conv.messages?.forEach((msg) => {
         const u = msg.telemetry?.usage;
         const model = msg.telemetry?.model || conv.model || "";
-        const cost = u && model ? calcTurnCost(model, u) : null;
+        const cost = u && model ? turnCost(model, u) : null;
         const uncached = u ? (u.uncachedInputTokens ?? (u.inputTokens - (u.cachedTokens ?? 0))) : "";
         rows.push(
           [

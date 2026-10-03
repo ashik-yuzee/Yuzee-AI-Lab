@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import * as api from "../services/api";
-import { calcTurnCost, formatCost } from "../data/models";
+import { calcTurnCost, turnCost, formatCost } from "../data/models";
 import {
   Plus,
   MessageSquare,
@@ -21,7 +20,9 @@ export const Sidebar: React.FC = () => {
     startNewConversation,
     loadDemoConversation,
     removeConversation,
-    updateCurrentConversationSettings,
+    renameConversation,
+    deleteAllConversations,
+    isStreaming,
     sessionStats,
     resetSessionStats,
     isSidebarOpen,
@@ -31,6 +32,8 @@ export const Sidebar: React.FC = () => {
   } = useTokenLab();
 
   const [conversationToDelete, setConversationToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+  const [deleteAllError, setDeleteAllError] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState("");
 
@@ -52,7 +55,7 @@ export const Sidebar: React.FC = () => {
   const sessionTotalCost = conversations.reduce((sum, conv) => {
     return sum + (conv.messages || []).reduce((s, m) => {
       if (m.role !== "assistant" || !m.telemetry?.usage || !m.telemetry?.model) return s;
-      const c = calcTurnCost(m.telemetry.model, m.telemetry.usage);
+      const c = turnCost(m.telemetry.model, m.telemetry.usage);
       return s + (c ?? 0);
     }, 0);
   }, 0);
@@ -80,11 +83,13 @@ export const Sidebar: React.FC = () => {
           <div className="flex items-center gap-2">
             <button
               id="btn-new-chat"
+              disabled={isStreaming}
+              title={isStreaming ? "Wait for the reply to finish, or stop it" : undefined}
               onClick={() => {
                 startNewConversation();
                 setSidebarOpen(false);
               }}
-              className="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+              className="flex-1 flex items-center justify-center gap-2 bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus className="w-4 h-4" />
               <span>New Conversation</span>
@@ -116,9 +121,23 @@ export const Sidebar: React.FC = () => {
 
         {/* Conversations List */}
         <div className="flex-1 overflow-y-auto p-2 space-y-1 bg-[#f7f8fa]">
-          <div className="px-2 py-1 text-[11px] font-semibold uppercase tracking-widest text-[#8a929d]">
-            Conversations
+          <div className="flex items-center justify-between px-2 py-1">
+            <span className="text-[11px] font-semibold uppercase tracking-widest text-[#8a929d]">Conversations</span>
+            {conversations.length > 0 && (
+              <button
+                id="btn-delete-all-convs"
+                type="button"
+                disabled={isStreaming}
+                onClick={() => { setDeleteAllError(""); setConfirmDeleteAll(true); }}
+                className="flex items-center gap-1 text-[11px] font-medium text-slate-500 hover:text-rose-600 rounded px-1.5 py-0.5 hover:bg-rose-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                title={isStreaming ? "Wait for the reply to finish, or stop it" : "Delete all conversations"}
+              >
+                <Trash2 className="w-3 h-3" aria-hidden="true" />
+                Delete all
+              </button>
+            )}
           </div>
+          {deleteAllError && <p role="alert" className="px-2 text-[11px] text-rose-600">{deleteAllError}</p>}
 
           {conversations.length === 0 ? (
             <div className="text-xs text-slate-500 text-center py-8 px-4 space-y-2">
@@ -135,7 +154,10 @@ export const Sidebar: React.FC = () => {
                 <div
                   key={conv.id}
                   id={`conv-item-${conv.id}`}
+                  aria-disabled={isStreaming && !isSelected}
+                  title={isStreaming && !isSelected ? "Wait for the reply to finish, or stop it" : undefined}
                   onClick={() => {
+                    if (isStreaming) return;
                     selectConversation(conv.id);
                     setSidebarOpen(false);
                   }}
@@ -158,8 +180,7 @@ export const Sidebar: React.FC = () => {
                           onBlur={() => {
                             const trimmed = editingTitle.trim();
                             if (trimmed) {
-                              if (isSelected) updateCurrentConversationSettings({ title: trimmed });
-                              else api.updateConversation(conv.id, { title: trimmed });
+                              renameConversation(conv.id, trimmed);
                             }
                             setEditingId(null);
                           }}
@@ -167,8 +188,7 @@ export const Sidebar: React.FC = () => {
                             if (e.key === "Enter") {
                               const trimmed = editingTitle.trim();
                               if (trimmed) {
-                                if (isSelected) updateCurrentConversationSettings({ title: trimmed });
-                                else api.updateConversation(conv.id, { title: trimmed });
+                                renameConversation(conv.id, trimmed);
                               }
                               setEditingId(null);
                             } else if (e.key === "Escape") {
@@ -257,6 +277,20 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
       </aside>
+
+      <AppleConfirmDialog
+        isOpen={confirmDeleteAll}
+        title="Delete all conversations"
+        message={`Permanently delete all ${conversations.length} conversation${conversations.length === 1 ? "" : "s"}, including their saved pathways, research and workspaces? This cannot be undone.`}
+        confirmLabel="Delete all"
+        cancelLabel="Cancel"
+        isDestructive={true}
+        onConfirm={() => {
+          setConfirmDeleteAll(false);
+          deleteAllConversations().catch((e) => setDeleteAllError(e instanceof Error ? e.message : "Conversations could not be deleted."));
+        }}
+        onCancel={() => setConfirmDeleteAll(false)}
+      />
 
       {/* Delete Confirmation Dialog */}
       <AppleConfirmDialog

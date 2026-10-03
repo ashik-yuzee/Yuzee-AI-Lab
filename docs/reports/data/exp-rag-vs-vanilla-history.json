@@ -1,0 +1,119 @@
+[
+ {
+  "round": "1 · Baseline",
+  "change": "EXP-RAG as built (BGE), re-judged with a fair renderer (internal ids hidden)",
+  "variant": "BGE",
+  "wlt": "5–5–3",
+  "score": "23.62 → 24.15",
+  "latency": "20.0 → 18.5 s (mean)",
+  "cost": "$0.00546 → $0.00302"
+ },
+ {
+  "round": "2",
+  "change": "Concreteness rule; open question preferred over a menu; comparison row labels fixed in the UI",
+  "variant": "BGE",
+  "wlt": "4–6–3",
+  "score": "24.46 → 24.23",
+  "latency": "20.6 → 16.3 s (mean)",
+  "cost": "$0.00543 → $0.00296"
+ },
+ {
+  "round": "3",
+  "change": "Single-question guard; explicit final check; judge told how tables are shown",
+  "variant": "BGE",
+  "wlt": "6–3–4",
+  "score": "24.62 → 24.62",
+  "latency": "18.5 → 16.8 s (mean)",
+  "cost": "$0.00472 → $0.00288"
+ },
+ {
+  "round": "4",
+  "change": "4 more scenarios (18 turns); no-restating rule; Gemini embeddings added",
+  "variant": "BGE",
+  "wlt": "8–5–5",
+  "score": "24.50 → 24.61",
+  "latency": "17.9 → 17.7 s",
+  "cost": "$0.00497 → $0.00280"
+ },
+ {
+  "round": "4",
+  "change": "(same)",
+  "variant": "Gemini",
+  "wlt": "5–10–3",
+  "score": "24.78 → 24.17",
+  "latency": "17.9 → 19.5 s",
+  "cost": "$0.00497 → $0.00297"
+ },
+ {
+  "round": "5",
+  "change": "Review fast path; Flash-Lite planner; interstate courses dropped; rerank skipped when it cannot change the result",
+  "variant": "BGE",
+  "wlt": "7–6–5",
+  "score": "24.28 → 24.72",
+  "latency": "17.9 → 15.6 s",
+  "cost": "$0.00497 → $0.00288"
+ },
+ {
+  "round": "5",
+  "change": "(same)",
+  "variant": "Gemini",
+  "wlt": "10–6–2",
+  "score": "24.44 → 24.67",
+  "latency": "17.9 → 15.0 s",
+  "cost": "$0.00497 → $0.00275"
+ },
+ {
+  "round": "Final A",
+  "change": "Compound-question trim; codes rule. Every mode run fresh in the same window",
+  "variant": "BGE",
+  "wlt": "10–5–3",
+  "score": "24.33 → 24.44",
+  "latency": "17.3 → 13.3 s",
+  "cost": "$0.00423 → $0.00255"
+ },
+ {
+  "round": "Final A",
+  "change": "(same)",
+  "variant": "Gemini",
+  "wlt": "14–3–1",
+  "score": "24.33 → 24.83",
+  "latency": "17.3 → 13.0 s",
+  "cost": "$0.00423 → $0.00255"
+ },
+ {
+  "round": "Final B",
+  "change": "Town-level and catalogue local scope; planner comparison guard (vs Final A's Vanilla answers)",
+  "variant": "BGE",
+  "wlt": "10–6–2",
+  "score": "24.44 → 24.44",
+  "latency": "17.3 → 15.4 s",
+  "cost": "$0.00423 → $0.00275"
+ },
+ {
+  "round": "Final B",
+  "change": "(same)",
+  "variant": "Gemini",
+  "wlt": "9–5–4",
+  "score": "24.39 → 24.61",
+  "latency": "17.3 → 15.1 s",
+  "cost": "$0.00423 → $0.00281"
+ },
+ {
+  "round": "Final (robust)",
+  "change": "Off-topic scope rule tightened (no poems); both final runs re-judged in both answer orders, win only when both agree",
+  "variant": "BGE",
+  "wlt": "12–8–16",
+  "score": "24.58 → 24.53",
+  "latency": "17.2 → 14.2 s",
+  "cost": "$0.00423 → $0.00266"
+ },
+ {
+  "round": "Final (robust)",
+  "change": "(same)",
+  "variant": "Gemini",
+  "wlt": "15–4–17",
+  "score": "24.71 → 24.76",
+  "latency": "17.2 → 14.2 s",
+  "cost": "$0.00423 → $0.00270"
+ }
+]

@@ -1,0 +1,401 @@
+{
+ "note": "Labelled EXP-RAG guidance retrieval cases. expect = modules that must be selected for the turn. history 'chat' adds one prior user/assistant exchange. history 'greeting' adds an instant-reply greeting exchange (not a counselling turn).",
+ "cases": [
+  {
+   "id": "plumber-first",
+   "message": "I want to become a plumber",
+   "expect": [
+    "voice.counsellor",
+    "teach.gap-first-turn"
+   ]
+  },
+  {
+   "id": "apprentice-or-uni",
+   "message": "Should I do an apprenticeship or go to uni?",
+   "expect": [
+    "compare.two-route",
+    "jurisdiction.facts",
+    "university.exploration-claims"
+   ]
+  },
+  {
+   "id": "overwhelm",
+   "history": "chat",
+   "message": "This is too much, I don't understand any of it",
+   "expect": [
+    "guide.overwhelm"
+   ]
+  },
+  {
+   "id": "correction",
+   "history": "chat",
+   "message": "Actually I can't study full time, I need to keep working",
+   "expect": [
+    "guide.change-correction"
+   ]
+  },
+  {
+   "id": "short-quality",
+   "history": "chat",
+   "message": "quality",
+   "expect": [
+    "app.short-replies",
+    "app.course-quality"
+   ]
+  },
+  {
+   "id": "yuzee-services",
+   "message": "What can Yuzee help me with?",
+   "expect": [
+    "service.registry"
+   ]
+  },
+  {
+   "id": "nursing-cost",
+   "message": "How much does the Diploma of Nursing cost?",
+   "expect": [
+    "teach.req.cost",
+    "jurisdiction.facts"
+   ]
+  },
+  {
+   "id": "off-topic",
+   "message": "How fast is a Subaru WRX?",
+   "expect": [
+    "scope.adjacent-unrelated"
+   ]
+  },
+  {
+   "id": "apply-for-me",
+   "history": "chat",
+   "message": "Can you apply to the course for me?",
+   "expect": [
+    "service.router",
+    "app.location-drafts",
+    "protocol.service-handoff"
+   ]
+  },
+  {
+   "id": "return-to-work",
+   "message": "I've been a stay-at-home mum for 8 years and want to go back to work",
+   "expect": [
+    "app.early-exploration-low-effort",
+    "routes.change-options"
+   ]
+  },
+  {
+   "id": "local-unsure",
+   "message": "I live in Ballarat and don't know what to do",
+   "warehouse": {
+    "ready": true,
+    "comparison": false,
+    "local": true,
+    "skillsJobs": false
+   },
+   "expect": [
+    "local.first-steps",
+    "warehouse.connected-guidance"
+   ]
+  },
+  {
+   "id": "local-figures",
+   "history": "chat",
+   "message": "How many jobs are there for electricians around Geelong?",
+   "warehouse": {
+    "ready": true,
+    "comparison": false,
+    "local": true,
+    "skillsJobs": true
+   },
+   "expect": [
+    "local.figures-scope",
+    "warehouse.connected-guidance"
+   ]
+  },
+  {
+   "id": "role",
+   "history": "chat",
+   "message": "What does a business analyst actually do day to day?",
+   "expect": [
+    "teach.req.role"
+   ]
+  },
+  {
+   "id": "skill",
+   "history": "chat",
+   "message": "Can you explain what stakeholder management means and how I'd get better at it?",
+   "expect": [
+    "teach.req.skill"
+   ]
+  },
+  {
+   "id": "finished-placement",
+   "history": "chat",
+   "message": "I finished my placement last week!",
+   "expect": [
+    "guide.completion-return"
+   ]
+  },
+  {
+   "id": "waiting",
+   "history": "chat",
+   "message": "I applied for the traineeship and I'm waiting to hear back",
+   "expect": [
+    "guide.waiting-parallel"
+   ]
+  },
+  {
+   "id": "tafe-good",
+   "history": "chat",
+   "message": "Is this TAFE any good for carpentry?",
+   "expect": [
+    "app.course-quality"
+   ]
+  },
+  {
+   "id": "leave-school",
+   "message": "Can I leave school after year 10?",
+   "expect": [
+    "jurisdiction.facts"
+   ]
+  },
+  {
+   "id": "uni-field-unclear",
+   "message": "I want to go to uni but I have no idea what to study",
+   "expect": [
+    "university.exploration-claims",
+    "teach.gap-first-turn"
+   ]
+  },
+  {
+   "id": "plan",
+   "history": "chat",
+   "message": "Make me a plan to become a web developer over the next year",
+   "expect": [
+    "teach.req.plan"
+   ]
+  },
+  {
+   "id": "study-hours",
+   "history": "chat",
+   "message": "I can study 12 hours a week, will a Bachelor of IT fit?",
+   "expect": [
+    "app.study-load-examples"
+   ]
+  },
+  {
+   "id": "parent",
+   "message": "My son wants to be a mechanic, what should he do?",
+   "expect": [
+    "app.audience-teaching"
+   ]
+  },
+  {
+   "id": "career-change-40",
+   "message": "I'm 40 and want to change careers into IT",
+   "expect": [
+    "routes.change-options"
+   ]
+  },
+  {
+   "id": "internship-job",
+   "history": "chat",
+   "message": "Is an internship the same as a job?",
+   "expect": [
+    "framework.layers-b"
+   ]
+  },
+  {
+   "id": "earn-learn",
+   "history": "chat",
+   "message": "I really need to earn money while I learn",
+   "expect": [
+    "framework.route-rules"
+   ]
+  },
+  {
+   "id": "recap",
+   "history": "chat",
+   "message": "Can you recap what we've worked out so far?",
+   "expect": [
+    "guide.checkpoints-style"
+   ]
+  },
+  {
+   "id": "rpl-evidence",
+   "history": "chat",
+   "message": "How do I prove my skills so I can get RPL?",
+   "expect": [
+    "teach.req.evidence",
+    "jurisdiction.facts"
+   ]
+  },
+  {
+   "id": "completion-job-ready",
+   "history": "chat",
+   "message": "Will finishing the course make me job ready?",
+   "expect": [
+    "teach.completion-evidence"
+   ]
+  },
+  {
+   "id": "units",
+   "history": "chat",
+   "message": "Explain the units in the Certificate IV in Accounting",
+   "expect": [
+    "teach.course-grounding"
+   ]
+  },
+  {
+   "id": "one-question",
+   "history": "chat",
+   "message": "Give me just one question to ask the provider, no follow-up",
+   "expect": [
+    "app.study-load-examples"
+   ]
+  },
+  {
+   "id": "rto-compare",
+   "history": "chat",
+   "message": "Compare the Certificate III in Carpentry at the two providers",
+   "warehouse": {
+    "ready": true,
+    "comparison": true,
+    "local": false,
+    "skillsJobs": false
+   },
+   "expect": [
+    "warehouse.rto-comparison",
+    "compare.two-route"
+   ]
+  },
+  {
+   "id": "handoff-location",
+   "history": "chat",
+   "activeInteraction": "handoff",
+   "message": "Change my location to Perth",
+   "expect": [
+    "app.location-drafts",
+    "protocol.service-handoff"
+   ]
+  },
+  {
+   "id": "business",
+   "message": "I want to start my own landscaping business",
+   "expect": [
+    "app.situations"
+   ]
+  },
+  {
+   "id": "skills-jobs",
+   "history": "chat",
+   "message": "What jobs could I do with my customer service skills?",
+   "warehouse": {
+    "ready": true,
+    "comparison": false,
+    "local": false,
+    "skillsJobs": true
+   },
+   "expect": [
+    "warehouse.connected-guidance",
+    "teach.req.skill-map"
+   ]
+  },
+  {
+   "id": "demand",
+   "history": "chat",
+   "message": "Is there much demand for registered nurses?",
+   "expect": [
+    "teach.req.market"
+   ]
+  },
+  {
+   "id": "dont-know",
+   "history": "chat",
+   "message": "I don't know",
+   "expect": [
+    "app.short-replies"
+   ]
+  },
+  {
+   "id": "table",
+   "history": "chat",
+   "message": "Can you put that comparison in a table?",
+   "expect": [
+    "presentation.density"
+   ]
+  },
+  {
+   "id": "cert-vs-diploma",
+   "message": "What's the difference between a Certificate IV and a Diploma?",
+   "expect": [
+    "pathway.route-design",
+    "compare.two-route"
+   ]
+  },
+  {
+   "id": "workspace",
+   "history": "chat",
+   "workspace": true,
+   "message": "I answered the questions in the activity on the right",
+   "expect": [
+    "connected.question-owner"
+   ]
+  },
+  {
+   "id": "tell-more",
+   "history": "chat",
+   "message": "Tell me more about the second option",
+   "expect": [
+    "app.followup-scope"
+   ]
+  },
+  {
+   "id": "place-unsure-no-data",
+   "message": "I live in Geelong and I'm finishing year 12. Not sure what to do next but I like fixing things.",
+   "expect": [
+    "local.first-steps",
+    "voice.counsellor"
+   ]
+  },
+  {
+   "id": "after-greeting",
+   "history": "greeting",
+   "message": "I want to become a nurse",
+   "expect": [
+    "voice.counsellor",
+    "teach.gap-first-turn"
+   ]
+  },
+  {
+   "id": "near-me-providers",
+   "history": "chat",
+   "message": "Which TAFEs near me teach electrical?",
+   "expect": [
+    "provider.local-gate"
+   ]
+  },
+  {
+   "id": "good-place",
+   "message": "Is TAFE Gippsland a good place to do the Certificate IV in Building and Construction?",
+   "expect": [
+    "app.course-quality",
+    "jurisdiction.facts"
+   ]
+  },
+  {
+   "id": "off-topic-car",
+   "message": "How fast is a Subaru WRX?",
+   "expect": [
+    "scope.adjacent-unrelated"
+   ]
+  },
+  {
+   "id": "retail-to-it",
+   "message": "I'm 19, work part-time in retail and want to get into IT support. Do I need a qualification first?",
+   "expect": [
+    "app.wording-acceptance"
+   ]
+  }
+ ]
+}

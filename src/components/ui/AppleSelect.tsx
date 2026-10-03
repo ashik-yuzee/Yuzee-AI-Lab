@@ -22,6 +22,8 @@ interface AppleSelectProps {
   leadingIcon?: React.ComponentType<{ className?: string }>;
   compact?: boolean;
   disabled?: boolean;
+  /** Tooltip on the trigger, e.g. why it is disabled. */
+  title?: string;
   className?: string;
   popoverWidth?: string;
   footerNote?: React.ReactNode;
@@ -38,6 +40,7 @@ export const AppleSelect: React.FC<AppleSelectProps> = ({
   leadingIcon: LeadingIcon,
   compact = false,
   disabled = false,
+  title,
   className = "",
   popoverWidth = "w-84 sm:w-96",
   footerNote,
@@ -159,6 +162,7 @@ export const AppleSelect: React.FC<AppleSelectProps> = ({
         id={id}
         type="button"
         disabled={disabled}
+        title={title}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         aria-label={label || selectedOption?.label || placeholder}

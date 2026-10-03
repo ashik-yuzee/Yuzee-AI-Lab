@@ -1,7 +1,8 @@
 import {RouterModelSelector} from './RouterModelSelector';
+import {IntelligenceSettings} from './IntelligenceSettings';
 import React, { useState, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
-import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type } from "lucide-react";
+import { Settings, X, Database, Trash2, FlaskConical, ShieldCheck, Info, Check, Wifi, Download, BarChart3, FileText, ChevronDown, ChevronUp, Copy, Type, RotateCcw } from "lucide-react";
 import { fetchLifetimeStats } from "../services/api";
 import { formatCost } from "../data/models";
 
@@ -15,7 +16,22 @@ export const SettingsModal: React.FC = () => {
     capabilities,
     localStorageStats,
     clearLocalData,
+    resetAllTelemetry,
   } = useTokenLab();
+  const [telemetryConfirm, setTelemetryConfirm] = useState(false);
+  const [telemetryState, setTelemetryState] = useState<{ status: 'idle' | 'busy' | 'done' | 'error'; message?: string }>({ status: 'idle' });
+  const handleResetTelemetry = async () => {
+    setTelemetryConfirm(false);
+    setTelemetryState({ status: 'busy' });
+    try {
+      await resetAllTelemetry();
+      setLifetime(await fetchLifetimeStats().catch(() => null));
+      setTelemetryState({ status: 'done' });
+      setTimeout(() => setTelemetryState({ status: 'idle' }), 2500);
+    } catch (e) {
+      setTelemetryState({ status: 'error', message: e instanceof Error ? e.message : 'Telemetry could not be reset.' });
+    }
+  };
   const [fontPref, setFontPref] = useState<'system' | 'open-sans'>(() =>
     (localStorage.getItem('oala-font') as 'open-sans' | null) === 'open-sans' ? 'open-sans' : 'system'
   );
@@ -214,6 +230,8 @@ export const SettingsModal: React.FC = () => {
 
           <RouterModelSelector />
 
+          <IntelligenceSettings />
+
           {/* Local Data Storage */}
           <div className="space-y-2">
             <div className="flex items-center gap-2">
@@ -285,8 +303,28 @@ export const SettingsModal: React.FC = () => {
             <div className="flex items-center gap-2">
               <BarChart3 className="w-3.5 h-3.5 text-violet-500" />
               <span className="font-semibold text-slate-800 text-xs uppercase tracking-wider">Lifetime Token Consumption</span>
-              <span className="text-[10px] text-slate-400 ml-auto">cannot be reset</span>
+              <span className="ml-auto flex items-center gap-1.5">
+                {telemetryState.status === 'done' ? (
+                  <span className="flex items-center gap-1 text-emerald-700 text-[11px] font-semibold" role="status"><Check className="w-3.5 h-3.5" /> Reset</span>
+                ) : telemetryConfirm ? (
+                  <>
+                    <span className="text-[11px] text-red-600 font-medium">Erase all telemetry?</span>
+                    <button onClick={handleResetTelemetry} className="px-2 py-1 bg-red-600 text-white text-[11px] font-semibold rounded-lg cursor-pointer hover:bg-red-700">Yes</button>
+                    <button onClick={() => setTelemetryConfirm(false)} className="px-2 py-1 border border-slate-300 text-slate-600 text-[11px] rounded-lg cursor-pointer hover:bg-slate-100">No</button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => setTelemetryConfirm(true)}
+                    disabled={telemetryState.status === 'busy'}
+                    className="flex items-center gap-1 px-2 py-1 border border-red-200 text-red-600 text-[11px] font-semibold rounded-lg cursor-pointer hover:bg-red-50 disabled:opacity-50"
+                    title="Erase session counters, the token log and all per-turn usage records"
+                  >
+                    <RotateCcw className="w-3 h-3" /> {telemetryState.status === 'busy' ? 'Resetting…' : 'Reset all telemetry'}
+                  </button>
+                )}
+              </span>
             </div>
+            {telemetryState.status === 'error' && <p role="alert" className="text-[11px] text-red-600">{telemetryState.message}</p>}
             <div className="bg-violet-50 border border-violet-200 rounded-xl p-3 space-y-1.5 text-xs text-slate-700">
               {lifetime === null ? (
                 <div className="text-[11px] text-slate-400">Loading…</div>

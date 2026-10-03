@@ -1,8 +1,9 @@
 import pg from "pg";
+import { statePath } from './paths';
 import path from "path";
 import { LocalConversationStore } from './LocalConversationStore';
 const { Pool } = pg;
-const localStore = new LocalConversationStore(path.join(process.cwd(), 'data', 'conversations.json'));
+const localStore = new LocalConversationStore(statePath('conversations.json'));
 
 // ---- PostgreSQL pool (optional) ----
 // Lazy — initialized in initDb() so dotenv has run before we read DATABASE_URL
@@ -92,6 +93,8 @@ const MIGRATION_SQLS = [
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS mode TEXT DEFAULT 'AUTO'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS compaction_history JSONB DEFAULT '[]'`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS active_interaction JSONB`,
+  `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS rag_memory JSONB`,
+  `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS features JSONB`,
 ];
 
 export async function initDb(): Promise<void> {
@@ -211,8 +214,8 @@ export async function saveConversation(conv: any): Promise<void> {
         summary, summary_version,
         system_prompt_mode, custom_system_prompt,
         use_interactions_api, use_flash_lite_utility,
-        career_context, compaction_history, active_interaction
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
+        career_context, compaction_history, active_interaction, rag_memory, features
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)
       ON CONFLICT (id) DO UPDATE SET
         title                 = EXCLUDED.title,
         updated_at            = EXCLUDED.updated_at,
@@ -233,7 +236,9 @@ export async function saveConversation(conv: any): Promise<void> {
         use_flash_lite_utility = EXCLUDED.use_flash_lite_utility,
         career_context        = EXCLUDED.career_context,
         compaction_history    = EXCLUDED.compaction_history,
-        active_interaction    = EXCLUDED.active_interaction`,
+        active_interaction    = EXCLUDED.active_interaction,
+        rag_memory            = EXCLUDED.rag_memory,
+        features              = EXCLUDED.features`,
       [
         conv.id,
         conv.title ?? '',
@@ -257,6 +262,8 @@ export async function saveConversation(conv: any): Promise<void> {
         JSON.stringify(conv.careerContext || {}),
         JSON.stringify(conv.compactionHistory || []),
         conv.activeInteraction ? JSON.stringify(conv.activeInteraction) : null,
+        conv.ragMemory ? JSON.stringify(conv.ragMemory) : null,
+        conv.features ? JSON.stringify(conv.features) : null,
       ]
     );
   } catch (err) {
@@ -304,6 +311,65 @@ export async function deleteConversation(id: string): Promise<void> {
   }
 }
 
+/** Deletes every conversation (messages cascade). Throws on failure so callers can report it. */
+export async function deleteAllConversations(): Promise<void> {
+  if (!pool) return localStore.clear();
+  await pool.query("DELETE FROM conversations");
+}
+
+/** Deletes all per-turn telemetry (lifetime, daily cost and rehydrated session stats derive from it). Throws on failure. */
+export async function clearTurnLogs(): Promise<void> {
+  if (!pool) return;
+  await pool.query("DELETE FROM conversation_logs");
+}
+
+function rowToConversation(r: any, msgs: any[]) {
+  return ({
+    id: r.id,
+    title: r.title,
+    createdAt: new Date(r.created_at).getTime(),
+    updatedAt: new Date(r.updated_at).getTime(),
+    model: r.model,
+    mode: r.mode,
+    strategy: r.strategy,
+    preset: r.preset,
+    responseMode: r.response_mode,
+    thinkingLevel: r.thinking_level,
+    contextBudget: r.context_budget,
+    recentTurnsToKeep: r.recent_turns_to_keep,
+    summary: r.summary || '',
+    summaryVersion: r.summary_version || 0,
+    systemPromptMode: r.system_prompt_mode,
+    customSystemPrompt: r.custom_system_prompt || '',
+    useInteractionsApi: r.use_interactions_api || false,
+    useFlashLiteUtility: r.use_flash_lite_utility ?? true,
+    careerContext: r.career_context || {},
+    compactionHistory: r.compaction_history || [],
+    activeInteraction: r.active_interaction || null,
+    ragMemory: r.rag_memory || undefined,
+    features: r.features || undefined,
+    messages: msgs.map((m: any) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+      structuredResponse: m.structured_response ?? undefined,
+      userEvent: m.user_event ?? undefined,
+      telemetry: m.telemetry ?? undefined,
+      feedback: m.feedback ?? undefined,
+      createdAt: new Date(m.created_at).getTime(),
+    })),
+  });
+}
+
+/** One conversation with its messages, or null. Used when a request reaches a process that has not cached it. */
+export async function loadConversation(id: string): Promise<any | null> {
+  if (!pool) return (await localStore.list()).find((c: any) => c.id === id) ?? null;
+  const conv = await pool.query(`SELECT * FROM conversations WHERE id = $1 AND expires_at > NOW()`, [id]);
+  if (!conv.rows.length) return null;
+  const msgs = await pool.query(`SELECT * FROM messages WHERE conversation_id = $1 ORDER BY created_at ASC`, [id]);
+  return rowToConversation(conv.rows[0], msgs.rows);
+}
+
 export async function loadConversations(): Promise<any[]> {
   if (!pool) return localStore.list();
   try {
@@ -324,39 +390,7 @@ export async function loadConversations(): Promise<any[]> {
       msgsByConv.get(m.conversation_id)!.push(m);
     }
 
-    return convResult.rows.map((r: any) => ({
-      id: r.id,
-      title: r.title,
-      createdAt: new Date(r.created_at).getTime(),
-      updatedAt: new Date(r.updated_at).getTime(),
-      model: r.model,
-      mode: r.mode,
-      strategy: r.strategy,
-      preset: r.preset,
-      responseMode: r.response_mode,
-      thinkingLevel: r.thinking_level,
-      contextBudget: r.context_budget,
-      recentTurnsToKeep: r.recent_turns_to_keep,
-      summary: r.summary || '',
-      summaryVersion: r.summary_version || 0,
-      systemPromptMode: r.system_prompt_mode,
-      customSystemPrompt: r.custom_system_prompt || '',
-      useInteractionsApi: r.use_interactions_api || false,
-      useFlashLiteUtility: r.use_flash_lite_utility ?? true,
-      careerContext: r.career_context || {},
-      compactionHistory: r.compaction_history || [],
-      activeInteraction: r.active_interaction || null,
-      messages: (msgsByConv.get(r.id) || []).map((m: any) => ({
-        id: m.id,
-        role: m.role,
-        content: m.content,
-        structuredResponse: m.structured_response ?? undefined,
-        userEvent: m.user_event ?? undefined,
-        telemetry: m.telemetry ?? undefined,
-        feedback: m.feedback ?? undefined,
-        createdAt: new Date(m.created_at).getTime(),
-      })),
-    }));
+    return convResult.rows.map((r: any) => rowToConversation(r, msgsByConv.get(r.id) || []));
   } catch (err) {
     console.error("[db] loadConversations failed:", err);
     return [];

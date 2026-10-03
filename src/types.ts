@@ -65,7 +65,7 @@ export type ModelId = string;
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high' | 'adaptive';
 
-export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA' | 'MICRO_PROMPT';
+export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA' | 'MICRO_PROMPT' | 'EXP_RAG';
 
 export type OptimizationStrategy =
   | 'BASELINE'          // Baseline / Full History (High token usage)
@@ -93,6 +93,10 @@ export interface TokenUsageMetrics {
   inputTokens: number;                  // Total prompt tokens sent to Gemini
   outputTokens: number;                 // Visible completion tokens
   thinkingTokens: number | null;        // Hidden reasoning/thinking tokens
+  /** Separate model calls made for this answer (e.g. the warehouse planner), priced with their own model. */
+  auxiliary?: Array<{ purpose: string; model: string; inputTokens: number; cachedTokens: number; outputTokens: number; thinkingTokens: number; costUsd: number }>;
+  auxiliaryTokens?: number;
+  auxiliaryCostUsd?: number;
   cachedTokens: number | null;          // Tokens read from implicit/explicit cache
   toolTokens: number | null;            // Tokens for tool declarations/use
   totalTokens: number;                  // Total tokens for this turn

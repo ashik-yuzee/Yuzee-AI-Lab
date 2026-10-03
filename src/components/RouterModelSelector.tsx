@@ -1,14 +1,16 @@
 import React,{useEffect,useId,useState} from 'react';
 import {RUNTIME_ROUTER_MODELS,routerModel} from '../routing/models';
 import {getRouterModel,getRouterStatus,onRouterStatus,setRouterModel,startWarmup} from '../services/MicroToolRouter';
+import {useTokenLab} from '../context/TokenLabContext';
 export function RouterModelSelector(){
  const id=useId();
+ const {chatLocked}=useTokenLab();
  const [selected,setSelected]=useState(getRouterModel);
  const [status,setStatus]=useState(getRouterStatus);
  useEffect(()=>onRouterStatus(value=>{setStatus(value);setSelected(getRouterModel());}),[]);
  return <section className="space-y-2" aria-label="Routing model">
   <label htmlFor={id} className="block text-xs font-semibold text-slate-800">Routing model</label>
-  <select id={id} value={selected} onChange={e=>setRouterModel(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white p-2 text-sm">
+  <select id={id} value={selected} disabled={chatLocked} title={chatLocked?'Fixed for this conversation. Start a new conversation to change it.':undefined} onChange={e=>setRouterModel(e.target.value)} className="w-full rounded-lg border border-slate-200 bg-white p-2 text-sm">
    {RUNTIME_ROUTER_MODELS.map(m=><option key={m.id} value={m.id}>{m.label}{'tokenBudget' in m ? ` — ${m.tokenBudget} tokens` : ' — server-side'}</option>)}
   </select>
   <p className="text-xs text-slate-600">{routerModel(selected).description}</p>

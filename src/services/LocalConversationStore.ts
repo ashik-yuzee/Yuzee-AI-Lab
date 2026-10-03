@@ -39,4 +39,5 @@ export class LocalConversationStore {
     });
   }
   delete(id:string){return this.update(all=>all.filter(c=>c.id!==id));}
+  clear(){return this.update(()=>[]);}
 }

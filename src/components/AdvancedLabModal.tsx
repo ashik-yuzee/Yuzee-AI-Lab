@@ -46,6 +46,7 @@ export const AdvancedLabModal: React.FC = () => {
     sharedSettings,
     updateSharedSettings,
     resetSharedPrompt,
+    chatLocked,
   } = useTokenLab();
 
   // Local state for benchmark
@@ -205,6 +206,11 @@ export const AdvancedLabModal: React.FC = () => {
 
           {/* Tab Content Container */}
           <div className="flex-1 overflow-y-auto p-5 space-y-6 bg-[#FBFBFC]">
+            {chatLocked && (
+              <p role="status" className="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                This conversation has started, so its model, mode and generation settings are fixed. Start a new conversation to change them. The thinking level can still be changed here or in the message box.
+              </p>
+            )}
             {/* TAB: CONTEXT & MEMORY */}
             {effectiveTab === "context" && (
               <div className="space-y-6 max-w-4xl">

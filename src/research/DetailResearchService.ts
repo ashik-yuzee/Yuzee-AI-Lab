@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto';
+import { statePath } from '../services/paths';
 import type { GoogleGenAI } from '@google/genai';
 import { LocalConversationStore } from '../services/LocalConversationStore';
 import { answerSchema, extractEvidence, validateAnswer } from './contract';
@@ -23,7 +24,7 @@ Return ONLY the JSON object matching the supplied schema.`;
 export class DetailResearchService {
   private policyVersion = '2026-09-15.4';
   private store: LocalConversationStore;
-  constructor(private ai: () => GoogleGenAI | null, file = 'data/detail-research.json') {
+  constructor(private ai: () => GoogleGenAI | null, file = statePath('detail-research.json')) {
     this.store = new LocalConversationStore(file);
   }
   async list(conversationId: string): Promise<DetailResult[]> {

@@ -1,0 +1,8 @@
+timesfm[torch]==2.0.2
+torch==2.12.0
+numpy==2.4.6
+neo4j==5.28.2
+PyMySQL==1.1.2
+psutil==7.2.2
+python-dotenv==1.2.2
+openpyxl==3.1.5

@@ -12,3 +12,12 @@ services:
         sync: false
       - key: SKIP_BGE_CONTRACT
         value: "1"
+      # Set in the Render dashboard; the built-in defaults are public.
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: DATABASE_URL
+        sync: false

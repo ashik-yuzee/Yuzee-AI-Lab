@@ -1,6 +1,9 @@
 import React, { useState, useRef, useCallback, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { ArrowUp, Square, Mic, MicOff, Plus, Paperclip, X } from "lucide-react";
+import { ThinkingEffortControl } from "./ThinkingEffortControl";
+import { GEMINI_MODELS } from "../data/models";
+import type { ThinkingLevel } from "../types";
 import {parseOalaMention, addressOala, isOalaSuggestion} from '../oala/invocation';
 
 const MicroRouterStatus = React.lazy(() => import('./MicroRouterStatus').then(m => ({default:m.MicroRouterStatus})));
@@ -15,7 +18,15 @@ interface Attachment {
 const ACCEPTED = "image/*,application/pdf,text/plain,text/csv,application/json";
 
 export const Composer: React.FC = () => {
-  const { sendMessage, isStreaming, stopStreaming, currentConversation } = useTokenLab();
+  const { sendMessage, isStreaming, stopStreaming, currentConversation, capabilities, updateCurrentConversationSettings, pendingSettings, selectedModel } = useTokenLab();
+  const settings = currentConversation ?? { ...pendingSettings, model: pendingSettings.model || selectedModel };
+  // Thinking level is the one setting that may change mid-chat; options follow what the conversation's model accepts.
+  const expRag = settings.mode === "EXP_RAG";
+  const modelInfo = (capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS).find((m: any) => m.id === settings.model);
+  const supported: string[] = expRag ? ["low", "medium", "high"] : (modelInfo as any)?.supportedThinkingLevels ?? ["low", "medium", "high"];
+  // Ordered effort steps; "adaptive" is not offered (medium is the default for every mode).
+  const thinkingOptions = ["minimal", "low", "medium", "high"].filter((l) => supported.includes(l));
+  const currentThinking = !settings.thinkingLevel || settings.thinkingLevel === "adaptive" ? "medium" : settings.thinkingLevel;
   const draftKey = `yuzee-message-draft:${currentConversation?.id || 'new'}`;
   const readDraft = () => { try { return sessionStorage.getItem(draftKey) || ''; } catch { return ''; } };
   const [text, setText] = useState(readDraft);
@@ -71,11 +82,13 @@ export const Composer: React.FC = () => {
 
   const handleSend = async () => {
     if ((!text.trim() && attachments.length === 0) || isStreaming) return;
-    const sent = await sendMessage(text, attachments.map(({ mimeType, data }) => ({ mimeType, data })));
-    if (!sent) return;
+    // Clear immediately (sendMessage resolves only when the reply finishes); restore if the send is refused.
+    const message = text, files = attachments;
     setText("");
     setAttachments([]);
     if (textareaRef.current) textareaRef.current.style.height = "auto";
+    const sent = await sendMessage(message, files.map(({ mimeType, data }) => ({ mimeType, data })));
+    if (!sent) { setText(message); setAttachments(files); }
   };
 
   const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -199,6 +212,12 @@ export const Composer: React.FC = () => {
             placeholder="Tell me what you’d like help with…"
             className="flex-1 min-w-0 text-[16px] sm:text-[15px] text-[#1c1f26] placeholder:text-[#a8b0bb] bg-transparent resize-none overflow-hidden focus:outline-none leading-[1.55] sm:leading-[1.68] min-h-[28px] max-h-44 py-0.5"
           />
+
+          {/* Thinking effort (changeable mid-chat; applies from the next message) */}
+          {thinkingOptions.length > 1 && (
+            <ThinkingEffortControl levels={thinkingOptions} value={currentThinking} disabled={isStreaming}
+              onChange={(level) => updateCurrentConversationSettings({ thinkingLevel: level as ThinkingLevel })} />
+          )}
 
           {/* Mic */}
           <button

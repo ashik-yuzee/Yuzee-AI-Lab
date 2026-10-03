@@ -34,6 +34,10 @@ interface TokenLabContextType {
   sessionStats: SessionCumulativeStats | null;
   isLoading: boolean;
   isStreaming: boolean;
+  /** True once the current conversation has messages: model, mode and settings are fixed; thinking level stays editable. */
+  chatLocked: boolean;
+  /** Settings chosen before the first message of a new conversation. */
+  pendingSettings: Partial<Conversation>;
   activeTurnTelemetry: {
     usage: TokenUsageMetrics;
     contextMetrics: ContextBreakdown;
@@ -107,6 +111,7 @@ interface TokenLabContextType {
   startNewConversation: (title?: string) => Promise<Conversation>;
   loadDemoConversation: () => Promise<Conversation>;
   removeConversation: (id: string) => Promise<void>;
+  renameConversation: (id: string, title: string) => Promise<void>;
   updateCurrentConversationSettings: (updates: Partial<Conversation>) => Promise<void>;
   applyOptimizationMode: (mode: OptimizationMode) => void;
   applyPreset: (preset: PresetMode) => void;
@@ -116,6 +121,10 @@ interface TokenLabContextType {
   resetMemory: () => Promise<void>;
   refreshStats: () => Promise<void>;
   resetSessionStats: () => Promise<void>;
+  /** Deletes every conversation (server, browser backup and UI). Returns the number deleted. */
+  deleteAllConversations: () => Promise<number>;
+  /** Clears all token telemetry (counters, token log and per-turn DB log). */
+  resetAllTelemetry: () => Promise<void>;
   inspectTurnTelemetry: (telemetry: any) => void;
   localStorageStats: { bytes: number; conversationCount: number; storageAvailable: boolean };
   clearLocalData: () => void;
@@ -217,6 +226,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const sendLockRef = useRef(false);
   const [selectedModel, setSelectedModel] = useState<string>(DEFAULT_MODEL_ID);
   const pendingModel = useRef<string>(DEFAULT_MODEL_ID);
+  // Mode / thinking chosen before the first message (no conversation yet); applied when the conversation is created.
+  const [pendingSettings, setPendingSettings] = useState<Partial<Conversation>>({});
 
   // Daily cost warning state
   const [dailyCostWarning, setDailyCostWarning] = useState<{ level: '$1' | '$5' | '$10' | '$15+' | null; totalCostUsd: number }>({ level: null, totalCostUsd: 0 });
@@ -310,17 +321,19 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     });
   }, [isStreaming, currentConversation]);
 
+  const [lsVersion, setLsVersion] = useState(0);
   const localStorageStats = useMemo(() => {
     const bytes = lsBytes();
     const saved = lsLoad();
     return { bytes, conversationCount: saved.length, storageAvailable: typeof localStorage !== "undefined" };
-  }, [conversations]); // recompute when conversations change
+  }, [conversations, lsVersion]); // recompute when conversations change or the backup is cleared
 
   const clearLocalData = useCallback(() => {
     try {
       localStorage.removeItem(LS_KEY);
       localStorage.removeItem(LS_ACTIVE_CONVERSATION_KEY);
     } catch { /* ignore */ }
+    setLsVersion((v) => v + 1);
   }, []);
 
   const refreshStats = useCallback(async () => {
@@ -333,6 +346,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, []);
 
   const selectConversation = async (id: string) => {
+    // Stream updates only apply to the visible conversation; switching mid-reply would strand the reply.
+    if (isStreaming) return;
     const found = conversations.find((c) => c.id === id);
     if (found) {
       setCurrentConversation(found);
@@ -347,6 +362,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   const startNewConversation = async (title?: string): Promise<Conversation> => {
+    if (isStreaming && currentConversation) return currentConversation;
     // Don't create a duplicate if the current conversation is already empty
     if (currentConversation && (!currentConversation.messages || currentConversation.messages.length === 0)) {
       return currentConversation;
@@ -355,8 +371,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       title || "New Career Exploration",
       currentConversation?.model || pendingModel.current,
       "BASELINE",
-      { mode: "VANILLA", thinkingLevel: "medium", responseMode: "vanilla", contextBudget: 270000, recentTurnsToKeep: 100 }
+      { mode: "VANILLA", thinkingLevel: "medium", responseMode: "vanilla", contextBudget: 270000, recentTurnsToKeep: 100, ...pendingSettings }
     );
+    setPendingSettings({});
     setConversations((prev) => [newConv, ...prev]);
     setCurrentConversation(newConv);
     setActiveTurnTelemetry(null);
@@ -396,17 +413,35 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
+  const renameConversation = async (id: string, title: string) => {
+    if (currentConversation?.id === id) return updateCurrentConversationSettings({ title });
+    const previous = conversations.find((c) => c.id === id)?.title;
+    setConversations((prev) => prev.map((c) => (c.id === id ? { ...c, title } : c)));
+    try { await api.updateConversation(id, { title }); }
+    catch (e) {
+      console.error("Failed to rename conversation:", e);
+      setConversations((prev) => prev.map((c) => (c.id === id ? { ...c, title: previous ?? c.title } : c)));
+    }
+  };
+
   const updateCurrentConversationSettings = async (updates: Partial<Conversation>) => {
+    // Once the conversation has messages only the title, thinking level and memory capsule may change (server enforces too).
+    if (currentConversation?.messages?.length) {
+      const allowed = Object.fromEntries(Object.entries(updates).filter(([k]) => k === 'title' || k === 'thinkingLevel' || k === 'careerContext')) as Partial<Conversation>;
+      if (Object.keys(allowed).length !== Object.keys(updates).length) console.warn('[settings] Ignored a change to settings that are fixed for this conversation.');
+      if (!Object.keys(allowed).length) return;
+      updates = allowed;
+    }
     if (updates.model) { pendingModel.current = updates.model; setSelectedModel(updates.model); }
-    if (!currentConversation) return;
+    if (!currentConversation) { setPendingSettings((prev) => ({ ...prev, ...updates })); return; }
     const updated = { ...currentConversation, ...updates, updatedAt: Date.now() };
     setCurrentConversation(updated);
     setConversations((prev) => prev.map((c) => (c.id === updated.id ? updated : c)));
     await api.updateConversation(updated.id, updates);
   };
 
+  // Modes no longer set the thinking level: it defaults to medium and is chosen in the message box.
   const applyOptimizationMode = (mode: OptimizationMode) => {
-    if (!currentConversation) return;
     let updates: Partial<Conversation> = { mode };
 
     switch (mode) {
@@ -414,7 +449,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updates = {
           mode: "AUTO",
           strategy: "ADAPTIVE_HYBRID",
-          thinkingLevel: "adaptive",
           recentTurnsToKeep: 100,
           contextBudget: 270000,
           responseMode: "standard",
@@ -424,7 +458,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updates = {
           mode: "SAVE_TOKENS",
           strategy: "SUMMARY_RECENT",
-          thinkingLevel: "low",
           recentTurnsToKeep: 2,
           contextBudget: 1000,
           responseMode: "quick",
@@ -434,7 +467,6 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updates = {
           mode: "FULL_CONTEXT",
           strategy: "BASELINE",
-          thinkingLevel: "medium",
           recentTurnsToKeep: 100,
           contextBudget: 270000,
           responseMode: "standard",
@@ -444,14 +476,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         updates = {
           mode: "VANILLA",
           strategy: "BASELINE",
-          thinkingLevel: "minimal",
           recentTurnsToKeep: 100,
           contextBudget: 270000,
           responseMode: "vanilla",
         };
         break;
       case "MICRO_PROMPT":
-        updates = {mode:"MICRO_PROMPT",strategy:"ADAPTIVE_HYBRID",thinkingLevel:"adaptive",responseMode:"standard"};
+        updates = {mode:"MICRO_PROMPT",strategy:"ADAPTIVE_HYBRID",responseMode:"standard"};
+        break;
+      case "EXP_RAG":
+        // Server-enforced: Gemini 3.7 Flash, medium thinking, cached core prompt + retrieval.
+        updates = { mode: "EXP_RAG", model: "gemini-3.7-flash", responseMode: "standard" };
         break;
       case "ADVANCED":
         updates = { mode: "ADVANCED" };
@@ -953,6 +988,24 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     await refreshStats();
   };
 
+  const deleteAllConversationsAction = async () => {
+    if (isStreaming) throw new Error("Stop the current reply before deleting all conversations.");
+    const deleted = await api.deleteAllConversations();
+    // The browser backup must go too, or the next load would restore everything to the server.
+    try { localStorage.removeItem(LS_KEY); localStorage.removeItem(LS_ACTIVE_CONVERSATION_KEY); } catch { /* ignore */ }
+    setConversations([]);
+    setCurrentConversation(null);
+    setActiveTurnTelemetry(null);
+    return deleted;
+  };
+
+  const resetAllTelemetryAction = async () => {
+    await api.resetAllTelemetry();
+    setActiveTurnTelemetry(null);
+    setDailyCostWarning({ level: null, totalCostUsd: 0 });
+    await refreshStats();
+  };
+
   const inspectTurnTelemetry = (telemetry: any) => {
     setActiveTurnTelemetry(telemetry);
     setTokenInspectorOpen(true);
@@ -1031,6 +1084,9 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         startNewConversation,
         loadDemoConversation,
         removeConversation,
+        renameConversation,
+        chatLocked: (currentConversation?.messages?.length ?? 0) > 0,
+        pendingSettings,
         updateCurrentConversationSettings,
         applyOptimizationMode,
         applyPreset,
@@ -1040,6 +1096,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         resetMemory,
         refreshStats,
         resetSessionStats: resetSessionStatsAction,
+        deleteAllConversations: deleteAllConversationsAction,
+        resetAllTelemetry: resetAllTelemetryAction,
         inspectTurnTelemetry,
         localStorageStats,
         clearLocalData,

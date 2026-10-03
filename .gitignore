@@ -20,3 +20,9 @@ data/objective-preview/
 
 # Rebuildable public catalogue search index
 data/warehouse/
+
+# EXP-RAG warehouse semantic index (rebuild with: npm run rag:index)
+data/rag/
+
+# Warehouse intelligence runs (forecast artifacts, graph reports; rebuild with the worker)
+data/intelligence/

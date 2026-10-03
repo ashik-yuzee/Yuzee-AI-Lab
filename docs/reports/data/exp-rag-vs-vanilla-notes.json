@@ -1,0 +1,67 @@
+{
+ "findings": [
+  "<b>EXP-RAG with Gemini embeddings (the default) is significantly better than Vanilla:</b> 15 wins, 4 losses and 17 ties over 36 turns judged in both answer orders, where a win counts only if both orders agree (sign test p = 0.01). It scores higher on counselling (4.78 → 4.92) and clarity, with equal relevance, grounding and continuity within ±0.06.",
+  "<b>EXP-RAG with BGE embeddings is on par with Vanilla, not significantly better:</b> 12–8–16 (p = 0.25), total 24.58 → 24.53. It shares every speed and cost gain, so it is the right choice where no Gemini API key is available, but Gemini is the better retriever for quality.",
+  "<b>Faster:</b> median turn latency 14.2 s for both EXP-RAG variants vs 17.2 s for Vanilla (−17% pooled; −23 to −25% in the run where every mode was measured in the same window). The gain comes from before the model call (3.1 → 2.1–2.3 s), time to first token (4.0 → 3.2 s) and the review (4.4 → 2.7–2.8 s); generation time is about the same.",
+  "<b>Cheaper:</b> 36–37% lower cost per turn ($0.0027 vs $0.0042) with about a third of Vanilla's input tokens: the cached core prompt replaces the full prompt and only relevant guidance and evidence are retrieved.",
+  "<b>Issues found along the way:</b> comparison tables showed no row labels to users (fixed for every mode); the teaching review re-emitted every substantive answer in full, about 4 s per turn (fast path for EXP-RAG; Vanilla left unchanged so the baseline stays fair); and EXP-RAG wrote a short poem for an off-topic request, which breaks Oala's scope (fixed: it now declines and redirects in 4/4 runs).",
+  "<b>Judge noise is large:</b> re-scoring identical answers once moved several verdicts, so the headline uses both final runs, each judged in both orders. Single-order counts are higher (Gemini 23–8–5) but less trustworthy."
+ ],
+ "changes": [
+  [
+   "Comparison rows labelled from their ids in the UI (all modes)",
+   "v1.3 rows carry only id + cells, so the dimension column was hidden from users"
+  ],
+  [
+   "Core prompt: concreteness rule (place, role, transferable experience, practical trade-offs as things to check)",
+   "Losses for generic advice versus Vanilla's personalised detail"
+  ],
+  [
+   "Core prompt: open TEXT question when it reveals more than a menu; explicit one-question final check",
+   "Losses for rigid multiple-choice and double questions"
+  ],
+  [
+   "Deterministic single-question guard: drops a trailing prose question and trims compound free-text questions",
+   "14 of 34 follow-up questions asked two things"
+  ],
+  [
+   "Core prompt: no restating table content in prose; codes only when asked and evidenced",
+   "Losses for repetition and superseded qualification codes"
+  ],
+  [
+   "Teaching review fast path for EXP-RAG: verdict OK or REVISE with blocks",
+   "The review re-emitted the full answer every turn (~4 s)"
+  ],
+  [
+   "Warehouse planner on Gemini 3.5 Flash-Lite for EXP-RAG, with a comparison guard",
+   "Planner latency 2.6 s → 1.3 s; the guard stops a false 'comparison' plan"
+  ],
+  [
+   "Local scope for course evidence: interstate-only records dropped, same-state campuses away from the user labelled (lookup and catalogue hits)",
+   "Answers named interstate or distant providers as local options"
+  ],
+  [
+   "Dense evidence rerank skipped when ranking cannot change the selected set",
+   "Saves an embedding round trip (≈0.8 s with Gemini) on most turns"
+  ],
+  [
+   "Gemini Embedding 2 as the default EXP-RAG embedder when an API key is set; per-provider thresholds tuned on the guidance eval set",
+   "Dense retrieval without local model files; 100% guidance recall with fewer tokens"
+  ],
+  [
+   "Off-topic rule: never produce the unrelated content itself",
+   "EXP-RAG wrote a short poem for 'write me a poem about cats' in 3 of 4 runs"
+  ],
+  [
+   "Evaluation: order-swapped double judging, scope-aware rubric, 429 back-off, UI-faithful rendering",
+   "Single-pass judging and rendering artifacts produced misleading verdicts"
+  ]
+ ],
+ "limitations": [
+  "One generation per turn per run (two final runs pooled) and an LLM judge. Judging both orders and counting only agreed wins removes position bias but leaves many ties; a larger scenario set would be needed to show a significant BGE difference.",
+  "The judge (Gemini 3.7 Flash) is the same model family as the generator; it was blind to which mode produced each answer and saw answers in alternating order.",
+  "18 turns across 13 scenarios cover first turns, comparisons, costs, outlook, support needs, off-topic and action requests, recognition of experience, local lookups, postgraduate choices and two multi-turn conversations; production traffic will be broader.",
+  "Final B reused Final A's Vanilla answers (Vanilla code was unchanged), so its latency comparison spans two time windows.",
+  "TimesFM forecasts were historical-only during testing (the JSA refresh was unreachable), so no turn exercised a current forecast."
+ ]
+}
