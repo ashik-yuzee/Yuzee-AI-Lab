@@ -23,7 +23,7 @@ const cases=[
  ['closure','','closure','Thanks, that is all for now.'],
  ['unknown','','unknown','Can you explain that thing?'],
 ] as const;
-const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD||'yuzeeadmin@2026'})})).json();
+const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD})})).json();
 if(!login.token)throw Error('Local login failed');
 const headers={'Content-Type':'application/json',Authorization:'Bearer '+login.token};
 const results:any[]=[];

@@ -14,7 +14,7 @@ const cases=[
  ['learning-depth','SKILL_009','@Oala Teach me how to clarify a customer request. I have never worked in customer service. Help me understand the skill with examples and practice before considering any course.'],
  ['placement-unknown','INST_009','@Oala Review a possible placement match using only these fictional facts: my course includes preparing simple reports, and a local company produces reports. We have no information about supervision, capacity, safety arrangements or available places. Explain whether this establishes a suitable placement and what to check.'],
 ] as const;
-const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD||'yuzeeadmin@2026'})})).json();
+const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD})})).json();
 if(!login.token)throw Error('Local login failed');
 const headers={'Content-Type':'application/json',Authorization:'Bearer '+login.token};
 const results:any[]=[];

@@ -98,22 +98,24 @@ const jsonSmall = express.json({ limit: '500kb' }), jsonLarge = express.json({ l
 app.use((req, res, next) => (req.path === '/api/conversations/restore' ? jsonLarge : jsonSmall)(req, res, next));
 
 // ── Authentication ────────────────────────────────────────────────────────────
-// Token is a deterministic HMAC derived from credentials + server secret.
-// Survives server restarts — no in-memory session store needed.
-const ADMIN_USER = process.env.ADMIN_USERNAME || 'yuzeeadmin';
-const ADMIN_PASS = process.env.ADMIN_PASSWORD || 'yuzeeadmin@2026';
-const AUTH_SECRET = process.env.AUTH_SECRET || 'yuzee-lab-secret-2026';
+// Credentials come only from the environment (ADMIN_USERNAME, ADMIN_PASSWORD, optional AUTH_SECRET); nothing is
+// hardcoded. Without them sign-in is disabled. The token is a deterministic HMAC, so it survives restarts and works
+// across serverless instances without a session store.
+const ADMIN_USER = (process.env.ADMIN_USERNAME || '').trim();
+const ADMIN_PASS = process.env.ADMIN_PASSWORD || '';
+const AUTH_CONFIGURED = !!(ADMIN_USER && ADMIN_PASS);
+// AUTH_SECRET is recommended; without it the signing key is derived from the password (still secret, still stable).
+const AUTH_SECRET = process.env.AUTH_SECRET || crypto.createHash('sha256').update(`yuzee-auth-key:${ADMIN_PASS}`).digest('hex');
 
 function makeStableToken(username: string, password: string): string {
   return crypto.createHmac('sha256', AUTH_SECRET).update(`${username}:${password}`).digest('hex');
 }
 
-const VALID_TOKEN = makeStableToken(ADMIN_USER, ADMIN_PASS);
-if (!process.env.ADMIN_PASSWORD || !process.env.AUTH_SECRET) {
-  // ponytail: warn instead of refusing to boot so existing deployments keep running; set both in production.
-  console.error('[auth] ADMIN_PASSWORD and/or AUTH_SECRET are unset; the built-in defaults are public. Set them in the host environment.');
-}
+const VALID_TOKEN = AUTH_CONFIGURED ? makeStableToken(ADMIN_USER, ADMIN_PASS) : '';
+if (!AUTH_CONFIGURED) console.error('[auth] ADMIN_USERNAME and ADMIN_PASSWORD must be set in the environment; sign-in is disabled until they are.');
+else if (!process.env.AUTH_SECRET) console.warn('[auth] AUTH_SECRET is not set; set a long random value so tokens do not depend on the password alone.');
 const tokenMatches = (token: string) => {
+  if (!AUTH_CONFIGURED) return false;
   const a = Buffer.from(token), b = Buffer.from(VALID_TOKEN);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 };
@@ -146,8 +148,9 @@ app.use('/api/conversations/:id', async (req, _res, next) => {
 });
 
 app.post('/api/auth/login', makeRateLimit(5), (req, res) => {
-  const { username, password } = req.body;
-  if (username !== ADMIN_USER || password !== ADMIN_PASS) {
+  if (!AUTH_CONFIGURED) return void res.status(503).json({ error: 'Sign-in is not configured on this server. Set ADMIN_USERNAME and ADMIN_PASSWORD in its environment.' });
+  const { username, password } = req.body ?? {};
+  if (typeof username !== 'string' || typeof password !== 'string' || username !== ADMIN_USER || password !== ADMIN_PASS) {
     return void res.status(401).json({ error: 'Invalid credentials' });
   }
   res.json({ token: makeStableToken(username, password) });

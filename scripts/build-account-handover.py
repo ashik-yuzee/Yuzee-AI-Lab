@@ -46,7 +46,7 @@ for line in (repo/'.env').read_text().splitlines():
  m=re.match(r'\s*([A-Z_]+)\s*=\s*(.*)',line)
  if m and re.search(r'KEY|PASSWORD|SECRET|DATABASE_URL|TOKEN',m[1]):
   value=m[2].strip().strip('"\'')
-  if len(value)>8 and value not in ['yuzeeadmin@2026','yuzee-lab-secret-2026']:secrets.append(value.encode())
+  if len(value)>8:secrets.append(value.encode())
 hits=[]
 for f in root.rglob('*'):
  if f.is_file():

@@ -140,8 +140,8 @@ npm run dev
 3000 serves both the API and the UI with HMR. The Vite dev-server proxy block in
 `vite.config.ts` only matters if you run `vite` standalone.
 
-Default login is `yuzeeadmin` / `yuzeeadmin@2026` unless `ADMIN_USERNAME` / `ADMIN_PASSWORD`
-are set.
+Sign-in uses `ADMIN_USERNAME` / `ADMIN_PASSWORD` from the environment only (no defaults in code; sign-in is disabled until both
+are set).
 
 ### Environment variables
 
@@ -149,8 +149,8 @@ are set.
 |---|---|---|
 | `GEMINI_API_KEY` | Yes for live mode | All Gemini calls. Without it, chat returns an `AUTH_ERROR` SSE event. |
 | `DATABASE_URL` | No | PostgreSQL. When unset, everything persists to `data/*.json`. |
-| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | No | Login credentials. |
-| `AUTH_SECRET` | No | HMAC secret for the stateless auth token. |
+| `ADMIN_USERNAME` / `ADMIN_PASSWORD` | Yes | Login credentials (environment only; sign-in is disabled without them). |
+| `AUTH_SECRET` | Recommended | HMAC secret for the stateless auth token (derived from the password when unset). |
 | `CLOUDFLARE_ACCOUNT_ID` / `CLOUDFLARE_API_TOKEN` | No | Enables the Llama-3.1-8b server-side routing model option. |
 | `YUZEE_WAREHOUSE_DB` | No | Path to the SQLite catalogue. Defaults to `~/.yuzee-monitor/training_gov.db`. |
 | `PORT` | No | Default 3000. |

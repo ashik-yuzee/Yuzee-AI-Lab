@@ -5,7 +5,7 @@ import {responseToReadableText} from '../../src/ux/responsePresentation';
 import {learningProfiles} from '../../src/routing/learningDepth';
 const cases=[['followup','','followup',"I still don't understand paraphrasing. Explain just that part using a different example, without repeating the whole lesson."]] as const;
 const prior=JSON.parse(fs.readFileSync('../outputs/Structured-Teaching-Final-Checks.json','utf8')).find((r:any)=>r.id==='communication');
-const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD||'yuzeeadmin@2026'})})).json();
+const login=await(await fetch('http://127.0.0.1:3000/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:process.env.ADMIN_USERNAME||'yuzeeadmin',password:process.env.ADMIN_PASSWORD})})).json();
 if(!login.token)throw Error('Local login failed');
 const headers={'Content-Type':'application/json',Authorization:'Bearer '+login.token};
 const results:any[]=[];

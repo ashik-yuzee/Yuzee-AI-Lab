@@ -87,7 +87,12 @@ function LoginPage({ onLogin }: { onLogin: () => void }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: u, password: p }),
       });
-      if (!r.ok) { setErr('Invalid credentials'); setLoading(false); return; }
+      if (!r.ok) {
+        // 503: the server has no ADMIN_USERNAME / ADMIN_PASSWORD; 429: too many attempts.
+        const detail = await r.json().catch(() => ({}));
+        setErr(r.status === 401 ? 'Invalid credentials' : detail.error || 'Sign-in failed. Please try again.');
+        setLoading(false); return;
+      }
       const { token } = await r.json();
       localStorage.setItem('yuzee_auth', token);
       onLogin();

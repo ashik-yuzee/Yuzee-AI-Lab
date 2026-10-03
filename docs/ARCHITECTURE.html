@@ -421,8 +421,8 @@ Spring backend.</p>
 <p><code>npm run dev</code> runs Express <strong>and</strong> Vite in middleware mode from the same process, so port
 3000 serves both the API and the UI with HMR. The Vite dev-server proxy block in
 <code>vite.config.ts</code> only matters if you run <code>vite</code> standalone.</p>
-<p>Default login is <code>yuzeeadmin</code> / <code>yuzeeadmin@2026</code> unless <code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code>
-are set.</p>
+<p>Sign-in uses <code>ADMIN_USERNAME</code> / <code>ADMIN_PASSWORD</code> from the environment only (no defaults in code; sign-in is disabled until both
+are set).</p>
 <h3>Environment variables</h3>
 <div class="table-wrap"><table>
 <thead>
