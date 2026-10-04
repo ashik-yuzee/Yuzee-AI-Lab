@@ -1,0 +1,64 @@
+{
+ "l0-concept#1": {
+  "X": "EXP_RAG",
+  "Y": "MULTI_AGENT",
+  "Z": "VANILLA"
+ },
+ "t1-lookup#1": {
+  "X": "EXP_RAG",
+  "Y": "MULTI_AGENT",
+  "Z": "VANILLA"
+ },
+ "s10-local#1": {
+  "X": "EXP_RAG",
+  "Y": "VANILLA",
+  "Z": "MULTI_AGENT"
+ },
+ "m1-multi#1": {
+  "X": "MULTI_AGENT",
+  "Y": "VANILLA",
+  "Z": "EXP_RAG"
+ },
+ "t2-fit#1": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MULTI_AGENT_FAST",
+  "S": "MULTI_AGENT"
+ },
+ "t3-pathway#1": {
+  "P": "VANILLA",
+  "Q": "EXP_RAG",
+  "R": "MULTI_AGENT_FAST",
+  "S": "MULTI_AGENT"
+ },
+ "t4-company#1": {
+  "P": "EXP_RAG",
+  "Q": "MULTI_AGENT_FAST",
+  "R": "VANILLA",
+  "S": "MULTI_AGENT"
+ },
+ "t5-discovery#1": {
+  "P": "EXP_RAG",
+  "Q": "MULTI_AGENT_FAST",
+  "R": "MULTI_AGENT",
+  "S": "VANILLA"
+ },
+ "t7-missing#1": {
+  "P": "MULTI_AGENT",
+  "Q": "VANILLA",
+  "R": "EXP_RAG",
+  "S": "MULTI_AGENT_FAST"
+ },
+ "s4-change#1": {
+  "P": "MULTI_AGENT",
+  "Q": "MULTI_AGENT_FAST",
+  "R": "EXP_RAG",
+  "S": "VANILLA"
+ },
+ "m1-multi#2": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MULTI_AGENT",
+  "S": "MULTI_AGENT_FAST"
+ }
+}

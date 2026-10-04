@@ -1,0 +1,356 @@
+{
+ "turns": [
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 16
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 22
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "P": 4,
+    "Q": 1,
+    "R": 2,
+    "S": 3
+   },
+   "reason": "Q honestly admits no count and names where to check plus alternative titles; P gives no way to find live numbers."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 3,
+     "total": 18
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "S": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    }
+   },
+   "rank": {
+    "P": 4,
+    "Q": 2,
+    "R": 3,
+    "S": 1
+   },
+   "reason": "S gives a direct verdict, cafe-specific case study idea and named training; Q strong; P and R more generic."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    },
+    "Q": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    },
+    "S": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 23
+    }
+   },
+   "rank": {
+    "P": 2,
+    "Q": 4,
+    "R": 2,
+    "S": 1
+   },
+   "reason": "S is a tight three-step path with trade-off; P/R similar (R's 3-6 month timeline unsupported); Q generic, no courses."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "P": {
+     "relevance": 3,
+     "grounding": 3,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 15
+    },
+    "Q": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 19
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 2,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 18
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    }
+   },
+   "rank": {
+    "P": 4,
+    "Q": 1,
+    "R": 2,
+    "S": 3
+   },
+   "reason": "Q explicitly states no Canva-specific data; R has the most concrete evidence-building actions but no limits disclosure; P weakest."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "P": {
+     "relevance": 3,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 16
+    },
+    "Q": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 20
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "P": 4,
+    "Q": 1,
+    "R": 3,
+    "S": 2
+   },
+   "reason": "Q clearly states no live board; S adds entry requirements; R thinner; P never admits it cannot list jobs."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "P": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "S": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    }
+   },
+   "rank": {
+    "P": 2,
+    "Q": 1,
+    "R": 4,
+    "S": 3
+   },
+   "reason": "Q gives RPL, grad cert caveat and good question; P solid; S has unsupported 6-month detail; R vaguer."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    },
+    "Q": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 20
+    },
+    "S": {
+     "relevance": 1,
+     "grounding": 1,
+     "personalisation": 1,
+     "actionability": 1,
+     "clarity": 1,
+     "total": 5
+    }
+   },
+   "rank": {
+    "P": 2,
+    "Q": 3,
+    "R": 1,
+    "S": 4
+   },
+   "reason": "R names Gordon and the standard Cert III entry route plus screening; P good; Q lists non-Geelong providers; S has no answer."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "P": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 21
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 19
+    }
+   },
+   "rank": {
+    "P": 2,
+    "Q": 3,
+    "R": 1,
+    "S": 4
+   },
+   "reason": "R states what to study for each role directly; P similar and broad; Q narrower with unsupported course length; S thinnest."
+  }
+ ]
+}

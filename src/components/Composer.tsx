@@ -5,6 +5,7 @@ import { ThinkingEffortControl } from "./ThinkingEffortControl";
 import { GEMINI_MODELS } from "../data/models";
 import type { ThinkingLevel } from "../types";
 import {parseOalaMention, addressOala, isOalaSuggestion} from '../oala/invocation';
+import {AgentTeamButton} from './agents/AgentTeamButton';
 
 const MicroRouterStatus = React.lazy(() => import('./MicroRouterStatus').then(m => ({default:m.MicroRouterStatus})));
 
@@ -21,7 +22,7 @@ export const Composer: React.FC = () => {
   const { sendMessage, isStreaming, stopStreaming, currentConversation, capabilities, updateCurrentConversationSettings, pendingSettings, selectedModel } = useTokenLab();
   const settings = currentConversation ?? { ...pendingSettings, model: pendingSettings.model || selectedModel };
   // Thinking level is the one setting that may change mid-chat; options follow what the conversation's model accepts.
-  const expRag = settings.mode === "EXP_RAG";
+  const expRag = settings.mode === "EXP_RAG" || settings.mode === "MULTI_AGENT";
   const modelInfo = (capabilities?.modelsList?.length ? capabilities.modelsList : GEMINI_MODELS).find((m: any) => m.id === settings.model);
   const supported: string[] = expRag ? ["low", "medium", "high"] : (modelInfo as any)?.supportedThinkingLevels ?? ["low", "medium", "high"];
   // Ordered effort steps; "adaptive" is not offered (medium is the default for every mode).
@@ -173,7 +174,7 @@ export const Composer: React.FC = () => {
 
         {/* Pill-shaped input */}
         <div
-          className={`flex items-center gap-1 sm:gap-1.5 bg-white border rounded-[28px] px-2.5 sm:px-3 py-1 sm:py-2.5 transition-all ${
+          className={`flex flex-wrap sm:flex-nowrap items-center gap-1 sm:gap-1.5 bg-white border rounded-[28px] px-2.5 sm:px-3 py-1 sm:py-2.5 transition-all ${
             listening ? "border-red-300" : "border-[#e2e6ed]"
           }`}
           style={{ boxShadow: "0 0 0 1px rgba(0,0,0,.04), 0 2px 6px rgba(0,0,0,.05)" }}
@@ -192,7 +193,7 @@ export const Composer: React.FC = () => {
             type="button"
             disabled={isStreaming}
             onClick={() => fileInputRef.current?.click()}
-            className="w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#8a929d] hover:text-[var(--accent)] hover:bg-[var(--accent-8)] transition-colors cursor-pointer shrink-0"
+            className="mr-auto sm:mr-0 w-11 h-11 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[#8a929d] hover:text-[var(--accent)] hover:bg-[var(--accent-8)] transition-colors cursor-pointer shrink-0"
             title="Attach file (image, PDF, text)"
           >
             <Plus className="w-4 h-4" />
@@ -210,7 +211,7 @@ export const Composer: React.FC = () => {
             aria-describedby={showOalaSuggestion ? 'oala-suggestion' : undefined}
             disabled={isStreaming}
             placeholder="Tell me what you’d like help with…"
-            className="flex-1 min-w-0 text-[16px] sm:text-[15px] text-[#1c1f26] placeholder:text-[#a8b0bb] bg-transparent resize-none overflow-hidden focus:outline-none leading-[1.55] sm:leading-[1.68] min-h-[28px] max-h-44 py-0.5"
+            className="flex-1 basis-full sm:basis-auto order-first sm:order-none px-2 pt-2 sm:px-0 min-w-0 text-[16px] sm:text-[15px] text-[#1c1f26] placeholder:text-[#a8b0bb] bg-transparent resize-none overflow-hidden focus:outline-none leading-[1.55] sm:leading-[1.68] min-h-[28px] max-h-44 py-0.5"
           />
 
           {/* Thinking effort (changeable mid-chat; applies from the next message) */}
@@ -218,6 +219,8 @@ export const Composer: React.FC = () => {
             <ThinkingEffortControl levels={thinkingOptions} value={currentThinking} disabled={isStreaming}
               onChange={(level) => updateCurrentConversationSettings({ thinkingLevel: level as ThinkingLevel })} />
           )}
+
+          {settings.mode === "MULTI_AGENT" && <AgentTeamButton />}
 
           {/* Mic */}
           <button

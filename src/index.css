@@ -1,5 +1,6 @@
 @import "./components/guidance-list.css";
 @import "./components/chat-experience.css";
+@import "./components/agents/agents.css";
 @import "tailwindcss";
 
 /* Accent color — updated at runtime via Settings */

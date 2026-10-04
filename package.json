@@ -50,13 +50,17 @@
     "rag:index": "node --no-warnings --import ./node_modules/tsx/dist/loader.mjs scripts/build-rag-warehouse.ts",
     "build:rag-vectors": "node --import ./node_modules/tsx/dist/loader.mjs scripts/build-rag-guidance-vectors.ts",
     "report:modes": "node --import ./node_modules/tsx/dist/loader.mjs scripts/mode-report.ts",
+    "report:multi-agent": "node --import ./node_modules/tsx/dist/loader.mjs scripts/multi-agent-report.ts",
     "eval:modes": "node --import ./node_modules/tsx/dist/loader.mjs scripts/compare-modes.ts",
     "eval:exp-rag": "node --no-warnings --import ./node_modules/tsx/dist/loader.mjs scripts/eval-exp-rag.ts",
     "test:exp-rag": "node --no-warnings --import ./node_modules/tsx/dist/loader.mjs tests/exp-rag.test.ts",
     "download:bge": "node --import ./node_modules/tsx/dist/loader.mjs scripts/download-bge-model.ts",
     "test:intelligence": "node --no-warnings --import ./node_modules/tsx/dist/loader.mjs tests/intelligence.test.ts",
+    "test:agents-ui": "node --import ./node_modules/tsx/dist/loader.mjs tests/agents-view-model.test.ts",
+    "test:pixel-agents": "node --import ./node_modules/tsx/dist/loader.mjs tests/pixel-agents.test.ts",
     "intelligence:up": "docker compose -f docker-compose.intelligence.yml up -d neo4j",
-    "intelligence:run": "docker compose -f docker-compose.intelligence.yml run --rm worker pipeline"
+    "intelligence:run": "docker compose -f docker-compose.intelligence.yml run --rm worker pipeline",
+    "test:multi-agent": "node --no-warnings --import ./node_modules/tsx/dist/loader.mjs tests/multi-agent.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",

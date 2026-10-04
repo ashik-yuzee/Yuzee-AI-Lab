@@ -22,6 +22,8 @@ import {
   UserEvent,
 } from "../types";
 import * as api from "../services/api";
+import type { OrchestrationViewModel } from "../agents/contract";
+import { applyOrchestrationEvent, interruptOrchestration, viewModelFromRecord } from "../agents/viewModel";
 import { GEMINI_MODELS } from "../data/models";
 
 const DEFAULT_MODEL_ID = GEMINI_MODELS.find(m => m.isDefault)?.id ?? "gemini-3.5-flash";
@@ -128,6 +130,10 @@ interface TokenLabContextType {
   inspectTurnTelemetry: (telemetry: any) => void;
   localStorageStats: { bytes: number; conversationCount: number; storageAvailable: boolean };
   clearLocalData: () => void;
+  /** MULTI_AGENT: the latest turn's specialist work in the open conversation (live while streaming, from the saved record afterwards). */
+  liveOrchestration: OrchestrationViewModel | null;
+  /** MULTI_AGENT analytics (agent_result_expanded, agent_next_action_clicked, ...). Fire-and-forget. */
+  trackAgentEvent: (event: string, data: { orchestrationId: string; agent?: string; action?: string }) => void;
 }
 
 const TokenLabContext = createContext<TokenLabContextType | null>(null);
@@ -336,6 +342,17 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setLsVersion((v) => v + 1);
   }, []);
 
+  // MULTI_AGENT: the latest assistant turn's view; follows the open conversation, so a switch or a new send replaces it.
+  const lastAssistantMsg = [...(currentConversation?.messages || [])].reverse().find((m) => m.role === "assistant");
+  const liveOrchestration = useMemo<OrchestrationViewModel | null>(
+    () => lastAssistantMsg?.orchestrationView ?? (lastAssistantMsg?.orchestration ? viewModelFromRecord(lastAssistantMsg.orchestration) : null),
+    [lastAssistantMsg?.orchestrationView, lastAssistantMsg?.orchestration],
+  );
+  const currentConversationId = currentConversation?.id;
+  const trackAgentEvent = useCallback((event: string, data: { orchestrationId: string; agent?: string; action?: string }) => {
+    if (currentConversationId) api.trackAgentEvent(currentConversationId, event, data);
+  }, [currentConversationId]);
+
   const refreshStats = useCallback(async () => {
     try {
       const stats = await api.fetchSessionStats();
@@ -487,6 +504,10 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       case "EXP_RAG":
         // Server-enforced: Gemini 3.7 Flash, medium thinking, cached core prompt + retrieval.
         updates = { mode: "EXP_RAG", model: "gemini-3.7-flash", responseMode: "standard" };
+        break;
+      case "MULTI_AGENT":
+        // EXP-RAG pipeline plus parallel specialists (src/agents); same server-enforced model.
+        updates = { mode: "MULTI_AGENT", model: "gemini-3.7-flash", responseMode: "standard" };
         break;
       case "ADVANCED":
         updates = { mode: "ADVANCED" };
@@ -840,6 +861,15 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             }
           }).catch(() => {});
         },
+        onOrchestration: (ev) => {
+          // May arrive before "start": the streaming message already exists, so nothing waits for the server id.
+          setCurrentConversation((prev) => {
+            if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
+            return { ...prev, messages: prev.messages.map((m) => m.id !== streamingAssistantMsg.id ? m
+              : ev.type === "RESPONSE_COMPLETED" ? { ...m, orchestration: ev.record, orchestrationView: undefined }
+              : { ...m, orchestrationView: applyOrchestrationEvent(m.orchestrationView ?? null, ev) }) };
+          });
+        },
         onCompaction: (compaction) => {
           setCurrentConversation((prev) => {
             if (!prev || prev.id !== activeConv.id || controller.signal.aborted) return prev;
@@ -863,7 +893,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
             const msgs = [...prev.messages];
             const last = msgs[msgs.length - 1];
             if (last?.id === streamingAssistantMsg.id) {
-              msgs[msgs.length - 1] = { ...last, isStreaming: false, ...(!accepted && !failed ? {error: "The reply stopped before it was ready. Your answer has been kept. Please try again.", errorCode: "INCOMPLETE_RESPONSE"} : {}) };
+              msgs[msgs.length - 1] = { ...last, isStreaming: false, ...(!accepted && !failed ? {error: "The reply stopped before it was ready. Your answer has been kept. Please try again.", errorCode: "INCOMPLETE_RESPONSE"} : {}),
+                ...(last.orchestrationView ? { orchestrationView: interruptOrchestration(last.orchestrationView, false) } : {}) };
             }
             return { ...prev, messages: msgs };
           });
@@ -914,6 +945,7 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
                 error: err.message,
                 errorCode: (err as any).errorCode,
                 isStreaming: false,
+                ...(last.orchestrationView ? { orchestrationView: interruptOrchestration(last.orchestrationView, false) } : {}),
               };
             }
             return { ...prev, messages: msgs };
@@ -952,7 +984,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const msgs = [...prev.messages];
         const last = msgs[msgs.length - 1];
         if (last?.role === "assistant" && last.isStreaming) {
-          msgs[msgs.length - 1] = { ...last, isStreaming: false, streamStopped: !last.structuredResponse, content: last.structuredResponse ? last.content : "" };
+          msgs[msgs.length - 1] = { ...last, isStreaming: false, streamStopped: !last.structuredResponse, content: last.structuredResponse ? last.content : "",
+            ...(last.orchestrationView ? { orchestrationView: interruptOrchestration(last.orchestrationView, true) } : {}) };
           return { ...prev, messages: msgs };
         }
         return prev;
@@ -1101,6 +1134,8 @@ export const TokenLabProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         inspectTurnTelemetry,
         localStorageStats,
         clearLocalData,
+        liveOrchestration,
+        trackAgentEvent,
       }}
     >
       {children}

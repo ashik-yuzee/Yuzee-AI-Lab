@@ -69,7 +69,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
   const [ragEmbedder, setRagEmbedder] = useState(() => loadFeatures().ragEmbedder);
   const [serverEmbedder, setServerEmbedder] = useState<'gemini' | 'bge'>('gemini');
   useEffect(() => {
-    if (displayMode !== "EXP_RAG") return;
+    if (displayMode !== "EXP_RAG" && displayMode !== "MULTI_AGENT") return;
     setRagEmbedder(loadFeatures().ragEmbedder);
     fetch('/api/rag/status').then(r => r.ok ? r.json() : null).then(s => { if (s?.defaultEmbedder) setServerEmbedder(s.defaultEmbedder); }).catch(() => {});
   }, [displayMode]);
@@ -121,6 +121,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
     });
 
   const modeOptions: AppleSelectOption[] = [
+    {value:"MULTI_AGENT",label:"Multi-Agent",description:"Specialist agents work in parallel on warehouse evidence, then Oala brings it together. Built on EXP-RAG. Gemini 3.7 Flash.",badge:"AGENTS",badgeColor:"purple"},
     {value:"EXP_RAG",label:"EXP-RAG (Experimental)",description:"Short cached core prompt; guidance and warehouse evidence retrieved per turn; rolling summaries. Gemini 3.7 Flash, medium thinking.",badge:"RAG",badgeColor:"emerald"},
     {value:"MICRO_PROMPT",label:"Oala assist (Preview)",description:"Type @Oala in your message for Yuzee service guidance. Local routing runs only when addressed.",badge:"Preview",badgeColor:"amber"},
     {
@@ -227,7 +228,7 @@ export const Navbar: React.FC<{ onOpenRenderer?: () => void }> = ({ onOpenRender
           showSearchThreshold={10}
         />
 
-        {displayMode === "EXP_RAG" && (
+        {(displayMode === "EXP_RAG" || displayMode === "MULTI_AGENT") && (
           <AppleSelect
             id="select-rag-embedder"
             disabled={chatLocked}

@@ -12,6 +12,8 @@ import {researchOffer} from '../routing/turnNeeds';
 import { ChatStreamingStatus, ChatStreamingDraft } from './ChatStreamingStatus';
 import { acceptedResponse, responseToReadableText } from "../ux/responsePresentation";
 import { MoreDetails } from './MoreDetails';
+import { AgentActivityPanel, AgentNextActions } from './agents/AgentActivityPanel';
+import { viewModelFromRecord } from '../agents/viewModel';
 import React, { useRef, useEffect } from "react";
 import { useTokenLab } from "../context/TokenLabContext";
 import { ChatMessage, UserEvent, YuzeeResponseV13 } from "../types";
@@ -63,6 +65,8 @@ export const ChatArea: React.FC = () => {
     dismissCostWarning,
     setWhiteboardOpen,
     setTokenInspectorOpen,
+    setProfileOpen,
+    trackAgentEvent,
   } = useTokenLab();
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -300,6 +304,7 @@ export const ChatArea: React.FC = () => {
                         {turn.assistantMsgs.map((msg, aIdx) => {
                           const structured = parseStructuredResponse(msg);
                           const offer = researchOffer(msg.preflight || (msg.telemetry as any)?.preflight);
+                          const agentView = msg.orchestrationView ?? (msg.orchestration ? viewModelFromRecord(msg.orchestration) : null);
                           const isCounsellorGate = !structured && !msg.isStreaming && msg.content?.trim().startsWith("{") && (() => {
                             try { const p = JSON.parse(msg.content!.trim()); return p.question_controller?.ask_questions === true; } catch { return false; }
                           })();
@@ -316,6 +321,8 @@ export const ChatArea: React.FC = () => {
                                   <span>Context compacted — older turns archived to preserve memory</span>
                                 </div>
                               )}
+
+                              {agentView && <AgentActivityPanel view={agentView} onTrack={trackAgentEvent} />}
 
                               {structured && outdatedHelpClaim(responseToReadableText(structured)) && <aside role="note" className="mb-4 rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-slate-800">
                                 <strong>This saved reply contains an outdated repayment rule.</strong>
@@ -360,6 +367,7 @@ export const ChatArea: React.FC = () => {
                                 )
                               )}
 
+                              {agentView && structured && !msg.isStreaming && isLastAssistantMsg(msg.id) && <AgentNextActions view={agentView} disabled={isStreaming} onSend={(prompt) => sendMessage(prompt)} onOpenProfile={() => setProfileOpen(true)} onTrack={trackAgentEvent} />}
                               {structured && offer && !msg.isStreaming && currentConversation && <MoreDetails offer={offer} key={`${currentConversation.id}-${msg.id}`} conversationId={currentConversation.id} parentMessageId={msg.id} disabled={isStreaming} onUse={sendMessage} />}
                               {msg.error && !msg.isStreaming && errorDisplay(msg.errorCode, msg.error, retryLastMessage)}
 

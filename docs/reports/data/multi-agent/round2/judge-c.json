@@ -1,0 +1,58 @@
+{"turns":[
+{"id":"t1-lookup#1","scores":{
+"P":{"relevance":4,"grounding":4,"personalisation":2,"actionability":2,"clarity":4,"total":16},
+"Q":{"relevance":4,"grounding":4,"personalisation":2,"actionability":4,"clarity":5,"total":19},
+"R":{"relevance":4,"grounding":4,"personalisation":2,"actionability":3,"clarity":4,"total":17},
+"S":{"relevance":4,"grounding":4,"personalisation":2,"actionability":3,"clarity":4,"total":17}},
+"rank":{"Q":1,"R":2,"S":2,"P":4},
+"reason":"All honest about no count; Q names where to check live listings and alternate titles concisely; P gives no way to find the number."},
+{"id":"t2-fit#1","scores":{
+"P":{"relevance":4,"grounding":5,"personalisation":4,"actionability":4,"clarity":3,"total":20},
+"Q":{"relevance":5,"grounding":4,"personalisation":5,"actionability":3,"clarity":4,"total":21},
+"R":{"relevance":4,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"S":{"relevance":5,"grounding":4,"personalisation":5,"actionability":5,"clarity":4,"total":23}},
+"rank":{"S":1,"Q":2,"R":2,"P":4},
+"reason":"S gives a clear honest verdict, uses cafe background for a concrete case-study idea plus training; P is hedged and clunky."},
+{"id":"t3-pathway#1","scores":{
+"P":{"relevance":3,"grounding":4,"personalisation":3,"actionability":4,"clarity":4,"total":18},
+"Q":{"relevance":4,"grounding":5,"personalisation":3,"actionability":4,"clarity":4,"total":20},
+"R":{"relevance":5,"grounding":3,"personalisation":3,"actionability":4,"clarity":5,"total":20},
+"S":{"relevance":5,"grounding":4,"personalisation":3,"actionability":5,"clarity":4,"total":21}},
+"rank":{"S":1,"Q":2,"R":2,"P":4},
+"reason":"S is a tight fastest path with adjacent roles and good trade-off; R suggests Grad Cert without degree caveat; P ignores 'fastest'."},
+{"id":"t4-company#1","scores":{
+"P":{"relevance":3,"grounding":5,"personalisation":2,"actionability":2,"clarity":4,"total":16},
+"Q":{"relevance":4,"grounding":5,"personalisation":2,"actionability":2,"clarity":4,"total":17},
+"R":{"relevance":4,"grounding":4,"personalisation":2,"actionability":4,"clarity":4,"total":18},
+"S":{"relevance":4,"grounding":5,"personalisation":2,"actionability":3,"clarity":4,"total":18}},
+"rank":{"R":1,"S":2,"Q":3,"P":4},
+"reason":"R offers concrete evidence-building actions (teardowns, research, side project); S honest but vaguer; P never mentions Canva."},
+{"id":"t5-discovery#1","scores":{
+"P":{"relevance":3,"grounding":4,"personalisation":3,"actionability":3,"clarity":5,"total":18},
+"Q":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":4,"total":19},
+"R":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":5,"total":20},
+"S":{"relevance":4,"grounding":5,"personalisation":3,"actionability":4,"clarity":4,"total":20}},
+"rank":{"S":1,"R":2,"Q":3,"P":4},
+"reason":"S states no live feed and gives entry requirements per setting; P never admits it cannot list jobs. None names a job board."},
+{"id":"s4-change#1","scores":{
+"P":{"relevance":5,"grounding":3,"personalisation":5,"actionability":4,"clarity":4,"total":21},
+"Q":{"relevance":5,"grounding":5,"personalisation":5,"actionability":4,"clarity":4,"total":23},
+"R":{"relevance":5,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":22},
+"S":{"relevance":5,"grounding":3,"personalisation":5,"actionability":5,"clarity":4,"total":22}},
+"rank":{"Q":1,"R":2,"S":2,"P":4},
+"reason":"Q has correct codes and properly hedged RPL and pay; S overstates RPL and '6-month part-time' Grad Cert; P overclaims pay bridging."},
+{"id":"s10-local#1","scores":{
+"P":{"relevance":4,"grounding":4,"personalisation":3,"actionability":4,"clarity":4,"total":19},
+"Q":{"relevance":3,"grounding":4,"personalisation":3,"actionability":4,"clarity":4,"total":18},
+"R":{"relevance":5,"grounding":4,"personalisation":3,"actionability":5,"clarity":4,"total":21},
+"S":{"relevance":1,"grounding":1,"personalisation":1,"actionability":1,"clarity":1,"total":5}},
+"rank":{"R":1,"P":2,"Q":3,"S":4},
+"reason":"R names The Gordon, the standard Cert III entry and required clearances; Q lists non-TAFE, non-Geelong providers; S empty."},
+{"id":"m1-multi#2","scores":{
+"P":{"relevance":5,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":22},
+"Q":{"relevance":5,"grounding":4,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"R":{"relevance":5,"grounding":4,"personalisation":4,"actionability":5,"clarity":3,"total":21},
+"S":{"relevance":4,"grounding":4,"personalisation":4,"actionability":4,"clarity":5,"total":21}},
+"rank":{"P":1,"R":2,"Q":3,"S":3},
+"reason":"P pairs varied day roles with accurate, modest study needs; R thorough but long; S light on study requirements. None uses Brisbane."}
+]}

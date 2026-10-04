@@ -1,0 +1,50 @@
+{
+ "t1-lookup#1": {
+  "P": "MA_V1",
+  "Q": "EXP_RAG",
+  "R": "VANILLA",
+  "S": "MA_V2"
+ },
+ "t2-fit#1": {
+  "P": "VANILLA",
+  "Q": "EXP_RAG",
+  "R": "MA_V2",
+  "S": "MA_V1"
+ },
+ "t3-pathway#1": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MA_V1",
+  "S": "MA_V2"
+ },
+ "t4-company#1": {
+  "P": "EXP_RAG",
+  "Q": "MA_V1",
+  "R": "VANILLA",
+  "S": "MA_V2"
+ },
+ "t5-discovery#1": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MA_V2",
+  "S": "MA_V1"
+ },
+ "s4-change#1": {
+  "P": "EXP_RAG",
+  "Q": "MA_V1",
+  "R": "VANILLA",
+  "S": "MA_V2"
+ },
+ "s10-local#1": {
+  "P": "MA_V2",
+  "Q": "VANILLA",
+  "R": "EXP_RAG",
+  "S": "MA_V1"
+ },
+ "m1-multi#2": {
+  "P": "VANILLA",
+  "Q": "MA_V2",
+  "R": "MA_V1",
+  "S": "EXP_RAG"
+ }
+}

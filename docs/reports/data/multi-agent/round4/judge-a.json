@@ -1,0 +1,51 @@
+{"turns":[
+{"id":"t2-fit#1","scores":{
+"P":{"relevance":4,"grounding":5,"personalisation":4,"actionability":3,"clarity":4,"total":20},
+"Q":{"relevance":4,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"R":{"relevance":5,"grounding":4,"personalisation":4,"actionability":5,"clarity":4,"total":22},
+"S":{"relevance":5,"grounding":4,"personalisation":4,"actionability":3,"clarity":4,"total":20}},
+"rank":{"R":1,"Q":2,"P":3,"S":3},
+"reason":"R gives a direct verdict, concrete bridge and adjacent roles; Q has a cafe-tied case-study step; P and S lack a concrete next step."},
+{"id":"t3-pathway#1","scores":{
+"P":{"relevance":4,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"Q":{"relevance":5,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":22},
+"R":{"relevance":5,"grounding":4,"personalisation":3,"actionability":5,"clarity":4,"total":21},
+"S":{"relevance":5,"grounding":3,"personalisation":4,"actionability":4,"clarity":4,"total":20}},
+"rank":{"Q":1,"P":2,"R":2,"S":4},
+"reason":"Q is fast, realistic and hospitality-tied without invented specifics; S's 2-6 and 4-8 week timelines are unsupported and optimistic."},
+{"id":"t4-company#1","scores":{
+"P":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":5,"total":20},
+"Q":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":4,"total":19},
+"R":{"relevance":4,"grounding":5,"personalisation":3,"actionability":4,"clarity":4,"total":20},
+"S":{"relevance":5,"grounding":5,"personalisation":3,"actionability":4,"clarity":4,"total":21}},
+"rank":{"S":1,"P":2,"R":2,"Q":4},
+"reason":"S is honest about lacking Canva data and gives concrete credibility-building moves; Q is generic and reads like a PM competency list."},
+{"id":"t5-discovery#1","scores":{
+"P":{"relevance":3,"grounding":4,"personalisation":4,"actionability":3,"clarity":4,"total":18},
+"Q":{"relevance":3,"grounding":4,"personalisation":3,"actionability":2,"clarity":4,"total":16},
+"R":{"relevance":3,"grounding":5,"personalisation":3,"actionability":3,"clarity":4,"total":18},
+"S":{"relevance":3,"grounding":4,"personalisation":3,"actionability":3,"clarity":3,"total":16}},
+"rank":{"R":1,"P":2,"Q":3,"S":3},
+"reason":"R states plainly no listings are available and maps entry requirements; P is Victoria-specific but silent on listings; Q's tutor stat is off-target; S double-asks."},
+{"id":"t7-missing#1","scores":{
+"P":{"relevance":4,"grounding":5,"personalisation":3,"actionability":2,"clarity":5,"total":19},
+"Q":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":5,"total":20},
+"R":{"relevance":4,"grounding":5,"personalisation":3,"actionability":3,"clarity":4,"total":19},
+"S":{"relevance":3,"grounding":4,"personalisation":2,"actionability":3,"clarity":3,"total":15}},
+"rank":{"Q":1,"P":2,"R":2,"S":4},
+"reason":"Q offers clear work-style lenses plus one good question; S contradicts itself by naming arbitrary roles (credit checking, courier) without any user data."},
+{"id":"s4-change#1","scores":{
+"P":{"relevance":5,"grounding":5,"personalisation":4,"actionability":5,"clarity":4,"total":23},
+"Q":{"relevance":5,"grounding":4,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"R":{"relevance":5,"grounding":5,"personalisation":5,"actionability":5,"clarity":4,"total":24},
+"S":{"relevance":5,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":22}},
+"rank":{"R":1,"P":2,"S":3,"Q":4},
+"reason":"R best leverages 20 years' management with RPL and smart positioning advice; P strong with sourced projections; Q adds unsupported duration and over-precise stats."},
+{"id":"m1-multi#2","scores":{
+"P":{"relevance":5,"grounding":4,"personalisation":4,"actionability":4,"clarity":4,"total":21},
+"Q":{"relevance":5,"grounding":5,"personalisation":4,"actionability":4,"clarity":4,"total":22},
+"R":{"relevance":5,"grounding":4,"personalisation":5,"actionability":4,"clarity":4,"total":22},
+"S":{"relevance":4,"grounding":4,"personalisation":4,"actionability":4,"clarity":4,"total":20}},
+"rank":{"Q":1,"R":1,"P":3,"S":4},
+"reason":"Q pairs each option with explicit study needs; R uses Brisbane and a sourced stat but overclaims 'strictly business hours'; S's telehealth triage often involves shifts."}
+]}

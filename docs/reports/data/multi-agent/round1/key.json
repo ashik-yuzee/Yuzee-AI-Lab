@@ -1,0 +1,64 @@
+{
+ "l0-concept#1": {
+  "X": "EXP_RAG",
+  "Y": "MA_MEDIUM",
+  "Z": "VANILLA"
+ },
+ "t1-lookup#1": {
+  "X": "EXP_RAG",
+  "Y": "MA_MEDIUM",
+  "Z": "VANILLA"
+ },
+ "t2-fit#1": {
+  "X": "EXP_RAG",
+  "Y": "VANILLA",
+  "Z": "MA_MEDIUM",
+  "W": "MA_LOW"
+ },
+ "t3-pathway#1": {
+  "X": "MA_MEDIUM",
+  "Y": "MA_LOW",
+  "Z": "VANILLA",
+  "W": "EXP_RAG"
+ },
+ "t4-company#1": {
+  "X": "VANILLA",
+  "Y": "EXP_RAG",
+  "Z": "MA_LOW",
+  "W": "MA_MEDIUM"
+ },
+ "t5-discovery#1": {
+  "X": "MA_MEDIUM",
+  "Y": "VANILLA",
+  "Z": "EXP_RAG",
+  "W": "MA_LOW"
+ },
+ "t7-missing#1": {
+  "X": "VANILLA",
+  "Y": "MA_MEDIUM",
+  "Z": "EXP_RAG"
+ },
+ "s4-change#1": {
+  "X": "VANILLA",
+  "Y": "EXP_RAG",
+  "Z": "MA_LOW",
+  "W": "MA_MEDIUM"
+ },
+ "s10-local#1": {
+  "X": "EXP_RAG",
+  "Y": "VANILLA",
+  "Z": "MA_MEDIUM"
+ },
+ "m1-multi#1": {
+  "X": "VANILLA",
+  "Y": "MA_MEDIUM",
+  "Z": "EXP_RAG",
+  "W": "MA_LOW"
+ },
+ "m1-multi#2": {
+  "X": "VANILLA",
+  "Y": "MA_LOW",
+  "Z": "EXP_RAG",
+  "W": "MA_MEDIUM"
+ }
+}

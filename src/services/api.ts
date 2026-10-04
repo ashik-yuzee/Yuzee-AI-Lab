@@ -107,6 +107,18 @@ export async function resetConversationMemory(id: string): Promise<Conversation>
   return res.json();
 }
 
+/** MULTI_AGENT analytics (spec §31). Fire-and-forget: analytics must never break the chat. */
+export function trackAgentEvent(convId: string, event: string, data: { orchestrationId: string; agent?: string; action?: string }): void {
+  try {
+    fetch(`${API_BASE}/api/conversations/${encodeURIComponent(convId)}/agent-events`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ event, ...data, at: Date.now() }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch { /* ignore */ }
+}
+
 export async function sendFeedback(
   convId: string,
   messageId: string,
@@ -375,6 +387,8 @@ export interface StreamCallbacks {
   onProtocolValidationError?: (data: { errors: string[]; rawJson?: string; reviewFailureCode?: string }) => void;
   onUsage?: (data: any) => void;
   onCompaction?: (data: any) => void;
+  /** MULTI_AGENT: may arrive before "start" (headers are flushed early). */
+  onOrchestration?: (event: import("../agents/contract").OrchestrationEvent) => void;
   onDone?: () => void;
   onError?: (err: Error) => void;
 }
@@ -491,6 +505,7 @@ export function streamChatMessage(
                 else if (currentEvent === "protocol_validation_error" && callbacks.onProtocolValidationError) callbacks.onProtocolValidationError(data);
                 else if (currentEvent === "usage" && callbacks.onUsage) callbacks.onUsage(data);
                 else if (currentEvent === "compaction" && callbacks.onCompaction) callbacks.onCompaction(data);
+                else if (currentEvent === "orchestration") callbacks.onOrchestration?.(data);
                 else if (currentEvent === "done") triggerDone();
                 else if (currentEvent === "error" && callbacks.onError) {
                   const e: any = new Error(data.error || "Streaming error");

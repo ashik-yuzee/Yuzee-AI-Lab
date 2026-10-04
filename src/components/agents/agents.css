@@ -1,0 +1,88 @@
+/* MULTI_AGENT activity panel: follows research.css / chat-experience.css (same greys, accent tokens, radii). */
+.agent-panel{border:1px solid #e1e5ef;border-radius:14px;background:#fff;color:#243047;max-width:740px}
+.agent-panel :is(button):focus-visible,.agent-chip:focus-visible,.agent-actions button:focus-visible{outline:3px solid var(--accent-40);outline-offset:2px}
+.agent-panel button,.agent-chip,.agent-actions button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.agent-panel-header{display:flex;align-items:flex-start;gap:12px;padding:13px 16px}
+.agent-panel-icon{display:grid;place-items:center;width:30px;height:30px;flex:0 0 30px;border-radius:9px;background:var(--accent-8);color:var(--accent)}
+.agent-panel-heading{flex:1;min-width:0}
+.agent-panel-heading h4{font-size:14px;font-weight:650;line-height:1.5;color:#27364a;margin:0}
+.agent-panel-heading p{font-size:12px;line-height:1.6;color:#606d80;margin:1px 0 0}
+.agent-panel-toggle{display:flex;align-items:center;gap:6px;min-height:36px;padding:4px 8px;border-radius:8px;font-size:12px;color:#606d80;white-space:nowrap;flex-shrink:0}
+.agent-panel-toggle:hover{background:var(--accent-5);color:var(--accent)}
+.agent-panel-toggle>svg{transition:transform .2s}
+.agent-panel-toggle[aria-expanded=true]>svg{transform:rotate(180deg)}
+.agent-panel-body{border-top:1px solid #edf0f5;padding:12px 16px 14px;display:grid;gap:12px}
+.agent-understood{font-size:13px;line-height:1.6;color:#485874;margin:0}
+.agent-understood>span{display:block;font-size:11px;font-weight:600;color:#7b899b;margin-bottom:1px}
+.agent-level-label{font-size:11px;font-weight:600;color:#7b899b;margin:0 0 6px}
+.agent-level>ul{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:8px;margin:0;padding:0;list-style:none}
+.agent-row{display:flex;align-items:flex-start;gap:9px;padding:10px 11px;border:1px solid #e8ebf1;border-radius:10px;background:#fafbfe;min-width:0}
+.agent-row.is-running{border-color:var(--accent-border);background:var(--accent-5)}
+.agent-row-copy{display:grid;gap:2px;min-width:0;flex:1}
+.agent-row-copy>strong{font-size:13px;font-weight:600;line-height:1.5;color:#27364a}
+.agent-row-copy>span{font-size:12px;line-height:1.55;color:#606d80;overflow-wrap:anywhere}
+.agent-icon{display:grid;place-items:center;width:20px;height:20px;flex:0 0 20px;border-radius:50%;margin-top:1px;color:#94a0b1}
+.agent-icon.is-running{color:var(--accent)}
+.agent-icon.is-running>svg{animation:agent-breathe 1.6s ease-in-out infinite}
+.agent-icon.is-completed{background:#eef7f3;color:#276253}
+.agent-icon.is-failed{background:#fcf6e9;color:#876018}
+.agent-link{display:inline-flex;align-items:center;gap:4px;justify-self:start;min-height:32px;padding:2px 0;font-size:12px;font-weight:550;color:var(--accent)}
+.agent-link[aria-expanded=true]>svg{transform:rotate(180deg)}
+.agent-link:focus-visible{outline:3px solid var(--accent-40);outline-offset:2px;border-radius:4px}
+.agent-result{display:grid;gap:9px;margin-top:4px;padding-top:9px;border-top:1px solid #e8ebf1;font-size:13px;line-height:1.6;color:#374357}
+.agent-result-failed{margin:0;color:#7d673e}
+.agent-findings{display:grid;gap:7px;margin:0;padding:0;list-style:none}
+.agent-findings li{display:grid;gap:1px}
+.agent-basis{font-size:11px;font-weight:600;color:#276253}
+.agent-basis.is-inference{color:#7d673e}
+.agent-result-section h5{font-size:12px;font-weight:600;color:#526079;margin:0 0 3px}
+.agent-result-section ul{margin:0;padding-left:1.1rem;list-style:disc;font-size:13px;line-height:1.6;color:#485874}
+.agent-result-section.is-warning h5{color:#6d5324}
+.agent-result-meta{display:flex;flex-wrap:wrap;gap:4px 12px;margin:0;font-size:11px;color:#7b899b}
+.agent-result-meta>span{display:inline-flex;align-items:center;gap:4px}
+.agent-sources{display:grid;gap:6px;margin:0;padding:0;list-style:none}
+.agent-sources li{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;font-size:12px;color:#485874}
+.agent-sources small{font-size:11px;color:#7b899b}
+.agent-stale{font-size:10px;font-weight:600;padding:1px 6px;border-radius:5px;background:#fcf6e9;color:#876018}
+.agent-nuance{display:flex;gap:9px;padding:10px 12px;border:1px solid #f1e2c2;border-radius:10px;background:#fffbf3;font-size:13px;line-height:1.6;color:#64563f}
+.agent-nuance>svg{flex-shrink:0;margin-top:3px;color:#bb995c}
+.agent-nuance strong{display:block;font-size:12px;font-weight:600;color:#6d5324}
+.agent-nuance p{margin:2px 0 0}.agent-nuance small{color:#7d673e}
+/* Levels 0–1: one quiet line, then a small chip. */
+.agent-compact{display:flex;align-items:center;gap:7px;margin:0;font-size:13px;line-height:1.6;color:#606d80}
+.agent-compact .agent-icon{width:16px;height:16px;flex-basis:16px;margin:0}
+.agent-compact-done{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start}
+.agent-compact-done>.agent-result{flex-basis:100%;max-width:740px}
+.agent-chip{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:3px 10px;border-radius:999px;border:1px solid #e1e5ef;background:#fafbfe;font-size:12px;color:#526079}
+.agent-chip.is-completed>svg:first-child{color:#276253}
+.agent-chip.is-failed>svg:first-child{color:#876018}
+.agent-chip:hover{border-color:var(--accent-border);background:var(--accent-5)}
+.agent-chip[aria-expanded=true]>svg:last-child{transform:rotate(180deg)}
+/* Next actions after the answer (spec §30). */
+.agent-actions{max-width:740px}
+.agent-actions h4{font-size:12px;font-weight:600;color:#606d80;letter-spacing:.4px;margin:0 0 4px}
+.agent-actions button{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;text-align:left;padding:11px 0;min-height:48px;border-bottom:1px solid #edf0f5;color:#485874}
+.agent-actions button:hover:not(:disabled){color:var(--accent)}
+.agent-actions button:disabled{opacity:.45;cursor:not-allowed}
+.agent-actions button>span{display:grid;gap:1px;min-width:0}
+.agent-actions strong{font-size:14px;font-weight:550;line-height:1.5}
+.agent-actions small{font-size:12px;line-height:1.5;color:#7b899b}
+.agent-actions button>svg{flex-shrink:0;color:#8895aa}
+@keyframes agent-breathe{50%{opacity:.35}}
+@media(prefers-reduced-motion:reduce){.agent-icon.is-running>svg{animation:none}.agent-panel-toggle>svg,.agent-link>svg,.agent-chip>svg{transition:none}}
+/* Mobile (spec test 9): compact stacked list, answer stays primary, no extra motion. */
+@media(max-width:640px){
+  .agent-panel-header{padding:11px 12px;gap:9px}
+  .agent-panel-icon{display:none}
+  .agent-panel-toggle{min-height:40px;padding:4px 6px}
+  .agent-panel-body{padding:10px 12px 12px;gap:10px}
+  .agent-level>ul{grid-template-columns:1fr;gap:0;border:1px solid #e8ebf1;border-radius:10px;overflow:hidden}
+  .agent-row{border:0;border-radius:0;border-bottom:1px solid #edf0f5;padding:9px 10px}
+  .agent-level>ul>.agent-row:last-child{border-bottom:0}
+  .agent-row-copy>strong{font-size:14px}
+  .agent-row-copy>span,.agent-result{font-size:13px}
+  .agent-link{min-height:40px}
+  .agent-icon.is-running>svg{animation:none}
+}
+/* Empty live region keeps its place in the a11y tree but takes no space between messages. */
+.agent-live:empty{display:contents}

@@ -1,0 +1,452 @@
+{
+ "turns": [
+  {
+   "id": "l0-concept#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 20
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 20
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 2
+   },
+   "reason": "X is the tightest accurate definition with a single focused question; Y and Z add useful credit/bridging detail but run longer."
+  },
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 20
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 3,
+    "Z": 2
+   },
+   "reason": "X is honest about no live count and points to Seek/LinkedIn plus alternate titles; Y has no way to find the number; Z is padded."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 3,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 20
+    }
+   },
+   "rank": {
+    "Z": 1,
+    "X": 2,
+    "W": 3,
+    "Y": 4
+   },
+   "reason": "Z gives a straight verdict, a cafe-based case study idea and named UX courses; Y hedges heavily; W offers no concrete next step."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 19
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 20
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "W": 3,
+    "Z": 4
+   },
+   "reason": "X gives a 3-step, timeboxed path with a named skill set; Y adds unit codes of uncertain accuracy; Z is generic with no timeline."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 19
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 16
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 3,
+     "total": 15
+    },
+    "W": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 1,
+    "W": 2,
+    "Y": 3,
+    "Z": 4
+   },
+   "reason": "X offers concrete evidence-building actions (teardowns, side project); W is honest and notes typical entry backgrounds; Y/Z stay generic or deflect."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 3,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 15
+    },
+    "W": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 18
+    }
+   },
+   "rank": {
+    "W": 1,
+    "X": 2,
+    "Y": 3,
+    "Z": 4
+   },
+   "reason": "W says plainly there are no live listings and adds tutoring roles; Z never admits it cannot find jobs; W's double question costs it clarity."
+  },
+  {
+   "id": "t7-missing#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 19
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 20
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 5,
+     "total": 18
+    }
+   },
+   "rank": {
+    "Y": 1,
+    "X": 2,
+    "Z": 3
+   },
+   "reason": "Y gives three concrete work categories to react to plus one question; X is similar but thinner; Z offers nothing beyond the question."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 20
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "Y": 1,
+    "X": 2,
+    "W": 3,
+    "Z": 4
+   },
+   "reason": "Y names concrete target roles, RPL to BSB50320/40420 and the pay trade-off; Z's closing question about prior study is weak."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Z": {
+     "relevance": 1,
+     "grounding": 1,
+     "personalisation": 1,
+     "actionability": 1,
+     "clarity": 1,
+     "total": 5
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 3
+   },
+   "reason": "X names The Gordon and the standard Cert III/IV pathway with screening checks; Y lists non-Geelong providers and omits Cert III; Z shows nothing."
+  },
+  {
+   "id": "m1-multi#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 24
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 22
+    }
+   },
+   "rank": {
+    "Y": 1,
+    "X": 2,
+    "Z": 2,
+    "W": 4
+   },
+   "reason": "Y offers the broadest set (including informatics, education) with a pay trade-off; W is thinner with a leading question."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    }
+   },
+   "rank": {
+    "W": 1,
+    "X": 2,
+    "Z": 3,
+    "Y": 4
+   },
+   "reason": "W states what study each role needs, with the TAE40122 code; Y misses most clinical-adjacent roles and jumps to postgraduate admin study."
+  }
+ ]
+}

@@ -1,0 +1,4104 @@
+{
+ "generatedAt": "2026-10-04T15:11:17.327Z",
+ "model": "gemini-3.7-flash",
+ "rows": [
+  {
+   "scenario": "t1-lookup",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-t1-lookup-mutyieaa",
+   "priorUserTurns": [],
+   "user": "How many UX designer jobs are in Perth?",
+   "answer": "\nI do not have a count of current UX designer job openings for Perth in the available data, so I cannot provide an exact number. A lack of local vacancy figures in this catalogue means current job listings were not retrieved, not that there are no opportunities.\n\nIf you are exploring the field or checking how to prepare, UX design tasks typically involve researching user needs, wireframing, and designing digital interfaces. Roles may be advertised under various titles, including UX Designer, UI/UX Designer, Web Designer, or Digital Product Designer.\n\nChecking live listings\nJob boards and employer career pages provide current vacancy numbers and specific employer requirements in Perth.\nRelated study pathways\nTraining options range from targeted skill sets (such as the ICTSS00118 User Experience Design Skill Set) to diplomas and broader IT or design qualifications.\n[Question] Are you exploring breaking into UX design in Perth?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "GENERAL_DELIVERY",
+    "content_blocks": [
+     {
+      "id": "blk_1",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "I do not have a count of current UX designer job openings for Perth in the available data, so I cannot provide an exact number. A lack of local vacancy figures in this catalogue means current job listings were not retrieved, not that there are no opportunities.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "blk_2",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "If you are exploring the field or checking how to prepare, UX design tasks typically involve researching user needs, wireframing, and designing digital interfaces. Roles may be advertised under various titles, including UX Designer, UI/UX Designer, Web Designer, or Digital Product Designer.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "blk_3",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "item_1",
+        "title": "Checking live listings",
+        "text": "Job boards and employer career pages provide current vacancy numbers and specific employer requirements in Perth.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_2",
+        "title": "Related study pathways",
+        "text": "Training options range from targeted skill sets (such as the ICTSS00118 User Experience Design Skill Set) to diplomas and broader IT or design qualifications.",
+        "value": "",
+        "status": "neutral"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "perth_ux_career_stage",
+     "question": "Are you exploring breaking into UX design in Perth?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "JOB_MATCH_RMO",
+     "confidence": "MEDIUM",
+     "reason": "User requested job market numbers for UX design in a specific location.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": -1,
+      "band": "unknown",
+      "evidence_strength": "none",
+      "trend": "unknown",
+      "reason_codes": [
+       "ROUTE_UNRESOLVED",
+       "CRITERIA_UNCLEAR"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Check UX designer job market figures in Perth",
+      "confirmed_facts": [],
+      "possible_need": "Understand local Perth UX opportunities and entry routes",
+      "missing_information": [
+       "Current professional background",
+       "Experience level in design"
+      ],
+      "relevant_question": "Are you exploring breaking into UX design in Perth, or are you already working in the field and checking local demand?",
+      "user_constraints": [
+       "Geographic focus: Perth"
+      ]
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 24813,
+   "firstDeltaMs": 17348,
+   "timeline": {
+    "pre": 2517,
+    "ttft": 11169,
+    "gen": 6784
+   },
+   "usage": {
+    "input": 21428,
+    "cached": 0,
+    "output": 1591,
+    "thinking": 1563
+   },
+   "mainCost": 0.0034044,
+   "auxCost": 0.0001236,
+   "totalCost": 0.0035280000000000003,
+   "orchestration": {
+    "level": 1,
+    "domains": [
+     "JOBS",
+     "LOCATION"
+    ],
+    "understood": "A quick UX designer lookup.",
+    "visible": false,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:JOBS",
+      "domain:LOCATION"
+     ]
+    },
+    "planned": [
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "retrieval"
+     }
+    ],
+    "agents": [
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "retrieval",
+      "summary": "No matching job records found for Perth; 6 related occupation profiles",
+      "error": null,
+      "startMs": 310,
+      "endMs": 2499,
+      "durationMs": 2187,
+      "costUsd": 0,
+      "tokens": {
+       "input": 0,
+       "cached": 0,
+       "output": 0,
+       "thinking": 0
+      },
+      "confidence": 0.3,
+      "missingData": [
+       "job records for this search"
+      ],
+      "warnings": []
+     }
+    ],
+    "merge": {
+     "confidence": 0.3,
+     "conflicts": [],
+     "missingData": [
+      "job records for this search"
+     ],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 6,
+      "findings": 6,
+      "duplicatesRemoved": 0,
+      "evidence": 6
+     },
+     "failedAgents": []
+    },
+    "nextActions": [],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 24500,
+     "agentsMs": 2189,
+     "composeMs": 22282,
+     "agentCostUsd": 0,
+     "agentTokens": 0,
+     "reusedResults": 0
+    },
+    "planMs": 310,
+    "responseStreamStartedMs": 2528,
+    "responseStreamStartedClientMs": 2532,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 310
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 310
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 310
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2442
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2498
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2499
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 2499
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 2499
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 2528
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 24811
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "t2-fit",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-t2-fit-mutyieac",
+   "priorUserTurns": [],
+   "user": "Am I suitable for UX designer jobs? I've been a cafe supervisor for 4 years and I taught myself Figma.",
+   "answer": "\nYour background provides a practical starting point to build from, though transitioning into UX design usually involves demonstrating a clear design process alongside your software skills. Self-taught Figma proficiency shows initiative, and four years as a cafe supervisor offers relevant experience in customer communication, problem-solving, and coordination. Employers in this field typically evaluate how you conduct research, test ideas, and solve problems rather than software knowledge alone.\n\nTransferable strengths\nDirect customer service and supervisory work connect well to core UX activities like active listening, understanding user needs, and managing stakeholder coordination.\nAreas to demonstrate\nUX and UI job advertisements generally look for documented work showing user research, wireframing, usability testing, and interface design, usually presented in project case studies.\nNext steps to consider\nYou can practice by creating self-directed case studies around real-world problems or consider structured study (such as a UX Design skill set) to learn standard research and testing methods. Note that employers assess self-created work on its own merits as evidence of your skills.\n[Question] Have you used Figma mainly for interface layouts and visual practice?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "block_intro",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Your background provides a practical starting point to build from, though transitioning into UX design usually involves demonstrating a clear design process alongside your software skills. Self-taught Figma proficiency shows initiative, and four years as a cafe supervisor offers relevant experience in customer communication, problem-solving, and coordination. Employers in this field typically evaluate how you conduct research, test ideas, and solve problems rather than software knowledge alone.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_breakdown",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "item_strengths",
+        "title": "Transferable strengths",
+        "text": "Direct customer service and supervisory work connect well to core UX activities like active listening, understanding user needs, and managing stakeholder coordination.",
+        "value": "",
+        "status": "positive"
+       },
+       {
+        "id": "item_gaps",
+        "title": "Areas to demonstrate",
+        "text": "UX and UI job advertisements generally look for documented work showing user research, wireframing, usability testing, and interface design, usually presented in project case studies.",
+        "value": "",
+        "status": "warning"
+       },
+       {
+        "id": "item_pathways",
+        "title": "Next steps to consider",
+        "text": "You can practice by creating self-directed case studies around real-world problems or consider structured study (such as a UX Design skill set) to learn standard research and testing methods. Note that employers assess self-created work on its own merits as evidence of your skills.",
+        "value": "",
+        "status": "next"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "q_ux_portfolio_experience",
+     "question": "Have you used Figma mainly for interface layouts and visual practice?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "NONE",
+     "confidence": "LOW",
+     "reason": "User is exploring role suitability and transition feasibility; no explicit service requested.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 40,
+      "band": "medium",
+      "evidence_strength": "moderate",
+      "trend": "unknown",
+      "reason_codes": [
+       "EXPLICIT_UNCERTAINTY",
+       "CRITERIA_PARTIAL",
+       "ROUTE_UNRESOLVED",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Assess suitability and transition path from cafe supervisor to UX designer",
+      "confirmed_facts": [
+       "I've been a cafe supervisor for 4 years",
+       "I taught myself Figma"
+      ],
+      "possible_need": "Explore portfolio building and targeted skill bridging for UX design roles",
+      "missing_information": [
+       "Whether user has built case studies or a portfolio",
+       "Prior education or formal qualifications"
+      ],
+      "relevant_question": "Have you used Figma mainly for interface layouts and visual practice, or have you already tried putting together an end-to-end design project or case study?",
+      "user_constraints": []
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 34650,
+   "firstDeltaMs": 10214,
+   "timeline": {
+    "pre": 6201,
+    "ttft": 3306,
+    "gen": 4070
+   },
+   "usage": {
+    "input": 24187,
+    "cached": 9122,
+    "output": 1506,
+    "thinking": 448
+   },
+   "mainCost": 0.00251615,
+   "auxCost": 0.0011802,
+   "totalCost": 0.00369635,
+   "orchestration": {
+    "level": 2,
+    "domains": [
+     "JOBS",
+     "SKILLS",
+     "PROFILE"
+    ],
+    "understood": "Your question about UX designer needs profile, jobs and skills checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:JOBS",
+      "domain:SKILLS",
+      "personal"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "skills",
+      "type": "SKILLS_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found cafe supervisor experience and self-taught Figma skills.",
+      "error": null,
+      "startMs": 21,
+      "endMs": 2584,
+      "durationMs": 2563,
+      "costUsd": 0.00017084999999999998,
+      "tokens": {
+       "input": 410,
+       "cached": 0,
+       "output": 467,
+       "thinking": 0
+      },
+      "confidence": 0.4,
+      "missingData": [
+       "highest qualification",
+       "years of UX design experience",
+       "UX portfolio link"
+      ],
+      "warnings": [
+       "Self-reported details are unverified."
+      ]
+     },
+     {
+      "id": "skills",
+      "agent": "SKILLS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found self-taught Figma skills and cafe supervisor experience with gaps in formal UX design history.",
+      "error": null,
+      "startMs": 2584,
+      "endMs": 5356,
+      "durationMs": 2772,
+      "costUsd": 0.00040537500000000003,
+      "tokens": {
+       "input": 2365,
+       "cached": 0,
+       "output": 760,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "highest qualification",
+       "years of UX design experience",
+       "UX portfolio link"
+      ],
+      "warnings": []
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 6 job records and multiple related design roles in the evidence.",
+      "error": null,
+      "startMs": 23,
+      "endMs": 6208,
+      "durationMs": 6185,
+      "costUsd": 0.00046747499999999997,
+      "tokens": {
+       "input": 2105,
+       "cached": 0,
+       "output": 1032,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "Formal suitability score",
+       "Detailed local salary data"
+      ],
+      "warnings": [
+       "Job records have availability NOT_CONFIRMED_CURRENT.",
+       "Role matching is exploratory.",
+       "1 statement without valid evidence removed"
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.7,
+     "conflicts": [],
+     "missingData": [
+      "highest qualification",
+      "years of UX design experience",
+      "UX portfolio link",
+      "Formal suitability score",
+      "Detailed local salary data"
+     ],
+     "staleEvidence": 4,
+     "counts": {
+      "facts": 10,
+      "findings": 16,
+      "duplicatesRemoved": 2,
+      "evidence": 10
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "REQUEST_JOB_MATCH",
+      "label": "Which of these jobs fit me?",
+      "reason": "4 job records were checked",
+      "prompt": "Which of the job records you found fit me best, and why?",
+      "evidenceIds": [
+       "job:1685697",
+       "job:1683082",
+       "job:1681408",
+       "job:1665816"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Close my top skill gap",
+      "reason": "The skills check ranked this as the most useful next skill: User Experience (UX) Design",
+      "prompt": "What is the quickest way to build User Experience (UX) Design?",
+      "priority": 2
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: highest qualification, years of UX design experience, UX portfolio link",
+      "priority": 3
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 34626,
+     "agentsMs": 6187,
+     "composeMs": 28437,
+     "agentCostUsd": 0.0010436999999999998,
+     "agentTokens": 7139,
+     "reusedResults": 0
+    },
+    "planMs": 21,
+    "responseStreamStartedMs": 6210,
+    "responseStreamStartedClientMs": 6213,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 21
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 21
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 21
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 23
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2045
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2046
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2455
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 2584
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2584
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2585
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2585
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2619
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 5356
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 6208
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 6209
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 6209
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 6210
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 34648
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "t3-pathway",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-t3-pathway-mutyj50v",
+   "priorUserTurns": [],
+   "user": "I want to move from hospitality into UX design. Give me the fastest realistic path.",
+   "answer": "\nMoving from hospitality to UX design is a sensible crossover because you already understand customer friction, active listening, and service flow. The fastest realistic route is not a multi-year degree, but a targeted skill set combined immediately with a practical portfolio.\n\nI checked your transition goal against accredited short training options, units of competency covering interface design and user research, and typical entry-level hiring expectations.\nThe Fastest 3-Step Transition Pathway\n\n1. Learn core tools and UX methodology\nComplete a focused program such as the User Experience Design Skill Set (ICTSS00118) or a targeted UI/UX short course. This builds working knowledge of user research, wireframing, and industry-standard tools like Figma.\n2. Build 2 to 3 practical case studies\nJunior UX hiring depends heavily on visual proof of your problem-solving. Re-design an existing booking, ordering, or customer-service workflow from your hospitality experience to demonstrate how you solve real user pain points.\n3. Target entry-level and adjacent digital roles\nApply for Junior UX Designer, Junior UI Designer, or Web Content/Digital Assistant roles where your client-facing hospitality background adds immediate communication value.\nKey Trade-off to Keep in Mind\nA short course gets you up to speed quickly on terminology and tools, but a certificate alone does not get hired in UX. Employers look for a demonstrated portfolio showing your design process, research, and prototypes.\n[Question] Are you planning to study part-time while keeping hospitality shifts, or switch to intensive full-time learning? Options: Part-time alongside work; Full-time intensive",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "ROUTE_SELECTION",
+    "content_blocks": [
+     {
+      "id": "block_overview",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Moving from hospitality to UX design is a sensible crossover because you already understand customer friction, active listening, and service flow. The fastest realistic route is not a multi-year degree, but a targeted skill set combined immediately with a practical portfolio.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_checks",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "I checked your transition goal against accredited short training options, units of competency covering interface design and user research, and typical entry-level hiring expectations.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_fastest_route",
+      "type": "steps",
+      "level": "h2",
+      "variant": "default",
+      "title": "The Fastest 3-Step Transition Pathway",
+      "text": "",
+      "items": [
+       {
+        "id": "step_1",
+        "title": "1. Learn core tools and UX methodology",
+        "text": "Complete a focused program such as the User Experience Design Skill Set (ICTSS00118) or a targeted UI/UX short course. This builds working knowledge of user research, wireframing, and industry-standard tools like Figma.",
+        "value": "2–4 months",
+        "status": "current"
+       },
+       {
+        "id": "step_2",
+        "title": "2. Build 2 to 3 practical case studies",
+        "text": "Junior UX hiring depends heavily on visual proof of your problem-solving. Re-design an existing booking, ordering, or customer-service workflow from your hospitality experience to demonstrate how you solve real user pain points.",
+        "value": "Concurrent with study",
+        "status": "next"
+       },
+       {
+        "id": "step_3",
+        "title": "3. Target entry-level and adjacent digital roles",
+        "text": "Apply for Junior UX Designer, Junior UI Designer, or Web Content/Digital Assistant roles where your client-facing hospitality background adds immediate communication value.",
+        "value": "Job entry",
+        "status": "neutral"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_tradeoffs",
+      "type": "callout",
+      "level": "none",
+      "variant": "warning",
+      "title": "Key Trade-off to Keep in Mind",
+      "text": "A short course gets you up to speed quickly on terminology and tools, but a certificate alone does not get hired in UX. Employers look for a demonstrated portfolio showing your design process, research, and prototypes.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "single_select",
+     "question_id": "study_pace_preference",
+     "question": "Are you planning to study part-time while keeping hospitality shifts, or switch to intensive full-time learning?",
+     "options": [
+      {
+       "id": "opt_part_time",
+       "label": "Part-time alongside work",
+       "description": "Keep earning while building skills and portfolio projects over evenings or days off.",
+       "value": "part_time"
+      },
+      {
+       "id": "opt_full_time",
+       "label": "Full-time intensive",
+       "description": "Dedicate all your time to finish training and portfolio pieces as quickly as possible.",
+       "value": "full_time"
+      }
+     ],
+     "allow_other_input": true,
+     "other_input_label": "Something else",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "PATHWAY_RMO",
+     "confidence": "HIGH",
+     "reason": "User is actively exploring and narrowing a career transition pathway into UX design.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 45,
+      "band": "medium",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+       "GOAL_CLEAR",
+       "ROUTE_UNRESOLVED",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Transition from hospitality to UX design via the fastest realistic route",
+      "confirmed_facts": [
+       "I want to move from hospitality into UX design."
+      ],
+      "possible_need": "Clarify study load and portfolio strategy for rapid entry into UX design",
+      "missing_information": [
+       "Current availability for full-time or part-time study",
+       "Prior experience with digital or design software"
+      ],
+      "relevant_question": "Are you planning to study part-time while keeping hospitality shifts, or switch to intensive full-time learning?",
+      "user_constraints": []
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 17161,
+   "firstDeltaMs": 10848,
+   "timeline": {
+    "pre": 5335,
+    "ttft": 3593,
+    "gen": 6206
+   },
+   "usage": {
+    "input": 24793,
+    "cached": 9122,
+    "output": 1490,
+    "thinking": 759
+   },
+   "mainCost": 0.00269475,
+   "auxCost": 0.0017433,
+   "totalCost": 0.00443805,
+   "orchestration": {
+    "level": 3,
+    "domains": [
+     "PATHWAY",
+     "PROFILE",
+     "JOBS",
+     "SKILLS",
+     "COURSES",
+     "MARKET"
+    ],
+    "understood": "Your question about UX design needs profile, jobs, skills, market, learning and pathway checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:PATHWAY",
+      "personal"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "skills",
+      "type": "SKILLS_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     },
+     {
+      "id": "market",
+      "type": "MARKET_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "learning",
+      "type": "LEARNING_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "pathway",
+      "type": "PATHWAY_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found profile statement regarding career transition into UX design.",
+      "error": null,
+      "startMs": 22,
+      "endMs": 1555,
+      "durationMs": 1533,
+      "costUsd": 0.00009044999999999999,
+      "tokens": {
+       "input": 394,
+       "cached": 0,
+       "output": 203,
+       "thinking": 0
+      },
+      "confidence": 0.2,
+      "missingData": [
+       "highest qualification",
+       "years of UX experience",
+       "location"
+      ],
+      "warnings": [
+       "Evidence lacks verified profile details."
+      ]
+     },
+     {
+      "id": "market",
+      "agent": "MARKET_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found no UX design records in evidence, only unrelated roles like lecturers and designers.",
+      "error": null,
+      "startMs": 22,
+      "endMs": 4935,
+      "durationMs": 4913,
+      "costUsd": 0.000241275,
+      "tokens": {
+       "input": 1529,
+       "cached": 0,
+       "output": 422,
+       "thinking": 0
+      },
+      "confidence": 0.1,
+      "missingData": [
+       "UX design job listings",
+       "UX design salary ranges",
+       "Target location information"
+      ],
+      "warnings": [
+       "No UX design specific evidence provided in the dataset.",
+       "2 statements without valid evidence removed"
+      ]
+     },
+     {
+      "id": "pathway",
+      "agent": "PATHWAY_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 2 UX design courses and 3 short courses to support transition from hospitality.",
+      "error": null,
+      "startMs": 1555,
+      "endMs": 4954,
+      "durationMs": 3399,
+      "costUsd": 0.000354975,
+      "tokens": {
+       "input": 2805,
+       "cached": 0,
+       "output": 482,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "highest qualification",
+       "years of UX experience",
+       "location"
+      ],
+      "warnings": []
+     },
+     {
+      "id": "skills",
+      "agent": "SKILLS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Analyzed user transition goal to UX design and identified relevant competency units.",
+      "error": null,
+      "startMs": 1555,
+      "endMs": 5079,
+      "durationMs": 3524,
+      "costUsd": 0.0002637,
+      "tokens": {
+       "input": 1624,
+       "cached": 0,
+       "output": 473,
+       "thinking": 0
+      },
+      "confidence": 0.5,
+      "missingData": [
+       "highest qualification",
+       "years of UX experience",
+       "location"
+      ],
+      "warnings": [
+       "Profile lacks specific UX skills or prior experience details."
+      ]
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found various design occupation profiles and adjacent roles related to the user's career transition exploration.",
+      "error": null,
+      "startMs": 22,
+      "endMs": 5173,
+      "durationMs": 5151,
+      "costUsd": 0.000290625,
+      "tokens": {
+       "input": 1403,
+       "cached": 0,
+       "output": 618,
+       "thinking": 0
+      },
+      "confidence": 0.5,
+      "missingData": [
+       "UX design specific job records",
+       "Hospitality transition pathways",
+       "Local geographic demand"
+      ],
+      "warnings": [
+       "Job records availability is unconfirmed and no specific UX design vacancies were found in the evidence."
+      ]
+     },
+     {
+      "id": "learning",
+      "agent": "LEARNING_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found multiple learning options ranging from individual units to full qualifications for UX design.",
+      "error": null,
+      "startMs": 22,
+      "endMs": 5349,
+      "durationMs": 5327,
+      "costUsd": 0.000360525,
+      "tokens": {
+       "input": 2151,
+       "cached": 0,
+       "output": 664,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "Exact delivery dates and tuition fees for specific providers not fully detailed in evidence."
+      ],
+      "warnings": [
+       "Check current details directly with providers."
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.5,
+     "conflicts": [],
+     "missingData": [
+      "highest qualification",
+      "years of UX experience",
+      "location",
+      "UX design specific job records",
+      "Hospitality transition pathways",
+      "Local geographic demand",
+      "UX design job listings",
+      "UX design salary ranges"
+     ],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 11,
+      "findings": 14,
+      "duplicatesRemoved": 1,
+      "evidence": 11
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "COMPARE_COURSES",
+      "label": "Compare UX courses",
+      "reason": "Compare available short courses and skill sets to find your fastest entry path.",
+      "prompt": "Can you compare the available UX short courses and skill sets?",
+      "expectedImpact": "high",
+      "evidenceIds": [
+       "short:1475",
+       "qual:ICTSS00118",
+       "qual:10992NAT"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "BUILD_PATHWAY",
+      "label": "Build this pathway",
+      "reason": "Turns the recommended route into steps: Short Course to Skill Set Pathway",
+      "prompt": "Build a step-by-step pathway for: Short Course to Skill Set Pathway",
+      "expectedImpact": "high",
+      "priority": 2
+     },
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Close my top skill gap",
+      "reason": "The skills check ranked this as the most useful next skill: user experience solutions design",
+      "prompt": "What is the quickest way to build user experience solutions design?",
+      "priority": 3
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: highest qualification, years of UX experience, location",
+      "priority": 4
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 17137,
+     "agentsMs": 5327,
+     "composeMs": 11808,
+     "agentCostUsd": 0.00160155,
+     "agentTokens": 12768,
+     "reusedResults": 0
+    },
+    "planMs": 22,
+    "responseStreamStartedMs": 5351,
+    "responseStreamStartedClientMs": 5353,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 22
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 22
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 1555
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1555
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1555
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2570
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2570
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2571
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2572
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2572
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2610
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2665
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2712
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2724
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2784
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 4935
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 4954
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 5079
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 5173
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 5349
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 5349
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 5349
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 5351
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 17160
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "t4-company",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-t4-company-mutyj50v",
+   "priorUserTurns": [],
+   "user": "What do I need to improve to get a product role at Canva?",
+   "answer": "\nAiming for a product role at a tech company like Canva is an exciting direction, but the exact skills you will need to sharpen depend heavily on where you are starting from. While I don't hold internal hiring data specific to Canva, I looked across current digital product manager roles and skill profiles to see what modern product teams generally look for.\n\nProduct strategy and discovery\nBeing able to identify real user problems, define a clear product vision, and prioritize features based on business value and user impact.\nDelivery and technical collaboration\nWorking closely with software engineers, designers, and data teams in agile sprints to take an idea from concept through to release.\nData and user insights\nForming clear hypotheses, analyzing user engagement metrics, and making data-informed decisions to improve the product continuously.\nCross-functional communication\nAligning stakeholders across design, engineering, marketing, and leadership without having direct authority over them.\n\nMost people transition into product management from adjacent areas—such as software engineering, UI/UX design, data analysis, marketing, or project coordination. The fastest way to bridge your gap is to lean on your existing strengths while building a portfolio or evidence around product thinking and execution.\n[Question] What kind of work or study are you doing at the moment?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "SKILLS_EXPLORE",
+    "content_blocks": [
+     {
+      "id": "block_opening",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Aiming for a product role at a tech company like Canva is an exciting direction, but the exact skills you will need to sharpen depend heavily on where you are starting from. While I don't hold internal hiring data specific to Canva, I looked across current digital product manager roles and skill profiles to see what modern product teams generally look for.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_core_skills",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "item_strategy",
+        "title": "Product strategy and discovery",
+        "text": "Being able to identify real user problems, define a clear product vision, and prioritize features based on business value and user impact.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_execution",
+        "title": "Delivery and technical collaboration",
+        "text": "Working closely with software engineers, designers, and data teams in agile sprints to take an idea from concept through to release.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_data",
+        "title": "Data and user insights",
+        "text": "Forming clear hypotheses, analyzing user engagement metrics, and making data-informed decisions to improve the product continuously.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_communication",
+        "title": "Cross-functional communication",
+        "text": "Aligning stakeholders across design, engineering, marketing, and leadership without having direct authority over them.",
+        "value": "",
+        "status": "neutral"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_transition_context",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Most people transition into product management from adjacent areas—such as software engineering, UI/UX design, data analysis, marketing, or project coordination. The fastest way to bridge your gap is to lean on your existing strengths while building a portfolio or evidence around product thinking and execution.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "current_background_experience",
+     "question": "What kind of work or study are you doing at the moment?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "PATHWAY_RMO",
+     "confidence": "HIGH",
+     "reason": "Exploratory career pathway and skill mapping for product management.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": -1,
+      "band": "unknown",
+      "evidence_strength": "none",
+      "trend": "unknown",
+      "reason_codes": [
+       "ROUTE_UNRESOLVED",
+       "CRITERIA_UNCLEAR",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Transitioning to a product role at Canva or tech companies",
+      "confirmed_facts": [],
+      "possible_need": "Identify transferable strengths and specific skill gaps for product management",
+      "missing_information": [
+       "Current role, experience, or study background"
+      ],
+      "relevant_question": "What kind of work or study are you doing at the moment?",
+      "user_constraints": []
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 18782,
+   "firstDeltaMs": 13028,
+   "timeline": {
+    "pre": 4825,
+    "ttft": 3920,
+    "gen": 7461
+   },
+   "usage": {
+    "input": 24191,
+    "cached": 9122,
+    "output": 1256,
+    "thinking": 1567
+   },
+   "mainCost": 0.0028641500000000006,
+   "auxCost": 0.0011778,
+   "totalCost": 0.004041950000000001,
+   "orchestration": {
+    "level": 3,
+    "domains": [
+     "JOBS",
+     "SKILLS",
+     "COMPANY",
+     "PROFILE",
+     "COURSES"
+    ],
+    "understood": "Your question about product needs profile, jobs, company, skills and learning checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:JOBS",
+      "domain:SKILLS",
+      "domain:COMPANY",
+      "personal",
+      "company:Canva"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "company",
+      "type": "COMPANY_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "skills",
+      "type": "SKILLS_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     },
+     {
+      "id": "learning",
+      "type": "LEARNING_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "No saved profile details yet, so I am working from this message only",
+      "error": null,
+      "startMs": 13,
+      "endMs": 15,
+      "durationMs": 1,
+      "costUsd": 0,
+      "tokens": {
+       "input": 0,
+       "cached": 0,
+       "output": 0,
+       "thinking": 0
+      },
+      "confidence": 0.1,
+      "missingData": [
+       "current or most recent job",
+       "highest qualification",
+       "location",
+       "hours available for study or work"
+      ],
+      "warnings": [
+       "Profile is empty"
+      ]
+     },
+     {
+      "id": "company",
+      "agent": "COMPANY_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "No records naming Canva in Yuzee's data",
+      "error": null,
+      "startMs": 14,
+      "endMs": 1893,
+      "durationMs": 1879,
+      "costUsd": 0,
+      "tokens": {
+       "input": 0,
+       "cached": 0,
+       "output": 0,
+       "thinking": 0
+      },
+      "confidence": 0.2,
+      "missingData": [
+       "Employer-specific roles and requirements for Canva"
+      ],
+      "warnings": [
+       "No employer evidence: no employer-specific claims"
+      ]
+     },
+     {
+      "id": "skills",
+      "agent": "SKILLS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found product and production management roles and required skills from available evidence.",
+      "error": null,
+      "startMs": 15,
+      "endMs": 4270,
+      "durationMs": 4255,
+      "costUsd": 0.00032122499999999996,
+      "tokens": {
+       "input": 2483,
+       "cached": 0,
+       "output": 450,
+       "thinking": 0
+      },
+      "confidence": 0.4,
+      "missingData": [
+       "current or most recent job",
+       "highest qualification",
+       "location",
+       "hours available for study or work"
+      ],
+      "warnings": [
+       "No saved profile details available; working from user message only."
+      ]
+     },
+     {
+      "id": "learning",
+      "agent": "LEARNING_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 4 units and 2 courses related to product management skills and digital products.",
+      "error": null,
+      "startMs": 14,
+      "endMs": 4563,
+      "durationMs": 4549,
+      "costUsd": 0.000311775,
+      "tokens": {
+       "input": 1261,
+       "cached": 0,
+       "output": 724,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "Specific hiring criteria and skill gaps for Canva product roles"
+      ],
+      "warnings": [
+       "Course details should be checked directly with providers."
+      ]
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 6 job records and 4 adjacent role types related to product and production management.",
+      "error": null,
+      "startMs": 14,
+      "endMs": 4833,
+      "durationMs": 4819,
+      "costUsd": 0.00041355,
+      "tokens": {
+       "input": 2154,
+       "cached": 0,
+       "output": 840,
+       "thinking": 0
+      },
+      "confidence": 0.4,
+      "missingData": [
+       "Canva specific job listings",
+       "Canva hiring criteria",
+       "Detailed candidate requirements"
+      ],
+      "warnings": [
+       "Job records have availability NOT_CONFIRMED_CURRENT.",
+       "No specific evidence regarding Canva was found.",
+       "1 statement without valid evidence removed"
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.38,
+     "conflicts": [],
+     "missingData": [
+      "current or most recent job",
+      "highest qualification",
+      "location",
+      "hours available for study or work",
+      "Canva specific job listings",
+      "Canva hiring criteria",
+      "Detailed candidate requirements",
+      "Employer-specific roles and requirements for Canva"
+     ],
+     "staleEvidence": 3,
+     "counts": {
+      "facts": 8,
+      "findings": 11,
+      "duplicatesRemoved": 0,
+      "evidence": 11
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "COMPARE_COURSES",
+      "label": "Compare learning options",
+      "reason": "2 learning options were found for the gaps",
+      "prompt": "Compare Online Graduate Certificate in Product Management and DIG201 Creating and Leveraging Digital Products for me",
+      "evidenceIds": [
+       "course:299650",
+       "course:290092"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "REQUEST_JOB_MATCH",
+      "label": "Which of these jobs fit me?",
+      "reason": "3 job records were checked",
+      "prompt": "Which of the job records you found fit me best, and why?",
+      "evidenceIds": [
+       "job:1686026",
+       "job:1681555",
+       "job:1680632"
+      ],
+      "priority": 2
+     },
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Close my top skill gap",
+      "reason": "The skills check ranked this as the most useful next skill: Product Management",
+      "prompt": "What is the quickest way to build Product Management?",
+      "priority": 3
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: current or most recent job, highest qualification, location",
+      "priority": 4
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 18767,
+     "agentsMs": 4820,
+     "composeMs": 13945,
+     "agentCostUsd": 0.00104655,
+     "agentTokens": 7912,
+     "reusedResults": 0
+    },
+    "planMs": 13,
+    "responseStreamStartedMs": 4835,
+    "responseStreamStartedClientMs": 4837,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 13
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 13
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 13
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 13
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 14
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "COMPANY_SPECIALIST",
+      "ms": 14
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 14
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 15
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 15
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1842
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1842
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "COMPANY_SPECIALIST",
+      "ms": 1843
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "COMPANY_SPECIALIST",
+      "ms": 1843
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1843
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1843
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1843
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1844
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1889
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "COMPANY_SPECIALIST",
+      "ms": 1893
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "COMPANY_SPECIALIST",
+      "ms": 1893
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1901
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1917
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 4270
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 4563
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 4833
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 4833
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 4834
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 4835
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 18781
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "t5-discovery",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-t5-discovery-mutyjjin",
+   "priorUserTurns": [],
+   "user": "Find teaching assistant jobs for me in Melbourne.",
+   "answer": "\nI checked our records for Melbourne. I do not have live job vacancy advertisements listed here today, but we can look at the main types of assistant roles and what they involve to help target your search.\n\nSchool Teacher Assistant / Aide\nSupports teachers in classrooms by reinforcing lessons one-on-one or with small groups, preparing materials, and helping with basic recordkeeping. Relevant study areas often include education and vocational support qualifications.\nGraduate Teaching Assistant / University Tutor\nAssists academic staff in higher education with classroom instruction, tutoring, and grading papers. Profiles for this role typically note enrolment in a postgraduate or graduate program.\n[Question] Which type of teaching assistant setting are you aiming for? Options: Primary or secondary schools; University or higher education; Early childhood or kindergarten; Not sure yet",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "block_intro",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "I checked our records for Melbourne. I do not have live job vacancy advertisements listed here today, but we can look at the main types of assistant roles and what they involve to help target your search.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_role_types",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "item_school_support",
+        "title": "School Teacher Assistant / Aide",
+        "text": "Supports teachers in classrooms by reinforcing lessons one-on-one or with small groups, preparing materials, and helping with basic recordkeeping. Relevant study areas often include education and vocational support qualifications.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_tertiary_tutor",
+        "title": "Graduate Teaching Assistant / University Tutor",
+        "text": "Assists academic staff in higher education with classroom instruction, tutoring, and grading papers. Profiles for this role typically note enrolment in a postgraduate or graduate program.",
+        "value": "",
+        "status": "neutral"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "single_select",
+     "question_id": "ta_setting_focus",
+     "question": "Which type of teaching assistant setting are you aiming for?",
+     "options": [
+      {
+       "id": "opt_school",
+       "label": "Primary or secondary schools",
+       "description": "Classroom aide or integration support in schools.",
+       "value": "school_support"
+      },
+      {
+       "id": "opt_uni",
+       "label": "University or higher education",
+       "description": "Tutoring, lab assisting, or academic grading.",
+       "value": "university_tutor"
+      },
+      {
+       "id": "opt_early_childhood",
+       "label": "Early childhood or kindergarten",
+       "description": "Working with preschool and young children.",
+       "value": "early_childhood"
+      },
+      {
+       "id": "opt_unsure",
+       "label": "Not sure yet",
+       "description": "Want to see which pathway fits my current background best.",
+       "value": "explore_all"
+      }
+     ],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": true,
+     "primary_requested_service": "JOB_MATCH_RMO",
+     "confidence": "HIGH",
+     "reason": "User requested teaching assistant job opportunities in Melbourne.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": -1,
+      "band": "unknown",
+      "evidence_strength": "none",
+      "trend": "unknown",
+      "reason_codes": [
+       "GOAL_CLEAR",
+       "ROUTE_UNRESOLVED",
+       "CRITERIA_UNCLEAR"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Find teaching assistant jobs in Melbourne",
+      "confirmed_facts": [
+       "Find teaching assistant jobs for me in Melbourne."
+      ],
+      "possible_need": "Clarify setting and existing qualifications to direct to relevant roles and hiring channels.",
+      "missing_information": [
+       "Desired education setting",
+       "Current qualifications or student status"
+      ],
+      "relevant_question": "Which type of teaching assistant setting are you aiming for?",
+      "user_constraints": [
+       "Location in Melbourne"
+      ]
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 23638,
+   "firstDeltaMs": 13437,
+   "timeline": {
+    "pre": 5342,
+    "ttft": 2422,
+    "gen": 9047
+   },
+   "usage": {
+    "input": 24587,
+    "cached": 9122,
+    "output": 1819,
+    "thinking": 1713
+   },
+   "mainCost": 0.0031873500000000003,
+   "auxCost": 0.0009065249999999999,
+   "totalCost": 0.004093875,
+   "orchestration": {
+    "level": 2,
+    "domains": [
+     "JOBS",
+     "LOCATION",
+     "PROFILE"
+    ],
+    "understood": "Your question about teaching assistant needs profile, jobs and opportunities checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:JOBS",
+      "domain:LOCATION",
+      "personal",
+      "discovery"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "opportunities",
+      "type": "OPPORTUNITY_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "No saved profile details yet, so I am working from this message only",
+      "error": null,
+      "startMs": 28,
+      "endMs": 29,
+      "durationMs": 0,
+      "costUsd": 0,
+      "tokens": {
+       "input": 0,
+       "cached": 0,
+       "output": 0,
+       "thinking": 0
+      },
+      "confidence": 0.1,
+      "missingData": [
+       "current or most recent job",
+       "highest qualification",
+       "location",
+       "hours available for study or work"
+      ],
+      "warnings": [
+       "Profile is empty"
+      ]
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 0 job records and 5 adjacent role types for teaching assistant positions in Melbourne.",
+      "error": null,
+      "startMs": 28,
+      "endMs": 4393,
+      "durationMs": 4365,
+      "costUsd": 0.0003315,
+      "tokens": {
+       "input": 1464,
+       "cached": 0,
+       "output": 739,
+       "thinking": 0
+      },
+      "confidence": 0.4,
+      "missingData": [
+       "Specific job vacancy advertisements",
+       "Employer listings",
+       "Salary details"
+      ],
+      "warnings": [
+       "Location request is ambiguous across multiple Melbourne areas.",
+       "No active job records are present in the evidence."
+      ]
+     },
+     {
+      "id": "opportunities",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found matching teaching assistant roles, university lecturing pathways, and related educational qualifications.",
+      "error": null,
+      "startMs": 29,
+      "endMs": 5366,
+      "durationMs": 5337,
+      "costUsd": 0.00045172499999999993,
+      "tokens": {
+       "input": 1607,
+       "cached": 0,
+       "output": 1104,
+       "thinking": 0
+      },
+      "confidence": 0.6,
+      "missingData": [
+       "current or most recent job",
+       "highest qualification",
+       "location",
+       "hours available for study or work"
+      ],
+      "warnings": [
+       "No saved profile details available; working from prompt only."
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.37,
+     "conflicts": [],
+     "missingData": [
+      "current or most recent job",
+      "highest qualification",
+      "location",
+      "hours available for study or work",
+      "Specific job vacancy advertisements",
+      "Employer listings",
+      "Salary details"
+     ],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 8,
+      "findings": 11,
+      "duplicatesRemoved": 1,
+      "evidence": 12
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Explore Graduate Teaching Assistant",
+      "reason": "Directly matches the requested teaching assistant occupation profile.",
+      "prompt": "Tell me more about Graduate Teaching Assistant and whether it could fit me",
+      "evidenceIds": [
+       "role:role:graduate_teaching_assistant",
+       "occ:graduate_teaching_assistant"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: current or most recent job, highest qualification, location",
+      "priority": 2
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 23608,
+     "agentsMs": 5338,
+     "composeMs": 18268,
+     "agentCostUsd": 0.0007832249999999999,
+     "agentTokens": 4914,
+     "reusedResults": 0
+    },
+    "planMs": 28,
+    "responseStreamStartedMs": 5368,
+    "responseStreamStartedClientMs": 5370,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 28
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 28
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 28
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 28
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 28
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 29
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "ms": 29
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1596
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1596
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "ms": 1596
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "ms": 1596
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1609
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "ms": 1627
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 4393
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "OPPORTUNITY_SPECIALIST",
+      "ms": 5366
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 5366
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 5366
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 5368
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 23637
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "s4-change",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-s4-change-mutyjjin",
+   "priorUserTurns": [],
+   "user": "I'm 45, I've managed retail stores for 20 years and want to move into HR. What are my options?",
+   "answer": "\nManaging retail stores for 20 years means you already have substantial real-world experience in people management. You have likely handled hiring, onboarding, rostering, resolving team conflicts, and managing performance—which are all core parts of human resources.\n\nThe main gap when shifting from store management to a dedicated HR role is usually formal knowledge of employment relations, Fair Work legislation, policy frameworks, and structured workplace compliance. You do not need to start over from scratch, but bridging that knowledge gap is what makes employers take your management background seriously for HR positions.\n\nVocational Diploma with Recognition of Prior Learning (RPL)\nA Diploma of Human Resource Management covers compliance, employee relations, and performance systems. With 20 years of management, you could seek RPL for units covering leadership and recruitment, significantly shortening the study time required to complete the qualification.\nPostgraduate Bridge (Graduate Certificate)\nIf you already hold a prior degree or have extensive senior management standing, a 6-month part-time Graduate Certificate in Human Resource Management provides a focused, high-level credential covering modern workplace law and HR strategy.\nInternal Pivot into Retail People & Culture\nRetail head offices and large regional employers value operational store experience because you understand frontline staff realities. Transition roles like Retail HR Coordinator, Recruitment Advisor, or People Partner allow you to pivot directly while developing formal HR systems knowledge.\n\nMoving straight into a senior HR Manager title usually requires proven industrial relations and policy experience. A realistic transition often starts at an HR Advisor, Recruitment Specialist, or People & Culture Coordinator level before stepping up.\n[Question] Do you already hold any formal tertiary qualifications?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "intro",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Managing retail stores for 20 years means you already have substantial real-world experience in people management. You have likely handled hiring, onboarding, rostering, resolving team conflicts, and managing performance—which are all core parts of human resources.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "gap_explanation",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "The main gap when shifting from store management to a dedicated HR role is usually formal knowledge of employment relations, Fair Work legislation, policy frameworks, and structured workplace compliance. You do not need to start over from scratch, but bridging that knowledge gap is what makes employers take your management background seriously for HR positions.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "pathway_options",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "opt_rpl_diploma",
+        "title": "Vocational Diploma with Recognition of Prior Learning (RPL)",
+        "text": "A Diploma of Human Resource Management covers compliance, employee relations, and performance systems. With 20 years of management, you could seek RPL for units covering leadership and recruitment, significantly shortening the study time required to complete the qualification.",
+        "value": "",
+        "status": "next"
+       },
+       {
+        "id": "opt_postgrad_cert",
+        "title": "Postgraduate Bridge (Graduate Certificate)",
+        "text": "If you already hold a prior degree or have extensive senior management standing, a 6-month part-time Graduate Certificate in Human Resource Management provides a focused, high-level credential covering modern workplace law and HR strategy.",
+        "value": "",
+        "status": "next"
+       },
+       {
+        "id": "opt_retail_pnc",
+        "title": "Internal Pivot into Retail People & Culture",
+        "text": "Retail head offices and large regional employers value operational store experience because you understand frontline staff realities. Transition roles like Retail HR Coordinator, Recruitment Advisor, or People Partner allow you to pivot directly while developing formal HR systems knowledge.",
+        "value": "",
+        "status": "next"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "trade_off_note",
+      "type": "callout",
+      "level": "none",
+      "variant": "info",
+      "title": "",
+      "text": "Moving straight into a senior HR Manager title usually requires proven industrial relations and policy experience. A realistic transition often starts at an HR Advisor, Recruitment Specialist, or People & Culture Coordinator level before stepping up.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "q_prior_qualifications_and_direction",
+     "question": "Do you already hold any formal tertiary qualifications?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "PATHWAY_RMO",
+     "confidence": "HIGH",
+     "reason": "User exploring transition pathways from retail management into HR.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 35,
+      "band": "low",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+       "EXPLICIT_UNCERTAINTY",
+       "CRITERIA_UNCLEAR",
+       "ROUTE_UNRESOLVED",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Transition from 20 years of retail store management into human resources",
+      "confirmed_facts": [
+       "I'm 45",
+       "I've managed retail stores for 20 years and want to move into HR"
+      ],
+      "possible_need": "Explore practical transition routes including RPL, vocational diplomas, or retail-specific People & Culture roles",
+      "missing_information": [
+       "Prior tertiary qualifications",
+       "Study time and format preferences"
+      ],
+      "relevant_question": "Do you already hold any formal tertiary qualifications, or are you looking for the most direct practical pathway using your management experience?",
+      "user_constraints": []
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 20884,
+   "firstDeltaMs": 13688,
+   "timeline": {
+    "pre": 5907,
+    "ttft": 2873,
+    "gen": 8246
+   },
+   "usage": {
+    "input": 27130,
+    "cached": 9122,
+    "output": 1391,
+    "thinking": 1815
+   },
+   "mainCost": 0.0033112500000000004,
+   "auxCost": 0.0022697249999999998,
+   "totalCost": 0.005580975,
+   "orchestration": {
+    "level": 3,
+    "domains": [
+     "PATHWAY",
+     "PROFILE",
+     "JOBS",
+     "SKILLS",
+     "COURSES",
+     "MARKET"
+    ],
+    "understood": "Your question needs profile, jobs, skills, market, learning and pathway checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:PATHWAY",
+      "personal"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "skills",
+      "type": "SKILLS_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     },
+     {
+      "id": "market",
+      "type": "MARKET_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "learning",
+      "type": "LEARNING_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "pathway",
+      "type": "PATHWAY_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 1 user profile statement containing retail management experience and age.",
+      "error": null,
+      "startMs": 18,
+      "endMs": 1908,
+      "durationMs": 1890,
+      "costUsd": 0.000147225,
+      "tokens": {
+       "input": 423,
+       "cached": 0,
+       "output": 385,
+       "thinking": 0
+      },
+      "confidence": 0.3,
+      "missingData": [
+       "highest qualification",
+       "location",
+       "study constraints"
+      ],
+      "warnings": [
+       "Profile evidence is extremely limited."
+      ]
+     },
+     {
+      "id": "market",
+      "agent": "MARKET_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found four HR and corporate management roles with positive national employment projections.",
+      "error": null,
+      "startMs": 18,
+      "endMs": 4935,
+      "durationMs": 4917,
+      "costUsd": 0.000343125,
+      "tokens": {
+       "input": 2271,
+       "cached": 0,
+       "output": 576,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "local salary ranges",
+       "specific local vacancy listings"
+      ],
+      "warnings": [
+       "Projections are national forecasts and wider than the user's specific local area."
+      ]
+     },
+     {
+      "id": "pathway",
+      "agent": "PATHWAY_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 2 qualification options and 3 career pathways for transitioning from retail management to human resources.",
+      "error": null,
+      "startMs": 1908,
+      "endMs": 5028,
+      "durationMs": 3120,
+      "costUsd": 0.00036405,
+      "tokens": {
+       "input": 2878,
+       "cached": 0,
+       "output": 494,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "highest qualification",
+       "location",
+       "study constraints"
+      ],
+      "warnings": []
+     },
+     {
+      "id": "skills",
+      "agent": "SKILLS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 20 years of retail management experience and multiple human resources target roles with core skill overlaps.",
+      "error": null,
+      "startMs": 1908,
+      "endMs": 5487,
+      "durationMs": 3579,
+      "costUsd": 0.0004395,
+      "tokens": {
+       "input": 2320,
+       "cached": 0,
+       "output": 885,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "highest qualification",
+       "location",
+       "study constraints"
+      ],
+      "warnings": []
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 5 human resources roles and 3 adjacent occupation categories.",
+      "error": null,
+      "startMs": 18,
+      "endMs": 5488,
+      "durationMs": 5470,
+      "costUsd": 0.00037275,
+      "tokens": {
+       "input": 1638,
+       "cached": 0,
+       "output": 833,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "local job openings",
+       "specific employer names",
+       "salary details"
+      ],
+      "warnings": [
+       "Job records availability is not confirmed current.",
+       "National forecasts do not guarantee local outcomes."
+      ]
+     },
+     {
+      "id": "learning",
+      "agent": "LEARNING_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found four higher education HR courses and one retail people management skill set.",
+      "error": null,
+      "startMs": 18,
+      "endMs": 5919,
+      "durationMs": 5901,
+      "costUsd": 0.0004584,
+      "tokens": {
+       "input": 2172,
+       "cached": 0,
+       "output": 985,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "Provider-specific fee structures",
+       "Exact delivery schedules",
+       "Application deadlines"
+      ],
+      "warnings": [
+       "Check current details directly with providers.",
+       "1 statement without valid evidence removed"
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.73,
+     "conflicts": [],
+     "missingData": [
+      "highest qualification",
+      "location",
+      "study constraints",
+      "local job openings",
+      "specific employer names",
+      "salary details",
+      "local salary ranges",
+      "specific local vacancy listings"
+     ],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 18,
+      "findings": 21,
+      "duplicatesRemoved": 4,
+      "evidence": 23
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "COMPARE_COURSES",
+      "label": "Compare HR courses",
+      "reason": "Reviewing available qualifications helps determine the best fit for your transition timeframe.",
+      "prompt": "Can you compare the HR Advisor Skill Set and the Diploma of Human Resource Management for me?",
+      "expectedImpact": "high",
+      "evidenceIds": [
+       "qual:BSBSS00111",
+       "qual:BSB50320"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "BUILD_PATHWAY",
+      "label": "Build this pathway",
+      "reason": "Turns the recommended route into steps: HR Advisor Skill Set",
+      "prompt": "Build a step-by-step pathway for: HR Advisor Skill Set",
+      "expectedImpact": "high",
+      "priority": 2
+     },
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Close my top skill gap",
+      "reason": "The skills check ranked this as the most useful next skill: Labor and Industrial Relations",
+      "prompt": "What is the quickest way to build Labor and Industrial Relations?",
+      "priority": 3
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: highest qualification, location, study constraints",
+      "priority": 4
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 20865,
+     "agentsMs": 5902,
+     "composeMs": 14961,
+     "agentCostUsd": 0.00212505,
+     "agentTokens": 15860,
+     "reusedResults": 0
+    },
+    "planMs": 18,
+    "responseStreamStartedMs": 5921,
+    "responseStreamStartedClientMs": 5923,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 18
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 18
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 1908
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1908
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1908
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 1946
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2457
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2458
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2458
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2459
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2459
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 2500
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 2512
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 2526
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 2535
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 2565
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 4935
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 5028
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 5487
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 5488
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 5919
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 5919
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 5919
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 5921
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 20883
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "s10-local",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-s10-local-mutyk1ra",
+   "priorUserTurns": [],
+   "user": "What TAFE courses in Geelong could help me become a disability support worker?",
+   "answer": "\nIf you are looking to become a disability support worker in Geelong, vocational training pathways typically focus on nationally accredited disability and community care qualifications that build foundational support skills and practical workplace experience.\nKey qualification pathways to explore\n\nCertificate III or IV in Disability / Individual Support\nFull qualifications provide comprehensive grounding in person-centred care, rights, and support strategies. Check individual provider listings for specific units, practical placement arrangements, and delivery formats.\nTargeted Skill Sets (e.g. Behaviour Support - CHCSS00124)\nAccredited skill sets offer focused training in areas like positive behaviour support. They provide targeted skills for upskilling or entry assistance, but do not cover the full breadth of a comprehensive certificate qualification.\nDiplomas in Disability and Community Practice\nVocational diplomas offer broader study in advocacy, person-centred planning, and community support, though you should confirm whether practical work experience is arranged as part of the specific course.\nChecking providers in the Geelong region\nTAFE and registered training organisations in the Geelong area (such as the Gordon Institute of TAFE locally, along with state-wide providers) offer varying schedules and delivery modes. When reviewing options, confirm specific entry requirements, whether practical placement is organised by the provider, course locations, and any applicable Victorian fee subsidies.\n[Question] What is your current starting point in care work? Options: Starting fresh; Have some care experience; Seeking short targeted training",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "block_overview",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "If you are looking to become a disability support worker in Geelong, vocational training pathways typically focus on nationally accredited disability and community care qualifications that build foundational support skills and practical workplace experience.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_pathways",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "Key qualification pathways to explore",
+      "text": "",
+      "items": [
+       {
+        "id": "item_cert3",
+        "title": "Certificate III or IV in Disability / Individual Support",
+        "text": "Full qualifications provide comprehensive grounding in person-centred care, rights, and support strategies. Check individual provider listings for specific units, practical placement arrangements, and delivery formats.",
+        "value": "",
+        "status": "next"
+       },
+       {
+        "id": "item_skillsets",
+        "title": "Targeted Skill Sets (e.g. Behaviour Support - CHCSS00124)",
+        "text": "Accredited skill sets offer focused training in areas like positive behaviour support. They provide targeted skills for upskilling or entry assistance, but do not cover the full breadth of a comprehensive certificate qualification.",
+        "value": "",
+        "status": "neutral"
+       },
+       {
+        "id": "item_higher",
+        "title": "Diplomas in Disability and Community Practice",
+        "text": "Vocational diplomas offer broader study in advocacy, person-centred planning, and community support, though you should confirm whether practical work experience is arranged as part of the specific course.",
+        "value": "",
+        "status": "neutral"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "block_local_delivery",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "Checking providers in the Geelong region",
+      "text": "TAFE and registered training organisations in the Geelong area (such as the Gordon Institute of TAFE locally, along with state-wide providers) offer varying schedules and delivery modes. When reviewing options, confirm specific entry requirements, whether practical placement is organised by the provider, course locations, and any applicable Victorian fee subsidies.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "single_select",
+     "question_id": "disability_support_starting_point",
+     "question": "What is your current starting point in care work?",
+     "options": [
+      {
+       "id": "opt_starting_fresh",
+       "label": "Starting fresh",
+       "description": "Looking for a full entry qualification with work placement",
+       "value": "starting_fresh"
+      },
+      {
+       "id": "opt_some_experience",
+       "label": "Have some care experience",
+       "description": "Looking to upskill, gain a formal qualification, or explore RPL",
+       "value": "have_experience"
+      },
+      {
+       "id": "opt_short_courses",
+       "label": "Seeking short targeted training",
+       "description": "Interested in specific skill sets or taster programs first",
+       "value": "short_courses"
+      }
+     ],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "EDU_OFFER_RMO",
+     "confidence": "HIGH",
+     "reason": "User is exploring vocational and TAFE course options to enter the disability support sector.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "PARTIAL",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 35,
+      "band": "low",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+       "GOAL_CLEAR",
+       "ROUTE_UNRESOLVED",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Become a disability support worker in Geelong via TAFE courses",
+      "confirmed_facts": [],
+      "possible_need": "Clarify starting background to recommend either standard entry Cert III or targeted skill set pathways",
+      "missing_information": [
+       "Prior experience in care or support roles",
+       "Preferred study format and timeline"
+      ],
+      "relevant_question": "What is your current starting point in care work?",
+      "user_constraints": [
+       "Geelong regional focus",
+       "TAFE/vocational orientation"
+      ]
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 16866,
+   "firstDeltaMs": 9126,
+   "timeline": {
+    "pre": 1484,
+    "ttft": 2881,
+    "gen": 8287
+   },
+   "usage": {
+    "input": 22527,
+    "cached": 9122,
+    "output": 1833,
+    "thinking": 1507
+   },
+   "mainCost": 0.00290455,
+   "auxCost": 0.00012869999999999998,
+   "totalCost": 0.00303325,
+   "orchestration": {
+    "level": 1,
+    "domains": [
+     "COURSES",
+     "LOCATION"
+    ],
+    "understood": "A quick disability support worker lookup.",
+    "visible": false,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:COURSES",
+      "domain:LOCATION"
+     ]
+    },
+    "planned": [
+     {
+      "id": "learning",
+      "type": "LEARNING_SPECIALIST",
+      "dependsOn": [],
+      "execution": "retrieval"
+     }
+    ],
+    "agents": [
+     {
+      "id": "learning",
+      "agent": "LEARNING_SPECIALIST",
+      "status": "completed",
+      "execution": "retrieval",
+      "summary": "Found 6 course and qualification records for Geelong",
+      "error": null,
+      "startMs": 30,
+      "endMs": 1493,
+      "durationMs": 1462,
+      "costUsd": 0,
+      "tokens": {
+       "input": 0,
+       "cached": 0,
+       "output": 0,
+       "thinking": 0
+      },
+      "confidence": 0.7,
+      "missingData": [],
+      "warnings": []
+     }
+    ],
+    "merge": {
+     "confidence": 0.7,
+     "conflicts": [],
+     "missingData": [],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 6,
+      "findings": 6,
+      "duplicatesRemoved": 0,
+      "evidence": 6
+     },
+     "failedAgents": []
+    },
+    "nextActions": [],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 16835,
+     "agentsMs": 1463,
+     "composeMs": 15354,
+     "agentCostUsd": 0,
+     "agentTokens": 0,
+     "reusedResults": 0
+    },
+    "planMs": 30,
+    "responseStreamStartedMs": 1511,
+    "responseStreamStartedClientMs": 1512,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 30
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 30
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 30
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 1413
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1469
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1469
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1492
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1493
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 1493
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 1493
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 1511
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 16865
+     }
+    ]
+   }
+  },
+  {
+   "scenario": "m1-multi",
+   "turn": 1,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-m1-multi-mutyk1ra",
+   "priorUserTurns": [],
+   "user": "I'm a registered nurse in Brisbane and I'm burnt out from shift work.",
+   "answer": "\nShift work burnout is very real, especially when rotating rosters leave you with little predictable recovery time. The good news is that holding your Registered Nurse qualification gives you considerable clinical experience and transferable skills, and ward-based shift work is far from the only way to use them.\n\nRegular-hours clinical roles\nRoles in general practice, outpatient clinics, day surgery units, school health, or community health. These keep you in direct patient care while moving to standard daytime hours with predictable schedules.\nNon-bedside healthcare and coordination\nOccupational health, telehealth triage, insurance injury management, clinical trial coordination, and hospital care navigation. These use your clinical assessment and communication strengths in office- or hybrid-based settings.\nClinical education and advisory\nClinical facilitation for nursing students, health promotion, or vocational training. These draw directly on your ward expertise without the physical toll of bedside shift routines.\n\nOne practical factor to keep in mind when moving away from shift work is income structure. Business-hours roles usually do not have night, weekend, or public holiday penalty rates, so it helps to balance predictable lifestyle benefits against any adjustment in take-home pay.\n[Question] Would you prefer to stay in direct patient care with regular daytime hours?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "intro",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Shift work burnout is very real, especially when rotating rosters leave you with little predictable recovery time. The good news is that holding your Registered Nurse qualification gives you considerable clinical experience and transferable skills, and ward-based shift work is far from the only way to use them.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "pathway_options",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "",
+      "items": [
+       {
+        "id": "opt_clinic_day",
+        "title": "Regular-hours clinical roles",
+        "text": "Roles in general practice, outpatient clinics, day surgery units, school health, or community health. These keep you in direct patient care while moving to standard daytime hours with predictable schedules.",
+        "value": "",
+        "status": ""
+       },
+       {
+        "id": "opt_case_management",
+        "title": "Non-bedside healthcare and coordination",
+        "text": "Occupational health, telehealth triage, insurance injury management, clinical trial coordination, and hospital care navigation. These use your clinical assessment and communication strengths in office- or hybrid-based settings.",
+        "value": "",
+        "status": ""
+       },
+       {
+        "id": "opt_education_adjacent",
+        "title": "Clinical education and advisory",
+        "text": "Clinical facilitation for nursing students, health promotion, or vocational training. These draw directly on your ward expertise without the physical toll of bedside shift routines.",
+        "value": "",
+        "status": ""
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "tradeoffs_note",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "One practical factor to keep in mind when moving away from shift work is income structure. Business-hours roles usually do not have night, weekend, or public holiday penalty rates, so it helps to balance predictable lifestyle benefits against any adjustment in take-home pay.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "rn_pivot_preference",
+     "question": "Would you prefer to stay in direct patient care with regular daytime hours?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "PATHWAY_RMO",
+     "confidence": "HIGH",
+     "reason": "User is seeking pathway alternatives to shift-based nursing due to burnout.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 30,
+      "band": "low",
+      "evidence_strength": "weak",
+      "trend": "unknown",
+      "reason_codes": [
+       "EXPLICIT_UNCERTAINTY",
+       "CRITERIA_UNCLEAR",
+       "ROUTE_UNRESOLVED"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Transition away from shift-based nursing work to manage burnout",
+      "confirmed_facts": [
+       "I'm a registered nurse in Brisbane and I'm burnt out from shift work."
+      ],
+      "possible_need": "Explore regular-hours or non-bedside nursing pathways",
+      "missing_information": [
+       "Preference for clinical vs non-clinical work",
+       "Salary tolerance without shift penalties"
+      ],
+      "relevant_question": "Would you prefer to stay in direct patient care with regular daytime hours, or are you looking to step away from bedside care entirely?",
+      "user_constraints": [
+       "Wants to avoid shift work"
+      ]
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 16829,
+   "firstDeltaMs": 9161,
+   "timeline": {
+    "pre": 4230,
+    "ttft": 2977,
+    "gen": 5672
+   },
+   "usage": {
+    "input": 23112,
+    "cached": 9122,
+    "output": 1247,
+    "thinking": 807
+   },
+   "mainCost": 0.00244865,
+   "auxCost": 0.000141375,
+   "totalCost": 0.002590025,
+   "orchestration": null
+  },
+  {
+   "scenario": "m1-multi",
+   "turn": 2,
+   "variant": "MA_MEDIUM",
+   "conversationId": "eval-ma-ma_medium-m1-multi-mutyk1ra",
+   "priorUserTurns": [
+    "I'm a registered nurse in Brisbane and I'm burnt out from shift work."
+   ],
+   "user": "What could I move into with regular business hours, and what would I need to study?",
+   "answer": "\nYour Registered Nurse registration gives you direct entry into several regular daytime pathways without necessarily having to restart study from scratch. I looked at Australian healthcare administration roles, community case management profiles, and current postgraduate and vocational training options to see what matches a standard business-hours schedule.\nRealistic daytime pathways and their study requirements\n\nCase Management and Care Coordination\nInvolves organizing patient care plans, navigating NDIS or aged care packages, and coordinating multidisciplinary services in community or office settings. Many employers hire RNs directly for their clinical assessment skills, but a 6-month Graduate Certificate in Case Management or specific community services units can help build formal funding and compliance knowledge.\nHealth Practice and Services Management\nInvolves managing clinic workflows, staff coordination, and operational compliance in general practice, specialist outpatient clinics, or day procedure centres. Small to medium clinics often value clinical background over formal management degrees, while larger health service manager roles may look for a Graduate Certificate or Master of Health Administration.\nClinical Research Coordination\nInvolves coordinating patient visits, data collection, and protocol compliance for clinical trials in hospital research units or private trial centres during daytime hours. Your clinical background and drug administration knowledge are key assets, typically supported by Good Clinical Practice (GCP) certification rather than a full degree.\n\nA key trade-off across these roles is moving from high-activity bedside tasks to higher administrative and documentation loads. Business-hours roles also mean stepping away from shift penalty rates, though they offer predictable weekday routines.\n[Question] Between coordinating care plans, running clinic operations, or working in clinical research, which direction feels closest to what you would enjoy doing daily?",
+   "raw": {
+    "schema_version": "1.3",
+    "current_mode": "A_CONVERSATION",
+    "response_intent": "EXPLORE_OPTIONS",
+    "content_blocks": [
+     {
+      "id": "intro_overview",
+      "type": "text",
+      "level": "none",
+      "variant": "default",
+      "title": "",
+      "text": "Your Registered Nurse registration gives you direct entry into several regular daytime pathways without necessarily having to restart study from scratch. I looked at Australian healthcare administration roles, community case management profiles, and current postgraduate and vocational training options to see what matches a standard business-hours schedule.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "pathway_options",
+      "type": "list",
+      "level": "none",
+      "variant": "default",
+      "title": "Realistic daytime pathways and their study requirements",
+      "text": "",
+      "items": [
+       {
+        "id": "opt_case_mgmt",
+        "title": "Case Management and Care Coordination",
+        "text": "Involves organizing patient care plans, navigating NDIS or aged care packages, and coordinating multidisciplinary services in community or office settings. Many employers hire RNs directly for their clinical assessment skills, but a 6-month Graduate Certificate in Case Management or specific community services units can help build formal funding and compliance knowledge.",
+        "value": "Direct entry or 6-month Grad Cert",
+        "status": "next"
+       },
+       {
+        "id": "opt_health_mgmt",
+        "title": "Health Practice and Services Management",
+        "text": "Involves managing clinic workflows, staff coordination, and operational compliance in general practice, specialist outpatient clinics, or day procedure centres. Small to medium clinics often value clinical background over formal management degrees, while larger health service manager roles may look for a Graduate Certificate or Master of Health Administration.",
+        "value": "RN experience plus targeted short courses or Grad Cert",
+        "status": "next"
+       },
+       {
+        "id": "opt_clinical_trials",
+        "title": "Clinical Research Coordination",
+        "text": "Involves coordinating patient visits, data collection, and protocol compliance for clinical trials in hospital research units or private trial centres during daytime hours. Your clinical background and drug administration knowledge are key assets, typically supported by Good Clinical Practice (GCP) certification rather than a full degree.",
+        "value": "RN background plus short compliance certification",
+        "status": "next"
+       }
+      ],
+      "columns": [],
+      "rows": []
+     },
+     {
+      "id": "tradeoff_callout",
+      "type": "callout",
+      "level": "none",
+      "variant": "info",
+      "title": "",
+      "text": "A key trade-off across these roles is moving from high-activity bedside tasks to higher administrative and documentation loads. Business-hours roles also mean stepping away from shift penalty rates, though they offer predictable weekday routines.",
+      "items": [],
+      "columns": [],
+      "rows": []
+     }
+    ],
+    "interaction": {
+     "kind": "question",
+     "input_type": "text",
+     "question_id": "daytime_direction_preference",
+     "question": "Between coordinating care plans, running clinic operations, or working in clinical research, which direction feels closest to what you would enjoy doing daily?",
+     "options": [],
+     "allow_other_input": false,
+     "other_input_label": "",
+     "fields": [],
+     "recommended_actions": []
+    },
+    "service_trigger": {
+     "service_intent_detected": false,
+     "primary_requested_service": "PATHWAY_RMO",
+     "confidence": "HIGH",
+     "reason": "User is actively exploring career transition routes and associated study pathways away from shift work.",
+     "trigger_now": false,
+     "needs_more_clarity": false,
+     "actions": []
+    },
+    "rmo_readiness": {
+     "readiness": "NOT_READY",
+     "ready_to_generate": false,
+     "missing_inputs": [],
+     "verification_required": false
+    },
+    "state": {
+     "active_response_mode": "Standard",
+     "effective_response_mode": "Standard",
+     "mode_source": "default",
+     "safety_override_applied": false,
+     "user_confidence": {
+      "score": 40,
+      "band": "medium",
+      "evidence_strength": "moderate",
+      "trend": "stable",
+      "reason_codes": [
+       "EXPLICIT_UNCERTAINTY",
+       "CRITERIA_PARTIAL",
+       "ROUTE_UNRESOLVED",
+       "ACTION_EXPLORING"
+      ]
+     },
+     "progress": {
+      "explained": true,
+      "failed_attempts": 0,
+      "loop_count_same_issue": 0,
+      "security_breach_count": 0,
+      "active_security_penalty": ""
+     },
+     "activity_context": {
+      "current_goal": "Identify regular business hours roles and study requirements for a registered nurse transitioning out of shift work.",
+      "confirmed_facts": [
+       "I'm a registered nurse in Brisbane",
+       "I'm burnt out from shift work."
+      ],
+      "possible_need": "Help narrow down whether case management, health administration, or clinical research best fits daily preferences.",
+      "missing_information": [
+       "Preference regarding administrative vs direct patient coordination work",
+       "Willingness to undertake short postgraduate study versus immediate direct-entry roles"
+      ],
+      "relevant_question": "Between coordinating care plans, running clinic operations, or working in clinical research, which direction feels closest to what you would enjoy doing daily?",
+      "user_constraints": [
+       "Must offer regular business hours without rotating shifts"
+      ]
+     }
+    },
+    "followups": {
+     "enabled": false,
+     "cancel_on_user_message": true,
+     "topic_lock": false,
+     "topic_key": "",
+     "triggers": []
+    }
+   },
+   "status": 200,
+   "retried": false,
+   "accepted": true,
+   "error": null,
+   "wallMs": 18856,
+   "firstDeltaMs": 11955,
+   "timeline": {
+    "pre": 5330,
+    "ttft": 2699,
+    "gen": 8006
+   },
+   "usage": {
+    "input": 24837,
+    "cached": 9122,
+    "output": 1367,
+    "thinking": 1172
+   },
+   "mainCost": 0.00281515,
+   "auxCost": 0.0019933499999999996,
+   "totalCost": 0.0048085,
+   "orchestration": {
+    "level": 3,
+    "domains": [
+     "COURSES",
+     "PATHWAY",
+     "PROFILE",
+     "JOBS",
+     "SKILLS",
+     "MARKET"
+    ],
+    "understood": "Your question about with regular business hours needs profile, jobs, skills, market, learning and pathway checks.",
+    "visible": true,
+    "classifier": {
+     "method": "rules",
+     "signals": [
+      "domain:COURSES",
+      "domain:PATHWAY",
+      "personal"
+     ]
+    },
+    "planned": [
+     {
+      "id": "profile",
+      "type": "PROFILE_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "jobs",
+      "type": "JOBS_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "skills",
+      "type": "SKILLS_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     },
+     {
+      "id": "market",
+      "type": "MARKET_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "learning",
+      "type": "LEARNING_SPECIALIST",
+      "dependsOn": [],
+      "execution": "analysis"
+     },
+     {
+      "id": "pathway",
+      "type": "PATHWAY_SPECIALIST",
+      "dependsOn": [
+       "profile"
+      ],
+      "execution": "analysis"
+     }
+    ],
+    "agents": [
+     {
+      "id": "profile",
+      "agent": "PROFILE_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 1 profile record regarding regular business hours and nurse background.",
+      "error": null,
+      "startMs": 6,
+      "endMs": 1905,
+      "durationMs": 1899,
+      "costUsd": 0.00015045,
+      "tokens": {
+       "input": 398,
+       "cached": 0,
+       "output": 402,
+       "thinking": 0
+      },
+      "confidence": 0.4,
+      "missingData": [
+       "highest qualification",
+       "years of experience",
+       "study constraints"
+      ],
+      "warnings": [
+       "Profile evidence is extremely limited."
+      ]
+     },
+     {
+      "id": "market",
+      "agent": "MARKET_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found national employment growth projections for health services managers and related health administration roles.",
+      "error": null,
+      "startMs": 6,
+      "endMs": 4173,
+      "durationMs": 4167,
+      "costUsd": 0.0002628,
+      "tokens": {
+       "input": 1596,
+       "cached": 0,
+       "output": 477,
+       "thinking": 0
+      },
+      "confidence": 0.6,
+      "missingData": [
+       "Exact salary figures",
+       "Specific course requirements for Brisbane",
+       "Local vacancy counts"
+      ],
+      "warnings": [
+       "National projections may not reflect local Brisbane conditions."
+      ]
+     },
+     {
+      "id": "jobs",
+      "agent": "JOBS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found 6 occupation profiles and several adjacent administrative and management roles.",
+      "error": null,
+      "startMs": 6,
+      "endMs": 4336,
+      "durationMs": 4330,
+      "costUsd": 0.00029654999999999997,
+      "tokens": {
+       "input": 1482,
+       "cached": 0,
+       "output": 618,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "Specific study requirements for Australian licensing",
+       "Live job vacancies for Brisbane"
+      ],
+      "warnings": [
+       "Location is ambiguous across multiple Brisbane areas."
+      ]
+     },
+     {
+      "id": "skills",
+      "agent": "SKILLS_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found management and administrative health roles matching the user's shift work avoidance requirement.",
+      "error": null,
+      "startMs": 1905,
+      "endMs": 4454,
+      "durationMs": 2549,
+      "costUsd": 0.00030405,
+      "tokens": {
+       "input": 1634,
+       "cached": 0,
+       "output": 605,
+       "thinking": 0
+      },
+      "confidence": 0.8,
+      "missingData": [
+       "highest qualification",
+       "years of experience",
+       "study constraints"
+      ],
+      "warnings": []
+     },
+     {
+      "id": "pathway",
+      "agent": "PATHWAY_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found management and community service pathways to transition away from nurse shift work.",
+      "error": null,
+      "startMs": 1905,
+      "endMs": 4696,
+      "durationMs": 2791,
+      "costUsd": 0.0003585,
+      "tokens": {
+       "input": 2684,
+       "cached": 0,
+       "output": 524,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "highest qualification",
+       "years of experience",
+       "study constraints"
+      ],
+      "warnings": [
+       "Personal suitability is not established; explore these as possibilities."
+      ]
+     },
+     {
+      "id": "learning",
+      "agent": "LEARNING_SPECIALIST",
+      "status": "completed",
+      "execution": "analysis",
+      "summary": "Found multiple postgraduate and single-unit healthcare management courses matching regular business hours.",
+      "error": null,
+      "startMs": 6,
+      "endMs": 5334,
+      "durationMs": 5328,
+      "costUsd": 0.00046395,
+      "tokens": {
+       "input": 2154,
+       "cached": 0,
+       "output": 1008,
+       "thinking": 0
+      },
+      "confidence": 0.85,
+      "missingData": [
+       "Exact delivery schedules and timetable hours for regular business hours",
+       "Prerequisite details for specific master programs"
+      ],
+      "warnings": [
+       "Check current details directly with the course provider."
+      ]
+     }
+    ],
+    "merge": {
+     "confidence": 0.72,
+     "conflicts": [],
+     "missingData": [
+      "highest qualification",
+      "years of experience",
+      "study constraints",
+      "Specific study requirements for Australian licensing",
+      "Live job vacancies for Brisbane",
+      "Exact salary figures",
+      "Specific course requirements for Brisbane",
+      "Local vacancy counts"
+     ],
+     "staleEvidence": 0,
+     "counts": {
+      "facts": 14,
+      "findings": 22,
+      "duplicatesRemoved": 1,
+      "evidence": 16
+     },
+     "failedAgents": []
+    },
+    "nextActions": [
+     {
+      "action": "BUILD_PATHWAY",
+      "label": "Explore management roles",
+      "reason": "You can leverage your nursing background to transition into regular business hours management.",
+      "prompt": "Can you show me more details on transitioning to a Health and Welfare Services Manager role?",
+      "expectedImpact": "high",
+      "evidenceIds": [
+       "career:1342",
+       "role:role:medical_and_health_services_manager",
+       "learning:learning:CHC42021:2",
+       "learning:learning:CHC52025:4"
+      ],
+      "priority": 1
+     },
+     {
+      "action": "COMPARE_COURSES",
+      "label": "Compare learning options",
+      "reason": "3 learning options were found for the gaps",
+      "prompt": "Compare PDC52516 - Working Legally and Ethically in Health Care and Graduate Certificate in Case Management and Coordinated Care for me",
+      "evidenceIds": [
+       "course:290678",
+       "course:278150"
+      ],
+      "priority": 2
+     },
+     {
+      "action": "ASK_FOLLOW_UP",
+      "label": "Close my top skill gap",
+      "reason": "The skills check ranked this as the most useful next skill: Business Administration and Management",
+      "prompt": "What is the quickest way to build Business Administration and Management?",
+      "priority": 3
+     },
+     {
+      "action": "UPDATE_PROFILE",
+      "label": "Add your missing details",
+      "reason": "Would sharpen the advice: highest qualification, years of experience, study constraints",
+      "priority": 4
+     }
+    ],
+    "state": "completed",
+    "recordMetrics": {
+     "totalMs": 18849,
+     "agentsMs": 5328,
+     "composeMs": 13520,
+     "agentCostUsd": 0.0018363,
+     "agentTokens": 13582,
+     "reusedResults": 0
+    },
+    "planMs": 6,
+    "responseStreamStartedMs": 5335,
+    "responseStreamStartedClientMs": 5337,
+    "events": [
+     {
+      "type": "ORCHESTRATION_STARTED",
+      "ms": 6
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 6
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 6
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 6
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 6
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 6
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 6
+     },
+     {
+      "type": "PLAN_CREATED",
+      "ms": 1700
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1783
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1783
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1783
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1783
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 1784
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 1784
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 1806
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 1833
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 1870
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PROFILE_SPECIALIST",
+      "ms": 1905
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1905
+     },
+     {
+      "type": "AGENT_STARTED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1905
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1905
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1905
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1906
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1906
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 1930
+     },
+     {
+      "type": "AGENT_PROGRESS",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 1949
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "MARKET_SPECIALIST",
+      "ms": 4173
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "JOBS_SPECIALIST",
+      "ms": 4336
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "SKILLS_SPECIALIST",
+      "ms": 4454
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "PATHWAY_SPECIALIST",
+      "ms": 4696
+     },
+     {
+      "type": "AGENT_COMPLETED",
+      "agent": "LEARNING_SPECIALIST",
+      "ms": 5334
+     },
+     {
+      "type": "MERGE_STARTED",
+      "ms": 5334
+     },
+     {
+      "type": "MERGE_COMPLETED",
+      "ms": 5334
+     },
+     {
+      "type": "RESPONSE_STREAM_STARTED",
+      "ms": 5335
+     },
+     {
+      "type": "RESPONSE_COMPLETED",
+      "ms": 18856
+     }
+    ]
+   }
+  }
+ ]
+}

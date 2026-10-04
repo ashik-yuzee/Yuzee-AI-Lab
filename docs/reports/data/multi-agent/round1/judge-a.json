@@ -1,0 +1,452 @@
+{
+ "turns": [
+  {
+   "id": "l0-concept#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    }
+   },
+   "rank": {
+    "Z": 1,
+    "Y": 2,
+    "X": 3
+   },
+   "reason": "Z adds gap-only study and fee variability; Y notes interview/practical tasks; X thinnest on what happens after assessment."
+  },
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Z": 2,
+    "Y": 3
+   },
+   "reason": "X honest and names where to check live counts plus alternate titles concisely; Z similar but wordier; Y gives no search step."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 22
+    }
+   },
+   "rank": {
+    "Z": 1,
+    "X": 2,
+    "W": 3,
+    "Y": 4
+   },
+   "reason": "Z gives an honest verdict plus concrete bridging steps tied to cafe experience; others stop at diagnosis or read stiffly."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "W": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "W": 3,
+    "Z": 3
+   },
+   "reason": "X answers 'fastest' with a tight timed three-step plan; Y adds unverifiable unit codes; Z generic; W pushes a Diploma, not fastest."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Z": 2,
+    "W": 2,
+    "Y": 4
+   },
+   "reason": "X gives concrete proof-building actions (teardowns, side projects); Z/W honest but vaguer; Y never addresses Canva."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 20
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 2,
+     "clarity": 5,
+     "total": 17
+    },
+    "W": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "W": 2,
+    "Z": 4
+   },
+   "reason": "All lack job-search channels; X clearest with accurate entry requirements; W asks two questions; Z silently ignores the 'find jobs' request."
+  },
+  {
+   "id": "t7-missing#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 20
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 20
+    }
+   },
+   "rank": {
+    "Y": 1,
+    "X": 2,
+    "Z": 2
+   },
+   "reason": "Y offers a light category scaffold the user can react to; X and Z only ask the question."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    }
+   },
+   "rank": {
+    "W": 1,
+    "Y": 2,
+    "Z": 3,
+    "X": 4
+   },
+   "reason": "W combines real course codes, RPL, hedged grad-cert entry and pay trade-off; Y/Z slightly overconfident claims; X lacks specifics."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "Z": {
+     "relevance": 1,
+     "grounding": 1,
+     "personalisation": 1,
+     "actionability": 1,
+     "clarity": 1,
+     "total": 5
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 3
+   },
+   "reason": "X names the local TAFE and the core Cert III entry route; Y omits Cert III and lists non-TAFE, non-Geelong providers; Z failed."
+  },
+  {
+   "id": "m1-multi#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    }
+   },
+   "rank": {
+    "Y": 1,
+    "Z": 1,
+    "W": 3,
+    "X": 3
+   },
+   "reason": "Y and Z cover breadth plus the shift-penalty pay trade-off; W narrower; X omits the trade-off."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "W": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    }
+   },
+   "rank": {
+    "W": 1,
+    "X": 2,
+    "Z": 3,
+    "Y": 4
+   },
+   "reason": "W maps study needs to each role and flags pay trade-off; X similar minus trade-off; Z fewer roles; Y vague, suggests admin downgrade."
+  }
+ ]
+}

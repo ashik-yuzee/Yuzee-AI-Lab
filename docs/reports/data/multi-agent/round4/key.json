@@ -1,0 +1,44 @@
+{
+ "t2-fit#1": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MA_COMPOSER_LOW",
+  "S": "MA_COMPOSER_MEDIUM"
+ },
+ "t3-pathway#1": {
+  "P": "VANILLA",
+  "Q": "EXP_RAG",
+  "R": "MA_COMPOSER_LOW",
+  "S": "MA_COMPOSER_MEDIUM"
+ },
+ "t4-company#1": {
+  "P": "EXP_RAG",
+  "Q": "MA_COMPOSER_LOW",
+  "R": "VANILLA",
+  "S": "MA_COMPOSER_MEDIUM"
+ },
+ "t5-discovery#1": {
+  "P": "EXP_RAG",
+  "Q": "MA_COMPOSER_LOW",
+  "R": "MA_COMPOSER_MEDIUM",
+  "S": "VANILLA"
+ },
+ "t7-missing#1": {
+  "P": "MA_COMPOSER_MEDIUM",
+  "Q": "VANILLA",
+  "R": "EXP_RAG",
+  "S": "MA_COMPOSER_LOW"
+ },
+ "s4-change#1": {
+  "P": "MA_COMPOSER_MEDIUM",
+  "Q": "MA_COMPOSER_LOW",
+  "R": "EXP_RAG",
+  "S": "VANILLA"
+ },
+ "m1-multi#2": {
+  "P": "EXP_RAG",
+  "Q": "VANILLA",
+  "R": "MA_COMPOSER_MEDIUM",
+  "S": "MA_COMPOSER_LOW"
+ }
+}

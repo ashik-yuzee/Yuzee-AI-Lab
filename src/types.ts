@@ -65,7 +65,7 @@ export type ModelId = string;
 
 export type ThinkingLevel = 'minimal' | 'low' | 'medium' | 'high' | 'adaptive';
 
-export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA' | 'MICRO_PROMPT' | 'EXP_RAG';
+export type OptimizationMode = 'AUTO' | 'SAVE_TOKENS' | 'FULL_CONTEXT' | 'ADVANCED' | 'VANILLA' | 'MICRO_PROMPT' | 'EXP_RAG' | 'MULTI_AGENT';
 
 export type OptimizationStrategy =
   | 'BASELINE'          // Baseline / Full History (High token usage)
@@ -248,6 +248,10 @@ export interface ChatMessage {
   streamProgress?: import("./ux/streamProgress").ChatStreamProgress;
   streamStopped?: boolean;
   routing?: import('./routing/policy').RoutingDecision;
+  /** MULTI_AGENT: the specialist work behind this answer, persisted by the server. */
+  orchestration?: import('./agents/contract').OrchestrationRecord;
+  /** MULTI_AGENT: live view while the turn streams (client only; the record replaces it on completion). */
+  orchestrationView?: import('./agents/contract').OrchestrationViewModel;
   error?: string;
   errorCode?: string;
 }

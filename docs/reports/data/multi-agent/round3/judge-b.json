@@ -1,0 +1,389 @@
+{
+ "turns": [
+  {
+   "id": "l0-concept#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 2
+   },
+   "reason": "All correct; X most concise and flags fees/individual assessment, Z adds steps but is longer than a simple definition needs."
+  },
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 20
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y honestly declines a count and gives the clearest next step (Seek/LinkedIn, alternate titles, remote); Z is thin with a two-part question."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 25
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y gives a concrete cafe-ordering case-study next step tied to the user; Z leans on historical employer records and asks an off-target study question."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 18
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    }
+   },
+   "rank": {
+    "X": 3,
+    "Y": 1,
+    "Z": 2
+   },
+   "reason": "Y's staged hospitality-based portfolio plan is most actionable; X asserts durations and its question wrongly mentions a postgraduate certificate."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 3,
+    "Y": 2,
+    "Z": 1
+   },
+   "reason": "Z is explicit it has no Canva-specific criteria; Y offers concrete teardown/side-project evidence; X is generic and does not disclose the limit."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 3,
+     "total": 17
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 17
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 3
+   },
+   "reason": "X notes applications go via school/uni portals and covers three settings and checks; Y never states it cannot list jobs; Z gives least."
+  },
+  {
+   "id": "t7-missing#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 20
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 3,
+    "Z": 2
+   },
+   "reason": "X offers four easy-to-pick work styles plus one focused question; Y pulls arbitrary roles (credit checker, courier) with no basis."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 25
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 2
+   },
+   "reason": "Y uses 20 years' experience, flags pay/positioning trade-off and real BSB codes; X and Z are sound but less tailored."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y names The Gordon and honestly says intake listings are unverified; Z never addresses Geelong or any local provider."
+  },
+  {
+   "id": "m1-multi#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 3,
+    "Z": 1
+   },
+   "reason": "Z gives the most specific pathways plus pay trade-off; Y omits the pay trade-off and is least concrete."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 5,
+     "total": 25
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 3
+   },
+   "reason": "X pairs each option with exactly what study is needed, directly answering the question; Z is vague on study and has filler."
+  }
+ ]
+}

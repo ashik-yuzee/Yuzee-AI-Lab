@@ -1,0 +1,389 @@
+{
+ "turns": [
+  {
+   "id": "l0-concept#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "X and Y define RPL accurately and concisely; Z is correct but over-long for a simple definition question."
+  },
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 20
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "X": 3,
+    "Y": 1,
+    "Z": 2
+   },
+   "reason": "Y is honest about counts and gives concrete search channels and titles; X drifts into course codes; Z leaks system wording, less actionable."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 24
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 18
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y adds a concrete cafe-based case-study next step; X lacks a next step; Z name-drops employers and asks a less relevant question."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 18
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    }
+   },
+   "rank": {
+    "X": 3,
+    "Y": 2,
+    "Z": 1
+   },
+   "reason": "Z gives a direct fastest route with hospitality case studies and no invented durations; X asserts unverified course lengths and mismatched question."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 18
+    },
+    "Y": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 2,
+    "Z": 1
+   },
+   "reason": "Z explicitly admits no Canva-specific hiring data and grounds in dated records; X and Y are generic without stating that limit."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "X": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 3,
+     "total": 15
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 16
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 17
+    }
+   },
+   "rank": {
+    "X": 3,
+    "Y": 2,
+    "Z": 1
+   },
+   "reason": "Z honestly states no live vacancies; Y gives correct Victorian requirements but no honesty note; X asks two questions and is wordier."
+  },
+  {
+   "id": "t7-missing#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 20
+    },
+    "Y": {
+     "relevance": 3,
+     "grounding": 3,
+     "personalisation": 1,
+     "actionability": 2,
+     "clarity": 3,
+     "total": 12
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 3,
+    "Z": 2
+   },
+   "reason": "X offers clear work-style options plus one question; Z similar but less to pick from; Y lists arbitrary roles without any user info."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y uses the 20-year manager context, real course codes and a pay/seniority trade-off; Z cites precise growth stats that are hard to verify."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 16
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y names The Gordon and is honest about missing intake data; X adds an unverified skill-set code; Z never names a Geelong provider."
+  },
+  {
+   "id": "m1-multi#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 3,
+     "total": 22
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 2
+   },
+   "reason": "Y is concise with a sharp focused question; X and Z add a useful pay trade-off but are longer, Z notably padded."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 3
+   },
+   "reason": "X pairs every option with a clear, hedged 'study needed' line; Y similar with minor unsupported claims; Z vague on study and has filler."
+  }
+ ]
+}

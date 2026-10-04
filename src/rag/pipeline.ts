@@ -60,7 +60,7 @@ export function expRagBypass(message:string,ctx:{hasHistory:boolean;activeKind?:
   return null;
 }
 
-const RESERVED=/<(\/?)(runtime_context|retrieved_guidance|retrieved_evidence|conversation_memory|conversation_summary|turn_notes|user_message|module|lookup|catalogue|context)\b/gi;
+const RESERVED=/<(\/?)(runtime_context|retrieved_guidance|retrieved_evidence|conversation_memory|conversation_summary|turn_notes|specialist_findings|user_message|module|lookup|catalogue|context)\b/gi;
 /** Users cannot forge application sections: look-alike tags in user text are defanged. */
 export const neutralise=(text:string)=>text.replace(RESERVED,'‹$1$2');
 
@@ -105,9 +105,11 @@ export interface ExpRagTurnInput{
   context:Array<{label:string;text:string}>;
   turnNotes:string[];
   signal:AbortSignal;
+  /** MULTI_AGENT: the merged <specialist_findings> block; awaited last, so guidance and evidence selection overlap the specialists. */
+  specialists?:Promise<string>;
 }
 export interface ExpRagTurn{
-  contents:Content[];userTurnText:string;history:HistoryPlan;guidance:GuidanceSelection;evidence:EvidenceSelection;
+  contents:Content[];userTurnText:string;history:HistoryPlan;guidance:GuidanceSelection;evidence:EvidenceSelection;specialists:string;
   recalled:Array<{id:string;text:string}>;sections:Array<{name:string;description:string;tokens:number;preview:string}>;telemetry:any;
 }
 
@@ -186,7 +188,8 @@ export async function buildExpRagTurn(i:ExpRagTurnInput):Promise<ExpRagTurn>{
   const notes=i.turnNotes.filter(Boolean);
   const notesBlock=notes.length?`<turn_notes>\n${notes.join('\n\n')}\n</turn_notes>`:'';
   const guidanceBlock=renderGuidance(guidance);const evidenceBlock=renderEvidence(evidence);const runtime=runtimeBlock(i.runtime);
-  const userTurnText=[runtime,guidanceBlock,evidenceBlock,memoryBlock,notesBlock,`<user_message>\n${neutralise(i.userInput)}\n</user_message>`].filter(Boolean).join('\n\n');
+  const tSpec=Date.now();const specialistsBlock=i.specialists?await i.specialists:'';const specialistsWaitMs=Date.now()-tSpec;
+  const userTurnText=[runtime,guidanceBlock,evidenceBlock,specialistsBlock,memoryBlock,notesBlock,`<user_message>\n${neutralise(i.userInput)}\n</user_message>`].filter(Boolean).join('\n\n');
   const careerCapsule=capsule(i.conv.careerContext);
   const contents=buildContents(history.keptTurns,history.summary,careerCapsule,userTurnText);
   const tok=(s:string)=>estimateTokens(s);
@@ -197,6 +200,7 @@ export async function buildExpRagTurn(i:ExpRagTurnInput):Promise<ExpRagTurn>{
     ...(runtime?[{name:'Runtime context',description:'Date, location, profile facts, workspace state',tokens:tok(runtime),preview:runtime.slice(18,93)}]:[]),
     ...(guidanceBlock?[{name:'Retrieved guidance',description:guidance.modules.map(m=>m.id).join(', '),tokens:tok(guidanceBlock),preview:guidance.modules.map(m=>m.title).join(' · ').slice(0,75)}]:[]),
     ...(evidenceBlock?[{name:'Retrieved evidence',description:`${evidence.lookupCount} lookup + ${evidence.catalogueCount} catalogue chunk(s)`,tokens:tok(evidenceBlock),preview:evidence.chunks[0]?.text.slice(0,75)||''}]:[]),
+    ...(specialistsBlock?[{name:'Specialist findings',description:'Merged MULTI_AGENT specialist results',tokens:tok(specialistsBlock),preview:specialistsBlock.split('\n')[1]?.slice(0,75)||''}]:[]),
     ...(memoryBlock?[{name:'Recalled user statements',description:`${recalled.length} statement(s)`,tokens:tok(memoryBlock),preview:recalled[0].text.slice(0,75)}]:[]),
     ...(notesBlock?[{name:'Turn notes',description:'Server-owned advisory notes',tokens:tok(notesBlock),preview:notes[0].slice(0,75)}]:[]),
     {name:'Current User Input',description:'Active incoming prompt / UserEvent',tokens:tok(i.userInput),preview:i.userInput.slice(0,75)},
@@ -208,9 +212,10 @@ export async function buildExpRagTurn(i:ExpRagTurnInput):Promise<ExpRagTurn>{
     guidance:{tokens:guidance.tokens,modules:guidance.trace,dropped:guidance.dropped,triggers:guidance.triggers,dense:guidance.dense},
     evidence:{tokens:evidence.tokens,lookup:evidence.lookupCount,catalogue:evidence.catalogueCount,dropped:evidence.dropped,dense:evidence.dense,candidates:{lookup:lookup.length,catalogue:hits.length},ids:evidence.chunks.map(c=>c.id)},
     memory:{summaryTokens:tok(history.summary),summarizedTurns:history.summarizedTurns,verbatimTurns:history.keptTurns.length,verbatimTokens:history.verbatimTokens,recalled:recalled.length,droppedUnsummarized:history.droppedUnsummarized},
-    latencyMs:{embed:i.start.embedMs,guidance:guidanceMs,index:indexMs,evidence:evidenceMs,assemble:Date.now()-t0,sinceStart:Date.now()-i.start.startedAt},
+    latencyMs:{embed:i.start.embedMs,guidance:guidanceMs,index:indexMs,evidence:evidenceMs,assemble:Date.now()-t0,sinceStart:Date.now()-i.start.startedAt,...(i.specialists?{specialistsWait:specialistsWaitMs}:{})},
+    ...(specialistsBlock?{specialists:{tokens:tok(specialistsBlock)}}:{}),
   };
-  return {contents,userTurnText,history,guidance,evidence,recalled,sections,telemetry};
+  return {contents,userTurnText,history,guidance,evidence,specialists:specialistsBlock,recalled,sections,telemetry};
 }
 
 /** EXP-RAG review fast path: an approved answer costs a few output tokens instead of a full rewrite. */

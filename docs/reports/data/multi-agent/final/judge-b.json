@@ -1,0 +1,452 @@
+{
+ "turns": [
+  {
+   "id": "l0-concept#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 21
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    }
+   },
+   "rank": {
+    "X": 1,
+    "Y": 2,
+    "Z": 2
+   },
+   "reason": "All correct; X most concise and flags fees/individual assessment, Z adds steps but is longer than a simple definition needs."
+  },
+  {
+   "id": "t1-lookup#1",
+   "scores": {
+    "X": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 2,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 20
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 2,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y honestly declines a count and gives the clearest next step (Seek/LinkedIn, alternate titles, remote); Z is thin with a two-part question."
+  },
+  {
+   "id": "s10-local#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 23
+    },
+    "Z": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 1,
+    "Z": 3
+   },
+   "reason": "Y names The Gordon and honestly says intake listings are unverified; Z never addresses Geelong or any local provider."
+  },
+  {
+   "id": "m1-multi#1",
+   "scores": {
+    "X": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "Y": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 5,
+     "total": 22
+    },
+    "Z": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    }
+   },
+   "rank": {
+    "X": 2,
+    "Y": 3,
+    "Z": 1
+   },
+   "reason": "Z gives the most specific pathways plus pay trade-off; Y omits the pay trade-off and is least concrete."
+  },
+  {
+   "id": "t2-fit#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 20
+    },
+    "Q": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 5,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "P": 3,
+    "Q": 1,
+    "R": 2,
+    "S": 4
+   },
+   "reason": "Q gives a concrete cafe-ordering case study with no unsupported claims; R gives a clear verdict; S claims to have checked job records without specifics."
+  },
+  {
+   "id": "t3-pathway#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 19
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "S": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 21
+    }
+   },
+   "rank": {
+    "P": 4,
+    "Q": 1,
+    "R": 2,
+    "S": 2
+   },
+   "reason": "Q is fast, honest about trade-offs and invents nothing; R and S are good, but S's week timelines are unsupported; P is long and slow."
+  },
+  {
+   "id": "t4-company#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "Q": {
+     "relevance": 3,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 19
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    }
+   },
+   "rank": {
+    "P": 3,
+    "Q": 4,
+    "R": 2,
+    "S": 1
+   },
+   "reason": "S admits no Canva-specific data and gives varied ways to build evidence; Q is honest but drifts to generic systems-analysis framing."
+  },
+  {
+   "id": "t5-discovery#1",
+   "scores": {
+    "P": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    },
+    "Q": {
+     "relevance": 3,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 17
+    },
+    "R": {
+     "relevance": 3,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 18
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 18
+    }
+   },
+   "rank": {
+    "P": 3,
+    "Q": 4,
+    "R": 2,
+    "S": 1
+   },
+   "reason": "S says where applications happen and covers three settings; R honestly states no live listings; P never admits it cannot list jobs; Q pads with an off-target stat."
+  },
+  {
+   "id": "t7-missing#1",
+   "scores": {
+    "P": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 2,
+     "clarity": 5,
+     "total": 19
+    },
+    "Q": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 4,
+     "total": 19
+    },
+    "R": {
+     "relevance": 4,
+     "grounding": 5,
+     "personalisation": 3,
+     "actionability": 2,
+     "clarity": 4,
+     "total": 18
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 3,
+     "clarity": 3,
+     "total": 17
+    }
+   },
+   "rank": {
+    "P": 2,
+    "Q": 1,
+    "R": 3,
+    "S": 4
+   },
+   "reason": "Q offers four easy-to-pick work styles plus one question; P is honest and concise; S's arbitrary job examples are guesswork."
+  },
+  {
+   "id": "s4-change#1",
+   "scores": {
+    "P": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 21
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 20
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 5,
+     "actionability": 5,
+     "clarity": 4,
+     "total": 23
+    },
+    "S": {
+     "relevance": 5,
+     "grounding": 5,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 22
+    }
+   },
+   "rank": {
+    "P": 3,
+    "Q": 4,
+    "R": 1,
+    "S": 2
+   },
+   "reason": "R uses 20 years' experience, RPL and a pay-step warning with a clear target; S is well hedged; P is long; Q has an unsupported duration."
+  },
+  {
+   "id": "m1-multi#2",
+   "scores": {
+    "P": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 4,
+     "actionability": 4,
+     "clarity": 3,
+     "total": 20
+    },
+    "Q": {
+     "relevance": 5,
+     "grounding": 4,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 5,
+     "total": 21
+    },
+    "R": {
+     "relevance": 5,
+     "grounding": 3,
+     "personalisation": 5,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 21
+    },
+    "S": {
+     "relevance": 4,
+     "grounding": 3,
+     "personalisation": 3,
+     "actionability": 4,
+     "clarity": 4,
+     "total": 18
+    }
+   },
+   "rank": {
+    "P": 3,
+    "Q": 1,
+    "R": 2,
+    "S": 4
+   },
+   "reason": "Q pairs each business-hours option with its study need; R uses Brisbane but overclaims 'strictly business hours'; S includes shaky telehealth triage."
+  }
+ ]
+}

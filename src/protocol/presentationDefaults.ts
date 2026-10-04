@@ -13,5 +13,9 @@ export function applyPresentationDefaults(response: any, turnId: string): string
       }
     }
   }
+  // A list/table block whose content is in items/rows sometimes omits its optional intro text; "" means no intro.
+  for(const b of Array.isArray(response?.content_blocks)?response.content_blocks:[]){
+    if(b&&typeof b==='object'&&!('text' in b)&&[b.items,b.rows,b.columns].some(x=>Array.isArray(x)&&x.length)){b.text='';changes.push('Added an empty intro text to a list or table block.');}
+  }
   return changes;
 }

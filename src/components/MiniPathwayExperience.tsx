@@ -104,6 +104,11 @@ export function MiniPathwayExperience(){
  const available=!!decision&&decision.action!=='none';
  const currentSaved=[...history.runs].reverse().find(r=>r.sourceMessageId===sourceId);
  const chooseSaved=(id:string)=>{history.select(id);setError('');};
+ // MULTI_AGENT "Build a pathway" next action: does what the offer button does, and says (preventDefault) whether it could.
+ useEffect(()=>{
+  const build=(e:Event)=>{if(!available||isStreaming||loading||(!currentSaved&&!hint))return;e.preventDefault();if(currentSaved){chooseSaved(currentSaved.id);reveal();}else if(hint)void generate('manual',hint);};
+  window.addEventListener('yuzee:build-pathway',build);return()=>window.removeEventListener('yuzee:build-pathway',build);
+ });
  const card=available&&target&&!isStreaming?createPortal(<button ref={opener} type="button" className="mini-pathway-offer" disabled={loading} onClick={()=>{if(currentSaved){chooseSaved(currentSaved.id);reveal();}else if(hint)void generate('manual',hint);}}>
   <Map size={21}/><span><strong>{loading?'Preparing your mini pathway…':currentSaved?'Open your mini pathway':'Explore a mini pathway'}</strong><small>See possible routes, trade-offs and a practical next step.</small></span><ArrowRight size={19}/>
  </button>,target):null;

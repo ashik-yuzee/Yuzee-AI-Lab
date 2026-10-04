@@ -95,6 +95,7 @@ const MIGRATION_SQLS = [
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS active_interaction JSONB`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS rag_memory JSONB`,
   `ALTER TABLE conversations ADD COLUMN IF NOT EXISTS features JSONB`,
+  `ALTER TABLE messages ADD COLUMN IF NOT EXISTS orchestration JSONB`,
 ];
 
 export async function initDb(): Promise<void> {
@@ -275,13 +276,14 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
   if (!pool) return;
   try {
     await pool.query(
-      `INSERT INTO messages (id, conversation_id, role, content, structured_response, user_event, telemetry, feedback, created_at)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      `INSERT INTO messages (id, conversation_id, role, content, structured_response, user_event, telemetry, feedback, created_at, orchestration)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
        ON CONFLICT (id) DO UPDATE SET
          content             = EXCLUDED.content,
          structured_response = EXCLUDED.structured_response,
          telemetry           = EXCLUDED.telemetry,
-         feedback            = EXCLUDED.feedback`,
+         feedback            = EXCLUDED.feedback,
+         orchestration       = EXCLUDED.orchestration`,
       [
         msg.id,
         conversationId,
@@ -292,6 +294,7 @@ export async function saveMessage(msg: any, conversationId: string): Promise<voi
         msg.telemetry != null ? JSON.stringify(msg.telemetry) : null,
         msg.feedback != null ? JSON.stringify(msg.feedback) : null,
         new Date(msg.createdAt || Date.now()),
+        msg.orchestration != null ? JSON.stringify(msg.orchestration) : null,
       ]
     );
   } catch (err) {
@@ -356,6 +359,7 @@ function rowToConversation(r: any, msgs: any[]) {
       userEvent: m.user_event ?? undefined,
       telemetry: m.telemetry ?? undefined,
       feedback: m.feedback ?? undefined,
+      orchestration: m.orchestration ?? undefined,
       createdAt: new Date(m.created_at).getTime(),
     })),
   });
