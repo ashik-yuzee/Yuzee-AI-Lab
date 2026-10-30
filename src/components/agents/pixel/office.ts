@@ -70,6 +70,9 @@ export function drawOffice(ctx:CanvasRenderingContext2D,img:Sprites,vm:Orchestra
   const lead=L.desks.find(d=>d.key==='oala')!;
   put(img.whiteboard,lead.x+8,0);
 
+  // Text scales with the office zoom (whole steps), capped by the screen's pixel ratio: scaling it by the pixel ratio
+  // alone cut names off at 2x displays, where the office still drew at zoom 2.
+  const ts=Math.min(dpr,z*2/3);
   let animating=false;
   const bubbles:Array<()=>void>=[];
   for(const d of L.desks){
@@ -84,7 +87,7 @@ export function drawOffice(ctx:CanvasRenderingContext2D,img:Sprites,vm:Orchestra
     put(img.desk,d.x,d.y);
     put(typing?img[`pc-on-${still?1:1+Math.floor(now/200)%3}`]:img['pc-off'],d.x+16,d.y);
     put(img.bench,d.x+16,d.y+32);
-    if(d.status===null){bubbles.push(()=>label(ctx,d.name,X(d.x+24),Y(d.y+47),CELL_W*z-2*dpr,dpr,true));continue;}
+    if(d.status===null){bubbles.push(()=>label(ctx,d.name,X(d.x+24),Y(d.y+47),CELL_W*z-2*ts,ts,true));continue;}
 
     // Sheet rows: 0 down, 1 up, 2 right (left = mirrored). Frames: 0-2 walk, 3-4 type, 5-6 read.
     const sheet=img[`char_${d.char}`], standing=d.status==='queued'||(d.status==='failed'&&!d.ran);
@@ -95,8 +98,8 @@ export function drawOffice(ctx:CanvasRenderingContext2D,img:Sprites,vm:Orchestra
     const headX=standing||walking?d.x+32:d.x+16, headY=standing||walking?d.y+2:d.y+12;
     const kind=d.status==='queued'?'wait':d.status==='failed'?'fail':d.status==='completed'&&(still||freshDone)?'done':null;
     bubbles.push(()=>{
-      label(ctx,d.name,X(d.x+24),Y(d.y+47),CELL_W*z-2*dpr,dpr);
-      if(typing&&d.message)speech(ctx,d.message,X(d.x+24),Y(d.y)-Math.round(2*dpr),CELL_W*z-4*dpr,dpr);
+      label(ctx,d.name,X(d.x+24),Y(d.y+47),CELL_W*z-2*ts,ts);
+      if(typing&&d.message)speech(ctx,d.message,X(d.x+24),Y(d.y)-Math.round(2*ts),CELL_W*z-4*ts,ts);
       else if(kind){const b=BUBBLES[kind];b.rows.forEach((r,ry)=>[...r].forEach((c,rx)=>{if(c==='_')return;
         ctx.fillStyle=c==='B'?'#555566':c==='F'?'#EEEEFF':b.mark;
         ctx.fillRect(X(headX+3+rx),Y(headY+ry),Math.ceil(z),Math.ceil(z));}));}
